@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — THE FULL PICTURE LLP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:      #0F0F10;
+      --dark-grey:  #1C1C1E;
+      --ivory:      #F5F5F2;
+      --gold:       #C6A96B;
+      --beige:      #D8CFC4;
+      --muted:      #888580;
+      --forest:     #1F3A2E;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── NAV ─────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 48px;
+      height: 72px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(15,15,16,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(198,169,107,0.12);
+    }
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ivory); text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .nav-logo:hover { opacity: 0.75; }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-sans);
+      font-size: 0.72rem; font-weight: 400;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--beige); text-decoration: none;
+      position: relative; padding-bottom: 3px;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 1px; background: var(--gold);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.35s cubic-bezier(0.76,0,0.24,1);
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .nav-links a.active { color: var(--gold); }
+    .nav-links a.active::after { transform: scaleX(1); }
+
+    .nav-cta {
+      font-family: var(--font-sans);
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(198,169,107,0.45);
+      padding: 9px 22px; text-decoration: none;
+      position: relative; overflow: hidden; transition: color 0.35s;
+    }
+    .nav-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.35s cubic-bezier(0.76,0,0.24,1); z-index: -1;
+    }
+    .nav-cta:hover { color: var(--black); }
+    .nav-cta:hover::before { transform: scaleX(1); transform-origin: left; }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 1px; background: var(--ivory); display: block; }
+
+    /* ─── PAGE HEADER ─────────────────── */
+    .page-header {
+      padding: 160px 48px 96px;
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: end;
+    }
+    .page-header-eyebrow {
+      font-size: 0.65rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0; transform: translateY(16px);
+      animation: fadeUp 0.8s ease 0.1s forwards;
+    }
+    .page-header-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 300; line-height: 1.05;
+      opacity: 0; transform: translateY(24px);
+      animation: fadeUp 1s ease 0.25s forwards;
+    }
+    .page-header-title em { font-style: italic; color: var(--gold); }
+    .page-header-right {
+      padding-bottom: 8px;
+      opacity: 0; transform: translateY(16px);
+      animation: fadeUp 0.9s ease 0.45s forwards;
+    }
+    .page-header-desc {
+      font-size: 0.9rem; color: var(--beige);
+      line-height: 1.85; max-width: 400px;
+      margin-bottom: 36px;
+    }
+    .page-header-note {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 20px 24px;
+      border: 1px solid rgba(198,169,107,0.15);
+      background: rgba(198,169,107,0.03);
+    }
+    .page-header-note-icon {
+      width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
+      color: var(--gold);
+    }
+    .page-header-note-text {
+      font-size: 0.78rem; color: var(--muted); line-height: 1.7;
+    }
+    .page-header-note-text strong { color: var(--beige); font-weight: 400; }
+
+    /* ─── DIVIDER ─────────────────────── */
+    .section-divider {
+      height: 1px; background: rgba(198,169,107,0.12);
+      max-width: 100%; margin: 0;
+    }
+
+    /* ─── MAIN CONTACT AREA ───────────── */
+    .contact-section {
+      max-width: 1240px; margin: 0 auto;
+      padding: 96px 48px 120px;
+      display: grid; grid-template-columns: 380px 1fr;
+      gap: 100px;
+    }
+
+    /* LEFT PANEL */
+    .contact-info-block {
+      margin-bottom: 52px;
+      padding-bottom: 52px;
+      border-bottom: 1px solid rgba(198,169,107,0.1);
+    }
+    .contact-info-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .info-label {
+      font-size: 0.6rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .info-label::before {
+      content: ''; width: 24px; height: 1px; background: var(--gold);
+    }
+    .info-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem; font-weight: 400;
+      color: var(--ivory); line-height: 1.3; margin-bottom: 14px;
+    }
+    .info-text {
+      font-size: 0.82rem; color: var(--muted);
+      line-height: 1.8; margin-bottom: 0;
+    }
+
+    /* Service badges */
+    .service-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .service-badge {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid rgba(198,169,107,0.12);
+      transition: background 0.3s, border-color 0.3s;
+      cursor: default;
+    }
+    .service-badge:hover { background: rgba(198,169,107,0.04); border-color: rgba(198,169,107,0.25); }
+    .service-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0;
+    }
+    .service-badge-name { font-size: 0.78rem; color: var(--beige); }
+
+    /* WhatsApp card */
+    .whatsapp-card {
+      display: flex; align-items: center; gap: 16px;
+      padding: 20px 22px;
+      border: 1px solid rgba(37,211,102,0.2);
+      text-decoration: none;
+      transition: background 0.3s, border-color 0.3s, gap 0.3s;
+      margin-top: 8px;
+    }
+    .whatsapp-card:hover {
+      background: rgba(37,211,102,0.05);
+      border-color: rgba(37,211,102,0.45);
+      gap: 20px;
+    }
+    .whatsapp-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 50%;
+      color: #25D366;
+      transition: background 0.3s;
+    }
+    .whatsapp-card:hover .whatsapp-icon { background: rgba(37,211,102,0.1); }
+    .whatsapp-label {
+      font-size: 0.62rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: #25D366;
+      margin-bottom: 3px;
+    }
+    .whatsapp-sub {
+      font-size: 0.8rem; color: var(--muted);
+    }
+
+    /* Confidentiality note */
+    .confidential-note {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 18px 20px;
+      background: rgba(31,58,46,0.3);
+      border: 1px solid rgba(31,58,46,0.6);
+      margin-top: 8px;
+    }
+    .confidential-note svg { flex-shrink: 0; margin-top: 2px; color: rgba(198,169,107,0.6); }
+    .confidential-note p { font-size: 0.75rem; color: var(--muted); line-height: 1.65; }
+    .confidential-note strong { color: var(--beige); font-weight: 400; }
+
+    /* ─── FORM PANEL ──────────────────── */
+    .form-heading {
+      font-family: var(--font-serif);
+      font-size: 1.9rem; font-weight: 300;
+      color: var(--ivory); margin-bottom: 8px; line-height: 1.2;
+    }
+    .form-subheading {
+      font-size: 0.82rem; color: var(--muted); margin-bottom: 52px; line-height: 1.7;
+    }
+
+    /* Form grid */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; }
+    .form-group { display: flex; flex-direction: column; gap: 10px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .required-star { color: rgba(198,169,107,0.5); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      font-family: var(--font-sans);
+      font-size: 0.88rem; font-weight: 300;
+      color: var(--ivory);
+      background: rgba(245,245,242,0.03);
+      border: 1px solid rgba(198,169,107,0.15);
+      padding: 15px 18px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(198,169,107,0.5);
+      background: rgba(198,169,107,0.03);
+    }
+    input:focus + .input-line,
+    select:focus + .input-line {
+      transform: scaleX(1);
+    }
+
+    /* Animated focus underline */
+    .input-wrapper { position: relative; }
+    .input-line {
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 1px;
+      background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.76,0,0.24,1);
+      pointer-events: none;
+    }
+    input:focus ~ .input-line,
+    select:focus ~ .input-line,
+    textarea:focus ~ .input-line { transform: scaleX(1); }
+
+    /* Select arrow */
+    .select-wrapper { position: relative; }
+    .select-wrapper select { padding-right: 44px; cursor: pointer; }
+    .select-arrow {
+      position: absolute; right: 16px; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none; color: var(--gold);
+    }
+
+    textarea {
+      resize: none; min-height: 140px; line-height: 1.7;
+    }
+
+    /* Interest checkboxes */
+    .checkbox-group { display: flex; flex-direction: column; gap: 0; }
+    .checkbox-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(198,169,107,0.08);
+      cursor: pointer;
+      transition: padding-left 0.3s;
+    }
+    .checkbox-item:first-child { border-top: 1px solid rgba(198,169,107,0.08); }
+    .checkbox-item:hover { padding-left: 8px; }
+    .checkbox-item input[type="checkbox"] {
+      width: 16px; height: 16px; flex-shrink: 0;
+      appearance: none; -webkit-appearance: none;
+      border: 1px solid rgba(198,169,107,0.3);
+      background: transparent;
+      cursor: pointer; padding: 0;
+      position: relative;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .checkbox-item input[type="checkbox"]:checked {
+      background: var(--gold); border-color: var(--gold);
+    }
+    .checkbox-item input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute; top: 2px; left: 5px;
+      width: 4px; height: 8px;
+      border: 1.5px solid var(--black);
+      border-top: none; border-left: none;
+      transform: rotate(40deg);
+    }
+    .checkbox-label { font-size: 0.84rem; color: var(--beige); }
+    .checkbox-item:hover .checkbox-label { color: var(--ivory); }
+
+    /* Honeypot */
+    .hp-field { display: none; }
+
+    /* Submit row */
+    .form-submit-row {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; gap: 28px;
+      flex-wrap: wrap; margin-top: 8px;
+    }
+    .btn-submit {
+      font-family: var(--font-sans);
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      background: var(--gold); color: var(--black);
+      border: none; padding: 16px 44px;
+      cursor: pointer; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 10px;
+      position: relative; overflow: hidden;
+      transition: opacity 0.3s;
+    }
+    .btn-submit::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(15,15,16,0.12);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.35s cubic-bezier(0.76,0,0.24,1);
+    }
+    .btn-submit:hover::before { transform: scaleX(1); transform-origin: left; }
+    .btn-submit .submit-arrow {
+      display: inline-block;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-submit:hover .submit-arrow { transform: translateX(5px); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .submit-privacy {
+      font-size: 0.7rem; color: var(--muted); line-height: 1.6; max-width: 280px;
+    }
+
+    /* Success message */
+    .form-success {
+      display: none;
+      padding: 48px 40px;
+      border: 1px solid rgba(198,169,107,0.2);
+      text-align: center;
+    }
+    .form-success.visible { display: block; }
+    .form-success-icon {
+      width: 48px; height: 48px;
+      border: 1px solid var(--gold); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px; color: var(--gold);
+    }
+    .form-success-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem; font-weight: 300; color: var(--ivory); margin-bottom: 12px;
+    }
+    .form-success-text { font-size: 0.85rem; color: var(--muted); max-width: 380px; margin: 0 auto; line-height: 1.8; }
+
+    /* ─── LOCATION / BOTTOM BAND ──────── */
+    .contact-footer-band {
+      border-top: 1px solid rgba(198,169,107,0.12);
+      background: var(--dark-grey);
+    }
+    .contact-footer-inner {
+      max-width: 1240px; margin: 0 auto;
+      padding: 80px 48px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+    }
+    .footer-info-label {
+      font-size: 0.6rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .footer-info-label::before {
+      content: ''; width: 18px; height: 1px; background: var(--gold);
+    }
+    .footer-info-value {
+      font-family: var(--font-serif);
+      font-size: 1.1rem; font-weight: 400; color: var(--ivory);
+      line-height: 1.5; margin-bottom: 8px;
+    }
+    .footer-info-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── FOOTER ──────────────────────── */
+    footer {
+      background: var(--dark-grey);
+      border-top: 1px solid rgba(198,169,107,0.12);
+      padding: 40px 0;
+    }
+    .footer-bottom-inner {
+      max-width: 1240px; margin: 0 auto; padding: 0 48px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-copy { font-size: 0.68rem; color: rgba(245,245,242,0.2); }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a {
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      color: rgba(245,245,242,0.25); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links-row a:hover { color: var(--gold); }
+
+    /* ─── ANIMATIONS ──────────────────── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.32s; }
+
+    /* ─── MOBILE NAV ──────────────────── */
+    .mobile-nav {
+      display: none; position: fixed; inset: 0;
+      background: var(--black); z-index: 99;
+      flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--font-serif); font-size: 2rem;
+      font-weight: 300; color: var(--ivory); text-decoration: none;
+      letter-spacing: 0.08em; transition: color 0.3s;
+    }
+    .mobile-nav a:hover { color: var(--gold); }
+    .mobile-nav-close {
+      position: absolute; top: 28px; right: 48px;
+      font-size: 1.5rem; color: var(--muted); cursor: pointer;
+      background: none; border: none;
+    }
+
+    /* ─── RESPONSIVE ──────────────────── */
+    @media (max-width: 1024px) {
+      .page-header { grid-template-columns: 1fr; gap: 40px; padding: 140px 40px 80px; }
+      .contact-section { grid-template-columns: 1fr; gap: 64px; padding: 72px 40px 96px; }
+      .contact-footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .form-submit-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .contact-footer-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 24px; }
+      .page-header { padding: 120px 24px 64px; }
+      .contact-section { padding: 56px 24px 80px; }
+      .contact-footer-inner { padding: 56px 24px; }
+      .footer-bottom-inner { padding: 0 24px; flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">The <span>Full</span> Picture</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <a href="#form" class="nav-cta">Book a Consultation</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="services.html">Services</a>
+    <a href="insights.html">Insights</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <p class="page-header-eyebrow">Get in Touch</p>
+      <h1 class="page-header-title">Begin Your<br><em>Consultation</em></h1>
+    </div>
+    <div class="page-header-right">
+      <p class="page-header-desc">
+        Every engagement begins with a conversation. Share your situation and we will respond personally to explore how The Full Picture can serve your needs.
+      </p>
+      <div class="page-header-note">
+        <svg class="page-header-note-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">
+          <circle cx="10" cy="10" r="8"/>
+          <path d="M10 9v5M10 6.5v.5" stroke-linecap="round"/>
+        </svg>
+        <p class="page-header-note-text">
+          <strong>All enquiries are strictly confidential.</strong> We respond to every submission personally, typically within one business day.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- MAIN CONTACT SECTION -->
+  <div class="contact-section">
+
+    <!-- LEFT: Info panel -->
+    <aside class="contact-info">
+
+      <div class="contact-info-block reveal">
+        <p class="info-label">Services Available</p>
+        <h2 class="info-title">What We Offer</h2>
+        <p class="info-text">Select one or more areas of interest in the form and we will ensure your enquiry reaches the right advisor.</p>
+        <div class="service-badges">
+          <div class="service-badge">
+            <div class="service-badge-dot"></div>
+            <span class="service-badge-name">Personal Destiny &amp; Life Path</span>
+          </div>
+          <div class="service-badge">
+            <div class="service-badge-dot"></div>
+            <span class="service-badge-name">Feng Shui &amp; Space Advisory</span>
+          </div>
+          <div class="service-badge">
+            <div class="service-badge-dot"></div>
+            <span class="service-badge-name">Courses &amp; Masterclasses</span>
+          </div>
+          <div class="service-badge">
+            <div class="service-badge-dot"></div>
+            <span class="service-badge-name">Corporate &amp; Group Programs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-info-block reveal reveal-delay-1">
+        <p class="info-label">Prefer to Message?</p>
+        <h2 class="info-title">WhatsApp Us Directly</h2>
+        <p class="info-text" style="margin-bottom: 20px;">For a quicker conversation, reach us via WhatsApp. A member of our advisory team will respond shortly.</p>
+        <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="whatsapp-card">
+          <div class="whatsapp-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.967-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.7 0-3.29-.45-4.667-1.236l-.334-.198-3.461.99.937-3.568-.215-.351A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
+            </svg>
+          </div>
+          <div class="whatsapp-text">
+            <p class="whatsapp-label">WhatsApp</p>
+            <p class="whatsapp-sub">Message us directly</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="contact-info-block reveal reveal-delay-2">
+        <div class="confidential-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round"/>
+          </svg>
+          <p>
+            <strong>Your information is kept strictly confidential.</strong> We do not share client details with third parties. Every consultation is held in the highest professional confidence.
+          </p>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT: Form -->
+    <div class="contact-form-wrap" id="form">
+      <h2 class="form-heading reveal">Send an Enquiry</h2>
+      <p class="form-subheading reveal reveal-delay-1">Fill in the details below and our team will be in touch to discuss how we can best serve you.</p>
+
+      <!-- Success state -->
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h3 class="form-success-title">Enquiry Received</h3>
+        <p class="form-success-text">Thank you for reaching out. A member of our advisory team will respond to you personally within one business day.</p>
+      </div>
+
+      <!-- Form -->
+      <form id="contactForm" novalidate>
+        <div class="form-grid">
+
+          <!-- Name -->
+          <div class="form-group reveal">
+            <label for="firstName">First Name <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input type="text" id="firstName" name="firstName" placeholder="Your first name" required />
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <div class="form-group reveal reveal-delay-1">
+            <label for="lastName">Last Name <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input type="text" id="lastName" name="lastName" placeholder="Your last name" required />
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group reveal">
+            <label for="email">Email Address <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <input type="email" id="email" name="email" placeholder="your@email.com" required />
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group reveal reveal-delay-1">
+            <label for="phone">Phone / WhatsApp</label>
+            <div class="input-wrapper">
+              <input type="tel" id="phone" name="phone" placeholder="+65 9XXX XXXX" />
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <!-- Service interest -->
+          <div class="form-group full reveal">
+            <label>Area of Interest <span class="required-star">*</span></label>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="destiny" />
+                <span class="checkbox-label">Personal Destiny &amp; Life Path (BaZi, Zi Wei Dou Shu, Number Energy)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="fengshui" />
+                <span class="checkbox-label">Feng Shui &amp; Space Advisory (Home or Office Audit)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="courses" />
+                <span class="checkbox-label">Courses &amp; Masterclasses</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="corporate" />
+                <span class="checkbox-label">Corporate / Association Workshop</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="general" />
+                <span class="checkbox-label">General Enquiry — Not Sure Yet</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- How did you hear -->
+          <div class="form-group full reveal">
+            <label for="source">How Did You Hear About Us?</label>
+            <div class="select-wrapper input-wrapper">
+              <select id="source" name="source">
+                <option value="" disabled selected>Please select</option>
+                <option value="referral">Personal Referral</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="instagram">Instagram</option>
+                <option value="google">Google Search</option>
+                <option value="event">Event / Workshop</option>
+                <option value="other">Other</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <!-- Message -->
+          <div class="form-group full reveal">
+            <label for="message">Your Message <span class="required-star">*</span></label>
+            <div class="input-wrapper">
+              <textarea id="message" name="message" placeholder="Please share a brief description of what you are looking for, and how we may best serve you." required></textarea>
+              <div class="input-line"></div>
+            </div>
+          </div>
+
+          <!-- Honeypot -->
+          <div class="hp-field">
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <!-- Submit -->
+          <div class="form-submit-row reveal">
+            <button type="submit" class="btn-submit" id="submitBtn">
+              Send Enquiry <span class="submit-arrow">→</span>
+            </button>
+            <p class="submit-privacy">By submitting this form you agree that your information will be held in strict confidence and used solely to respond to your enquiry.</p>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+  </div><!-- end contact-section -->
+
+  <!-- BOTTOM INFO BAND -->
+  <div class="contact-footer-band">
+    <div class="contact-footer-inner">
+      <div class="footer-info-block reveal">
+        <p class="footer-info-label">Location</p>
+        <p class="footer-info-value">Singapore</p>
+        <p class="footer-info-sub">Consultations are conducted in-person or virtually, depending on the nature of the engagement and client preference.</p>
+      </div>
+      <div class="footer-info-block reveal reveal-delay-1">
+        <p class="footer-info-label">Response Time</p>
+        <p class="footer-info-value">Within 1 Business Day</p>
+        <p class="footer-info-sub">All enquiries are reviewed personally by our advisory team. We do not use automated responses.</p>
+      </div>
+      <div class="footer-info-block reveal reveal-delay-2">
+        <p class="footer-info-label">Availability</p>
+        <p class="footer-info-value">By Appointment</p>
+        <p class="footer-info-sub">All consultations are by private appointment only. We serve a limited number of clients to ensure the highest standard of engagement.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-bottom-inner">
+      <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+      <div class="footer-links-row">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Focus: trigger input-line on parent
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      el.addEventListener('focus', () => {
+        const line = el.closest('.input-wrapper')?.querySelector('.input-line');
+        if (line) line.style.transform = 'scaleX(1)';
+      });
+      el.addEventListener('blur', () => {
+        const line = el.closest('.input-wrapper')?.querySelector('.input-line');
+        if (line) line.style.transform = 'scaleX(0)';
+      });
+    });
+
+    // Form submission
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formSuccess = document.getElementById('formSuccess');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Honeypot check
+      if (form.querySelector('[name="_honey"]').value) return;
+
+      // Basic validation
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(field => {
+        if (!field.value.trim()) { valid = false; field.focus(); }
+      });
+
+      // Check at least one interest
+      const checked = form.querySelectorAll('[name="interest"]:checked');
+      if (checked.length === 0) { valid = false; }
+
+      if (!valid) return;
+
+      // Simulate submission
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Sending… <span class="submit-arrow">→</span>';
+
+      setTimeout(() => {
+        form.style.display = 'none';
+        formSuccess.classList.add('visible');
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 1200);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insights — THE FULL PICTURE LLP</title>
+  <meta name="description" content="Thought leadership and perspective from The Full Picture LLP — where ancient metaphysical intelligence meets modern strategic thinking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:      #0F0F10;
+      --dark-grey:  #1C1C1E;
+      --ivory:      #F5F5F2;
+      --gold:       #C6A96B;
+      --beige:      #D8CFC4;
+      --muted:      #888580;
+      --forest:     #1F3A2E;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+
+      /* Type scale specific to Insights */
+      --text-xs:   clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --text-3xl:  clamp(2.5rem, 1rem + 4vw, 5rem);
+
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── SHARED NAV ─────────────────────────── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:0 48px; height:72px; display:flex; align-items:center; justify-content:space-between; transition:background .4s,border-bottom .4s; }
+    nav.scrolled { background:rgba(15,15,16,0.93); backdrop-filter:blur(14px); border-bottom:1px solid rgba(198,169,107,.12); }
+    .nav-logo { font-family:var(--font-serif); font-size:1rem; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--ivory); text-decoration:none; transition:opacity .3s; }
+    .nav-logo:hover { opacity:.75; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:36px; list-style:none; }
+    .nav-links a { font-size:.72rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:1px; background:var(--gold); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.76,0,.24,1); }
+    .nav-links a:hover,.nav-links a.active { color:var(--gold); }
+    .nav-links a:hover::after,.nav-links a.active::after { transform:scaleX(1); transform-origin:left; }
+    .nav-cta { font-size:.72rem; font-weight:400; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); border:1px solid rgba(198,169,107,.45); padding:9px 22px; text-decoration:none; position:relative; overflow:hidden; transition:color .35s; }
+    .nav-cta::before { content:''; position:absolute; inset:0; background:var(--gold); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.76,0,.24,1); z-index:-1; }
+    .nav-cta:hover { color:var(--black); }
+    .nav-cta:hover::before { transform:scaleX(1); transform-origin:left; }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+    .hamburger span { width:24px; height:1px; background:var(--ivory); display:block; transition:.3s; }
+    .mobile-nav { display:none; position:fixed; inset:0; background:var(--black); z-index:99; flex-direction:column; align-items:center; justify-content:center; gap:36px; }
+    .mobile-nav.open { display:flex; }
+    .mobile-nav a { font-family:var(--font-serif); font-size:2rem; font-weight:300; color:var(--ivory); text-decoration:none; letter-spacing:.08em; transition:color .3s; }
+    .mobile-nav a:hover { color:var(--gold); }
+    .mobile-nav-close { position:absolute; top:28px; right:48px; font-size:1.5rem; color:var(--muted); cursor:pointer; background:none; border:none; }
+
+    /* ─── SHARED REVEAL ANIMATIONS ───────────── */
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+    .reveal { opacity:0; transform:translateY(32px); transition:opacity .8s ease,transform .8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:.12s; }
+    .reveal-delay-2 { transition-delay:.24s; }
+    .reveal-delay-3 { transition-delay:.36s; }
+
+    /* ─── PAGE HEADER ─────────────────── */
+    .page-header {
+      padding: 152px 48px 72px;
+      max-width: 1240px; margin: 0 auto;
+      border-bottom: 1px solid rgba(198,169,107,0.12);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end;
+    }
+    .page-eyebrow {
+      font-size: var(--text-xs); letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+      opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: var(--text-3xl); font-weight: 300; line-height: 1.05;
+      opacity: 0; transform: translateY(24px); animation: fadeUp 1s ease 0.35s forwards;
+    }
+    .page-title em { font-style: italic; color: var(--gold); }
+    .header-right {
+      padding-bottom: 6px;
+      opacity: 0; transform: translateY(18px); animation: fadeUp 0.9s ease 0.6s forwards;
+    }
+    .header-desc {
+      font-size: var(--text-sm); color: var(--beige); line-height: 1.85;
+      max-width: 420px; margin-bottom: 0;
+    }
+    .header-count {
+      margin-top: 24px;
+      font-size: var(--text-xs); color: var(--muted); letter-spacing: 0.12em;
+    }
+    .header-count span { color: var(--gold); font-family: var(--font-serif); font-size: 1.1rem; }
+
+    /* ─── FILTER BAR ──────────────────── */
+    .filter-bar {
+      max-width: 1240px; margin: 0 auto;
+      padding: 0 48px;
+      border-bottom: 1px solid rgba(198,169,107,0.08);
+    }
+    .filter-inner {
+      display: flex; align-items: center; gap: 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .filter-inner::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      font-family: var(--font-sans); font-size: var(--text-xs);
+      font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); background: none; border: none;
+      padding: 22px 28px; cursor: pointer; white-space: nowrap;
+      position: relative;
+      transition: color var(--transition-interactive);
+    }
+    .filter-btn::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+      transform: scaleX(0);
+      transition: transform 0.35s cubic-bezier(0.76,0,0.24,1);
+    }
+    .filter-btn:hover { color: var(--beige); }
+    .filter-btn.active { color: var(--gold); }
+    .filter-btn.active::after { transform: scaleX(1); }
+
+    /* ─── INSIGHTS MAIN ───────────────── */
+    .insights-main {
+      max-width: 1240px; margin: 0 auto;
+      padding: 0 48px 120px;
+    }
+
+    /* ── FEATURED HERO CARD ── */
+    .featured-card {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid rgba(198,169,107,0.1);
+      text-decoration: none; color: inherit;
+      position: relative; overflow: hidden;
+      transition: background var(--transition-interactive);
+      margin-bottom: 1px;
+    }
+    .featured-card:hover { background: rgba(198,169,107,0.04); }
+    .featured-left {
+      padding: 72px 64px 72px 0;
+      border-right: 1px solid rgba(198,169,107,0.1);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .featured-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: var(--text-xs); letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 32px;
+    }
+    .featured-badge::before {
+      content: ''; width: 32px; height: 1px; background: var(--gold);
+    }
+    .featured-label {
+      font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 20px;
+    }
+    .featured-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.2vw, 3.2rem);
+      font-weight: 300; line-height: 1.15; color: var(--ivory);
+      margin-bottom: 28px;
+      transition: color var(--transition-interactive);
+    }
+    .featured-card:hover .featured-title { color: #fff; }
+    .featured-excerpt {
+      font-size: var(--text-sm); color: var(--muted);
+      line-height: 1.85; max-width: 440px; margin-bottom: 44px;
+    }
+    .featured-meta {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .featured-date {
+      font-size: var(--text-xs); color: rgba(245,245,242,0.3); letter-spacing: 0.12em;
+    }
+    .featured-read {
+      font-size: var(--text-xs); letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 8px;
+      transition: gap var(--transition-interactive);
+    }
+    .featured-card:hover .featured-read { gap: 14px; }
+    .featured-read .arr {
+      display: inline-block;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .featured-card:hover .arr { transform: translateX(4px); }
+
+    /* Right panel - decorative visual */
+    .featured-right {
+      padding: 72px 0 72px 64px;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden;
+      background: var(--forest);
+    }
+    .featured-right::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(198,169,107,0.08) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 80%, rgba(15,15,16,0.5) 0%, transparent 60%);
+    }
+    .featured-deco-num {
+      position: absolute; right: -20px; bottom: -30px;
+      font-family: var(--font-serif); font-size: 18rem;
+      font-weight: 300; line-height: 1;
+      color: rgba(198,169,107,0.04);
+      pointer-events: none;
+    }
+    .featured-deco-rings {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .featured-deco-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(198,169,107,0.1);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      animation: ringBreathe 5s ease-in-out infinite;
+    }
+    .featured-deco-ring:nth-child(1) { width: 280px; height: 280px; animation-delay: 0s; }
+    .featured-deco-ring:nth-child(2) { width: 190px; height: 190px; animation-delay: 0.8s; }
+    .featured-deco-ring:nth-child(3) { width: 100px; height: 100px; border-color: rgba(198,169,107,0.2); animation-delay: 1.6s; }
+    @keyframes ringBreathe {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .featured-right-content {
+      position: relative; z-index: 2; padding: 0 48px;
+    }
+    .featured-right-label {
+      font-size: var(--text-xs); letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(198,169,107,0.5); margin-bottom: 28px;
+    }
+    .featured-pull {
+      font-family: var(--font-serif);
+      font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+      font-weight: 300; font-style: italic;
+      color: rgba(245,245,242,0.75);
+      line-height: 1.5; max-width: 360px;
+    }
+    .featured-pull strong { color: var(--gold); font-style: normal; font-weight: 400; }
+    .featured-tag-list {
+      margin-top: 40px; display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .tag-pill {
+      font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(198,169,107,0.6);
+      border: 1px solid rgba(198,169,107,0.15);
+      padding: 5px 14px;
+    }
+
+    /* ─── ARTICLE GRID ────────────────── */
+    .articles-section { margin-top: 1px; }
+
+    /* Row: 2-col feature + 1-col stack */
+    .grid-row-feature {
+      display: grid; grid-template-columns: 2fr 1fr;
+      gap: 1px; background: rgba(198,169,107,0.1);
+      margin-bottom: 1px;
+    }
+    /* Row: 3-column equal */
+    .grid-row-three {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: rgba(198,169,107,0.1);
+      margin-bottom: 1px;
+    }
+    /* Row: 1-col stack + 2-col feature */
+    .grid-row-feature-right {
+      display: grid; grid-template-columns: 1fr 2fr;
+      gap: 1px; background: rgba(198,169,107,0.1);
+      margin-bottom: 1px;
+    }
+
+    /* ── ARTICLE CARD ── */
+    .article-card {
+      background: var(--black);
+      padding: 48px 40px;
+      text-decoration: none; display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      transition: background var(--transition-interactive);
+      cursor: pointer;
+    }
+    .article-card:hover { background: var(--dark-grey); }
+
+    /* top gold sweep */
+    .article-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 2px; background: var(--gold);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.45s cubic-bezier(0.76,0,0.24,1);
+    }
+    .article-card:hover::before { transform: scaleX(1); }
+
+    /* Atmospheric deco number */
+    .card-deco {
+      position: absolute; right: -10px; bottom: -20px;
+      font-family: var(--font-serif); font-weight: 300; line-height: 1;
+      color: rgba(198,169,107,0.05); pointer-events: none;
+      transition: color 0.5s;
+      font-size: 7rem;
+    }
+    .article-card:hover .card-deco { color: rgba(198,169,107,0.09); }
+
+    .card-category {
+      font-size: var(--text-xs); letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 18px;
+      display: inline-block;
+      transition: letter-spacing var(--transition-interactive);
+    }
+    .article-card:hover .card-category { letter-spacing: 0.3em; }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-weight: 400; color: var(--ivory); line-height: 1.3;
+      margin-bottom: 16px; flex: 1;
+      transition: color var(--transition-interactive);
+    }
+    .article-card:hover .card-title { color: #fff; }
+    .card-title.large { font-size: clamp(1.4rem, 2vw, 2rem); }
+    .card-title.normal { font-size: clamp(1.1rem, 1.5vw, 1.45rem); }
+
+    .card-excerpt {
+      font-size: var(--text-sm); color: var(--muted);
+      line-height: 1.8; margin-bottom: 32px;
+      transition: color var(--transition-interactive);
+    }
+    .article-card:hover .card-excerpt { color: rgba(136,133,128,0.85); }
+
+    .card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid rgba(198,169,107,0.1);
+      margin-top: auto;
+      transition: border-color var(--transition-interactive);
+    }
+    .article-card:hover .card-footer { border-color: rgba(198,169,107,0.25); }
+    .card-meta { display: flex; gap: 14px; align-items: center; }
+    .card-date { font-size: var(--text-xs); color: rgba(245,245,242,0.28); }
+    .card-read-time { font-size: var(--text-xs); color: var(--muted); }
+    .card-date::after { content: '·'; margin-left: 14px; opacity: 0.4; }
+    
+    .card-arrow {
+      width: 32px; height: 32px; border: 1px solid rgba(198,169,107,0.25);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      transition: background var(--transition-interactive), border-color var(--transition-interactive);
+    }
+    .article-card:hover .card-arrow { background: var(--gold); border-color: var(--gold); }
+    .card-arrow .arr-out {
+      position: absolute; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
+    }
+    .card-arrow .arr-in {
+      position: absolute; display: flex; align-items: center; justify-content: center;
+      transform: translate(-8px, 8px); opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
+    }
+    .article-card:hover .card-arrow .arr-out { transform: translate(8px,-8px); opacity: 0; }
+    .article-card:hover .card-arrow .arr-in { transform: translate(0,0); opacity: 1; }
+    .card-arrow svg { color: var(--ivory); }
+    .article-card:hover .card-arrow svg { color: var(--black); }
+
+    /* Wide card (2-col span) has image-bg treatment */
+    .article-card.wide {
+      padding: 56px 52px;
+    }
+    .article-card.wide .card-title { font-size: clamp(1.5rem, 2.2vw, 2.1rem); }
+    .article-card.wide .card-excerpt { max-width: 420px; }
+
+    /* Tall card (stacked in single col) */
+    .col-stack {
+      display: flex; flex-direction: column; gap: 1px; background: rgba(198,169,107,0.1);
+    }
+    .col-stack .article-card { flex: 1; min-height: 240px; }
+
+    /* Visual card: dark green atmosphere */
+    .article-card.visual {
+      background: var(--forest);
+    }
+    .article-card.visual:hover { background: #1a3226; }
+    .article-card.visual .card-title { color: var(--ivory); }
+    .article-card.visual .card-excerpt { color: rgba(216,207,196,0.55); }
+    .article-card.visual .card-deco { color: rgba(198,169,107,0.07); }
+    .article-card.visual:hover .card-deco { color: rgba(198,169,107,0.14); }
+
+    /* ─── PAGINATION / LOAD MORE ──────── */
+    .load-more-section {
+      padding: 64px 0 0;
+      display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px;
+    }
+    .load-more-btn {
+      font-family: var(--font-sans); font-size: var(--text-xs);
+      letter-spacing: 0.2em; text-transform: uppercase;
+      background: transparent; color: var(--ivory);
+      border: 1px solid rgba(245,245,242,0.2);
+      padding: 14px 40px; cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+      transition: border-color var(--transition-interactive), color var(--transition-interactive), gap var(--transition-interactive);
+    }
+    .load-more-btn:hover { border-color: var(--gold); color: var(--gold); gap: 16px; }
+    .load-more-btn .btn-arr {
+      display: inline-block;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .load-more-btn:hover .btn-arr { transform: translateY(3px); }
+    .article-count-note {
+      font-size: var(--text-xs); color: rgba(245,245,242,0.2);
+    }
+
+    /* ─── NEWSLETTER / SUBSCRIBE ──────── */
+    .subscribe-band {
+      margin-top: 120px;
+      background: var(--forest);
+      border-top: 1px solid rgba(198,169,107,0.12);
+      border-bottom: 1px solid rgba(198,169,107,0.12);
+    }
+    .subscribe-inner {
+      max-width: 1240px; margin: 0 auto;
+      padding: 100px 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center;
+    }
+    .subscribe-label {
+      font-size: var(--text-xs); letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .subscribe-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+    .subscribe-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 2.8vw, 2.8rem);
+      font-weight: 300; line-height: 1.2; color: var(--ivory);
+    }
+    .subscribe-title em { font-style: italic; color: var(--gold); }
+    .subscribe-desc {
+      font-size: var(--text-sm); color: rgba(216,207,196,0.6);
+      line-height: 1.85; margin-top: 18px;
+    }
+    .subscribe-form { display: flex; gap: 0; }
+    .subscribe-input {
+      font-family: var(--font-sans); font-size: var(--text-sm); font-weight: 300;
+      color: var(--ivory); background: rgba(245,245,242,0.04);
+      border: 1px solid rgba(198,169,107,0.2); border-right: none;
+      padding: 15px 22px; flex: 1; outline: none;
+      transition: border-color var(--transition-interactive), background var(--transition-interactive);
+    }
+    .subscribe-input::placeholder { color: var(--muted); }
+    .subscribe-input:focus { border-color: rgba(198,169,107,0.45); background: rgba(198,169,107,0.04); }
+    .subscribe-submit {
+      font-family: var(--font-sans); font-size: var(--text-xs);
+      letter-spacing: 0.18em; text-transform: uppercase;
+      background: var(--gold); color: var(--black);
+      border: none; padding: 15px 28px; cursor: pointer; font-weight: 500;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+      position: relative; overflow: hidden;
+      transition: color 0.35s;
+    }
+    .subscribe-submit::before {
+      content: ''; position: absolute; inset: 0; background: rgba(15,15,16,0.12);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.35s cubic-bezier(0.76,0,0.24,1);
+    }
+    .subscribe-submit:hover::before { transform: scaleX(1); transform-origin: left; }
+    .subscribe-submit .arr {
+      display: inline-block;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .subscribe-submit:hover .arr { transform: translateX(4px); }
+    .subscribe-note {
+      font-size: var(--text-xs); color: rgba(136,133,128,0.6);
+      margin-top: 14px; line-height: 1.6;
+    }
+
+    /* ─── SHARED FOOTER ──────────────────────── */
+    footer { background:var(--dark-grey); border-top:1px solid rgba(198,169,107,.12); padding:72px 0 40px; }
+    .footer-inner { max-width:1240px; margin:0 auto; padding:0 48px; }
+    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:64px; padding-bottom:56px; border-bottom:1px solid rgba(198,169,107,.1); margin-bottom:36px; }
+    .footer-logo { font-family:var(--font-serif); font-size:1.1rem; letter-spacing:.22em; text-transform:uppercase; color:var(--ivory); margin-bottom:16px; }
+    .footer-logo span { color:var(--gold); }
+    .footer-llp { color:rgba(198,169,107,.4) !important; }
+    .footer-tagline { font-size:.78rem; color:var(--muted); line-height:1.7; max-width:280px; }
+    .footer-col-title { font-size:.62rem; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+    .footer-links { list-style:none; }
+    .footer-links li { margin-bottom:12px; }
+    .footer-links a { font-size:.82rem; color:var(--muted); text-decoration:none; display:inline-flex; align-items:center; gap:0; transition:color .3s,gap .3s; }
+    .footer-links a::before { content:'→'; font-size:.7rem; color:var(--gold); opacity:0; max-width:0; overflow:hidden; transition:opacity .3s,max-width .3s,margin-right .3s; margin-right:0; }
+    .footer-links a:hover { color:var(--ivory); gap:8px; }
+    .footer-links a:hover::before { opacity:1; max-width:16px; margin-right:4px; }
+    .footer-bottom { display:flex; justify-content:space-between; align-items:center; }
+    .footer-copy { font-size:.68rem; color:rgba(245,245,242,.2); letter-spacing:.06em; }
+    .footer-bottom-links { display:flex; gap:24px; }
+    .footer-bottom-links a { font-size:.65rem; letter-spacing:.12em; color:rgba(245,245,242,.25); text-decoration:none; transition:color .3s; }
+    .footer-bottom-links a:hover { color:var(--gold); }
+
+    /* ─── NO RESULTS ──────────────────── */
+    .no-results {
+      display: none; text-align: center; padding: 100px 0;
+      color: var(--muted);
+    }
+    .no-results.visible { display: block; }
+    .no-results p { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 300; margin-bottom: 10px; color: var(--ivory); }
+    .no-results small { font-size: var(--text-sm); }
+
+    /* ─── RESPONSIVE ──────────────────── */
+    @media (max-width: 1024px) {
+      .page-header { grid-template-columns: 1fr; gap: 32px; padding: 140px 40px 64px; }
+      .featured-card { grid-template-columns: 1fr; }
+      .featured-right { min-height: 300px; padding: 56px 40px; }
+      .featured-left { border-right: none; border-bottom: 1px solid rgba(198,169,107,0.1); padding: 56px 40px; }
+      .grid-row-feature, .grid-row-feature-right { grid-template-columns: 1fr; }
+      .grid-row-three { grid-template-columns: 1fr 1fr; }
+      .col-stack { flex-direction: row; }
+      .subscribe-inner { grid-template-columns: 1fr; gap: 48px; }
+      .filter-bar { padding: 0 40px; }
+      .insights-main { padding: 0 40px 80px; }
+      
+      /* Shared Elements specific */
+      .footer-top{grid-template-columns:1fr 1fr;gap:40px;}
+      .nav-links,.nav-cta{display:none;}
+      .hamburger{display:flex;}
+    }
+    @media (max-width: 768px) {
+      .grid-row-three { grid-template-columns: 1fr; }
+      .col-stack { flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 24px; }
+      .page-header { padding: 120px 24px 56px; }
+      .filter-bar { padding: 0 24px; }
+      .insights-main { padding: 0 24px 80px; }
+      .featured-left { padding: 48px 24px; }
+      .featured-right { padding: 48px 24px; }
+      .article-card { padding: 36px 28px; }
+      .subscribe-inner { padding: 72px 24px; }
+      .subscribe-form { flex-direction: column; }
+      .subscribe-input { border-right: 1px solid rgba(198,169,107,0.2); }
+      
+      /* Shared Elements specific */
+      .footer-inner{padding:0 24px;}
+      .footer-top{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="navbar">
+    <a class="nav-logo" href="index.html">The <span>Full</span> Picture</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="insights.html" class="active">Insights</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Book a Consultation</a>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="services.html">Services</a>
+    <a href="insights.html">Insights</a>
+    <a href="contact.html">Contact</a>
+    <a href="contact.html" class="btn-primary">Book a Consultation</a>
+  </div>
+
+  <div class="page-header">
+    <div class="header-left">
+      <p class="page-eyebrow">The Advisory Desk</p>
+      <h1 class="page-title">Insights &amp;<br><em>Perspectives</em></h1>
+    </div>
+    <div class="header-right">
+      <p class="header-desc">Thought leadership from The Full Picture — where ancient metaphysical intelligence meets modern strategic thinking. Written for discerning professionals and leaders.</p>
+      <p class="header-count"><span id="articleCount">9</span> articles published</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-inner">
+      <button class="filter-btn active" data-filter="all">All Insights</button>
+      <button class="filter-btn" data-filter="wealth">Wealth Strategy</button>
+      <button class="filter-btn" data-filter="direction">Life Direction</button>
+      <button class="filter-btn" data-filter="space">Space &amp; Environment</button>
+      <button class="filter-btn" data-filter="mindset">Leadership &amp; Mindset</button>
+    </div>
+  </div>
+
+  <div class="insights-main">
+
+    <div class="no-results" id="noResults">
+      <p>No insights in this category yet.</p>
+      <small>Check back soon — we publish regularly.</small>
+    </div>
+
+    <a class="featured-card reveal" href="#" data-category="wealth" id="featuredCard">
+      <div class="featured-left">
+        <div>
+          <p class="featured-badge">Featured Insight</p>
+          <p class="featured-label">Wealth Strategy</p>
+          <h2 class="featured-title">Understanding Your Wealth Phase — Timing, Not Luck</h2>
+          <p class="featured-excerpt">How BaZi decodes the cyclical nature of wealth patterns and reveals why the timing of your decisions is far more critical than effort alone. A framework for high-performers navigating transition.</p>
+        </div>
+        <div class="featured-meta">
+          <span class="featured-date">March 2026 &nbsp;·&nbsp; 8 min read</span>
+          <span class="featured-read">Read Insight <span class="arr">→</span></span>
+        </div>
+      </div>
+      <div class="featured-right">
+        <div class="featured-deco-rings">
+          <div class="featured-deco-ring"></div>
+          <div class="featured-deco-ring"></div>
+          <div class="featured-deco-ring"></div>
+        </div>
+        <div class="featured-deco-num">財</div>
+        <div class="featured-right-content">
+          <p class="featured-right-label">Key Insight</p>
+          <p class="featured-pull">"Wealth is not a destination — it is a <strong>cycle with an optimal entry point</strong>. BaZi reveals when yours opens."</p>
+          <div class="featured-tag-list">
+            <span class="tag-pill">BaZi</span>
+            <span class="tag-pill">Wealth Cycles</span>
+            <span class="tag-pill">Timing</span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <div class="articles-section" id="articlesGrid">
+
+      <div class="grid-row-feature reveal" data-row>
+        <a class="article-card wide" href="#" data-category="space">
+          <div class="card-deco">空</div>
+          <p class="card-category">Space &amp; Environment</p>
+          <h3 class="card-title large">The Office That Builds Momentum — A Feng Shui Advisory Framework</h3>
+          <p class="card-excerpt">Why the physical environment of your workspace directly influences strategic clarity, leadership effectiveness, and the accumulation of positive momentum over time.</p>
+          <div class="card-footer">
+            <div class="card-meta">
+              <span class="card-date">February 2026</span>
+              <span class="card-read-time">7 min read</span>
+            </div>
+            <div class="card-arrow">
+              <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </a>
+        <div class="col-stack">
+          <a class="article-card" href="#" data-category="direction">
+            <div class="card-deco">命</div>
+            <p class="card-category">Life Direction</p>
+            <h3 class="card-title normal">Clarity Over Certainty — The High Performer's Approach to Uncertainty</h3>
+            <div class="card-footer">
+              <div class="card-meta">
+                <span class="card-date">January 2026</span>
+                <span class="card-read-time">5 min read</span>
+              </div>
+              <div class="card-arrow">
+                <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+          </a>
+          <a class="article-card" href="#" data-category="mindset">
+            <div class="card-deco">智</div>
+            <p class="card-category">Leadership &amp; Mindset</p>
+            <h3 class="card-title normal">What Ancient Chinese Astrology Can Teach Modern Leaders</h3>
+            <div class="card-footer">
+              <div class="card-meta">
+                <span class="card-date">January 2026</span>
+                <span class="card-read-time">6 min read</span>
+              </div>
+              <div class="card-arrow">
+                <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="grid-row-three reveal reveal-delay-1" data-row>
+        <a class="article-card visual" href="#" data-category="wealth">
+          <div class="card-deco">木</div>
+          <p class="card-category">Wealth Strategy</p>
+          <h3 class="card-title normal">The Five Elements in Business Decision-Making</h3>
+          <p class="card-excerpt">How the classical Wu Xing framework maps to modern business cycles — and why your dominant element reveals your most natural wealth pathway.</p>
+          <div class="card-footer">
+            <div class="card-meta">
+              <span class="card-date">December 2025</span>
+              <span class="card-read-time">9 min read</span>
+            </div>
+            <div class="card-arrow">
+              <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </a>
+        <a class="article-card" href="#" data-category="direction">
+          <div class="card-deco">斗</div>
+          <p class="card-category">Life Direction</p>
+          <h3 class="card-title normal">Zi Wei Dou Shu: The Emperor's Astrology and What It Reveals About Your Path</h3>
+          <p class="card-excerpt">An introduction to the most sophisticated of the classical Chinese destiny systems, and how it differs from BaZi.</p>
+          <div class="card-footer">
+            <div class="card-meta">
+              <span class="card-date">November 2025</span>
+              <span class="card-read-time">7 min read</span>
+            </div>
+            <div class="card-arrow">
+              <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </a>
+        <a class="article-card" href="#" data-category="space">
+          <div class="card-deco">宅</div>
+          <p class="card-category">Space &amp; Environment</p>
+          <h3 class="card-title normal">Why Your Home's Facing Direction Changes Everything</h3>
+          <p class="card-excerpt">The compass orientation of your primary residence has a quantifiable effect on wealth, health, and relationship dynamics, according to classical Feng Shui.</p>
+          <div class="card-footer">
+            <div class="card-meta">
+              <span class="card-date">October 2025</span>
+              <span class="card-read-time">6 min read</span>
+            </div>
+            <div class="card-arrow">
+              <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="grid-row-feature-right reveal reveal-delay-2" data-row>
+        <div class="col-stack">
+          <a class="article-card" href="#" data-category="mindset">
+            <div class="card-deco">領</div>
+            <p class="card-category">Leadership &amp; Mindset</p>
+            <h3 class="card-title normal">The BaZi Reading Every Entrepreneur Should Commission Before a Major Pivot</h3>
+            <div class="card-footer">
+              <div class="card-meta">
+                <span class="card-date">October 2025</span>
+                <span class="card-read-time">5 min read</span>
+              </div>
+              <div class="card-arrow">
+                <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+          </a>
+          <a class="article-card visual" href="#" data-category="direction">
+            <div class="card-deco">奇</div>
+            <p class="card-category">Life Direction</p>
+            <h3 class="card-title normal">Qi Men Dun Jia: Decoding the Most Strategic of All Classical Systems</h3>
+            <div class="card-footer">
+              <div class="card-meta">
+                <span class="card-date">September 2025</span>
+                <span class="card-read-time">8 min read</span>
+              </div>
+              <div class="card-arrow">
+                <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <a class="article-card wide" href="#" data-category="wealth">
+          <div class="card-deco">時</div>
+          <p class="card-category">Wealth Strategy</p>
+          <h3 class="card-title large">Timing Your Next Business Move with Qi Men Dun Jia</h3>
+          <p class="card-excerpt">Used historically by generals and strategists to determine optimal timing for major decisions, Qi Men Dun Jia offers a sophisticated framework for timing business pivots, investments, and partnerships with precision.</p>
+          <div class="card-footer">
+            <div class="card-meta">
+              <span class="card-date">September 2025</span>
+              <span class="card-read-time">10 min read</span>
+            </div>
+            <div class="card-arrow">
+              <span class="arr-out"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="arr-in"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div><div class="load-more-section reveal" id="loadMoreSection">
+      <button class="load-more-btn" id="loadMoreBtn">
+        Load More Insights <span class="btn-arr">↓</span>
+      </button>
+      <p class="article-count-note">Showing 9 of 9 insights</p>
+    </div>
+
+  </div><div class="subscribe-band">
+    <div class="subscribe-inner">
+      <div class="reveal">
+        <p class="subscribe-label">Stay Informed</p>
+        <h2 class="subscribe-title">Receive <em>Perspectives</em><br>from the Advisory Desk</h2>
+        <p class="subscribe-desc">Occasional dispatches — not newsletters. When we publish a piece worth your time, we will let you know. No frequency, no filler.</p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <form id="subscribeForm" onsubmit="handleSubscribe(event)">
+          <div class="subscribe-form">
+            <input type="email" class="subscribe-input" placeholder="Your email address" required />
+            <button type="submit" class="subscribe-submit">Subscribe <span class="arr">→</span></button>
+          </div>
+          <p class="subscribe-note">No spam. No frequent emails. Unsubscribe at any time. Your information is kept strictly private.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">The <span>Full</span> Picture <span class="footer-llp">LLP</span></div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy. For those who seek true clarity.</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="insights.html">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="services.html#personal">Personal Destiny</a></li>
+            <li><a href="services.html#fengshui">Feng Shui Advisory</a></li>
+            <li><a href="services.html#courses">Masterclasses</a></li>
+            <li><a href="services.html#corporate">Corporate Programs</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="contact.html">Book a Consultation</a></li>
+            <li><a href="https://wa.me/">WhatsApp</a></li>
+            <li><a href="contact.html">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── SHARED NAV SCROLL & MOBILE MENU ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); });
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.add('open'));
+    document.getElementById('mobileClose').addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open')));
+
+    // ── SHARED REVEAL ANIMATION (Intersection Observer) ──
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => obs.observe(el));
+
+    // ── INSIGHTS PAGE SPECIFIC ──
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const featuredCard = document.getElementById('featuredCard');
+    const articleRows = document.querySelectorAll('[data-row]');
+    const allCards = document.querySelectorAll('.articles-section [data-category]');
+    const noResults = document.getElementById('noResults');
+    const articleCount = document.getElementById('articleCount');
+
+    function applyFilter(filter) {
+      // Update buttons
+      filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+
+      let visible = 0;
+      allCards.forEach(card => {
+        const match = filter === 'all' || card.dataset.category === filter;
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+
+      // Hide/show entire rows if all cards in them are hidden
+      articleRows.forEach(row => {
+        const rowCards = row.querySelectorAll('[data-category]');
+        const anyVisible = Array.from(rowCards).some(c => c.style.display !== 'none');
+        row.style.display = anyVisible ? '' : 'none';
+      });
+
+      // Featured hero — show/hide based on filter, not counted in article count
+      if (featuredCard) {
+        const fMatch = filter === 'all' || featuredCard.dataset.category === filter;
+        featuredCard.style.display = fMatch ? '' : 'none';
+      }
+
+      noResults.classList.toggle('visible', visible === 0);
+      articleCount.textContent = visible;
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+    });
+
+    // Load more (demo)
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        loadMoreBtn.textContent = 'All insights loaded';
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.style.opacity = '0.4';
+        loadMoreBtn.style.cursor = 'default';
+        loadMoreBtn.querySelector('.btn-arr').style.display = 'none';
+      });
+    }
+
+    // Subscribe form
+    function handleSubscribe(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('.subscribe-submit');
+      btn.innerHTML = 'Subscribed ✓';
+      btn.style.background = 'rgba(198,169,107,0.5)';
+      btn.disabled = true;
+      form.querySelector('input').disabled = true;
+    }
+    
+    // Initialise filter state
+    applyFilter('all');
+  </script>
+</body>
+</html>
