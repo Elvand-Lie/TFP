@@ -113,7 +113,27 @@
       max-width: 1240px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 80px; align-items: end;
+      position: relative;
+      overflow: hidden;
     }
+    /* Ensure content stays above the watermark */
+    .page-header > div { position: relative; z-index: 2; }
+    
+    /* The Atmospheric Character */
+    .header-deco {
+      position: absolute;
+      top: 10px;
+      right: 5%;
+      font-family: var(--font-serif);
+      font-size: clamp(14rem, 20vw, 20rem);
+      font-weight: 300;
+      line-height: 1;
+      color: rgba(198,169,107,0.03);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
     .page-header-eyebrow {
       font-size: 0.65rem; letter-spacing: 0.28em;
       text-transform: uppercase; color: var(--gold);
@@ -523,7 +543,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <a class="nav-logo" href="index.html">The <span>Full</span> Picture</a>
     <ul class="nav-links">
@@ -537,7 +556,6 @@
     <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </nav>
 
-  <!-- MOBILE NAV -->
   <div class="mobile-nav" id="mobileNav">
     <button class="mobile-nav-close" id="mobileClose">✕</button>
     <a href="index.html">Home</a>
@@ -547,8 +565,8 @@
     <a href="contact.html">Contact</a>
   </div>
 
-  <!-- PAGE HEADER -->
   <div class="page-header">
+    <div class="header-deco">缘</div>
     <div>
       <p class="page-header-eyebrow">Get in Touch</p>
       <h1 class="page-header-title">Begin Your<br><em>Consultation</em></h1>
@@ -571,10 +589,8 @@
 
   <div class="section-divider"></div>
 
-  <!-- MAIN CONTACT SECTION -->
   <div class="contact-section">
 
-    <!-- LEFT: Info panel -->
     <aside class="contact-info">
 
       <div class="contact-info-block reveal">
@@ -633,12 +649,10 @@
 
     </aside>
 
-    <!-- RIGHT: Form -->
     <div class="contact-form-wrap" id="form">
       <h2 class="form-heading reveal">Send an Enquiry</h2>
       <p class="form-subheading reveal reveal-delay-1">Fill in the details below and our team will be in touch to discuss how we can best serve you.</p>
 
-      <!-- Success state -->
       <div class="form-success" id="formSuccess">
         <div class="form-success-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -649,11 +663,9 @@
         <p class="form-success-text">Thank you for reaching out. A member of our advisory team will respond to you personally within one business day.</p>
       </div>
 
-      <!-- Form -->
       <form id="contactForm" novalidate>
         <div class="form-grid">
 
-          <!-- Name -->
           <div class="form-group reveal">
             <label for="firstName">First Name <span class="required-star">*</span></label>
             <div class="input-wrapper">
@@ -670,7 +682,6 @@
             </div>
           </div>
 
-          <!-- Email -->
           <div class="form-group reveal">
             <label for="email">Email Address <span class="required-star">*</span></label>
             <div class="input-wrapper">
@@ -679,7 +690,6 @@
             </div>
           </div>
 
-          <!-- Phone -->
           <div class="form-group reveal reveal-delay-1">
             <label for="phone">Phone / WhatsApp</label>
             <div class="input-wrapper">
@@ -688,7 +698,6 @@
             </div>
           </div>
 
-          <!-- Service interest -->
           <div class="form-group full reveal">
             <label>Area of Interest <span class="required-star">*</span></label>
             <div class="checkbox-group">
@@ -715,7 +724,6 @@
             </div>
           </div>
 
-          <!-- How did you hear -->
           <div class="form-group full reveal">
             <label for="source">How Did You Hear About Us?</label>
             <div class="select-wrapper input-wrapper">
@@ -735,7 +743,6 @@
             </div>
           </div>
 
-          <!-- Message -->
           <div class="form-group full reveal">
             <label for="message">Your Message <span class="required-star">*</span></label>
             <div class="input-wrapper">
@@ -744,12 +751,10 @@
             </div>
           </div>
 
-          <!-- Honeypot -->
           <div class="hp-field">
             <input type="text" name="_honey" tabindex="-1" autocomplete="off" />
           </div>
 
-          <!-- Submit -->
           <div class="form-submit-row reveal">
             <button type="submit" class="btn-submit" id="submitBtn">
               Send Enquiry <span class="submit-arrow">→</span>
@@ -761,10 +766,7 @@
       </form>
     </div>
 
-  </div><!-- end contact-section -->
-
-  <!-- BOTTOM INFO BAND -->
-  <div class="contact-footer-band">
+  </div><div class="contact-footer-band">
     <div class="contact-footer-inner">
       <div class="footer-info-block reveal">
         <p class="footer-info-label">Location</p>
@@ -784,7 +786,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-bottom-inner">
       <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
