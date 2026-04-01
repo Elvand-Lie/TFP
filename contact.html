@@ -112,14 +112,15 @@
       padding: 160px 48px 96px;
       max-width: 1240px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: end;
+      gap: 80px; align-items: start; /* FIXED: Top-aligns the text boxes */
       position: relative;
       overflow: hidden;
     }
-    /* Ensure content stays above the watermark */
-    .page-header > div { position: relative; z-index: 2; }
     
-    /* The Atmospheric Character */
+    /* Ensure content stays above the watermark */
+    .header-left, .header-right { position: relative; z-index: 2; }
+    
+    /* The Atmospheric Character - FIXED */
     .header-deco {
       position: absolute;
       top: 10px;
@@ -149,8 +150,8 @@
       animation: fadeUp 1s ease 0.25s forwards;
     }
     .page-header-title em { font-style: italic; color: var(--gold); }
+    
     .page-header-right {
-      padding-bottom: 8px;
       opacity: 0; transform: translateY(16px);
       animation: fadeUp 0.9s ease 0.45s forwards;
     }
@@ -170,7 +171,7 @@
       color: var(--gold);
     }
     .page-header-note-text {
-      font-size: 0.78rem; color: var(--muted); line-height: 1.7;
+      font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin: 0;
     }
     .page-header-note-text strong { color: var(--beige); font-weight: 400; }
 
@@ -567,11 +568,13 @@
 
   <div class="page-header">
     <div class="header-deco">缘</div>
-    <div>
+    
+    <div class="header-left">
       <p class="page-header-eyebrow">Get in Touch</p>
       <h1 class="page-header-title">Begin Your<br><em>Consultation</em></h1>
     </div>
-    <div class="page-header-right">
+    
+    <div class="header-right">
       <p class="page-header-desc">
         Every engagement begins with a conversation. Share your situation and we will respond personally to explore how The Full Picture can serve your needs.
       </p>
