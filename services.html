@@ -42,7 +42,7 @@
     body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity:0.025; pointer-events:none; z-index:9999; }
     
     /* ─── SHARED NAV ─────────────────────────── */
-    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:0 48px; height:80px; display:flex; align-items:center; justify-content:space-between; transition:background .4s,border-bottom .4s; }
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:0 48px; padding-top:20px; padding-bottom:20px; display:flex; align-items:center; justify-content:space-between; transition:background .4s,border-bottom .4s; }
     nav.scrolled { background:rgba(15,15,16,0.93); backdrop-filter:blur(14px); border-bottom:1px solid rgba(113,1,1,0.25); }
     .nav-logo { font-family:var(--font-serif); font-size:1.2rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--ivory); text-decoration:none; transition:opacity .3s; }
     .nav-logo:hover { opacity:.85; }
@@ -381,7 +381,7 @@
 </head>
 <body>
   <nav id="navbar">
-    <a class="nav-logo" href="/" style="display: flex; align-items: center; gap: 10px;"><img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 32px; width: auto;" />The <span>Full</span> Picture</a>
+    <a class="nav-logo" href="/"><img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 160px; width: auto; display: block;" /></a>
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/about">About</a></li>
@@ -648,7 +648,7 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div>
-          <div class="footer-logo" style="display: flex; align-items: center; gap: 12px;"><img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 48px; width: auto;" />The <span>Full</span> Picture <span style="color:rgba(113,1,1,0.6); background:transparent; text-shadow:none; font-weight:normal;">LLP</span></div>
+          <div class="footer-logo"><img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 240px; width: auto; display: block;" /></div>
           <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy. For those who seek true clarity.</p>
         </div>
         <div>
