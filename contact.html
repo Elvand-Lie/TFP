@@ -647,6 +647,9 @@
       </div>
 
       <form id="contactForm" novalidate>
+        <input type="hidden" name="access_key" value="18a1b4f8-c39a-48ee-af36-a6664d79bba6">
+        <input type="hidden" name="subject" value="New Enquiry — The Full Picture">
+        <input type="hidden" name="from_name" value="The Full Picture Website">
         <div class="form-grid">
 
           <div class="form-group reveal">
@@ -857,7 +860,7 @@
     const submitBtn = document.getElementById('submitBtn');
     const formSuccess = document.getElementById('formSuccess');
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       e.preventDefault();
       if (form.querySelector('[name="_honey"]').value) return;
 
@@ -874,11 +877,28 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'Sending… <span class="submit-arrow">→</span>';
 
-      setTimeout(() => {
-        form.style.display = 'none';
-        formSuccess.classList.add('visible');
-        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 1200);
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          form.style.display = 'none';
+          formSuccess.classList.add('visible');
+          formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          alert('Something went wrong: ' + (data.message || 'Please try again.'));
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Send Enquiry <span class="submit-arrow">→</span>';
+        }
+      } catch (error) {
+        alert('Network error. Please check your connection and try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Enquiry <span class="submit-arrow">→</span>';
+      }
     });
   </script>
 </body>
