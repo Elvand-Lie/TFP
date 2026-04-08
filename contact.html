@@ -348,8 +348,23 @@
     textarea:focus ~ .input-line { transform: scaleX(1); }
 
     .select-wrapper { position: relative; }
-    .select-wrapper select { padding-right: 48px; cursor: pointer; color: rgba(245,245,242,0.8); }
-    .select-wrapper select:focus { color: var(--ivory); }
+    .select-wrapper select { padding-right: 48px; cursor: pointer; color: rgba(245,245,242,0.8); background: #1C1C1E; }
+    .select-wrapper select:focus { color: var(--ivory); background: #1C1C1E; }
+    select option {
+      background: #1C1C1E;
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      padding: 10px 16px;
+    }
+    select option:disabled {
+      color: rgba(245,245,242,0.4);
+    }
+    select option:checked,
+    select option:hover {
+      background: #710101;
+      color: var(--ivory);
+    }
     .select-arrow {
       position: absolute; right: 20px; top: 50%;
       transform: translateY(-50%);
