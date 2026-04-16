@@ -113,7 +113,7 @@
 
     /* ─── SHARED NAV ─────────────────────────── */
     nav {
-      position: fixed;
+      position: sticky;
       top: 0;
       left: 0;
       right: 0;
@@ -125,6 +125,7 @@
       align-items: center;
       justify-content: space-between;
       transition: background .4s, border-bottom .4s;
+      background: var(--black);
     }
 
     nav.scrolled {
