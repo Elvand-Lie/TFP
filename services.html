@@ -115,9 +115,11 @@
     
     .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
     .hamburger span { width:24px; height:2px; background:var(--ivory); display:block; transition:.3s; }
-    .mobile-nav { display:none; position:fixed; inset:0; background:var(--black); z-index:99; flex-direction:column; align-items:center; justify-content:center; gap:36px; }
-    .mobile-nav.open { display:flex; }
-    .mobile-nav a { font-family:var(--font-serif); font-size:2.2rem; font-weight:400; color:var(--ivory); text-decoration:none; letter-spacing:.08em; transition:color .3s; }
+    .mobile-nav { position:fixed; inset:0; background:rgba(15,15,16,0.98); z-index:99; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:36px; opacity:0; visibility:hidden; transition:opacity .4s ease, visibility .4s ease; }
+    .mobile-nav.open { opacity:1; visibility:visible; }
+    .mobile-nav a { font-family:var(--font-serif); font-size:2.2rem; font-weight:400; color:var(--ivory); text-decoration:none; letter-spacing:.08em; transition:color .3s, transform .4s ease, opacity .4s ease; opacity:0; transform:translateY(20px); }
+    .mobile-nav.open a { opacity:1; transform:translateY(0); }
+    .mobile-nav a:nth-child(2) { transition-delay:.05s; } .mobile-nav a:nth-child(3) { transition-delay:.1s; } .mobile-nav a:nth-child(4) { transition-delay:.15s; } .mobile-nav a:nth-child(5) { transition-delay:.2s; } .mobile-nav a:nth-child(6) { transition-delay:.25s; } .mobile-nav a:nth-child(7) { transition-delay:.3s; } .mobile-nav a:nth-child(8) { transition-delay:.35s; }
     .mobile-nav a:hover { color:var(--crimson-text); }
     .mobile-nav-close { position:absolute; top:28px; right:48px; font-size:1.8rem; color:var(--muted); cursor:pointer; background:none; border:none; }
 
@@ -401,7 +403,8 @@
     }
     @media(max-width:640px){ 
       nav{padding:0 24px;} .section-inner{padding:0 24px;} .footer-inner{padding:0 24px;} .footer-top{grid-template-columns:1fr;} 
-      #page-hero { padding:120px 24px 80px; }
+      #page-hero { padding:120px 24px 60px; }
+      .page-hero-inner { padding:0 !important; }
       .pillar-section,#engagement,#services-cta { padding:80px 0; }
       .footer-bottom { flex-direction:column; gap:16px; text-align:center; }
       .mobile-nav-close { right:24px; }
@@ -413,8 +416,12 @@
       .engagement-inner { padding:0 24px; }
       .eng-card { padding:40px 28px; }
       .cta-title { font-size:clamp(2rem,6vw,3rem); }
-      .btn-primary { padding:14px 28px; font-size:0.8rem; }
-      .btn-ghost { padding:13px 28px; font-size:0.8rem; }
+      /* Hide pillar arrow to prevent tag conflict */
+      .pillar-arrow { display:none; }
+      /* CTA buttons: same width and height */
+      .cta-actions { flex-direction:column; width:100%; }
+      .cta-actions .btn-primary,
+      .cta-actions .whatsapp-btn { width:100%; justify-content:center; text-align:center; padding:16px 28px; font-size:0.8rem; box-sizing:border-box; }
     }
   </style>
 </head>
