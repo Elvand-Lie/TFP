@@ -374,11 +374,27 @@
       .approach-steps { grid-template-columns:1fr 1fr; }
       .approach-steps::before { display:none; }
       #page-hero { padding:140px 0 80px; }
+      .nav-logo img { height:56px !important; }
+      /* Founder-specific: collapse inline-styled grids */
+      #background .section-inner { grid-template-columns:1fr !important; gap:56px !important; }
     }
     @media(max-width:640px){
       .principles-grid,.approach-steps { grid-template-columns:1fr; }
       .page-hero-inner,.serve-inner { padding:0 24px; }
       #brand-story,#principles,#approach,#who-we-serve,#about-cta { padding:80px 0; }
+      .footer-bottom { flex-direction:column; gap:16px; text-align:center; }
+      .mobile-nav-close { right:24px; }
+      .nav-logo img { height:48px !important; }
+      /* Founder-specific */
+      #founder-hero { padding:140px 0 60px !important; }
+      #background { padding:80px 0 !important; }
+      #turning-point { padding:80px 0 !important; }
+      #closing { padding:80px 0 !important; }
+      .page-hero-title { font-size:clamp(2.5rem,8vw,4rem) !important; }
+      #turning-point .section-inner { padding:0 24px !important; }
+      #turning-point .section-title { font-size:clamp(2rem,5vw,3rem); }
+      .founder-image img { aspect-ratio:4/3 !important; }
+      .profile-item { padding:24px 20px; gap:16px; }
     }
   </style>
 </head>

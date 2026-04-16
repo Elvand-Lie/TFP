@@ -614,6 +614,7 @@
       .footer-top{grid-template-columns:1fr 1fr;gap:40px;}
       .nav-links,.nav-cta{display:none;}
       .hamburger{display:flex;}
+      .nav-logo img { height:56px !important; }
     }
     @media (max-width: 768px) {
       .grid-row-three { grid-template-columns: 1fr; }
@@ -634,6 +635,12 @@
       /* Shared Elements specific */
       .footer-inner{padding:0 24px;}
       .footer-top{grid-template-columns:1fr;}
+      .footer-bottom { flex-direction:column; gap:16px; text-align:center; }
+      .mobile-nav-close { right:24px; }
+      .nav-logo img { height:48px !important; }
+      .page-title { font-size:clamp(2rem,8vw,3.5rem); }
+      .featured-title { font-size:clamp(1.6rem,4vw,2.4rem); }
+      .subscribe-title { font-size:clamp(2rem,5vw,2.8rem); }
     }
   </style>
 </head>
