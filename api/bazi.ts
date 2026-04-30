@@ -857,7 +857,7 @@ export default function handler(req: any, res: any) {
         }
     }
 
-    const legacyData = {
+    const legacyData: any = {
       four_pillars: {
         year_pillar: mapPillar(pillars.year, dayStemChar, bazi.getYearNaYin(), yearBranchChar, dayBranchChar),
         month_pillar: mapPillar(pillars.month, dayStemChar, bazi.getMonthNaYin(), yearBranchChar, dayBranchChar),
