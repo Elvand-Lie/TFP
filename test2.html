@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        Bazi Life Profilling
+    </title>
+    <script src="/bundles/modernizr?v=inCVuEFe6J4Q07A0AcRsbJic_UE5MwpRMNGcOtk94TE1"></script>
+    <link href="/Content/css?v=aCXyIK6PH00TNHmBIZK-4NYw-bjyHNxsno6tAql9ang1" rel="stylesheet" />
+    <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="Content/animation.css" rel="stylesheet" />
+</head>
+
+<body class="min-vh-100">
+    <form method="post" action="./Plot" onsubmit="javascript:return WebForm_OnSubmit();" id="ctl01">
+        <div class="aspNetHidden">
+            <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+            <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+            <input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+            <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+                value="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" />
+        </div>
+
+        <script type="text/javascript">
+            //<![CDATA[
+            var theForm = document.forms['ctl01'];
+            if (!theForm) {
+                theForm = document.ctl01;
+            }
+            function __doPostBack(eventTarget, eventArgument) {
+                if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+                    theForm.__EVENTTARGET.value = eventTarget;
+                    theForm.__EVENTARGUMENT.value = eventArgument;
+                    theForm.submit();
+                }
+            }
+            //]]>
+        </script>
+
+
+
+        <script src="/bundles/MsAjaxJs?v=D6VN0fHlwFSIWjbVzi6mZyE9Ls-4LNrSSYVGRU46XF81" type="text/javascript"></script>
+        <script src="Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+        <script src="/bundles/WebFormsJs?v=N8tymL9KraMLGAMFuPycfH3pXe6uUlRXdhtYv8A_jUU1"
+            type="text/javascript"></script>
+        <script type="text/javascript">
+            //<![CDATA[
+            function WebForm_OnSubmit() {
+                if (typeof (ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+                return true;
+            }
+            //]]>
+        </script>
+
+        <div class="aspNetHidden">
+
+            <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="6F00C931" />
+            <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+                value="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" />
+        </div>
+        <script type="text/javascript">
+            //<![CDATA[
+            Sys.WebForms.PageRequestManager._initialize('ctl00$ctl10', 'ctl01', ['tctl00$MainContent$ctl00', 'MainContent_ctl00'], [], [], 90, 'ctl00');
+            //]]>
+        </script>
+
+
+        <script type="text/javascript">
+            $(function () {
+                $('#atage1').click(function () {
+                    if ($('#ContentPlaceHolder1_PnlTwin').css('display') == 'none') {
+                        $('#ContentPlaceHolder1_PnlTwin').show();
+                    }
+                    else {
+                        $('#ContentPlaceHolder1_PnlTwin').hide();
+                    }
+                });
+            });
+            $(document).ready(function () {
+                $(document).ready(function () {
+                });
+                //Function call
+                setname();
+            });
+
+            function setname() {
+
+                var localTime = new Date();
+                var year = localTime.getFullYear();
+                var month = localTime.getMonth() + 1;
+                var date = localTime.getDate();
+                var hours = localTime.getHours();
+                var minutes = localTime.getMinutes();
+                var seconds = localTime.getSeconds();
+
+                var result = year + "|" + month + "|" + date + "|" + hours + "|" + minutes + "|" + seconds;
+
+                $('#HiddenFieldTimeFinal').val(result);
+
+            }
+        </script>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand ms-3" href="Default.aspx">
+                    <img src="https://images.joeyyap.com/bazibz/logo.png" style="max-width: 180px" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item ">
+
+                        </li>
+                    </ul>
+                    <div class="d-flex">
+                        <input type="button" name="ctl00$MainContent$btnLogout" value="Logout"
+                            onclick="javascript:__doPostBack(&#39;ctl00$MainContent$btnLogout&#39;,&#39;&#39;)"
+                            id="MainContent_btnLogout" class="btn btn-outline-dark" type="button" />
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <input type="hidden" name="ctl00$MainContent$HiddenFieldTimeFinal" id="HiddenFieldTimeFinal" />
+
+        <div id="MainContent_ctl00">
+
+            <div class="container" style="max-width: 1100px">
+                <div class="row justify-content-center mt-5 mb-5 ">
+                    <div class="col-10 rounded" style="background: rgb(255, 255, 255, 0.1)">
+                        <div class="row text-white p-5 ps-1 pe-1">
+                            <div class="col-4 d-none d-md-block border-end border-white text-center">
+                                <h1 class="align-self-center h-100 d-flex align-items-center">DECODE YOUR DESTINY</h1>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row form-group">
+                                    <div class="col-md-9">
+                                        <div class="form-floating mb-3 text-dark">
+                                            <input name="ctl00$MainContent$txtName" type="text" id="MainContent_txtName"
+                                                class="form-control" placeholder="Username/Email" value=""
+                                                required="true" />
+                                            <label>Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating text-dark">
+                                            <select name="ctl00$MainContent$ddlGender" id="MainContent_ddlGender"
+                                                class="form-control form-select" required="true">
+                                                <option selected="selected" value=""> Select Gender </option>
+                                                <option value="1">Male</option>
+                                                <option value="-1">Female</option>
+
+                                            </select>
+                                            <label for="ddlGender" class="font-weight-bold">Gender:</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label style="font-size: 15px" class="m-3">*Please key in your western (Gregorian
+                                    Calendar) date and time of birth, based on the local time of where you were born.
+                                    There is no need to convert your date or time of birth to the Chinese Lunar
+                                    Calendar, the software will automatically convert and plot your BaZi based on the
+                                    Chinese Solar Calendar, in which the BaZi system is based on.</label>
+                                <label for="txtUserName" class="font-weight-bold">Date of Birth:</label>
+                                <div class="row form-group mb-3">
+                                    <div class="col-md-4">
+                                        <div class="form-floating text-dark">
+                                            <select name="ctl00$MainContent$cbxYear"
+                                                onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$cbxYear\&#39;,\&#39;\&#39;)&#39;, 0)"
+                                                id="MainContent_cbxYear" class="form-select form-control"
+                                                placeholder="Year">
+                                                <option value="2027">2027</option>
+                                                <option selected="selected" value="2026">2026</option>
+                                                <option value="2025">2025</option>
+                                                <option value="2024">2024</option>
+                                                <option value="2023">2023</option>
+                                                <option value="2022">2022</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2020">2020</option>
+                                                <option value="2019">2019</option>
+                                                <option value="2018">2018</option>
+                                                <option value="2017">2017</option>
+                                                <option value="2016">2016</option>
+                                                <option value="2015">2015</option>
+                                                <option value="2014">2014</option>
+                                                <option value="2013">2013</option>
+                                                <option value="2012">2012</option>
+                                                <option value="2011">2011</option>
+                                                <option value="2010">2010</option>
+                                                <option value="2009">2009</option>
+                                                <option value="2008">2008</option>
+                                                <option value="2007">2007</option>
+                                                <option value="2006">2006</option>
+                                                <option value="2005">2005</option>
+                                                <option value="2004">2004</option>
+                                                <option value="2003">2003</option>
+                                                <option value="2002">2002</option>
+                                                <option value="2001">2001</option>
+                                                <option value="2000">2000</option>
+                                                <option value="1999">1999</option>
+                                                <option value="1998">1998</option>
+                                                <option value="1997">1997</option>
+                                                <option value="1996">1996</option>
+                                                <option value="1995">1995</option>
+                                                <option value="1994">1994</option>
+                                                <option value="1993">1993</option>
+                                                <option value="1992">1992</option>
+                                                <option value="1991">1991</option>
+                                                <option value="1990">1990</option>
+                                                <option value="1989">1989</option>
+                                                <option value="1988">1988</option>
+                                                <option value="1987">1987</option>
+                                                <option value="1986">1986</option>
+                                                <option value="1985">1985</option>
+                                                <option value="1984">1984</option>
+                                                <option value="1983">1983</option>
+                                                <option value="1982">1982</option>
+                                                <option value="1981">1981</option>
+                                                <option value="1980">1980</option>
+                                                <option value="1979">1979</option>
+                                                <option value="1978">1978</option>
+                                                <option value="1977">1977</option>
+                                                <option value="1976">1976</option>
+                                                <option value="1975">1975</option>
+                                                <option value="1974">1974</option>
+                                                <option value="1973">1973</option>
+                                                <option value="1972">1972</option>
+                                                <option value="1971">1971</option>
+                                                <option value="1970">1970</option>
+                                                <option value="1969">1969</option>
+                                                <option value="1968">1968</option>
+                                                <option value="1967">1967</option>
+                                                <option value="1966">1966</option>
+                                                <option value="1965">1965</option>
+                                                <option value="1964">1964</option>
+                                                <option value="1963">1963</option>
+                                                <option value="1962">1962</option>
+                                                <option value="1961">1961</option>
+                                                <option value="1960">1960</option>
+                                                <option value="1959">1959</option>
+                                                <option value="1958">1958</option>
+                                                <option value="1957">1957</option>
+                                                <option value="1956">1956</option>
+                                                <option value="1955">1955</option>
+                                                <option value="1954">1954</option>
+                                                <option value="1953">1953</option>
+                                                <option value="1952">1952</option>
+                                                <option value="1951">1951</option>
+                                                <option value="1950">1950</option>
+                                                <option value="1949">1949</option>
+                                                <option value="1948">1948</option>
+                                                <option value="1947">1947</option>
+                                                <option value="1946">1946</option>
+                                                <option value="1945">1945</option>
+                                                <option value="1944">1944</option>
+                                                <option value="1943">1943</option>
+                                                <option value="1942">1942</option>
+                                                <option value="1941">1941</option>
+                                                <option value="1940">1940</option>
+                                                <option value="1939">1939</option>
+                                                <option value="1938">1938</option>
+                                                <option value="1937">1937</option>
+                                                <option value="1936">1936</option>
+                                                <option value="1935">1935</option>
+                                                <option value="1934">1934</option>
+                                                <option value="1933">1933</option>
+                                                <option value="1932">1932</option>
+                                                <option value="1931">1931</option>
+                                                <option value="1930">1930</option>
+                                                <option value="1929">1929</option>
+                                                <option value="1928">1928</option>
+                                                <option value="1927">1927</option>
+                                                <option value="1926">1926</option>
+                                                <option value="1925">1925</option>
+                                                <option value="1924">1924</option>
+                                                <option value="1923">1923</option>
+                                                <option value="1922">1922</option>
+                                                <option value="1921">1921</option>
+                                                <option value="1920">1920</option>
+                                                <option value="1919">1919</option>
+                                                <option value="1918">1918</option>
+                                                <option value="1917">1917</option>
+                                                <option value="1916">1916</option>
+                                                <option value="1915">1915</option>
+                                                <option value="1914">1914</option>
+                                                <option value="1913">1913</option>
+                                                <option value="1912">1912</option>
+                                                <option value="1911">1911</option>
+                                                <option value="1910">1910</option>
+
+                                            </select>
+                                            <label>Year</label>
+                                        </div>
+                                        <span data-val-controltovalidate="MainContent_cbxYear" data-val-errormessage="*"
+                                            data-val-display="Dynamic" data-val-validationGroup="log"
+                                            id="MainContent_ctl02" class="text-danger" data-val="true"
+                                            data-val-evaluationfunction="RequiredFieldValidatorEvaluateIsValid"
+                                            data-val-initialvalue="" style="display:none;">*</span>
+                                    </div>
+                                    <div class="col-md-4 pt-md-0 pt-3">
+                                        <div class="form-floating text-dark">
+                                            <select name="ctl00$MainContent$cbxMonth"
+                                                onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$cbxMonth\&#39;,\&#39;\&#39;)&#39;, 0)"
+                                                id="MainContent_cbxMonth" class="form-select form-control"
+                                                placeholder="Month">
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option selected="selected" value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+
+                                            </select>
+                                            <label>Month</label>
+                                        </div>
+                                        <span class=""></span>
+                                        <span data-val-controltovalidate="MainContent_cbxMonth"
+                                            data-val-errormessage="*" data-val-display="Dynamic"
+                                            data-val-validationGroup="log" id="MainContent_ctl03" class="text-newdanger"
+                                            data-val="true"
+                                            data-val-evaluationfunction="RequiredFieldValidatorEvaluateIsValid"
+                                            data-val-initialvalue="" style="display:none;">*</span>
+                                    </div>
+                                    <div class="col-md-4 pt-md-0 pt-3">
+                                        <div class="form-floating text-dark">
+                                            <select name="ctl00$MainContent$cbxDay" id="MainContent_cbxDay"
+                                                class="form-select form-control" placeholder="Day">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                                <option value="19">19</option>
+                                                <option value="20">20</option>
+                                                <option value="21">21</option>
+                                                <option value="22">22</option>
+                                                <option value="23">23</option>
+                                                <option value="24">24</option>
+                                                <option value="25">25</option>
+                                                <option value="26">26</option>
+                                                <option value="27">27</option>
+                                                <option value="28">28</option>
+                                                <option selected="selected" value="29">29</option>
+                                                <option value="30">30</option>
+
+                                            </select>
+                                            <label>Day</label>
+                                        </div>
+                                        <span data-val-controltovalidate="MainContent_cbxDay" data-val-errormessage="*"
+                                            data-val-display="Dynamic" data-val-validationGroup="log"
+                                            id="MainContent_ctl04" class="text-danger" data-val="true"
+                                            data-val-evaluationfunction="RequiredFieldValidatorEvaluateIsValid"
+                                            data-val-initialvalue="" style="display:none;">*</span>
+                                    </div>
+                                </div>
+                                <label class="font-weight-bold">Time of Birth:</label>
+                                <div class="row form-group mb-3">
+                                    <div class="col-md-3 col-6">
+                                        <div class="form-floating mb-3 text-dark">
+                                            <select name="ctl00$MainContent$ddlHour" id="MainContent_ddlHour"
+                                                class="form-select form-control" placeholder="Hour">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                                <option value="19">19</option>
+                                                <option value="20">20</option>
+                                                <option selected="selected" value="21">21</option>
+                                                <option value="22">22</option>
+                                                <option value="23">23</option>
+
+                                            </select>
+                                            <label>Hour</label>
+                                        </div>
+                                        <span data-val-controltovalidate="MainContent_ddlHour" data-val-errormessage="*"
+                                            data-val-display="Dynamic" data-val-validationGroup="plot"
+                                            id="MainContent_ctl05" class="text-newdanger" data-val="true"
+                                            data-val-evaluationfunction="RequiredFieldValidatorEvaluateIsValid"
+                                            data-val-initialvalue="" style="display:none;">*</span>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <div class="form-floating mb-3 text-dark">
+                                            <select name="ctl00$MainContent$ddlMin" id="MainContent_ddlMin"
+                                                class="form-select form-control" placeholder="Minutes">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                                <option selected="selected" value="19">19</option>
+                                                <option value="20">20</option>
+                                                <option value="21">21</option>
+                                                <option value="22">22</option>
+                                                <option value="23">23</option>
+                                                <option value="24">24</option>
+                                                <option value="25">25</option>
+                                                <option value="26">26</option>
+                                                <option value="27">27</option>
+                                                <option value="28">28</option>
+                                                <option value="29">29</option>
+                                                <option value="30">30</option>
+                                                <option value="31">31</option>
+                                                <option value="32">32</option>
+                                                <option value="33">33</option>
+                                                <option value="34">34</option>
+                                                <option value="35">35</option>
+                                                <option value="36">36</option>
+                                                <option value="37">37</option>
+                                                <option value="38">38</option>
+                                                <option value="39">39</option>
+                                                <option value="40">40</option>
+                                                <option value="41">41</option>
+                                                <option value="42">42</option>
+                                                <option value="43">43</option>
+                                                <option value="44">44</option>
+                                                <option value="45">45</option>
+                                                <option value="46">46</option>
+                                                <option value="47">47</option>
+                                                <option value="48">48</option>
+                                                <option value="49">49</option>
+                                                <option value="50">50</option>
+                                                <option value="51">51</option>
+                                                <option value="52">52</option>
+                                                <option value="53">53</option>
+                                                <option value="54">54</option>
+                                                <option value="55">55</option>
+                                                <option value="56">56</option>
+                                                <option value="57">57</option>
+                                                <option value="58">58</option>
+                                                <option value="59">59</option>
+
+                                            </select>
+                                            <label>Min</label>
+                                        </div>
+                                        <span class="font-weight-bold"></span>
+                                        <span data-val-controltovalidate="MainContent_ddlMin" data-val-errormessage="*"
+                                            data-val-display="Dynamic" data-val-validationGroup="plot"
+                                            id="MainContent_ctl06" class="text-newdanger" data-val="true"
+                                            data-val-evaluationfunction="RequiredFieldValidatorEvaluateIsValid"
+                                            data-val-initialvalue="" style="display:none;">*</span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <input name="ctl00$MainContent$chkUnknown" type="checkbox"
+                                                id="MainContent_chkUnknown" class="form-check-input" />
+                                            <label class="form-check-label" for="MainContent_chkUnknown">
+                                                Time of Birth Unknown
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12 d-flex justify-content-center">
+                                        <a Class="btn btn-dark me-3" Style="min-width: 25%" href="Plot.aspx">Reset</a>
+                                        <input type="submit" name="ctl00$MainContent$btnSubmit" value="Plot"
+                                            id="MainContent_btnSubmit" class="btn btn-dark" type="submit"
+                                            style="min-width: 25%" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+    </form>
+    <script src="/Scripts/bootstrap.js"></script>
+
+</body>
+
+</html>

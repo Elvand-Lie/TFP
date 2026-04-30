@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BaZi Calculator — The Full Picture | Four Pillars of Destiny</title>
+  <meta name="description" content="Decode your destiny with our BaZi (Four Pillars of Destiny) calculator. Enter your birth date and time to reveal your personal Heavenly Stems, Earthly Branches, and Luck Pillars." />
+  <meta name="keywords" content="BaZi calculator, Four Pillars of Destiny, Chinese astrology, Heavenly Stems, Earthly Branches, The Full Picture" />
+  <meta name="author" content="The Full Picture LLP" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0F0F10; --dark-grey: #1C1C1E; --ivory: #F5F5F2; --beige: #D8CFC4; --pure-white: #FFFFFF; --muted: #888580;
+      --crimson: #710101; --maroon: #591f16; --deep-red: #680806; --crimson-text: #E53939;
+      --gold: #C6A96B; --forest: #1F3A2E; --blue: #42A5F5;
+      --font-serif: 'Cormorant Garamond', Georgia, serif; --font-sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--ivory); font-family: var(--font-sans); font-weight: 400; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: var(--black); } ::-webkit-scrollbar-thumb { background: var(--crimson); border-radius: 2px; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; pointer-events: none; z-index: 9999; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; transition: background .4s, border-bottom .4s; }
+    nav.scrolled { background: rgba(15,15,16,0.93); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(113,1,1,0.25); }
+    .nav-logo { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ivory); text-decoration: none; transition: opacity .3s; }
+    .nav-logo:hover { opacity: .85; }
+    .nav-logo span { color: var(--crimson-text); font-weight: 600; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-family: var(--font-sans); font-size: 0.85rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--beige); text-decoration: none; position: relative; padding-bottom: 3px; transition: color .3s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--crimson-text); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.76,0,.24,1); }
+    .nav-links a:hover, .nav-links a.active { color: var(--ivory); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); transform-origin: left; }
+    .nav-cta { font-family: var(--font-sans); font-size: 0.85rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--ivory); border: 2px solid var(--crimson); padding: 10px 24px; text-decoration: none; position: relative; overflow: hidden; transition: color .35s; z-index: 1; }
+    .nav-cta::before { content: ''; position: absolute; inset: 0; background: var(--crimson); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.76,0,.24,1); z-index: -1; }
+    .nav-cta:hover::before { transform: scaleX(1); transform-origin: left; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--ivory); display: block; transition: .3s; }
+    .mobile-nav { position: fixed; inset: 0; background: var(--black); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 60px 24px; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
+    .mobile-nav.open { opacity: 1; visibility: visible; }
+    .mobile-nav a { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; color: var(--ivory); text-decoration: none; letter-spacing: .08em; transition: color .3s, transform .4s, opacity .4s; opacity: 0; transform: translateY(20px); }
+    .mobile-nav.open a { opacity: 1; transform: translateY(0); }
+    .mobile-nav a:hover { color: var(--crimson-text); }
+    .mobile-nav-close { position: absolute; top: 28px; right: 48px; font-size: 1.8rem; color: var(--muted); cursor: pointer; background: none; border: none; }
+    .section-tag { font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .primary-line { width: 60px; height: 2px; background: var(--crimson); margin-bottom: 24px; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid rgba(113,1,1,0.15); padding: 80px 0 40px; }
+    .footer-inner { max-width: 1240px; margin: 0 auto; padding: 0 48px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 60px; }
+    .footer-logo { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ivory); margin-bottom: 16px; }
+    .footer-tagline { font-size: 0.9rem; color: var(--muted); line-height: 1.8; max-width: 320px; }
+    .footer-col-title { font-family: var(--font-sans); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { font-size: 0.9rem; color: var(--beige); text-decoration: none; transition: color .3s; }
+    .footer-links a:hover { color: var(--ivory); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(113,1,1,0.15); }
+    .footer-copy { font-size: 0.8rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 24px; }
+    .footer-bottom-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; }
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; } .nav-links { display: none; } .nav-cta { display: none; } .hamburger { display: flex; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/bazi.css" />
+</head>
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="/" class="nav-logo">The <span>Full</span> Picture</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/founder">Founder</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/bazi" class="active">BaZi</a></li>
+      <li><a href="/insights">Insights</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Contact</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/founder">Founder</a>
+    <a href="/services">Services</a>
+    <a href="/bazi" class="active">BaZi</a>
+    <a href="/insights">Insights</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="bazi-hero">
+    <div class="bazi-hero-content">
+      <div class="primary-line reveal"></div>
+      <p class="section-tag reveal">Four Pillars of Destiny · 八字</p>
+      <h1 class="bazi-hero-title reveal reveal-delay-1">Decode Your<br><em>Destiny</em></h1>
+      <p class="bazi-hero-sub reveal reveal-delay-2">Enter your Western (Gregorian) date and time of birth. The system will automatically convert and plot your BaZi chart based on the Chinese Solar Calendar.</p>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section id="bazi-form-section">
+    <div class="bazi-form-container">
+      <div class="bazi-form-card reveal">
+        <form id="bazi-input-form">
+          <!-- Name -->
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label for="client-name">Name</label>
+              <input type="text" id="client-name" placeholder="Enter your name" />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <div class="gender-toggle">
+                <input type="radio" name="gender" id="gender-m" value="1" checked /><label for="gender-m">♂ Male</label>
+                <input type="radio" name="gender" id="gender-f" value="0" /><label for="gender-f">♀ Female</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- DOB -->
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label for="birth-year">Year</label>
+              <select id="birth-year" required></select>
+            </div>
+            <div class="form-group">
+              <label for="birth-month">Month</label>
+              <select id="birth-month" required></select>
+            </div>
+            <div class="form-group">
+              <label for="birth-day">Day</label>
+              <select id="birth-day" required></select>
+            </div>
+          </div>
+
+          <!-- Time -->
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label for="birth-hour">Hour (24h)</label>
+              <select id="birth-hour"></select>
+            </div>
+            <div class="form-group">
+              <label for="birth-minute">Minute</label>
+              <select id="birth-minute"></select>
+            </div>
+            <div class="form-group">
+              <label for="target-year">Target Year</label>
+              <select id="target-year">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="form-checkbox">
+            <input type="checkbox" id="time-unknown" />
+            <span>Time of Birth Unknown (defaults to 12:00 noon)</span>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-plot" id="btn-submit">Plot Chart <span>→</span></button>
+            <button type="button" class="btn-reset" id="btn-reset">Reset</button>
+          </div>
+
+          <div class="loading-spinner" id="loading">
+            <div class="spinner"></div>
+            <span class="loading-text">Calculating your BaZi chart...</span>
+          </div>
+          <div class="error-msg" id="error-msg"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHART OUTPUT -->
+  <section id="bazi-chart">
+    <div class="chart-container">
+      <!-- Summary -->
+      <div class="chart-summary reveal">
+        <div class="chart-summary-left">
+          <h2 id="summary-name">Client Name</h2>
+          <p id="summary-info">31 Dec 1990 (06:30)  |  Male</p>
+          <div id="auxiliary-info" style="margin-top:10px; font-size:0.85rem; color:var(--muted);"></div>
+        </div>
+        <div class="day-master-badge">
+          <div class="day-master-label">Day Master · 日主</div>
+          <div class="day-master-char" id="dm-char">庚</div>
+          <div class="day-master-name" id="dm-name">Geng · Yang Metal</div>
+        </div>
+      </div>
+
+      <!-- Four Pillars -->
+      <div class="pillars-section reveal reveal-delay-1">
+        <p class="section-tag">Natal Chart · 本命八字</p>
+        <div class="four-pillars-grid">
+          <!-- Header row -->
+          <div class="fp-header"></div>
+          <div class="fp-header">時 Hour</div>
+          <div class="fp-header">日 Day</div>
+          <div class="fp-header">月 Month</div>
+          <div class="fp-header">年 Year</div>
+          <!-- Stem row -->
+          <div class="fp-label">Heavenly<br>Stem 天干</div>
+          <div class="fp-cell" id="hour-stem"></div>
+          <div class="fp-cell" id="day-stem"></div>
+          <div class="fp-cell" id="month-stem"></div>
+          <div class="fp-cell" id="year-stem"></div>
+          <!-- Branch row -->
+          <div class="fp-label">Earthly<br>Branch 地支</div>
+          <div class="fp-cell" id="hour-branch"></div>
+          <div class="fp-cell" id="day-branch"></div>
+          <div class="fp-cell" id="month-branch"></div>
+          <div class="fp-cell" id="year-branch"></div>
+          <!-- Hidden Stems row -->
+          <div class="fp-label">Hidden<br>Stems 藏干</div>
+          <div class="fp-cell" id="hour-hidden"></div>
+          <div class="fp-cell" id="day-hidden"></div>
+          <div class="fp-cell" id="month-hidden"></div>
+          <div class="fp-cell" id="year-hidden"></div>
+          <!-- Life Cycle row -->
+          <div class="fp-label">Life<br>Cycle 長生</div>
+          <div class="fp-cell" id="hour-lifecycle"></div>
+          <div class="fp-cell" id="day-lifecycle"></div>
+          <div class="fp-cell" id="month-lifecycle"></div>
+          <div class="fp-cell" id="year-lifecycle"></div>
+        </div>
+      </div>
+
+      <!-- Luck Pillars -->
+      <div class="luck-section reveal reveal-delay-2">
+        <p class="section-tag">Luck Pillars · 大運</p>
+        <div class="luck-timeline" id="luck-timeline"></div>
+      </div>
+
+      <!-- NEW: Joey Yap Personal Chart Details & 8 Mansions -->
+      <div class="joey-yap-section reveal" style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom: 60px;">
+        <div style="flex:1; min-width:300px;">
+          <p class="section-tag">Personal Chart Details · 命理資訊</p>
+          <div id="personal-chart-details" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden;"></div>
+        </div>
+        <div style="flex:1; min-width:300px;">
+          <p class="section-tag">Favorable Directions · 吉方 (8 Mansions)</p>
+          <div id="eight-mansions-favorable" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden; margin-bottom:20px;"></div>
+          <p class="section-tag">Unfavorable Directions · 凶方</p>
+          <div id="eight-mansions-unfavorable" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden;"></div>
+        </div>
+      </div>
+
+      <!-- NEW: Bazi Profiling System (Radar Chart & Profiles) -->
+      <div class="profiling-section reveal" style="margin-bottom:60px;">
+        <p class="section-tag">Bazi Profiling System · 五型格 & 十神格</p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; background:var(--card-bg); padding:1.5rem; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+          <div style="flex:1; min-width:300px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <canvas id="profiling-radar" width="400" height="400"></canvas>
+            <div style="margin-top:10px; font-family:var(--font-sans); font-size:0.8rem; color:var(--muted);">Main Structure: <span id="main-structure-text" style="color:var(--gold);"></span></div>
+          </div>
+          <div style="flex:1; min-width:300px;">
+            <div id="profiling-bars" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Element Analysis & Ten Gods -->
+      <div style="display:flex; flex-wrap:wrap; gap:20px;">
+        <div class="element-section reveal" style="flex:1; min-width:300px;">
+          <p class="section-tag">Five Elements · 五行</p>
+          <div class="element-grid" id="element-grid"></div>
+        </div>
+        <div class="tengods-section reveal" style="flex:1; min-width:300px;">
+          <p class="section-tag">Ten Gods Strength · 十神格</p>
+          <div class="tengods-grid" id="tengods-grid" style="display:flex; flex-direction:column; gap:5px; background:var(--card-bg); padding:1.5rem; border-radius:12px; border:1px solid rgba(255,255,255,0.05);"></div>
+        </div>
+      </div>
+
+      <!-- Annual Luck Matrix -->
+      <div class="annual-section reveal reveal-delay-2" style="margin-top:2rem;">
+        <p class="section-tag">Annual Luck Matrix · 六十甲子 (Ages 1 - 90)</p>
+        <div id="annual-luck-matrix" style="background:var(--card-bg); padding:1rem; border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow-x:auto;"></div>
+      </div>
+
+      <!-- NEW: Monthly Influence Calendar -->
+      <div class="monthly-influence-section reveal" style="margin-top:2rem;">
+        <p class="section-tag">Monthly Influence · 流月運程</p>
+        <div id="monthly-influence-grid" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow-x:auto; display:grid; grid-template-columns: repeat(12, 1fr); gap:1px; background-color:rgba(113,1,1,0.15);"></div>
+      </div>
+
+      <!-- NEW: Annual BaZi Stars -->
+      <div class="annual-stars-section reveal" style="margin-top:2rem;">
+        <p class="section-tag">Annual BaZi Stars · 流年吉凶星</p>
+        <div id="annual-stars-table" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+            <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span style="text-shadow:none;color:rgba(113,1,1,0.6);font-weight:600;">LLP</span></div>
+          </div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy.</p>
+          <p style="font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:16px;opacity:0.7;">A Huang He Group Platform</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li><li><a href="/about">About</a></li><li><a href="/founder">Founder</a></li><li><a href="/services">Services</a></li><li><a href="/bazi">BaZi</a></li><li><a href="/insights">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="/services#personal">Personal Destiny</a></li><li><a href="/services#fengshui">Feng Shui Advisory</a></li><li><a href="/services#courses">Masterclasses</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="/contact">Book a Consultation</a></li><li><a href="https://wa.me/6588257687">WhatsApp</a></li><li><a href="/contact">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/bazi.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

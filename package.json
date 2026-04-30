@@ -1,0 +1,25 @@
+{
+  "name": "tfp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elvand-Lie/TFP.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Elvand-Lie/TFP/issues"
+  },
+  "homepage": "https://github.com/Elvand-Lie/TFP#readme",
+  "dependencies": {
+    "bazi-calculator-by-alvamind": "^1.0.2",
+    "lunar-javascript": "^1.7.7"
+  }
+}
