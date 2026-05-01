@@ -25,6 +25,14 @@ function getElementClass(name) {
   return '';
 }
 
+function getStemPolarityClass(char) {
+  const yangStems = ['甲','丙','戊','庚','壬'];
+  const yinStems = ['乙','丁','己','辛','癸'];
+  if (yangStems.includes(char)) return 'stem-yang';
+  if (yinStems.includes(char)) return 'stem-yin';
+  return '';
+}
+
 function getElementBgClass(name) {
   return getElementClass(name).replace('el-', 'el-bg-');
 }
@@ -157,6 +165,38 @@ function renderChart(data, input) {
   document.getElementById('dm-char').textContent = dm.character;
   document.getElementById('dm-char').className = 'day-master-char ' + getElementClass(dm.name);
   
+  // Day Master Strength Indicator
+  const strengthScore = data.analysis ? data.analysis.dm_strength : 5.0;
+  const strengthLabel = data.analysis ? data.analysis.dm_strength_label : 'Balanced';
+  const dmBadgeContainer = document.querySelector('.day-master-badge-container') || document.querySelector('.day-master-badge').parentElement;
+  
+  let dmStrengthEl = document.getElementById('dm-strength-indicator');
+  if (!dmStrengthEl) {
+    dmStrengthEl = document.createElement('div');
+    dmStrengthEl.id = 'dm-strength-indicator';
+    dmStrengthEl.style.marginTop = '15px';
+    dmStrengthEl.style.padding = '15px';
+    dmStrengthEl.style.background = 'rgba(0,0,0,0.3)';
+    dmStrengthEl.style.borderRadius = '6px';
+    dmStrengthEl.style.border = '1px solid rgba(255,255,255,0.05)';
+    dmStrengthEl.style.textAlign = 'center';
+    const badge = document.querySelector('.day-master-badge');
+    badge.parentNode.insertBefore(dmStrengthEl, badge.nextSibling);
+  }
+  
+  const pct = (strengthScore / 10) * 100;
+  let strengthColor = 'var(--ivory)';
+  if (strengthLabel === 'Strong' || strengthLabel === 'CongGe') strengthColor = 'var(--gold)';
+  if (strengthLabel === 'Weak') strengthColor = 'var(--muted)';
+  
+  dmStrengthEl.innerHTML = `
+    <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">Day Master Strength</div>
+    <div style="font-size:1.1rem; color:${strengthColor}; font-weight:600; margin-bottom:10px;">${strengthScore}/10 — ${strengthLabel}</div>
+    <div style="position:relative; width:100%; height:8px; border-radius:4px; background:linear-gradient(to right, rgba(136,133,128,0.5), rgba(245,245,242,0.8), rgba(198,169,107,0.8));">
+      <div style="position:absolute; top:-4px; bottom:-4px; width:2px; background:#fff; left:${pct}%; box-shadow:0 0 5px rgba(255,255,255,0.8); transform:translateX(-50%);"></div>
+    </div>
+  `;
+
   // Display Day Master Name and Main Structure
   const mainStructStr = data.analysis && data.analysis.main_structure ? `  |  Structure: ${data.analysis.main_structure}` : '';
   document.getElementById('dm-name').textContent = `${dm.spelling.charAt(0).toUpperCase()+dm.spelling.slice(1)} · ${dm.name}${mainStructStr}`;
@@ -188,12 +228,12 @@ function renderChart(data, input) {
     let tenGodHtml = '';
     // Don't show Ten God for Day Master stem (Day Pillar)
     if (prefix !== 'day' && hs.ten_god) {
-      tenGodHtml = `<div class="fp-ten-god" style="font-size: 0.7rem; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 4px;">${hs.ten_god.chinese} ${hs.ten_god.short}</div>`;
+      tenGodHtml = `<div class="fp-ten-god" style="font-size: 0.9rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 600;">${hs.ten_god.chinese} <span style="font-size: 0.65rem; color: var(--muted); font-weight: 400;">${hs.ten_god.short}</span></div>`;
     }
     
     stemEl.innerHTML = `
       ${tenGodHtml}
-      <div class="fp-char ${getElementClass(hs.name)}">${hs.character}</div>
+      <div class="fp-char ${getStemPolarityClass(hs.character)}">${hs.character}</div>
       <div class="fp-pinyin">${hs.spelling.charAt(0).toUpperCase()+hs.spelling.slice(1)}</div>
       <div class="fp-element ${getElementBgClass(hs.name)}">${hs.name}</div>
     `;
@@ -211,8 +251,8 @@ function renderChart(data, input) {
     const hiddenEl = document.getElementById(`${prefix}-hidden`);
     const hStems = p.data.hidden_stems || [];
     hiddenEl.innerHTML = '<div class="fp-hidden">' + hStems.map(h => {
-      const tg = h.ten_god ? `<div style="font-size: 0.6rem; color: var(--muted); margin-bottom: 2px;">${h.ten_god.chinese} ${h.ten_god.short}</div>` : '';
-      return `<div class="fp-hidden-stem">${tg}<span class="mini-char ${getElementClass(h.element)}">${h.character}</span><span class="mini-name">${h.spelling.charAt(0).toUpperCase()+h.spelling.slice(1)}</span></div>`;
+      const tg = h.ten_god ? `<div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 2px;">${h.ten_god.chinese} <span style="font-size: 0.6rem;">${h.ten_god.short}</span></div>` : '';
+      return `<div class="fp-hidden-stem">${tg}<span class="mini-char ${getStemPolarityClass(h.character)}">${h.character}</span><span class="mini-name">${h.spelling.charAt(0).toUpperCase()+h.spelling.slice(1)}</span></div>`;
     }).join('') + '</div>';
 
     // Life Cycle & Na Yin & Shen Sha
@@ -244,14 +284,14 @@ function renderChart(data, input) {
       const card = document.createElement('div');
       card.className = 'luck-card' + (isCurrent ? ' current' : '');
       
-      const hsTg = lp.heavenly_stem.ten_god ? lp.heavenly_stem.ten_god.short : '';
+      const hsTg = lp.heavenly_stem.ten_god ? `${lp.heavenly_stem.ten_god.chinese} <span style="font-size:0.6rem;color:#888;">${lp.heavenly_stem.ten_god.short}</span>` : '';
       const lc = lp.life_cycle ? lp.life_cycle.chinese : '';
-      const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.short : ''}</span></div>`).join('');
+      const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;" class="${getStemPolarityClass(h.character)}">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('');
 
       card.innerHTML = `
-        <div style="font-size:0.7rem; color:var(--gold); margin-bottom:5px; min-height:14px;">${hsTg}</div>
+        <div style="font-size:0.8rem; color:var(--gold); margin-bottom:5px; min-height:16px;">${hsTg}</div>
         <div class="luck-stem-cell" style="margin-bottom:0;">
-          <div class="luck-char ${getElementClass(lp.heavenly_stem.name)}">${lp.heavenly_stem.character}</div>
+          <div class="luck-char ${getStemPolarityClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
         </div>
         <div class="luck-branch-cell" style="margin-bottom:5px;">
           <div class="luck-char ${getElementClass(lp.earthly_branch.element)}">${lp.earthly_branch.character}</div>
@@ -346,12 +386,12 @@ function renderChart(data, input) {
                  </div>`;
         html += `<div style="display:flex; gap:8px; flex:1; justify-content:space-between;">`;
         lp.annual_pillars.forEach(ap => {
-          const tg = ap.ten_god ? ap.ten_god.short : '';
+          const tg = ap.ten_god ? `${ap.ten_god.chinese}<br><span style="font-size:0.6rem;color:#888">${ap.ten_god.short}</span>` : '';
           html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;">
                      <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
-                     <div style="color:var(--gold); font-size:0.7rem; margin-bottom:4px; min-height:14px;">${tg}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;" class="${getElementClass(ap.ten_god ? ap.ten_god.english : '')}">${ap.stem}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;">${ap.branch}</div>
+                     <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
+                     <div style="font-size:1.1rem; line-height:1.2;" class="${getStemPolarityClass(ap.stem)}">${ap.stem}</div>
+                     <div style="font-size:1.1rem; line-height:1.2;" class="${getElementClass(ap.branch)}">${ap.branch}</div>
                      <div style="color:#666; font-size:0.7rem; margin-top:4px;">${ap.year}</div>
                    </div>`;
         });
@@ -454,11 +494,11 @@ function renderChart(data, input) {
       const monthsStr = data.analysis.monthly_influence.map(m => `
         <div style="background:var(--card-bg); padding:15px 10px; text-align:center;">
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
-          <div style="font-size:0.7rem; color:var(--gold); margin-bottom:4px; min-height:14px;">${m.stem.ten_god ? m.stem.ten_god.short : ''}</div>
-          <div style="font-size:1.8rem; font-weight:bold; color:#fff; line-height:1;">${m.stem.character}</div>
+          <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemPolarityClass(m.stem.character)}">${m.stem.character}</div>
           <div style="font-size:1.8rem; font-weight:bold; color:var(--beige); line-height:1; margin-bottom:10px;">${m.branch.character}</div>
           <div style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
-            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem; color:#fff;">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.short : ''}</span></div>`).join('')}
+            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemPolarityClass(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
           </div>
         </div>
       `).join('');
@@ -551,6 +591,43 @@ function renderChart(data, input) {
         });
       }
     }
+  }
+  
+  // Render QMDJ (If present)
+  const qmdjGrid = document.getElementById('qmdj-grid');
+  if (qmdjGrid && data.qmdj) {
+    document.getElementById('qmdj-solar-term').textContent = data.qmdj.solar_term;
+    document.getElementById('qmdj-ju').textContent = data.qmdj.ju;
+    document.getElementById('qmdj-zhifu').textContent = data.qmdj.duty_star;
+    document.getElementById('qmdj-zhishi').textContent = data.qmdj.duty_door;
+    
+    qmdjGrid.innerHTML = '';
+    
+    // Sort palaces by standard order (1 to 9) or map them to visual grid
+    // Standard visual grid for QMDJ (Luo Shu):
+    // 4(SE) | 9(S)  | 2(SW)
+    // 3(E)  | 5(CTR)| 7(W)
+    // 8(NE) | 1(N)  | 6(NW)
+    
+    const displayOrder = [4, 9, 2, 3, 5, 7, 8, 1, 6];
+    displayOrder.forEach(id => {
+      const palace = data.qmdj.palaces.find(p => p.id === id);
+      const card = document.createElement('div');
+      card.className = 'qmdj-palace';
+      if (!palace) {
+        card.innerHTML = `<div></div>`;
+      } else {
+        card.innerHTML = `
+          <div class="qmdj-star">${palace.star || '&nbsp;'}</div>
+          <div class="qmdj-god">${palace.god || '&nbsp;'}</div>
+          <div class="qmdj-door">${palace.door || '&nbsp;'}</div>
+          <div class="qmdj-stem-heaven" class="${getStemPolarityClass(palace.heaven_stem)}">${palace.heaven_stem || '&nbsp;'}</div>
+          <div class="qmdj-stem-earth" class="${getStemPolarityClass(palace.earth_stem)}">${palace.earth_stem || '&nbsp;'}</div>
+          <div class="qmdj-palace-num">${palace.id}</div>
+        `;
+      }
+      qmdjGrid.appendChild(card);
+    });
   }
 
   // Show chart

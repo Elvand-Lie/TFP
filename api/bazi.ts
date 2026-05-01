@@ -1,6 +1,7 @@
 import { BaziCalculator } from './bazi-calculator/bazi-calculator';
 import { STEMS, BRANCHES, ANIMALS } from './bazi-calculator/constants';
 import { Solar, LunarUtil } from 'lunar-javascript';
+import * as qimen from 'qimen-dunjia';
 
 // ─── STEM / BRANCH METADATA ────────────────────────────────
 const STEM_META: Record<string, { spelling: string; name: string; element: string }> = {
@@ -691,7 +692,9 @@ function calculateDynamicScores(chartStems: string[], chartBranches: string[], d
     });
   }
   
-  return normalizedScores;
+  const dmStrengthScore = Math.min((supportivePct / 10), 10).toFixed(1);
+
+  return { normalizedScores, dmStrengthScore: parseFloat(dmStrengthScore), structure };
 }
 
 function calculateTenGodsScores(bazi: any) {
@@ -721,7 +724,7 @@ function calculateMainStructure(bazi: any) {
     structureGod = getTenGod(dm, hiddenStems[0]);
   }
   
-  return structureGod ? structureGod.english : '';
+  return structureGod ? { english: structureGod.english, chinese: structureGod.chinese } : { english: '', chinese: '' };
 }
 
 // ─── MAP PILLAR DATA ────────────────────────────────────────
@@ -791,7 +794,10 @@ export default function handler(req: any, res: any) {
     const yun = bazi.getYun(genderInt);
 
     const mainStructure = calculateMainStructure(bazi);
-    const tenGodsScores = calculateTenGodsScores(bazi);
+    const dynamicScoresResult = calculateTenGodsScores(bazi);
+    const tenGodsScores = dynamicScoresResult.normalizedScores;
+    const dmStrengthScore = dynamicScoresResult.dmStrengthScore;
+    const dmStrengthLabel = dynamicScoresResult.structure;
 
     const dayStemChar = bazi.getDayGan();
     const yearBranchChar = bazi.getYearZhi();
@@ -875,7 +881,9 @@ export default function handler(req: any, res: any) {
           element: analysis.dayMaster.element,
           nature: analysis.dayMaster.nature
         },
-        main_structure: mainStructure,
+        main_structure: `${mainStructure.chinese}格 ${mainStructure.english}`,
+        dm_strength: dmStrengthScore,
+        dm_strength_label: dmStrengthLabel,
         ten_gods_scores: tenGodsScores,
         auxiliary: {
           tai_yuan: bazi.getTaiYuan(),
@@ -957,7 +965,7 @@ export default function handler(req: any, res: any) {
 
     // 5. Bazi Profiling System (Structures & 10 Profiles)
     // Annual scores: calculated via the new Dynamic Truth Engine
-    const annualScores = calculateDynamicScores(
+    const annualScoresResult = calculateDynamicScores(
       [bazi.getYearGan(), bazi.getMonthGan(), bazi.getDayGan(), bazi.getTimeGan(), annualStem],
       [bazi.getYearZhi(), bazi.getMonthZhi(), bazi.getDayZhi(), bazi.getTimeZhi(), annualBranch],
       dayStemChar,
@@ -984,10 +992,44 @@ export default function handler(req: any, res: any) {
 
     legacyData.analysis.profiling = {
       natal_percentages: tenGodsScores,  // Already max-normalized from calculateTenGodsScores
-      annual_percentages: annualScores,
+      annual_percentages: annualScoresResult.normalizedScores,
       structures_natal: maxNormalize(getStructureScores(tenGodsScores)),
-      structures_annual: maxNormalize(getStructureScores(annualScores))
+      structures_annual: maxNormalize(getStructureScores(annualScoresResult.normalizedScores))
     };
+
+    // ─── QMDJ ENGINE (qimen-dunjia) ───
+    try {
+      const qimenString = `${year}${String(month).padStart(2,'0')}${String(day).padStart(2,'0')}${String(hour).padStart(2,'0')}`;
+      const qmdjRaw = (qimen as any).generateChartByDatetime ? (qimen as any).generateChartByDatetime(qimenString) : null;
+      if (qmdjRaw) {
+        const qmdjChart = (qimen as any).chartToObject(qmdjRaw);
+        
+        // Map qimen-dunjia palaces to Luo Shu indices (0: Xun, 1: Li, 2: Kun, 3: Zhen, 4: Center, 5: Dui, 6: Gen, 7: Kan, 8: Qian)
+        // Luo Shu IDs: 4, 9, 2, 3, 5, 7, 8, 1, 6
+        const luoShuIds = [4, 9, 2, 3, 5, 7, 8, 1, 6];
+        const palaces = [];
+        for (let i = 0; i < 9; i++) {
+          palaces.push({
+            id: luoShuIds[i],
+            star: qmdjChart["九星"][i] || '',
+            door: qmdjChart["天門"][i] || qmdjChart["地門"][i] || '',
+            god: qmdjChart["八神"][i] || '',
+            earth_stem: qmdjChart["地盤"][i] || '',
+            heaven_stem: qmdjChart["天盤"][i] || ''
+          });
+        }
+        
+        legacyData.qmdj = {
+          solar_term: qmdjChart["節氣"] || lunar.getJieQi(),
+          ju: `${qmdjChart["陰陽"]}${qmdjChart["局數"]}局`, 
+          duty_star: qmdjChart["值符"] || '',
+          duty_door: qmdjChart["值使"] || '',
+          palaces: palaces
+        };
+      }
+    } catch (err) {
+      console.error('QMDJ Calculation Error:', err);
+    }
 
     res.status(200).json(legacyData);
   } catch (error: any) {

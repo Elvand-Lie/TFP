@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Elvand-Lie/TFP#readme",
   "dependencies": {
     "bazi-calculator-by-alvamind": "^1.0.2",
-    "lunar-javascript": "^1.7.7"
+    "lunar-javascript": "^1.7.7",
+    "qimen-dunjia": "^2.1.0"
   }
 }
