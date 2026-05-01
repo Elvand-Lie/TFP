@@ -768,7 +768,7 @@ function mapPillar(pillarData: any, dayStemChar: string, naYin: string, yearBran
 }
 
 // ─── MAIN HANDLER ───────────────────────────────────────────
-export default async function handler(req: any, res: any) {
+export default function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -996,13 +996,14 @@ export default async function handler(req: any, res: any) {
       structures_annual: maxNormalize(getStructureScores(annualScoresResult.normalizedScores))
     };
 
-    // ─── QMDJ ENGINE (qimen-dunjia) ───
+    // ─── QMDJ ENGINE (qimen-dunjia via CJS bridge) ───
     try {
-      const qimen = await import('qimen-dunjia');
+      const { getQimen } = require('./qimen-bridge.js');
+      const qimen = getQimen();
       const qimenString = `${year}${String(month).padStart(2,'0')}${String(day).padStart(2,'0')}${String(hour).padStart(2,'0')}`;
-      const qmdjRaw = (qimen as any).generateChartByDatetime ? (qimen as any).generateChartByDatetime(qimenString) : null;
+      const qmdjRaw = qimen.generateChartByDatetime ? qimen.generateChartByDatetime(qimenString) : null;
       if (qmdjRaw) {
-        const qmdjChart = (qimen as any).chartToObject(qmdjRaw);
+        const qmdjChart = qimen.chartToObject(qmdjRaw);
         
         // Map qimen-dunjia palaces to Luo Shu indices (0: Xun, 1: Li, 2: Kun, 3: Zhen, 4: Center, 5: Dui, 6: Gen, 7: Kan, 8: Qian)
         // Luo Shu IDs: 4, 9, 2, 3, 5, 7, 8, 1, 6
