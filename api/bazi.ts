@@ -1,7 +1,6 @@
 import { BaziCalculator } from './bazi-calculator/bazi-calculator';
 import { STEMS, BRANCHES, ANIMALS } from './bazi-calculator/constants';
 import { Solar, LunarUtil } from 'lunar-javascript';
-import * as qimen from 'qimen-dunjia';
 
 // ─── STEM / BRANCH METADATA ────────────────────────────────
 const STEM_META: Record<string, { spelling: string; name: string; element: string }> = {
@@ -769,7 +768,7 @@ function mapPillar(pillarData: any, dayStemChar: string, naYin: string, yearBran
 }
 
 // ─── MAIN HANDLER ───────────────────────────────────────────
-export default function handler(req: any, res: any) {
+export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -999,6 +998,7 @@ export default function handler(req: any, res: any) {
 
     // ─── QMDJ ENGINE (qimen-dunjia) ───
     try {
+      const qimen = await import('qimen-dunjia');
       const qimenString = `${year}${String(month).padStart(2,'0')}${String(day).padStart(2,'0')}${String(hour).padStart(2,'0')}`;
       const qmdjRaw = (qimen as any).generateChartByDatetime ? (qimen as any).generateChartByDatetime(qimenString) : null;
       if (qmdjRaw) {
