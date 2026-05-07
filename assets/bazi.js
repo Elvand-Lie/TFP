@@ -347,30 +347,7 @@ function renderChart(data, input) {
     });
   }
 
-  // Ten Gods Chart
-  const tgGrid = document.getElementById('tengods-grid');
-  if (tgGrid && data.analysis && data.analysis.ten_gods_scores) {
-    tgGrid.innerHTML = '';
-    const scores = data.analysis.ten_gods_scores;
-    const maxScore = Math.max(...Object.values(scores), 1);
-    
-    // Sort gods by score descending
-    const sortedGods = Object.entries(scores).sort((a,b) => b[1] - a[1]);
-    
-    sortedGods.forEach(([god, score]) => {
-      if(score === 0) return; // Hide zero scores for cleaner UI like Louis Loh (or keep them? let's keep all to match reference but maybe gray out)
-      const pct = Math.round((score / maxScore) * 100);
-      tgGrid.innerHTML += `
-        <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem;">
-          <div style="width:140px; color:var(--beige);">${god}</div>
-          <div style="flex:1; background:rgba(0,0,0,0.2); height:14px; border-radius:4px; overflow:hidden;">
-            <div style="height:100%; width:${pct}%; background:var(--gold);"></div>
-          </div>
-          <div style="width:40px; text-align:right; font-weight:600; color:#fff;">${score.toFixed(1)}</div>
-        </div>
-      `;
-    });
-  }
+
 
   // Annual Luck Matrix
   const amGrid = document.getElementById('annual-luck-matrix');
