@@ -390,7 +390,7 @@ function renderChart(data, input) {
           html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;">
                      <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
                      <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;" class="${getStemPolarityClass(ap.stem)}">${ap.stem}</div>
+                     <div style="font-size:1.1rem; line-height:1.2; color:var(--ivory);">${ap.stem}</div>
                      <div style="font-size:1.1rem; line-height:1.2;" class="${getElementClass(ap.branch)}">${ap.branch}</div>
                      <div style="color:#666; font-size:0.7rem; margin-top:4px;">${ap.year}</div>
                    </div>`;
@@ -593,42 +593,7 @@ function renderChart(data, input) {
     }
   }
   
-  // Render QMDJ (If present)
-  const qmdjGrid = document.getElementById('qmdj-grid');
-  if (qmdjGrid && data.qmdj) {
-    document.getElementById('qmdj-solar-term').textContent = data.qmdj.solar_term;
-    document.getElementById('qmdj-ju').textContent = data.qmdj.ju;
-    document.getElementById('qmdj-zhifu').textContent = data.qmdj.duty_star;
-    document.getElementById('qmdj-zhishi').textContent = data.qmdj.duty_door;
-    
-    qmdjGrid.innerHTML = '';
-    
-    // Sort palaces by standard order (1 to 9) or map them to visual grid
-    // Standard visual grid for QMDJ (Luo Shu):
-    // 4(SE) | 9(S)  | 2(SW)
-    // 3(E)  | 5(CTR)| 7(W)
-    // 8(NE) | 1(N)  | 6(NW)
-    
-    const displayOrder = [4, 9, 2, 3, 5, 7, 8, 1, 6];
-    displayOrder.forEach(id => {
-      const palace = data.qmdj.palaces.find(p => p.id === id);
-      const card = document.createElement('div');
-      card.className = 'qmdj-palace';
-      if (!palace) {
-        card.innerHTML = `<div></div>`;
-      } else {
-        card.innerHTML = `
-          <div class="qmdj-star">${palace.star || '&nbsp;'}</div>
-          <div class="qmdj-god">${palace.god || '&nbsp;'}</div>
-          <div class="qmdj-door">${palace.door || '&nbsp;'}</div>
-          <div class="qmdj-stem-heaven" class="${getStemPolarityClass(palace.heaven_stem)}">${palace.heaven_stem || '&nbsp;'}</div>
-          <div class="qmdj-stem-earth" class="${getStemPolarityClass(palace.earth_stem)}">${palace.earth_stem || '&nbsp;'}</div>
-          <div class="qmdj-palace-num">${palace.id}</div>
-        `;
-      }
-      qmdjGrid.appendChild(card);
-    });
-  }
+
 
   // Show chart
   const chartSection = document.getElementById('bazi-chart');
