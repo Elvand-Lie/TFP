@@ -286,9 +286,16 @@
 .el-bg-metal { background: rgba(207,216,220,0.15); color: #CFD8DC; }
 .el-bg-water { background: rgba(66,165,245,0.15); color: #42A5F5; }
 
-/* Predictive Auspiciousness Text Coloring */
-.stem-auspicious { color: var(--crimson-text) !important; text-shadow: 0 0 5px rgba(229,57,57,0.3); }
-.stem-inauspicious { color: rgba(255,255,255,0.7) !important; }
+/* Red/Black Text Coloring (Yang/Yin stems + Auspicious branches) */
+.stem-auspicious { color: #E53935 !important; }
+.stem-inauspicious { color: #1a1a1a !important; text-shadow: 0 0 0 transparent; }
+
+/* Dark theme override for inauspicious (black text won't show on dark bg) */
+@media (prefers-color-scheme: dark) {
+  .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
+}
+/* Force light-on-dark since our app is always dark themed */
+body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
 
 
 

@@ -386,18 +386,8 @@ function renderChart(data, input) {
         html += `<div style="display:flex; gap:8px; flex:1; justify-content:space-between;">`;
         lp.annual_pillars.forEach(ap => {
           const tg = ap.ten_god ? `${ap.ten_god.chinese}<br><span style="font-size:0.6rem;color:#888">${ap.ten_god.short}</span>` : '';
-          
-          // Red/White Auspiciousness Background Logic
-          let auspClass = '';
-          if (data.analysis && data.analysis.useful_god && data.analysis.harmful_god) {
-            const annStemElement = STEM_ELEMENT[ap.stem];
-            const usefulElements = data.analysis.useful_god.split(',');
-            const harmfulElements = data.analysis.harmful_god.split(',');
-            if (usefulElements.includes(annStemElement)) auspClass = ' annual-auspicious';
-            else if (harmfulElements.includes(annStemElement)) auspClass = ' annual-inauspicious';
-          }
 
-          html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;" class="${auspClass}">
+          html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;">
                      <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
                      <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
                      <div style="font-size:1.1rem; line-height:1.2;" class="${getStemColorClass(ap.stem)}">${ap.stem}</div>
