@@ -32,9 +32,21 @@ function getElementClass(name) {
   return '';
 }
 
+const BRANCH_ELEMENT = {
+  '寅':'Wood','卯':'Wood','巳':'Fire','午':'Fire',
+  '丑':'Earth','辰':'Earth','未':'Earth','戌':'Earth',
+  '申':'Metal','酉':'Metal','亥':'Water','子':'Water'
+};
+
 function getStemColorClass(char) {
+  const yangStems = ['甲','丙','戊','庚','壬'];
+  if (yangStems.includes(char)) return 'stem-auspicious';
+  return 'stem-inauspicious';
+}
+
+function getBranchColorClass(char) {
   if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return 'stem-inauspicious';
-  const element = STEM_ELEMENT[char];
+  const element = BRANCH_ELEMENT[char];
   if (!element) return 'stem-inauspicious';
   const useful = _chartData.analysis.useful_god.split(',');
   if (useful.includes(element)) return 'stem-auspicious';
@@ -304,7 +316,7 @@ function renderChart(data, input) {
           <div class="luck-char ${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
         </div>
         <div class="luck-branch-cell" style="margin-bottom:5px;">
-          <div class="luck-char ${getElementClass(lp.earthly_branch.element)}">${lp.earthly_branch.character}</div>
+          <div class="luck-char ${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</div>
         </div>
         <div style="font-size:0.65rem; color:#aaa; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px; margin-bottom:4px;">${lp.na_yin || ''}</div>
         <div style="display:flex; flex-direction:column; gap:2px; height:50px; justify-content:center;">${hStemsHtml}</div>
@@ -389,7 +401,7 @@ function renderChart(data, input) {
                      <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
                      <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
                      <div style="font-size:1.1rem; line-height:1.2;" class="${getStemColorClass(ap.stem)}">${ap.stem}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;" class="${getElementClass(ap.branch)}">${ap.branch}</div>
+                     <div style="font-size:1.1rem; line-height:1.2;" class="${getBranchColorClass(ap.branch)}">${ap.branch}</div>
                      <div style="color:#666; font-size:0.7rem; margin-top:4px;">${ap.year}</div>
                    </div>`;
         });
@@ -494,7 +506,7 @@ function renderChart(data, input) {
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
           <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
           <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
-          <div style="font-size:1.8rem; font-weight:bold; color:var(--beige); line-height:1; margin-bottom:10px;">${m.branch.character}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1; margin-bottom:10px;" class="${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
           <div style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
             ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemColorClass(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
           </div>
