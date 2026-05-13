@@ -589,46 +589,19 @@ function calculateDynamicScores(chartStems: string[], chartBranches: string[], d
   let harmfulGod = '';
   
   if (structure === 'CongGe') {
-    primaryUsefulGod = maxDrainingElem;
-    // Cong Ge charts receive no Harmful God penalty; the DM has surrendered
+    // Follow the dominant flow — all draining elements are useful
+    primaryUsefulGod = [outputElem, wealthElem, controlElem].join(',');
+    harmfulGod = '';
   } else if (structure === 'Strong') {
-    primaryUsefulGod = maxDrainingElem;
-    
-    let maxSuppElem = '';
-    let maxSuppScore = -1;
-    let secSuppElem = '';
-    let secSuppScore = -1;
-    [companionElem, resourceElem].forEach(e => {
-      if (elementScores[e] > maxSuppScore) {
-        secSuppScore = maxSuppScore;
-        secSuppElem = maxSuppElem;
-        maxSuppScore = elementScores[e];
-        maxSuppElem = e;
-      } else if (elementScores[e] > secSuppScore) {
-        secSuppScore = elementScores[e];
-        secSuppElem = e;
-      }
-    });
-    harmfulGod = maxSuppElem;
-    if (maxSuppScore > 0 && Math.abs(maxSuppScore - Math.max(secSuppScore, 0)) / totalScore < 0.05) {
-      harmfulGod = `${maxSuppElem},${secSuppElem}`;
-    }
+    // Strong DM needs to be drained — output, wealth, control are ALL useful
+    primaryUsefulGod = [outputElem, wealthElem, controlElem].join(',');
+    // Companion and resource make it worse
+    harmfulGod = [companionElem, resourceElem].join(',');
   } else if (structure === 'Weak') {
-    let maxSuppElem = '';
-    let maxSuppScore = -1;
-    [companionElem, resourceElem].forEach(e => {
-      if (elementScores[e] > maxSuppScore) {
-        maxSuppScore = elementScores[e];
-        maxSuppElem = e;
-      }
-    });
-    primaryUsefulGod = maxSuppElem;
-    
-    harmfulGod = maxDrainingElem;
-    let sortedDraining = [outputElem, wealthElem, controlElem].sort((a,b) => elementScores[b] - elementScores[a]);
-    if (elementScores[sortedDraining[0]] > 0 && Math.abs(elementScores[sortedDraining[0]] - elementScores[sortedDraining[1]]) / totalScore < 0.05) {
-      harmfulGod = `${sortedDraining[0]},${sortedDraining[1]}`;
-    }
+    // Weak DM needs support — companion and resource are BOTH useful
+    primaryUsefulGod = [companionElem, resourceElem].join(',');
+    // Output, wealth, control drain it further
+    harmfulGod = [outputElem, wealthElem, controlElem].join(',');
   }
 
   const finalScores: Record<string, number> = {};
