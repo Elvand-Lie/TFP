@@ -602,6 +602,10 @@ function calculateDynamicScores(chartStems: string[], chartBranches: string[], d
     primaryUsefulGod = [companionElem, resourceElem].join(',');
     // Output, wealth, control drain it further
     harmfulGod = [outputElem, wealthElem, controlElem].join(',');
+  } else {
+    // Balanced — slightly favor what keeps equilibrium; treat like mild weak
+    primaryUsefulGod = [companionElem, resourceElem].join(',');
+    harmfulGod = [outputElem, wealthElem, controlElem].join(',');
   }
 
   const finalScores: Record<string, number> = {};
