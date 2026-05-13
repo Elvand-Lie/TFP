@@ -44,29 +44,6 @@ function getStemElementClass(char) {
   return '';
 }
 
-function getAuspiciousClass(char, data) {
-  if (!data || !data.analysis || !data.analysis.useful_god || !data.analysis.harmful_god) return getStemElementClass(char);
-  
-  const wood = ['甲','乙'];
-  const fire = ['丙','丁'];
-  const earth = ['戊','己'];
-  const metal = ['庚','辛'];
-  const water = ['壬','癸'];
-  
-  let element = '';
-  if (wood.includes(char)) element = 'Wood';
-  else if (fire.includes(char)) element = 'Fire';
-  else if (earth.includes(char)) element = 'Earth';
-  else if (metal.includes(char)) element = 'Metal';
-  else if (water.includes(char)) element = 'Water';
-  
-  const useful = data.analysis.useful_god.split(',');
-  const harmful = data.analysis.harmful_god.split(',');
-  
-  if (useful.includes(element)) return 'stem-auspicious';
-  if (harmful.includes(element)) return 'stem-inauspicious';
-  return getStemElementClass(char);
-}
 
 function getElementBgClass(name) {
   return getElementClass(name).replace('el-', 'el-bg-');
@@ -321,12 +298,12 @@ function renderChart(data, input) {
       
       const hsTg = lp.heavenly_stem.ten_god ? `${lp.heavenly_stem.ten_god.chinese} <span style="font-size:0.6rem;color:#888;">${lp.heavenly_stem.ten_god.short}</span>` : '';
       const lc = lp.life_cycle ? lp.life_cycle.chinese : '';
-      const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;" class="${getAuspiciousClass(h.character, data)}">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('');
+      const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;" class="${getStemElementClass(h.character)}">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('');
 
       card.innerHTML = `
         <div style="font-size:0.8rem; color:var(--gold); margin-bottom:5px; min-height:16px;">${hsTg}</div>
         <div class="luck-stem-cell" style="margin-bottom:0;">
-          <div class="luck-char ${getAuspiciousClass(lp.heavenly_stem.character, data)}">${lp.heavenly_stem.character}</div>
+          <div class="luck-char ${getStemElementClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
         </div>
         <div class="luck-branch-cell" style="margin-bottom:5px;">
           <div class="luck-char ${getElementClass(lp.earthly_branch.element)}">${lp.earthly_branch.character}</div>
@@ -413,7 +390,7 @@ function renderChart(data, input) {
           html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;" class="${auspClass}">
                      <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
                      <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;" class="${getAuspiciousClass(ap.stem, data)}">${ap.stem}</div>
+                     <div style="font-size:1.1rem; line-height:1.2;" class="${getStemElementClass(ap.stem)}">${ap.stem}</div>
                      <div style="font-size:1.1rem; line-height:1.2;" class="${getElementClass(ap.branch)}">${ap.branch}</div>
                      <div style="color:#666; font-size:0.7rem; margin-top:4px;">${ap.year}</div>
                    </div>`;
@@ -518,10 +495,10 @@ function renderChart(data, input) {
         <div style="background:var(--card-bg); padding:15px 10px; text-align:center;">
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
           <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
-          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getAuspiciousClass(m.stem.character, data)}">${m.stem.character}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemElementClass(m.stem.character)}">${m.stem.character}</div>
           <div style="font-size:1.8rem; font-weight:bold; color:var(--beige); line-height:1; margin-bottom:10px;">${m.branch.character}</div>
           <div style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
-            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getAuspiciousClass(h.character, data)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
+            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemElementClass(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
           </div>
         </div>
       `).join('');
