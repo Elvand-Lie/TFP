@@ -39,8 +39,11 @@ const BRANCH_ELEMENT = {
 };
 
 function getStemColorClass(char) {
-  const yangStems = ['甲','丙','戊','庚','壬'];
-  if (yangStems.includes(char)) return 'stem-auspicious';
+  if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return 'stem-inauspicious';
+  const element = STEM_ELEMENT[char];
+  if (!element) return 'stem-inauspicious';
+  const useful = _chartData.analysis.useful_god.split(',');
+  if (useful.includes(element)) return 'stem-auspicious';
   return 'stem-inauspicious';
 }
 
