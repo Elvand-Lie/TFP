@@ -380,7 +380,7 @@ function renderChart(data, input) {
         html += `<div style="display:flex; gap:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px;">`;
         html += `<div style="width:70px; font-size:0.85rem; color:var(--gold); display:flex; flex-direction:column; justify-content:center; align-items:center; border-right:1px solid rgba(255,255,255,0.1); padding-right:15px;">
                    <div style="color:#888;">${lp.year_start}</div>
-                   <div style="font-size:1.4rem; color:white; letter-spacing:2px;">${lp.heavenly_stem.character}${lp.earthly_branch.character}</div>
+                   <div style="font-size:1.4rem; letter-spacing:2px;"><span class="${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</span><span class="${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</span></div>
                    <div>Age ${lp.age}</div>
                  </div>`;
         html += `<div style="display:flex; gap:8px; flex:1; justify-content:space-between;">`;
