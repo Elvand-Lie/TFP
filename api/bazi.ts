@@ -777,7 +777,7 @@ export default function handler(req: any, res: any) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     if (!body) return res.status(400).json({ error: 'Invalid JSON' });
 
-    const { year, month, day, hour, gender, target_year } = body;
+    const { year, month, day, hour, minute = 0, gender, target_year } = body;
     const genderStr = gender === 1 ? 'male' : 'female';
     const analysisYear = target_year || new Date().getFullYear();
     const genderInt = gender === 1 ? 1 : 0; // lunar-javascript mapping
