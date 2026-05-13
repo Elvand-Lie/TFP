@@ -253,10 +253,10 @@ function renderChart(data, input) {
     // Branch
     const branchEl = document.getElementById(`${prefix}-branch`);
     branchEl.innerHTML = `
-      <div class="fp-char ${getElementClass(eb.name)}">${eb.character}</div>
+      <div class="fp-char ${getElementClass(eb.element)}">${eb.character}</div>
       <div class="fp-pinyin">${eb.spelling.charAt(0).toUpperCase()+eb.spelling.slice(1)}</div>
       <div class="fp-animal">${eb.name}</div>
-      <div class="fp-element ${getElementBgClass(eb.name)}">${extractElement(eb.name)}</div>
+      <div class="fp-element ${getElementBgClass(eb.element)}">${extractElement(eb.element)}</div>
     `;
 
     // Hidden Stems
