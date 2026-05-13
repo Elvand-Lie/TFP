@@ -14,6 +14,11 @@ const HIDDEN_STEMS = {
   '亥': [{char:'壬',name:'Ren',el:'Water'},{char:'甲',name:'Jia',el:'Wood'}]
 };
 
+const STEM_ELEMENT = {
+  '甲':'Wood','乙':'Wood','丙':'Fire','丁':'Fire','戊':'Earth','己':'Earth',
+  '庚':'Metal','辛':'Metal','壬':'Water','癸':'Water'
+};
+
 function getElementClass(name) {
   if (!name) return '';
   const n = name.toLowerCase();
@@ -364,7 +369,20 @@ function renderChart(data, input) {
         html += `<div style="display:flex; gap:8px; flex:1; justify-content:space-between;">`;
         lp.annual_pillars.forEach(ap => {
           const tg = ap.ten_god ? `${ap.ten_god.chinese}<br><span style="font-size:0.6rem;color:#888">${ap.ten_god.short}</span>` : '';
-          html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;">
+          
+          // Red/White Auspiciousness Logic
+          let auspClass = '';
+          if (data.analysis && data.analysis.useful_god && data.analysis.harmful_god) {
+            const annStemElement = STEM_ELEMENT[ap.stem];
+            // Split useful/harmful god in case there are multiple (e.g. 'Wood,Fire')
+            const usefulElements = data.analysis.useful_god.split(',');
+            const harmfulElements = data.analysis.harmful_god.split(',');
+            
+            if (usefulElements.includes(annStemElement)) auspClass = ' annual-auspicious';
+            else if (harmfulElements.includes(annStemElement)) auspClass = ' annual-inauspicious';
+          }
+
+          html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;" class="${auspClass}">
                      <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
                      <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
                      <div style="font-size:1.1rem; line-height:1.2; color:var(--ivory);">${ap.stem}</div>
@@ -570,7 +588,51 @@ function renderChart(data, input) {
     }
   }
   
+  // ─── QIMEN DUNJIA (QMDJ) ───
+  const qmdjGrid = document.getElementById('qmdj-grid');
+  const qmdjMeta = document.getElementById('qmdj-meta');
+  const qmdjSection = document.getElementById('qmdj-section');
+  
+  if (data.qmdj && qmdjGrid && qmdjMeta && qmdjSection) {
+    qmdjSection.style.display = 'block';
+    
+    // Fill Metadata
+    document.getElementById('qmdj-solar-term').textContent = data.qmdj.solar_term || '—';
+    document.getElementById('qmdj-ju').textContent = data.qmdj.ju || '—';
+    document.getElementById('qmdj-zhifu').textContent = data.qmdj.duty_star || '—';
+    document.getElementById('qmdj-zhishi').textContent = data.qmdj.duty_door || '—';
 
+    // Map palaces to Luo Shu Order (SE:4, S:9, SW:2, E:3, C:5, W:7, NE:8, N:1, NW:6)
+    const luoShuOrder = [4, 9, 2, 3, 5, 7, 8, 1, 6];
+    const directionNames = {
+      4: 'SE 巽', 9: 'S 離', 2: 'SW 坤',
+      3: 'E 震', 5: 'C 中', 7: 'W 兌',
+      8: 'NE 艮', 1: 'N 坎', 6: 'NW 乾'
+    };
+
+    let qmdjHtml = '';
+    luoShuOrder.forEach(id => {
+      const p = data.qmdj.palaces.find(x => x.id === id);
+      if (!p) return;
+      
+      const isZhiFu = p.star === data.qmdj.duty_star;
+      const zhifuClass = isZhiFu ? ' zhifu-palace' : '';
+      
+      qmdjHtml += `
+        <div class="qmdj-palace${zhifuClass}">
+          <div class="qmdj-palace-header">${directionNames[id]}</div>
+          <div class="qmdj-god">${p.god || ''}</div>
+          <div class="qmdj-heaven ${getStemPolarityClass(p.heaven_stem)}">${p.heaven_stem || ''}</div>
+          <div class="qmdj-star">${p.star || ''}</div>
+          <div class="qmdj-door">${p.door || ''}</div>
+          <div class="qmdj-earth">${p.earth_stem || ''}</div>
+        </div>
+      `;
+    });
+    qmdjGrid.innerHTML = qmdjHtml;
+  } else if (qmdjSection) {
+    qmdjSection.style.display = 'none';
+  }
 
   // Show chart
   const chartSection = document.getElementById('bazi-chart');

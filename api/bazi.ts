@@ -693,7 +693,7 @@ function calculateDynamicScores(chartStems: string[], chartBranches: string[], d
   
   const dmStrengthScore = Math.min((supportivePct / 10), 10).toFixed(1);
 
-  return { normalizedScores, dmStrengthScore: parseFloat(dmStrengthScore), structure };
+  return { normalizedScores, dmStrengthScore: parseFloat(dmStrengthScore), structure, primaryUsefulGod, harmfulGod };
 }
 
 function calculateTenGodsScores(bazi: any) {
@@ -883,6 +883,8 @@ export default function handler(req: any, res: any) {
         main_structure: `${mainStructure.chinese}格 ${mainStructure.english}`,
         dm_strength: dmStrengthScore,
         dm_strength_label: dmStrengthLabel,
+        useful_god: dynamicScoresResult.primaryUsefulGod || '',
+        harmful_god: dynamicScoresResult.harmfulGod || '',
         ten_gods_scores: tenGodsScores,
         auxiliary: {
           tai_yuan: bazi.getTaiYuan(),
