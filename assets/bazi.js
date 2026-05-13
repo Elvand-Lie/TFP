@@ -38,22 +38,14 @@ const BRANCH_ELEMENT = {
   '申':'Metal','酉':'Metal','亥':'Water','子':'Water'
 };
 
+// Red/White coloring disabled until client provides verified rules.
+// The backend still calculates useful_god/harmful_god — ready to re-enable.
 function getStemColorClass(char) {
-  if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return 'stem-inauspicious';
-  const element = STEM_ELEMENT[char];
-  if (!element) return 'stem-inauspicious';
-  const useful = _chartData.analysis.useful_god.split(',');
-  if (useful.includes(element)) return 'stem-auspicious';
-  return 'stem-inauspicious';
+  return '';
 }
 
 function getBranchColorClass(char) {
-  if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return 'stem-inauspicious';
-  const element = BRANCH_ELEMENT[char];
-  if (!element) return 'stem-inauspicious';
-  const useful = _chartData.analysis.useful_god.split(',');
-  if (useful.includes(element)) return 'stem-auspicious';
-  return 'stem-inauspicious';
+  return '';
 }
 
 
