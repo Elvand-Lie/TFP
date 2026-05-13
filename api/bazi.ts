@@ -1002,8 +1002,43 @@ export default function handler(req: any, res: any) {
     try {
       const { getQimen } = require('./qimen-bridge.js');
       const qimen = getQimen();
-      const qimenString = `${year}${String(month).padStart(2,'0')}${String(day).padStart(2,'0')}${String(hour).padStart(2,'0')}`;
-      const qmdjRaw = qimen.generateChartByDatetime ? qimen.generateChartByDatetime(qimenString) : null;
+      const yearGz = bazi.getYear();
+      const monthGz = bazi.getMonth();
+      const dayGz = bazi.getDay();
+      const hourGz = bazi.getTime();
+
+      // Implement proper Chai Bu (拆補) Ju Calculation
+      const dayGan = dayGz.charAt(0);
+      const dayZhi = dayGz.charAt(1);
+      const ganArr = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+      const zhiArr = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+      
+      const ganIndex = ganArr.indexOf(dayGan);
+      const zhiIndex = zhiArr.indexOf(dayZhi);
+      
+      const offsetToFuTou = ganIndex >= 0 && ganIndex <= 4 ? ganIndex : ganIndex - 5;
+      let fuTouZhiIndex = (zhiIndex - offsetToFuTou) % 12;
+      if (fuTouZhiIndex < 0) fuTouZhiIndex += 12;
+      const fuTouZhi = zhiArr[fuTouZhiIndex];
+
+      let yuan = 0; // 0=Upper, 1=Middle, 2=Lower
+      if (['子', '午', '卯', '酉'].includes(fuTouZhi)) yuan = 0;
+      else if (['寅', '申', '巳', '亥'].includes(fuTouZhi)) yuan = 1;
+      else if (['辰', '戌', '丑', '未'].includes(fuTouZhi)) yuan = 2;
+
+      const prevJieQi = lunar.getPrevJieQi(true);
+      const jieQiName = prevJieQi.getName();
+      const jqData = qimen.JIEQI_JUSHU[jieQiName];
+      
+      const juNumber = jqData.ju[yuan];
+      const yinYang = jqData.yang ? '陽' : '陰';
+
+      // Generate the chart using explicit GanZhi and Chai Bu Ju
+      const qmdjRaw = qimen.generateQimenChart(
+        new Date(year, month - 1, day, hour, minute),
+        [yearGz, monthGz, dayGz, hourGz, juNumber, yinYang]
+      );
+      
       if (qmdjRaw) {
         const qmdjChart = qimen.chartToObject(qmdjRaw);
         
