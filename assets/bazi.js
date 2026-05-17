@@ -38,14 +38,24 @@ const BRANCH_ELEMENT = {
   '申':'Metal','酉':'Metal','亥':'Water','子':'Water'
 };
 
-// Red/White coloring disabled until client provides verified rules.
-// The backend still calculates useful_god/harmful_god — ready to re-enable.
+// Red/White coloring based on Favorable Elements (Yong Shen 用神)
+// Red (stem-auspicious) = element is favorable for this chart
+// White (stem-inauspicious) = element is unfavorable
+// Uses the backend's useful_god calculation (Day Master strength analysis)
 function getStemColorClass(char) {
-  return '';
+  if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return '';
+  const element = STEM_ELEMENT[char];
+  if (!element) return '';
+  const favorable = _chartData.analysis.useful_god.split(',');
+  return favorable.includes(element) ? 'stem-auspicious' : 'stem-inauspicious';
 }
 
 function getBranchColorClass(char) {
-  return '';
+  if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return '';
+  const element = BRANCH_ELEMENT[char];
+  if (!element) return '';
+  const favorable = _chartData.analysis.useful_god.split(',');
+  return favorable.includes(element) ? 'stem-auspicious' : 'stem-inauspicious';
 }
 
 
