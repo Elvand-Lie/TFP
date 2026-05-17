@@ -744,6 +744,58 @@ function mapPillar(pillarData: any, dayStemChar: string, naYin: string, yearBran
   };
 }
 
+// ─── SIMPLE 100-POINT DAY MASTER STRENGTH (for Useful God determination) ───
+// Clean positional weighting without seasonal multipliers.
+// Month Branch gets heaviest weight (35) because the season is the primary
+// determinant of DM strength in classical BaZi.
+const BRANCH_ELEMENT_MAP: Record<string, string> = {
+  '子':'Water','丑':'Earth','寅':'Wood','卯':'Wood','辰':'Earth',
+  '巳':'Fire','午':'Fire','未':'Earth','申':'Metal','酉':'Metal',
+  '戌':'Earth','亥':'Water'
+};
+
+function calculateSimpleStrength(bazi: any) {
+  const dmChar = bazi.getDayGan();
+  const dmElement = STEM_ELEMENTS[dmChar];
+
+  const produces: Record<string, string> = {'Wood':'Fire','Fire':'Earth','Earth':'Metal','Metal':'Water','Water':'Wood'};
+  const controls: Record<string, string> = {'Wood':'Earth','Earth':'Water','Water':'Fire','Fire':'Metal','Metal':'Wood'};
+
+  const companionElem = dmElement;
+  const resourceElem = Object.keys(produces).find(k => produces[k] === dmElement)!;
+  const outputElem = produces[dmElement];
+  const wealthElem = controls[dmElement];
+  const controlElem = Object.keys(controls).find(k => controls[k] === dmElement)!;
+
+  const isSupportive = (elem: string) => elem === companionElem || elem === resourceElem;
+
+  let points = 0;
+
+  // Stems (excluding Day Stem = DM itself)
+  if (isSupportive(STEM_ELEMENTS[bazi.getYearGan()]))  points += 10; // Year Stem
+  if (isSupportive(STEM_ELEMENTS[bazi.getMonthGan()])) points += 10; // Month Stem
+  if (isSupportive(STEM_ELEMENTS[bazi.getTimeGan()]))  points += 10; // Hour Stem
+
+  // Branches
+  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getYearZhi()]))  points += 10; // Year Branch
+  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getMonthZhi()])) points += 35; // Month Branch (season)
+  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getDayZhi()]))   points += 15; // Day Branch
+  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getTimeZhi()]))  points += 10; // Hour Branch
+
+  const isStrong = points >= 50;
+
+  return {
+    points,
+    label: isStrong ? 'Strong' : 'Weak',
+    useful_god: isStrong
+      ? [outputElem, wealthElem, controlElem].join(',')
+      : [companionElem, resourceElem].join(','),
+    harmful_god: isStrong
+      ? [companionElem, resourceElem].join(',')
+      : [outputElem, wealthElem, controlElem].join(',')
+  };
+}
+
 // ─── MAIN HANDLER ───────────────────────────────────────────
 export default function handler(req: any, res: any) {
   if (req.method !== 'POST') {
@@ -774,6 +826,8 @@ export default function handler(req: any, res: any) {
     const tenGodsScores = dynamicScoresResult.normalizedScores;
     const dmStrengthScore = dynamicScoresResult.dmStrengthScore;
     const dmStrengthLabel = dynamicScoresResult.structure;
+
+    const simpleStrength = calculateSimpleStrength(bazi);
 
     const dayStemChar = bazi.getDayGan();
     const yearBranchChar = bazi.getYearZhi();
@@ -859,9 +913,9 @@ export default function handler(req: any, res: any) {
         },
         main_structure: `${mainStructure.chinese}格 ${mainStructure.english}`,
         dm_strength: dmStrengthScore,
-        dm_strength_label: dmStrengthLabel,
-        useful_god: dynamicScoresResult.primaryUsefulGod || '',
-        harmful_god: dynamicScoresResult.harmfulGod || '',
+        dm_strength_label: simpleStrength.label,
+        useful_god: simpleStrength.useful_god,
+        harmful_god: simpleStrength.harmful_god,
         ten_gods_scores: tenGodsScores,
         auxiliary: {
           tai_yuan: bazi.getTaiYuan(),
