@@ -661,7 +661,7 @@ function renderChart(data, input) {
         <div class="qmdj-palace${zhifuClass}">
           <div class="qmdj-palace-header">${directionNames[id]}</div>
           <div class="qmdj-god">${p.god || ''}</div>
-          <div class="qmdj-heaven ${getStemColorClass(p.heaven_stem)}">${p.heaven_stem || ''}</div>
+          <div class="qmdj-heaven">${p.heaven_stem || ''}</div>
           <div class="qmdj-star">${p.star || ''}</div>
           <div class="qmdj-door">${p.door || ''}</div>
           <div class="qmdj-earth">${p.earth_stem || ''}</div>
