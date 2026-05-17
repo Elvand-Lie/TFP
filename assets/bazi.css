@@ -378,7 +378,7 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
 
 .qmdj-meta {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 1px;
   background: rgba(113,1,1,0.15);
   border-radius: 8px 8px 0 0;
@@ -505,6 +505,51 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
   border-radius: 3px;
 }
 
+/* QMDJ Markers: Kong Wang (Void) & Tian Ma (Sky Horse) Badges */
+.qmdj-badges {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+.qmdj-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.qmdj-badge:hover {
+  transform: scale(1.15);
+}
+.qmdj-badge-void {
+  background: rgba(136, 133, 128, 0.2);
+  color: var(--muted);
+  border: 1px solid rgba(136, 133, 128, 0.4);
+  box-shadow: 0 0 6px rgba(136, 133, 128, 0.15);
+}
+.qmdj-badge-void:hover {
+  box-shadow: 0 0 10px rgba(136, 133, 128, 0.3);
+}
+.qmdj-badge-horse {
+  background: rgba(198, 169, 107, 0.18);
+  color: var(--gold);
+  border: 1px solid rgba(198, 169, 107, 0.45);
+  box-shadow: 0 0 6px rgba(198, 169, 107, 0.15);
+}
+.qmdj-badge-horse:hover {
+  box-shadow: 0 0 10px rgba(198, 169, 107, 0.35);
+}
+
 /* ─── RED/WHITE AUSPICIOUSNESS COLORING ─── */
 .annual-auspicious {
   background: rgba(229, 57, 57, 0.12) !important;
@@ -539,17 +584,20 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
   .luck-card { min-width: 100px; }
   .form-actions { flex-direction: column; }
   .btn-plot, .btn-reset { width: 100%; text-align: center; }
-  .qmdj-meta { grid-template-columns: repeat(2, 1fr); }
+  .qmdj-meta { grid-template-columns: repeat(3, 1fr); }
   .qmdj-palace { padding: 14px 10px; min-height: 140px; }
   .qmdj-heaven { font-size: 1.3rem; }
+  .qmdj-badge { width: 20px; height: 20px; font-size: 0.55rem; }
 }
 @media (max-width: 480px) {
   .four-pillars-grid { grid-template-columns: 60px repeat(4, 1fr); }
   .fp-char { font-size: 1.3rem; }
   .fp-pinyin { font-size: 0.65rem; }
-  .qmdj-meta { grid-template-columns: 1fr 1fr; }
+  .qmdj-meta { grid-template-columns: repeat(3, 1fr); }
   .qmdj-palace { padding: 10px 6px; min-height: 120px; }
   .qmdj-heaven { font-size: 1.1rem; }
   .qmdj-star, .qmdj-door { font-size: 0.7rem; }
+  .qmdj-badge { width: 18px; height: 18px; font-size: 0.5rem; }
+  .qmdj-badges { bottom: 4px; left: 4px; gap: 3px; }
 }
 

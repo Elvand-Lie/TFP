@@ -602,6 +602,16 @@ function renderChart(data, input) {
     document.getElementById('qmdj-zhifu').textContent = data.qmdj.duty_star || '—';
     document.getElementById('qmdj-zhishi').textContent = data.qmdj.duty_door || '—';
 
+    // Kong Wang & Tian Ma metadata display
+    const kwMetaEl = document.getElementById('qmdj-kongwang');
+    const tmMetaEl = document.getElementById('qmdj-tianma');
+    if (kwMetaEl && data.qmdj.kong_wang) {
+      kwMetaEl.textContent = data.qmdj.kong_wang.branches || '—';
+    }
+    if (tmMetaEl && data.qmdj.tian_ma) {
+      tmMetaEl.textContent = data.qmdj.tian_ma.branch || '—';
+    }
+
     // Map palaces to Luo Shu Order (SE:4, S:9, SW:2, E:3, C:5, W:7, NE:8, N:1, NW:6)
     const luoShuOrder = [4, 9, 2, 3, 5, 7, 8, 1, 6];
     const directionNames = {
@@ -610,6 +620,10 @@ function renderChart(data, input) {
       8: 'NE 艮', 1: 'N 坎', 6: 'NW 乾'
     };
 
+    // Precompute Kong Wang and Tian Ma palace sets
+    const kongWangPalaces = (data.qmdj.kong_wang && data.qmdj.kong_wang.palaces) || [];
+    const tianMaPalace = (data.qmdj.tian_ma && data.qmdj.tian_ma.palace) || null;
+
     let qmdjHtml = '';
     luoShuOrder.forEach(id => {
       const p = data.qmdj.palaces.find(x => x.id === id);
@@ -617,7 +631,22 @@ function renderChart(data, input) {
       
       const isZhiFu = p.star === data.qmdj.duty_star;
       const zhifuClass = isZhiFu ? ' zhifu-palace' : '';
-      
+
+      // Build badges HTML for Kong Wang and Tian Ma
+      let badgesHtml = '';
+      const isKongWang = kongWangPalaces.includes(id);
+      const isTianMa = tianMaPalace === id;
+      if (isKongWang || isTianMa) {
+        badgesHtml = '<div class="qmdj-badges">';
+        if (isKongWang) {
+          badgesHtml += '<span class="qmdj-badge qmdj-badge-void" title="Kong Wang (Void · 空亡)">空</span>';
+        }
+        if (isTianMa) {
+          badgesHtml += '<span class="qmdj-badge qmdj-badge-horse" title="Tian Ma (Sky Horse · 驛馬)">馬</span>';
+        }
+        badgesHtml += '</div>';
+      }
+
       qmdjHtml += `
         <div class="qmdj-palace${zhifuClass}">
           <div class="qmdj-palace-header">${directionNames[id]}</div>
@@ -626,6 +655,7 @@ function renderChart(data, input) {
           <div class="qmdj-star">${p.star || ''}</div>
           <div class="qmdj-door">${p.door || ''}</div>
           <div class="qmdj-earth">${p.earth_stem || ''}</div>
+          ${badgesHtml}
         </div>
       `;
     });

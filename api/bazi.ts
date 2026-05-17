@@ -1033,13 +1033,42 @@ export default function handler(req: any, res: any) {
             heaven_stem: qmdjChart["天盤"][i] || ''
           });
         }
-        
+
+        // ─── QMDJ MARKERS: Kong Wang (空/Void) & Tian Ma (馬/Sky Horse) ───
+        // Earthly Branch → Luo Shu Palace mapping
+        const BRANCH_PALACE: Record<string, number> = {
+          '子': 1, '丑': 8, '寅': 8,
+          '卯': 3, '辰': 4, '巳': 4,
+          '午': 9, '未': 2, '申': 2,
+          '酉': 7, '戌': 6, '亥': 6
+        };
+
+        // Kong Wang (空/Void) — Day Pillar's Xun Kong (日旬空)
+        const dayKongWang = bazi.getDayXunKong(); // e.g. "戌亥"
+        const kwBranch1 = dayKongWang.charAt(0);
+        const kwBranch2 = dayKongWang.charAt(1);
+        const kongWangPalaces = [...new Set(
+          [BRANCH_PALACE[kwBranch1], BRANCH_PALACE[kwBranch2]].filter(Boolean)
+        )];
+
+        // Tian Ma (馬/Sky Horse) — Day Branch's Yi Ma (驛馬)
+        const tianMaBranch = SHEN_SHA_RULES.YiMa[dayZhi as keyof typeof SHEN_SHA_RULES.YiMa] || '';
+        const tianMaPalace = BRANCH_PALACE[tianMaBranch] || null;
+
         legacyData.qmdj = {
           solar_term: qmdjChart["節氣"] || lunar.getJieQi(),
           ju: `${qmdjChart["陰陽"]}${qmdjChart["局數"]}局`, 
           duty_star: qmdjChart["值符"] || '',
           duty_door: qmdjChart["值使"] || '',
-          palaces: palaces
+          palaces: palaces,
+          kong_wang: {
+            branches: dayKongWang,
+            palaces: kongWangPalaces
+          },
+          tian_ma: {
+            branch: tianMaBranch,
+            palace: tianMaPalace
+          }
         };
       }
     } catch (err) {
