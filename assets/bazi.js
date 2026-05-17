@@ -512,10 +512,10 @@ function renderChart(data, input) {
         <div style="background:var(--card-bg); padding:15px 10px; text-align:center;">
           <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
           <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
-          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemElementColor(m.stem.character)}">${m.stem.character}</div>
-          <div style="font-size:1.8rem; font-weight:bold; line-height:1; margin-bottom:10px;" class="${getBranchElementColor(m.branch.character)}">${m.branch.character}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1; margin-bottom:10px;" class="${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
           <div style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
-            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemElementColor(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
+            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemColorClass(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
           </div>
         </div>
       `).join('');
