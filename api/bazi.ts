@@ -247,8 +247,29 @@ function getTianXi(yearBranch: string) {
 const AUSPICIOUS_STARS = new Set([
   'Tian Yi Gui Ren', 'Wen Chang', 'Lu Shen', 'Yi Ma', 'Tao Hua',
   'Hua Gai', 'Jiang Xing', 'Hong Luan', 'Tian Xi', 'Tai Ji Gui Ren',
-  'Fu Xing Gui Ren'
+  'Fu Xing Gui Ren',
+  // Twelve Annual Spirits - auspicious
+  'Tai Yang', 'Tai Yin', 'Long De', 'Fu De',
+  // Xue Tang
+  'Xue Tang'
 ]);
+
+// ─── TWELVE ANNUAL SPIRITS (岁前十二神煞) ───────────────────
+// Rotation from Tai Sui (annual branch). Offset 0 = Tai Sui position.
+const TWELVE_SPIRITS: { name: string; chinese: string }[] = [
+  { name: 'Tai Sui',  chinese: '太歲' },   // 0
+  { name: 'Tai Yang', chinese: '太陽' },   // 1
+  { name: 'Sang Men', chinese: '喪門' },   // 2
+  { name: 'Tai Yin',  chinese: '太陰' },   // 3
+  { name: 'Guan Fu',  chinese: '官符' },   // 4 (五鬼)
+  { name: 'Si Fu',    chinese: '死符' },   // 5 (小耗)
+  { name: 'Sui Po',   chinese: '歲破' },   // 6 (大耗)
+  { name: 'Long De',  chinese: '龍德' },   // 7
+  { name: 'Bai Hu',   chinese: '白虎' },   // 8
+  { name: 'Fu De',    chinese: '福德' },   // 9 (天德)
+  { name: 'Diao Ke',  chinese: '弔客' },   // 10 (天狗)
+  { name: 'Bing Fu',  chinese: '病符' }    // 11
+];
 
 type ShenShaContext = 'natal' | 'annual';
 
@@ -302,8 +323,19 @@ function getShenSha(targetBranch: string, context: ShenShaContext, params: ShenS
   } else if (context === 'annual') {
     const refBranch = params.referenceBranch || '';
     const refStem = params.referenceStem || '';
+    const BRANCHES_ARR = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 
-    // Branch-relative stars driven by Annual Branch
+    // ── Twelve Annual Spirits (岁前十二神煞) ──
+    // Calculate offset from Tai Sui (annual branch) to natal branch
+    const refIdx = BRANCHES_ARR.indexOf(refBranch);
+    const targetIdx = BRANCHES_ARR.indexOf(targetBranch);
+    if (refIdx >= 0 && targetIdx >= 0) {
+      const offset = (targetIdx - refIdx + 12) % 12;
+      const spirit = TWELVE_SPIRITS[offset];
+      if (spirit) stars.push(spirit.name);
+    }
+
+    // ── Branch-relative stars driven by Annual Branch ──
     if (SHEN_SHA_RULES.YiMa[refBranch as keyof typeof SHEN_SHA_RULES.YiMa] === targetBranch) stars.push('Yi Ma');
     if (SHEN_SHA_RULES.TaoHua[refBranch as keyof typeof SHEN_SHA_RULES.TaoHua] === targetBranch) stars.push('Tao Hua');
     if (SHEN_SHA_RULES.HuaGai[refBranch as keyof typeof SHEN_SHA_RULES.HuaGai] === targetBranch) stars.push('Hua Gai');
@@ -318,13 +350,11 @@ function getShenSha(targetBranch: string, context: ShenShaContext, params: ShenS
     if (SHEN_SHA_RULES.ZaiSha[refBranch as keyof typeof SHEN_SHA_RULES.ZaiSha] === targetBranch) stars.push('Zai Sha');
     if (SHEN_SHA_RULES.WangShen[refBranch as keyof typeof SHEN_SHA_RULES.WangShen] === targetBranch) stars.push('Wang Shen');
 
-    // Stem-relative stars driven by Annual Stem
+    // ── Stem-relative stars driven by Annual Stem ──
     if (refStem && SHEN_SHA_RULES.FuXing[refStem as keyof typeof SHEN_SHA_RULES.FuXing] === targetBranch) stars.push('Fu Xing Gui Ren');
-
-    // Tai Sui relationships against Annual Branch
-    if (refBranch === targetBranch) stars.push('Tai Sui');
-    const BRANCHES_ARR = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-    if (BRANCHES_ARR[(BRANCHES_ARR.indexOf(refBranch) + 6) % 12] === targetBranch) stars.push('Sui Po');
+    if (refStem && (SHEN_SHA_RULES.TianYi[refStem as keyof typeof SHEN_SHA_RULES.TianYi] || []).includes(targetBranch)) stars.push('Tian Yi Gui Ren');
+    if (refStem && SHEN_SHA_RULES.WenChang[refStem as keyof typeof SHEN_SHA_RULES.WenChang] === targetBranch) stars.push('Wen Chang');
+    if (refStem && (SHEN_SHA_RULES.TaiJi[refStem as keyof typeof SHEN_SHA_RULES.TaiJi] || []).includes(targetBranch)) stars.push('Tai Ji Gui Ren');
   }
   
   const unique = [...new Set(stars)];
