@@ -744,17 +744,64 @@ function mapPillar(pillarData: any, dayStemChar: string, naYin: string, yearBran
   };
 }
 
-// ─── SIMPLE 100-POINT DAY MASTER STRENGTH (for Useful God determination) ───
-// Clean positional weighting without seasonal multipliers.
-// Month Branch gets heaviest weight (35) because the season is the primary
-// determinant of DM strength in classical BaZi.
+// ─── ENHANCED DAY MASTER STRENGTH (with Roots, Combinations, Clashes) ───
+// Classical BaZi factors: 得令(Season) > 得根(Roots) > 得势(Support) > 合冲(Combos/Clashes)
+
 const BRANCH_ELEMENT_MAP: Record<string, string> = {
   '子':'Water','丑':'Earth','寅':'Wood','卯':'Wood','辰':'Earth',
   '巳':'Fire','午':'Fire','未':'Earth','申':'Metal','酉':'Metal',
   '戌':'Earth','亥':'Water'
 };
 
-function calculateSimpleStrength(bazi: any) {
+// Hidden stem qi strength (main qi = 1.0, middle = 0.5, residual = 0.3)
+const HIDDEN_STEM_QI: Record<string, [string, number][]> = {
+  '子': [['癸',1.0]],
+  '丑': [['己',0.6],['癸',0.3],['辛',0.1]],
+  '寅': [['甲',0.6],['丙',0.3],['戊',0.1]],
+  '卯': [['乙',1.0]],
+  '辰': [['戊',0.6],['乙',0.3],['癸',0.1]],
+  '巳': [['丙',0.6],['庚',0.3],['戊',0.1]],
+  '午': [['丁',0.7],['己',0.3]],
+  '未': [['己',0.6],['丁',0.3],['乙',0.1]],
+  '申': [['庚',0.6],['壬',0.3],['戊',0.1]],
+  '酉': [['辛',1.0]],
+  '戌': [['戊',0.6],['辛',0.3],['丁',0.1]],
+  '亥': [['壬',0.7],['甲',0.3]]
+};
+
+// Three Harmony combinations (三合局)
+const SAN_HE: [string, string, string, string][] = [
+  ['申','子','辰','Water'],
+  ['亥','卯','未','Wood'],
+  ['寅','午','戌','Fire'],
+  ['巳','酉','丑','Metal']
+];
+
+// Seasonal combinations (三会局) — strongest type
+const SAN_HUI: [string, string, string, string][] = [
+  ['寅','卯','辰','Wood'],
+  ['巳','午','未','Fire'],
+  ['申','酉','戌','Metal'],
+  ['亥','子','丑','Water']
+];
+
+// Six Harmony combinations (六合)
+const LIU_HE: [string, string, string][] = [
+  ['子','丑','Earth'],
+  ['寅','亥','Wood'],
+  ['卯','戌','Fire'],
+  ['辰','酉','Metal'],
+  ['巳','申','Water'],
+  ['午','未','Fire']
+];
+
+// Six Clashes (六冲)
+const LIU_CHONG: [string, string][] = [
+  ['子','午'],['丑','未'],['寅','申'],
+  ['卯','酉'],['辰','戌'],['巳','亥']
+];
+
+function calculateEnhancedStrength(bazi: any) {
   const dmChar = bazi.getDayGan();
   const dmElement = STEM_ELEMENTS[dmChar];
 
@@ -769,23 +816,124 @@ function calculateSimpleStrength(bazi: any) {
 
   const isSupportive = (elem: string) => elem === companionElem || elem === resourceElem;
 
+  // Collect all four branches
+  const yearBranch = bazi.getYearZhi();
+  const monthBranch = bazi.getMonthZhi();
+  const dayBranch = bazi.getDayZhi();
+  const hourBranch = bazi.getTimeZhi();
+  const allBranches = [yearBranch, monthBranch, dayBranch, hourBranch];
+
+  // ── Step 1: Detect Clashes (position-aware) ──
+  // Only adjacent or closest positions clash. Each branch position can only
+  // be involved in one clash. Track by position index, not character.
+  const clashedPositions = new Set<number>();
+  for (const [a, b] of LIU_CHONG) {
+    // Find positions of a and b
+    const posA: number[] = [];
+    const posB: number[] = [];
+    allBranches.forEach((br, idx) => {
+      if (br === a && !clashedPositions.has(idx)) posA.push(idx);
+      if (br === b && !clashedPositions.has(idx)) posB.push(idx);
+    });
+    // Match closest pairs
+    for (const pa of posA) {
+      let bestB = -1, bestDist = 99;
+      for (const pb of posB) {
+        if (clashedPositions.has(pb)) continue;
+        const dist = Math.abs(pa - pb);
+        if (dist < bestDist) { bestDist = dist; bestB = pb; }
+      }
+      if (bestB >= 0) {
+        clashedPositions.add(pa);
+        clashedPositions.add(bestB);
+      }
+    }
+  }
+
+  // ── Step 2: Base Positional Scoring ──
+  // Weight: Month Branch = 40, Day Branch = 12, Year/Hour = 8 each
+  // Stems: Month = 8, Year = 8, Hour = 8
+  // Total possible base = 92 (if all support)
   let points = 0;
+  const branchWeights: [string, number][] = [
+    [yearBranch,  8],
+    [monthBranch, 40],
+    [dayBranch,   12],
+    [hourBranch,  8]
+  ];
 
-  // Stems (excluding Day Stem = DM itself)
-  if (isSupportive(STEM_ELEMENTS[bazi.getYearGan()]))  points += 10; // Year Stem
-  if (isSupportive(STEM_ELEMENTS[bazi.getMonthGan()])) points += 10; // Month Stem
-  if (isSupportive(STEM_ELEMENTS[bazi.getTimeGan()]))  points += 10; // Hour Stem
+  branchWeights.forEach(([branch, weight], posIdx) => {
+    const elem = BRANCH_ELEMENT_MAP[branch];
+    if (isSupportive(elem)) {
+      // Clashed positions contribute only 50%
+      const effectiveWeight = clashedPositions.has(posIdx) ? weight * 0.5 : weight;
+      points += effectiveWeight;
+    }
+  });
 
-  // Branches
-  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getYearZhi()]))  points += 10; // Year Branch
-  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getMonthZhi()])) points += 35; // Month Branch (season)
-  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getDayZhi()]))   points += 15; // Day Branch
-  if (isSupportive(BRANCH_ELEMENT_MAP[bazi.getTimeZhi()]))  points += 10; // Hour Branch
+  // Stems (excluding Day Stem)
+  const stems: [string, number][] = [
+    [bazi.getYearGan(), 8],
+    [bazi.getMonthGan(), 8],
+    [bazi.getTimeGan(), 8]
+  ];
+  for (const [stem, weight] of stems) {
+    if (isSupportive(STEM_ELEMENTS[stem])) {
+      points += weight;
+    }
+  }
 
-  const isStrong = points >= 50;
+  // ── Step 3: Hidden Stem Root Bonus ──
+  // If the DM's own element has roots (hidden stems) in branches → bonus
+  // Month root is most valuable, Day root second
+  const rootWeights: [string, number][] = [
+    [yearBranch, 3], [monthBranch, 10], [dayBranch, 6], [hourBranch, 3]
+  ];
+  rootWeights.forEach(([branch, bonus], posIdx) => {
+    if (clashedPositions.has(posIdx)) return; // Clashed roots don't count
+    const hiddenStems = HIDDEN_STEM_QI[branch] || [];
+    for (const [hStem, qi] of hiddenStems) {
+      if (STEM_ELEMENTS[hStem] === dmElement) {
+        points += bonus * qi;
+        break; // Only count the strongest root per branch
+      }
+    }
+  });
+
+  // ── Step 4: Combination Modifiers ──
+  // San Hui (三会 Seasonal) — strongest, +/- 12
+  for (const [a, b, c, resultElem] of SAN_HUI) {
+    if (allBranches.includes(a) && allBranches.includes(b) && allBranches.includes(c)) {
+      points += isSupportive(resultElem) ? 12 : -8;
+    }
+  }
+
+  // San He (三合 Three Harmony) — strong, +/- 8; half combo +/- 3
+  for (const [a, b, c, resultElem] of SAN_HE) {
+    const count = [a, b, c].filter(x => allBranches.includes(x)).length;
+    if (count === 3) {
+      points += isSupportive(resultElem) ? 8 : -5;
+    } else if (count === 2) {
+      points += isSupportive(resultElem) ? 3 : -2;
+    }
+  }
+
+  // Liu He (六合 Six Harmony) — mild, +/- 3
+  for (const [a, b, resultElem] of LIU_HE) {
+    if (allBranches.includes(a) && allBranches.includes(b)) {
+      points += isSupportive(resultElem) ? 3 : -2;
+    }
+  }
+  // ── Step 5: Determine Strength ──
+  // Two-tier threshold: Classical BaZi allows "失令但得势得根" (lost season but
+  // gained support and roots) to still be Strong. When Month Branch opposes,
+  // use a lower threshold since max achievable points are reduced.
+  const monthSupports = isSupportive(BRANCH_ELEMENT_MAP[monthBranch]);
+  const threshold = monthSupports ? 50 : 40;
+  const isStrong = points >= threshold;
 
   return {
-    points,
+    points: Math.round(points * 10) / 10,
     label: isStrong ? 'Strong' : 'Weak',
     useful_god: isStrong
       ? [outputElem, wealthElem, controlElem].join(',')
@@ -827,7 +975,7 @@ export default function handler(req: any, res: any) {
     const dmStrengthScore = dynamicScoresResult.dmStrengthScore;
     const dmStrengthLabel = dynamicScoresResult.structure;
 
-    const simpleStrength = calculateSimpleStrength(bazi);
+    const simpleStrength = calculateEnhancedStrength(bazi);
 
     const dayStemChar = bazi.getDayGan();
     const yearBranchChar = bazi.getYearZhi();
