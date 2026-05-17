@@ -38,10 +38,22 @@ const BRANCH_ELEMENT = {
   '申':'Metal','酉':'Metal','亥':'Water','子':'Water'
 };
 
-// Red/White coloring based on Favorable Elements (Yong Shen 用神)
-// Red (stem-auspicious) = element is favorable for this chart
-// White (stem-inauspicious) = element is unfavorable
-// Uses the backend's useful_god calculation (Day Master strength analysis)
+// ─── COLORING SYSTEMS ───
+// 1. Five Element Colors (Natal Chart) — informational only
+//    Wood=Green, Fire=Red, Earth=Gold, Metal=Silver, Water=Blue
+function getStemElementColor(char) {
+  const el = STEM_ELEMENT[char];
+  return el ? 'el-' + el.toLowerCase() : '';
+}
+function getBranchElementColor(char) {
+  const el = BRANCH_ELEMENT[char];
+  return el ? 'el-' + el.toLowerCase() : '';
+}
+
+// 2. Favorable/Unfavorable (Luck Pillars, Annual, Monthly) — favorability
+//    Red (stem-auspicious) = element is favorable for this chart
+//    White (stem-inauspicious) = element is unfavorable
+//    Uses the backend's useful_god calculation (Day Master strength analysis)
 function getStemColorClass(char) {
   if (!_chartData || !_chartData.analysis || !_chartData.analysis.useful_god) return '';
   const element = STEM_ELEMENT[char];
@@ -260,7 +272,7 @@ function renderChart(data, input) {
     
     stemEl.innerHTML = `
       ${tenGodHtml}
-      <div class="fp-char ${getStemColorClass(hs.character)}">${hs.character}</div>
+      <div class="fp-char ${getStemElementColor(hs.character)}">${hs.character}</div>
       <div class="fp-pinyin">${hs.spelling.charAt(0).toUpperCase()+hs.spelling.slice(1)}</div>
       <div class="fp-element ${getElementBgClass(hs.name)}">${hs.name}</div>
     `;
@@ -268,7 +280,7 @@ function renderChart(data, input) {
     // Branch
     const branchEl = document.getElementById(`${prefix}-branch`);
     branchEl.innerHTML = `
-      <div class="fp-char" style="color: var(--ivory);">${eb.character}</div>
+      <div class="fp-char ${getBranchElementColor(eb.character)}">${eb.character}</div>
       <div class="fp-pinyin">${eb.spelling.charAt(0).toUpperCase()+eb.spelling.slice(1)}</div>
       <div class="fp-animal">${eb.name}</div>
       <div class="fp-element ${getElementBgClass(eb.element)}">${extractElement(eb.element)}</div>
@@ -279,7 +291,7 @@ function renderChart(data, input) {
     const hStems = p.data.hidden_stems || [];
     hiddenEl.innerHTML = '<div class="fp-hidden">' + hStems.map(h => {
       const tg = h.ten_god ? `<div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 2px;">${h.ten_god.chinese} <span style="font-size: 0.6rem;">${h.ten_god.short}</span></div>` : '';
-      return `<div class="fp-hidden-stem">${tg}<span class="mini-char ${getStemColorClass(h.character)}">${h.character}</span><span class="mini-name">${h.spelling.charAt(0).toUpperCase()+h.spelling.slice(1)}</span></div>`;
+      return `<div class="fp-hidden-stem">${tg}<span class="mini-char ${getStemElementColor(h.character)}">${h.character}</span><span class="mini-name">${h.spelling.charAt(0).toUpperCase()+h.spelling.slice(1)}</span></div>`;
     }).join('') + '</div>';
 
     // Life Cycle & Na Yin & Shen Sha
