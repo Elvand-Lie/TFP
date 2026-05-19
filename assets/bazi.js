@@ -644,6 +644,26 @@ function renderChart(data, input) {
     const kongWangPalaces = (data.qmdj.kong_wang && data.qmdj.kong_wang.palaces) || [];
     const tianMaPalace = (data.qmdj.tian_ma && data.qmdj.tian_ma.palace) || null;
 
+    // QMDJ Helpers
+    function getQmdjDoorClass(door) {
+      if (!door) return '';
+      const auspicious = ['開', '休', '生'];
+      const inauspicious = ['死', '驚', '傷'];
+      const char = door.charAt(0);
+      if (auspicious.includes(char)) return ' qmdj-auspicious';
+      if (inauspicious.includes(char)) return ' qmdj-inauspicious';
+      return '';
+    }
+    function getQmdjStarClass(star) {
+      if (!star) return '';
+      const auspicious = ['輔', '禽', '心', '任', '沖'];
+      const inauspicious = ['蓬', '芮', '柱', '英'];
+      const char = star.length > 1 ? star.charAt(1) : star.charAt(0);
+      if (auspicious.includes(char)) return ' qmdj-auspicious';
+      if (inauspicious.includes(char)) return ' qmdj-inauspicious';
+      return '';
+    }
+
     let qmdjHtml = '';
     luoShuOrder.forEach(id => {
       const p = data.qmdj.palaces.find(x => x.id === id);
@@ -651,6 +671,7 @@ function renderChart(data, input) {
       
       const isZhiFu = p.star === data.qmdj.duty_star;
       const zhifuClass = isZhiFu ? ' zhifu-palace' : '';
+      const palaceClass = ` qmdj-palace-${id}`;
 
       // Build badges HTML for Kong Wang and Tian Ma
       let badgesHtml = '';
@@ -668,14 +689,14 @@ function renderChart(data, input) {
       }
 
       qmdjHtml += `
-        <div class="qmdj-palace${zhifuClass}">
+        <div class="qmdj-palace${zhifuClass}${palaceClass}">
           <div class="qmdj-col-left">
-            <div class="qmdj-star">${p.star || ''}</div>
+            <div class="qmdj-star${getQmdjStarClass(p.star)}">${p.star || ''}</div>
           </div>
           <div class="qmdj-col-center">
-            <div class="qmdj-heaven">${p.heaven_stem || ''}</div>
-            <div class="qmdj-door-box">${p.door || ''}</div>
-            <div class="qmdj-earth">${p.earth_stem || ''}</div>
+            <div class="qmdj-heaven ${getStemColorClass(p.heaven_stem)}">${p.heaven_stem || ''}</div>
+            <div class="qmdj-door-box${getQmdjDoorClass(p.door)}">${p.door || ''}</div>
+            <div class="qmdj-earth ${getStemColorClass(p.earth_stem)}">${p.earth_stem || ''}</div>
           </div>
           <div class="qmdj-col-right">
             <div class="qmdj-god">${p.god || ''}</div>
