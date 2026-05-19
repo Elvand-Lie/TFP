@@ -690,16 +690,12 @@ function renderChart(data, input) {
 
       qmdjHtml += `
         <div class="qmdj-palace${zhifuClass}${palaceClass}">
-          <div class="qmdj-col-left">
+          <div class="qmdj-palace-inner">
             <div class="qmdj-star${getQmdjStarClass(p.star)}">${p.star || ''}</div>
-          </div>
-          <div class="qmdj-col-center">
-            <div class="qmdj-heaven ${getStemColorClass(p.heaven_stem)}">${p.heaven_stem || ''}</div>
-            <div class="qmdj-door-box${getQmdjDoorClass(p.door)}">${p.door || ''}</div>
-            <div class="qmdj-earth ${getStemColorClass(p.earth_stem)}">${p.earth_stem || ''}</div>
-          </div>
-          <div class="qmdj-col-right">
             <div class="qmdj-god">${p.god || ''}</div>
+            <div class="qmdj-heaven ${getElementClass(STEM_ELEMENT[p.heaven_stem])}">${p.heaven_stem || ''}</div>
+            <div class="qmdj-door-box${getQmdjDoorClass(p.door)}">${p.door || ''}</div>
+            <div class="qmdj-earth ${getElementClass(STEM_ELEMENT[p.earth_stem])}">${p.earth_stem || ''}</div>
           </div>
           <div class="qmdj-direction">${directionNames[id]}</div>
           ${badgesHtml}
