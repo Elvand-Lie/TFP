@@ -299,47 +299,58 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
 
 
 
-/* ─── LUCK PILLARS ─── */
-.luck-section { margin-bottom: 80px; }
-.luck-section .section-tag { margin-bottom: 32px; }
-.luck-timeline {
-  display: flex; gap: 0; overflow-x: auto;
-  border: 1px solid rgba(113,1,1,0.25);
-  scrollbar-width: thin; scrollbar-color: var(--crimson) var(--black);
-}
-.luck-timeline::-webkit-scrollbar { height: 4px; }
-.luck-timeline::-webkit-scrollbar-track { background: var(--black); }
-.luck-timeline::-webkit-scrollbar-thumb { background: var(--crimson); }
+/* ─── TIME DASHBOARD (3-TIER) ─── */
+.dashboard-section { margin-bottom: 60px; }
+.dashboard-tier::-webkit-scrollbar { display: none; } /* Hide default scrollbar on tiers if needed */
+.tier-items::-webkit-scrollbar { height: 4px; }
+.tier-items::-webkit-scrollbar-track { background: var(--black); }
+.tier-items::-webkit-scrollbar-thumb { background: var(--crimson); }
 
-.luck-card {
-  flex: 1;
-  min-width: 120px; text-align: center;
-  border-right: 1px solid rgba(113,1,1,0.15);
-  transition: background 0.3s;
+.tier-item {
+  flex: 0 0 auto;
+  min-width: 100px;
+  text-align: center;
+  background: rgba(15,15,16,0.6);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
-.luck-card:last-child { border-right: none; }
-.luck-card:hover { background: rgba(28,28,30,0.8); }
-.luck-card.current {
-  background: rgba(113,1,1,0.12);
-  border-bottom: 3px solid var(--crimson-text);
+.tier-item:hover {
+  background: rgba(28,28,30,0.9);
+  border-color: rgba(255,255,255,0.15);
 }
-.luck-age {
-  padding: 12px 16px;
-  font-family: var(--font-sans); font-size: 0.7rem;
-  font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
-  color: var(--gold); background: rgba(28,28,30,0.6);
-  border-bottom: 1px solid rgba(113,1,1,0.15);
+.tier-item.active {
+  background: rgba(113,1,1,0.15);
+  border-color: var(--crimson-text);
+  box-shadow: 0 4px 15px rgba(113,1,1,0.3);
 }
-.luck-card.current .luck-age { background: var(--crimson); color: var(--ivory); }
-.luck-stem-cell, .luck-branch-cell {
-  padding: 16px 12px;
-  border-bottom: 1px solid rgba(113,1,1,0.1);
+.tier-item.active::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--crimson-text);
 }
-.luck-char { font-size: 1.8rem; line-height: 1; margin-bottom: 4px; font-weight: 600; }
-.luck-name { font-size: 0.7rem; color: var(--beige); }
-.luck-years {
-  padding: 10px 12px; font-size: 0.7rem; color: var(--muted);
-  font-family: var(--font-sans);
+
+.tier-item-header {
+  font-size: 0.75rem; color: var(--gold);
+  margin-bottom: 8px; font-weight: 500;
+  min-height: 14px;
+}
+.tier-item-char {
+  font-size: 1.6rem; font-weight: 700; line-height: 1.1; margin-bottom: 2px;
+}
+.tier-item-sub {
+  font-size: 0.65rem; color: var(--muted);
+  margin-top: 6px; padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.tier-item-hidden {
+  display: flex; flex-direction: column; gap: 2px; margin-top: 6px;
 }
 
 /* ─── ELEMENT ANALYSIS ─── */

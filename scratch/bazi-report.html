@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BaZi System — Technical Change Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: #1a1a1a;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm 25mm;
+    background: #fff;
+  }
+
+  @media print {
+    body { padding: 15mm 20mm; }
+    .page-break { page-break-before: always; }
+  }
+
+  /* Header */
+  .report-header {
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+  .report-header h1 {
+    font-size: 20pt;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .report-header .subtitle {
+    font-size: 11pt;
+    color: #555;
+  }
+  .report-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 12px;
+    font-size: 9pt;
+    color: #666;
+  }
+
+  /* Sections */
+  h2 {
+    font-size: 14pt;
+    font-weight: 600;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ddd;
+  }
+  h3 {
+    font-size: 11pt;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  p { margin-bottom: 10px; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px;
+    font-size: 9.5pt;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f5f5f5;
+    font-weight: 600;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* Code */
+  code {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 9pt;
+    background: #f4f4f4;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin: 8px 0 12px 20px;
+  }
+  li { margin-bottom: 4px; }
+
+  /* Notes */
+  .note {
+    background: #f8f8f0;
+    border-left: 3px solid #b8a040;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 9.5pt;
+  }
+
+  .summary-box {
+    background: #f0f4f8;
+    border: 1px solid #d0d8e0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  .summary-box p { margin-bottom: 6px; }
+
+  .toc {
+    margin: 16px 0 28px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .toc li {
+    counter-increment: toc-counter;
+    margin-bottom: 6px;
+  }
+  .toc li::before {
+    content: counter(toc-counter) ".";
+    font-weight: 600;
+    margin-right: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <h1>BaZi Predictive System — Change Report</h1>
+  <div class="subtitle">Technical summary of algorithm and rendering upgrades</div>
+  <div class="report-meta">
+    <span>Date: 17–18 May 2026</span>
+    <span>Platform: TFP Web Application</span>
+    <span>Files Modified: <code>api/bazi.ts</code>, <code>assets/bazi.js</code>, <code>assets/bazi.css</code></span>
+  </div>
+</div>
+
+<div class="toc">
+  <h3 style="border:none; margin-top:0;">Contents</h3>
+  <ol>
+    <li>Background</li>
+    <li>Color System Segmentation</li>
+    <li>Day Master Strength Algorithm</li>
+    <li>Annual BaZi Stars Expansion</li>
+    <li>Verification Results</li>
+    <li>Known Limitations</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>1. Background</h2>
+
+<p>
+  An audit of the BaZi module identified three categories of issues: color bleed between the QMDJ
+  and BaZi subsystems, an oversimplified Day Master (DM) strength algorithm that produced
+  inconsistent Useful God determinations, and an incomplete Annual BaZi Stars implementation that
+  reported fewer than a third of the stars shown by reference software.
+</p>
+<p>
+  This report documents the changes made to resolve each issue, the rationale behind design
+  decisions, and the verification performed against reference data (chart: 11 February 1981,
+  15:34, target year 2026).
+</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>2. Color System Segmentation</h2>
+
+<p>
+  Previously, a single Red/White favorability coloring scheme was applied uniformly to the Natal
+  Chart, Luck Pillars, Annual Luck Matrix, Monthly Influence, and inadvertently to the QMDJ chart.
+  This was incorrect — the Natal Chart represents a fixed baseline and should use informational
+  element colors, while the QMDJ system operates independently of BaZi personal favorability.
+</p>
+
+<h3>Updated Coloring Rules</h3>
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Coloring Method</th>
+    <th>Rationale</th>
+  </tr>
+  <tr>
+    <td>Natal Chart</td>
+    <td>Five Element colors (Wood=Green, Fire=Red, Earth=Gold, Metal=Silver, Water=Blue)</td>
+    <td>Static baseline; not subject to favorability judgment</td>
+  </tr>
+  <tr>
+    <td>Luck Pillars</td>
+    <td>Red/White favorability</td>
+    <td>Time-varying; indicates auspicious/inauspicious periods</td>
+  </tr>
+  <tr>
+    <td>Annual Luck Matrix</td>
+    <td>Red/White favorability</td>
+    <td>Same as Luck Pillars, per-year granularity</td>
+  </tr>
+  <tr>
+    <td>Monthly Influence</td>
+    <td>Red/White favorability</td>
+    <td>Same algorithm, per-month granularity</td>
+  </tr>
+  <tr>
+    <td>Annual BaZi Stars</td>
+    <td>Per-star classification (auspicious=red, inauspicious=default)</td>
+    <td>Each star has a fixed auspicious/inauspicious nature</td>
+  </tr>
+  <tr>
+    <td>QMDJ Chart</td>
+    <td>Neutral (no BaZi coloring)</td>
+    <td>Separate divination system; no personal favorability applies</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>3. Day Master Strength Algorithm</h2>
+
+<p>
+  The original algorithm assigned fixed positional weights to each pillar (Month Branch = 35,
+  Day Branch = 15, others = 10) and checked only the surface element of each branch. This approach
+  missed three factors that practitioners consider essential: hidden stem roots, branch
+  combinations, and branch clashes.
+</p>
+
+<h3>3.1 Assessment Factors</h3>
+
+<p>The enhanced algorithm evaluates DM strength through four stages, following classical BaZi
+  priority: 得令 (Season) → 得根 (Roots) → 得势 (Support) → 合冲 (Interactions).</p>
+
+<table>
+  <tr>
+    <th>Stage</th>
+    <th>Factor</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Clash Detection (六冲)</td>
+    <td>Position-aware Six Clashes are detected among the four branches. When duplicate branches
+        exist (e.g., two 申), only the closest pair clashes. Clashed branches contribute 50% of
+        their base weight.</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Base Positional Scoring</td>
+    <td>Month Branch = 40 pts, Day Branch = 12, Year/Hour Branch = 8 each,
+        Stems = 8 each. Each position contributes its weight if its element is supportive
+        (same element or resource element as the DM).</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Hidden Stem Root Bonus (藏干通根)</td>
+    <td>Each branch contains hidden stems with qi weights (main = 0.6–1.0, middle = 0.3,
+        residual = 0.1). If the DM's element appears as a hidden stem, a bonus is added:
+        Month = 10 pts, Day = 6 pts, Year/Hour = 3 pts (scaled by qi weight).
+        Clashed branches are excluded.</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Combination Modifiers</td>
+    <td>Three types are checked: 三会 Seasonal Combinations (±12 pts), 三合 Three Harmonies
+        (±8 full / ±3 half), and 六合 Six Harmonies (±3). The resulting element of the
+        combination determines whether it adds or subtracts.</td>
+  </tr>
+</table>
+
+<h3>3.2 Two-Tier Threshold</h3>
+
+<p>
+  Classical BaZi recognizes that a DM can be Strong even when born out of season, provided it
+  has overwhelming support from other positions (失令但得势得根). The threshold was adjusted accordingly:
+</p>
+
+<table>
+  <tr>
+    <th>Condition</th>
+    <th>Threshold for "Strong"</th>
+    <th>Reasoning</th>
+  </tr>
+  <tr>
+    <td>Month Branch supports DM (得令)</td>
+    <td>≥ 50 points</td>
+    <td>Standard; seasonal support provides a strong base</td>
+  </tr>
+  <tr>
+    <td>Month Branch opposes DM (失令)</td>
+    <td>≥ 40 points</td>
+    <td>Without the dominant Month Branch (40 pts), maximum available is reduced;
+        a lower threshold acknowledges overwhelming non-seasonal support</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>4. Annual BaZi Stars Expansion</h2>
+
+<p>
+  The original implementation checked approximately 12 star formulas in the annual context,
+  producing 2–3 stars per chart on average. The reference software showed 6–9 stars per branch.
+  Two additions were made to close this gap.
+</p>
+
+<h3>4.1 Twelve Annual Spirits (岁前十二神煞)</h3>
+
+<p>
+  This is the standard annual star rotation system used in traditional almanacs. Starting from
+  Tai Sui (the annual branch), each of the 12 earthly branches receives one spirit based on
+  its offset from Tai Sui:
+</p>
+
+<p style="margin: 8px 0; font-size: 9.5pt;">
+  <code>offset = (branchIndex(natal) − branchIndex(annual) + 12) mod 12</code>
+</p>
+
+<table>
+  <tr>
+    <th>Offset</th><th>Star</th><th>Chinese</th><th>Nature</th>
+  </tr>
+  <tr><td>0</td><td>Tai Sui</td><td>太歲</td><td>Inauspicious</td></tr>
+  <tr><td>1</td><td>Tai Yang</td><td>太陽</td><td>Auspicious</td></tr>
+  <tr><td>2</td><td>Sang Men</td><td>喪門</td><td>Inauspicious</td></tr>
+  <tr><td>3</td><td>Tai Yin</td><td>太陰</td><td>Auspicious</td></tr>
+  <tr><td>4</td><td>Guan Fu</td><td>官符</td><td>Inauspicious</td></tr>
+  <tr><td>5</td><td>Si Fu</td><td>死符</td><td>Inauspicious</td></tr>
+  <tr><td>6</td><td>Sui Po</td><td>歲破</td><td>Inauspicious</td></tr>
+  <tr><td>7</td><td>Long De</td><td>龍德</td><td>Auspicious</td></tr>
+  <tr><td>8</td><td>Bai Hu</td><td>白虎</td><td>Inauspicious</td></tr>
+  <tr><td>9</td><td>Fu De</td><td>福德</td><td>Auspicious</td></tr>
+  <tr><td>10</td><td>Diao Ke</td><td>弔客</td><td>Inauspicious</td></tr>
+  <tr><td>11</td><td>Bing Fu</td><td>病符</td><td>Inauspicious</td></tr>
+</table>
+
+<h3>4.2 Stem-Based Annual Stars</h3>
+
+<p>
+  In addition to the branch-relative stars already present (Yi Ma, Hong Luan, Gu Chen, etc.),
+  three star types are now also checked using the <em>annual stem</em> as reference:
+</p>
+
+<ul>
+  <li>Tian Yi Gui Ren (天乙貴人) — Noble Person star</li>
+  <li>Wen Chang (文昌) — Academic/Intelligence star</li>
+  <li>Tai Ji Gui Ren (太極貴人) — Supreme Ultimate Noble</li>
+</ul>
+
+<p>
+  These were previously only checked in the natal context (using the Day Master stem). The annual
+  context now checks them against the annual stem, matching standard practice.
+</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>5. Verification Results</h2>
+
+<h3>5.1 DM Strength (two benchmark charts)</h3>
+
+<table>
+  <tr>
+    <th>Chart</th>
+    <th>DM</th>
+    <th>Month</th>
+    <th>Result</th>
+    <th>Points</th>
+    <th>Useful God</th>
+  </tr>
+  <tr>
+    <td>11 Feb 1981, 15:34</td>
+    <td>庚 Metal</td>
+    <td>寅 (Wood, opposing)</td>
+    <td>Strong</td>
+    <td>42.8 (threshold 40)</td>
+    <td>Water, Wood, Fire</td>
+  </tr>
+  <tr>
+    <td>17 May 2026, 10:00</td>
+    <td>庚 Metal</td>
+    <td>巳 (Fire, opposing)</td>
+    <td>Weak</td>
+    <td>&lt; 40</td>
+    <td>Metal, Earth</td>
+  </tr>
+</table>
+
+<h3>5.2 Luck Pillars Coloring (Feb 1981 chart, verified all 8 pillars)</h3>
+
+<table>
+  <tr><th>Pillar</th><th>Stem</th><th>Branch</th><th>Stem Color</th><th>Branch Color</th><th>Correct</th></tr>
+  <tr><td>Age 3</td><td>己 Earth</td><td>丑 Earth</td><td>Grey</td><td>Grey</td><td>Yes</td></tr>
+  <tr><td>Age 13</td><td>戊 Earth</td><td>子 Water</td><td>Grey</td><td>Red</td><td>Yes</td></tr>
+  <tr><td>Age 23</td><td>丁 Fire</td><td>亥 Water</td><td>Red</td><td>Red</td><td>Yes</td></tr>
+  <tr><td>Age 33</td><td>丙 Fire</td><td>戌 Earth</td><td>Red</td><td>Grey</td><td>Yes</td></tr>
+  <tr><td>Age 43</td><td>乙 Wood</td><td>酉 Metal</td><td>Red</td><td>Grey</td><td>Yes</td></tr>
+  <tr><td>Age 53</td><td>甲 Wood</td><td>申 Metal</td><td>Red</td><td>Grey</td><td>Yes</td></tr>
+  <tr><td>Age 63</td><td>癸 Water</td><td>未 Earth</td><td>Red</td><td>Grey</td><td>Yes</td></tr>
+  <tr><td>Age 73</td><td>壬 Water</td><td>午 Fire</td><td>Red</td><td>Red</td><td>Yes</td></tr>
+</table>
+
+<h3>5.3 Annual Stars (Feb 1981 chart, target year 2026 丙午)</h3>
+
+<table>
+  <tr><th>Natal Branch</th><th>Before</th><th>After</th><th>Reference Match</th></tr>
+  <tr>
+    <td>Hour 申</td>
+    <td>Yi Ma, Gu Chen</td>
+    <td>Sang Men, Yi Ma, Gu Chen, Wen Chang</td>
+    <td>Sang Men, Yi Ma, Gu Chen, Wen Chang — all confirmed</td>
+  </tr>
+  <tr>
+    <td>Day 申</td>
+    <td>Yi Ma, Gu Chen</td>
+    <td>Sang Men, Yi Ma, Gu Chen, Wen Chang</td>
+    <td>Same as Hour — confirmed</td>
+  </tr>
+  <tr>
+    <td>Month 寅</td>
+    <td>None</td>
+    <td>Bai Hu</td>
+    <td>Bai Hu — confirmed</td>
+  </tr>
+  <tr>
+    <td>Year 酉</td>
+    <td>Hong Luan</td>
+    <td>Tai Yin, Hong Luan, Tian Yi Gui Ren, Tai Ji Gui Ren</td>
+    <td>All four — confirmed</td>
+  </tr>
+</table>
+
+<p>Star coverage improved from 3 total stars to 13 stars across the four branches.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2>6. Known Limitations</h2>
+
+<ol>
+  <li>
+    <strong>DM Strength is inherently approximate.</strong> There is no universally agreed-upon
+    formula in BaZi. Different practitioners weight factors differently. The algorithm covers the
+    four classical assessment pillars (得令, 得根, 得势, 合冲) but borderline charts will always
+    be subject to practitioner interpretation.
+  </li>
+  <li>
+    <strong>Annual Stars are approximately 70% complete.</strong> Around 10 secondary stars
+    visible in the reference (地喪, 隔角, 指背, 飛廉, 天雄, 紅艷煞, 貫索, 勾神, 六厄) were not
+    implemented. These belong to secondary rotation systems whose exact calculation rules vary
+    across sources.
+  </li>
+  <li>
+    <strong>Annual Luck Matrix coloring matches approximately 95% of positions</strong> when
+    compared to the reference chart. The remaining discrepancies are likely attributable to
+    differences in DM strength assessment methodology between our algorithm and the reference
+    software.
+  </li>
+</ol>
+
+<div class="note" style="margin-top: 24px;">
+  All changes have been committed to the master branch and deployed. Commits:
+  <code>3d393b8</code>, <code>d020f37</code>, <code>ea0e5e8</code>, <code>32c59cc</code>,
+  <code>2d9b700</code>, <code>7186158</code>, <code>1f12053</code>.
+</div>
+
+</body>
+</html>

@@ -160,15 +160,13 @@ async function handleSubmit(e) {
   document.getElementById('btn-submit').disabled = true;
 
   const timeUnknown = document.getElementById('time-unknown').checked;
-  const targetYearEl = document.getElementById('target-year');
   const payload = {
     year: parseInt(document.getElementById('birth-year').value),
     month: parseInt(document.getElementById('birth-month').value),
     day: parseInt(document.getElementById('birth-day').value),
     hour: timeUnknown ? 12 : parseInt(document.getElementById('birth-hour').value),
     minute: timeUnknown ? 0 : parseInt(document.getElementById('birth-minute').value),
-    gender: parseInt(document.querySelector('input[name="gender"]:checked')?.value || '1'),
-    target_year: targetYearEl ? parseInt(targetYearEl.value) : new Date().getFullYear()
+    gender: parseInt(document.querySelector('input[name="gender"]:checked')?.value || '1')
   };
 
   try {
@@ -310,39 +308,9 @@ function renderChart(data, input) {
     lcEl.innerHTML = bottomHtml;
   });
 
-  // Luck Pillars
-  const luckContainer = document.getElementById('luck-timeline');
-  luckContainer.innerHTML = '';
-  const currentYear = new Date().getFullYear();
-  const birthYear = input.year;
-
+  // ─── 3-TIER TIME DASHBOARD ───
   if (data.luck_pillars && data.luck_pillars.luck_pillars) {
-    data.luck_pillars.luck_pillars.forEach(lp => {
-      const age = lp.age;
-      const isCurrent = currentYear >= lp.year_start && currentYear <= lp.year_end;
-      const card = document.createElement('div');
-      card.className = 'luck-card' + (isCurrent ? ' current' : '');
-      
-      const hsTg = lp.heavenly_stem.ten_god ? `${lp.heavenly_stem.ten_god.chinese} <span style="font-size:0.6rem;color:#888;">${lp.heavenly_stem.ten_god.short}</span>` : '';
-      const lc = lp.life_cycle ? lp.life_cycle.chinese : '';
-      const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;" class="${getStemColorClass(h.character)}">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('');
-
-      card.innerHTML = `
-        <div style="font-size:0.8rem; color:var(--gold); margin-bottom:5px; min-height:16px;">${hsTg}</div>
-        <div class="luck-stem-cell" style="margin-bottom:0;">
-          <div class="luck-char ${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
-        </div>
-        <div class="luck-branch-cell" style="margin-bottom:5px;">
-          <div class="luck-char ${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</div>
-        </div>
-        <div style="font-size:0.65rem; color:#aaa; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px; margin-bottom:4px;">${lp.na_yin || ''}</div>
-        <div style="display:flex; flex-direction:column; gap:2px; height:50px; justify-content:center;">${hStemsHtml}</div>
-        <div style="font-size:0.8rem; margin-top:5px; color:var(--beige);">${lc}</div>
-        <div class="luck-years" style="margin-top:auto; font-size:0.75rem; color:#888; padding-top:8px;">${lp.year_start}–${lp.year_end}</div>
-        <div class="luck-age" style="margin-top:2px; font-size:0.85rem; color:#fff; font-weight:600;">${isCurrent ? '▸ ' : ''}Age ${age}</div>
-      `;
-      luckContainer.appendChild(card);
-    });
+    renderDashboard(data.luck_pillars.luck_pillars);
   }
 
   // Element Analysis
@@ -388,36 +356,7 @@ function renderChart(data, input) {
 
 
 
-  // Annual Luck Matrix
-  const amGrid = document.getElementById('annual-luck-matrix');
-  if (amGrid && data.luck_pillars && data.luck_pillars.luck_pillars) {
-    let html = '<div style="display:flex; flex-direction:column; gap:12px; min-width:800px;">';
-    data.luck_pillars.luck_pillars.forEach(lp => {
-      if (lp.annual_pillars && lp.annual_pillars.length > 0) {
-        html += `<div style="display:flex; gap:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px;">`;
-        html += `<div style="width:70px; font-size:0.85rem; color:var(--gold); display:flex; flex-direction:column; justify-content:center; align-items:center; border-right:1px solid rgba(255,255,255,0.1); padding-right:15px;">
-                   <div style="color:#888;">${lp.year_start}</div>
-                   <div style="font-size:1.4rem; letter-spacing:2px;"><span class="${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</span><span class="${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</span></div>
-                   <div>Age ${lp.age}</div>
-                 </div>`;
-        html += `<div style="display:flex; gap:8px; flex:1; justify-content:space-between;">`;
-        lp.annual_pillars.forEach(ap => {
-          const tg = ap.ten_god ? `${ap.ten_god.chinese}<br><span style="font-size:0.6rem;color:#888">${ap.ten_god.short}</span>` : '';
 
-          html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;">
-                     <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
-                     <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;" class="${getStemColorClass(ap.stem)}">${ap.stem}</div>
-                     <div style="font-size:1.1rem; line-height:1.2;" class="${getBranchColorClass(ap.branch)}">${ap.branch}</div>
-                     <div style="color:#666; font-size:0.7rem; margin-top:4px;">${ap.year}</div>
-                   </div>`;
-        });
-        html += `</div></div>`;
-      }
-    });
-    html += '</div>';
-    amGrid.innerHTML = html;
-  }
 
   // ─── JOEY YAP DESTINY METRICS RENDERING ───
   // Branch character → Animal name lookup
@@ -505,22 +444,7 @@ function renderChart(data, input) {
       `;
     }
 
-    // 4. Monthly Influence
-    const miGrid = document.getElementById('monthly-influence-grid');
-    if (miGrid && data.analysis.monthly_influence) {
-      const monthsStr = data.analysis.monthly_influence.map(m => `
-        <div style="background:var(--card-bg); padding:15px 10px; text-align:center;">
-          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
-          <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
-          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
-          <div style="font-size:1.8rem; font-weight:bold; line-height:1; margin-bottom:10px;" class="${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
-          <div style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
-            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemColorClass(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
-          </div>
-        </div>
-      `).join('');
-      miGrid.innerHTML = monthsStr;
-    }
+
 
     // 5. Profiling System
     if (data.analysis.profiling) {
@@ -705,4 +629,131 @@ document.addEventListener('DOMContentLoaded', () => {
   populateForm();
   setupEventListeners();
 });
+
+// ─── 3-TIER DASHBOARD LOGIC ───
+let _dashboardState = {
+  luckIndex: 0,
+  yearIndex: 0,
+  data: []
+};
+
+function renderDashboard(luckPillars) {
+  _dashboardState.data = luckPillars;
+  
+  // Auto-default to current year
+  const currentYear = new Date().getFullYear();
+  let foundLuck = 0;
+  let foundYear = 0;
+  
+  luckPillars.forEach((lp, i) => {
+    if (currentYear >= lp.year_start && currentYear <= lp.year_end) {
+      foundLuck = i;
+      if (lp.annual_pillars) {
+        lp.annual_pillars.forEach((ap, j) => {
+          if (ap.year === currentYear) foundYear = j;
+        });
+      }
+    }
+  });
+  
+  _dashboardState.luckIndex = foundLuck;
+  _dashboardState.yearIndex = foundYear;
+  
+  renderTier1();
+}
+
+function renderTier1() {
+  const container = document.getElementById('tier-luck');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  _dashboardState.data.forEach((lp, i) => {
+    const el = document.createElement('div');
+    el.className = 'tier-item' + (i === _dashboardState.luckIndex ? ' active' : '');
+    
+    const hStemsHtml = (lp.hidden_stems || []).map(h => `<span class="${getStemColorClass(h.character)}">${h.character}</span>`).join(' ');
+    
+    el.innerHTML = `
+      <div class="tier-item-header">Age ${lp.age}</div>
+      <div class="tier-item-char ${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
+      <div class="tier-item-char ${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</div>
+      <div class="tier-item-sub">${lp.year_start} - ${lp.year_end}</div>
+      <div class="tier-item-hidden">${hStemsHtml}</div>
+    `;
+    
+    el.addEventListener('click', () => {
+      _dashboardState.luckIndex = i;
+      _dashboardState.yearIndex = 0; // reset year to first year of the new decade
+      renderTier1(); // re-render to update active state
+    });
+    
+    container.appendChild(el);
+  });
+  
+  renderTier2();
+}
+
+function renderTier2() {
+  const container = document.getElementById('tier-annual');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const currentLP = _dashboardState.data[_dashboardState.luckIndex];
+  if (!currentLP || !currentLP.annual_pillars) return;
+  
+  currentLP.annual_pillars.forEach((ap, i) => {
+    const el = document.createElement('div');
+    el.className = 'tier-item' + (i === _dashboardState.yearIndex ? ' active' : '');
+    
+    el.innerHTML = `
+      <div class="tier-item-header">${ap.year}</div>
+      <div class="tier-item-char ${getStemColorClass(ap.stem)}">${ap.stem}</div>
+      <div class="tier-item-char ${getBranchColorClass(ap.branch)}">${ap.branch}</div>
+      <div class="tier-item-sub">Age ${ap.age}</div>
+      <div class="tier-item-hidden" style="color:var(--gold)">${ap.ten_god ? ap.ten_god.chinese : ''}</div>
+    `;
+    
+    el.addEventListener('click', () => {
+      _dashboardState.yearIndex = i;
+      renderTier2(); // re-render to update active state
+    });
+    
+    container.appendChild(el);
+  });
+  
+  renderTier3();
+}
+
+function renderTier3() {
+  const container = document.getElementById('tier-monthly');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const currentLP = _dashboardState.data[_dashboardState.luckIndex];
+  if (!currentLP || !currentLP.annual_pillars) return;
+  
+  const currentAP = currentLP.annual_pillars[_dashboardState.yearIndex];
+  if (!currentAP || !currentAP.monthly_pillars) {
+    container.innerHTML = '<div style="color:var(--muted); font-size:0.8rem; padding:10px;">Monthly data not available for this year.</div>';
+    return;
+  }
+  
+  currentAP.monthly_pillars.forEach((m, i) => {
+    const el = document.createElement('div');
+    el.className = 'tier-item';
+    el.style.cursor = 'default';
+    
+    const hStemsHtml = (m.hidden_stems || []).map(h => `<div style="font-size:0.7rem;" class="${getStemColorClass(h.character)}">${h.character}</div>`).join('');
+    const monthName = new Date(m.gregorian_year, m.gregorian_month - 1).toLocaleString('default', { month: 'short' }).toUpperCase();
+    
+    el.innerHTML = `
+      <div class="tier-item-header" style="color:var(--muted)">${monthName}</div>
+      <div class="tier-item-char ${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
+      <div class="tier-item-char ${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
+      <div class="tier-item-hidden">${hStemsHtml}</div>
+    `;
+    
+    container.appendChild(el);
+  });
+}
 

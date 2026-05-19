@@ -1038,12 +1038,48 @@ export default function handler(req: any, res: any) {
             for (let j = 0; j < liuNians.length; j++) {
               const ln = liuNians[j];
               const lnGanZhi = ln.getGanZhi();
+              
+              // 12 Months of the Year
+              const monthlyPillars = [];
+              for (let m = 2; m <= 13; m++) {
+                const yearToUse = m > 12 ? ln.getYear() + 1 : ln.getYear();
+                const monthToUse = m > 12 ? m - 12 : m;
+                const d = new Date(yearToUse, monthToUse - 1, 15);
+                const s = Solar.fromDate(d);
+                const mPillar = s.getLunar().getEightChar().getMonth();
+                const mStem = mPillar.charAt(0);
+                const mBranch = mPillar.charAt(1);
+                
+                const mHiddenRaw = HIDDEN_STEMS_MAP[mBranch] || [];
+                const mHidden = mHiddenRaw.map(h => ({
+                  character: h,
+                  element: STEM_META[h]?.element || '',
+                  ten_god: getTenGod(dayStemChar, h)
+                }));
+
+                monthlyPillars.push({
+                  gregorian_month: monthToUse,
+                  gregorian_year: yearToUse,
+                  stem: {
+                    character: mStem,
+                    element: STEM_META[mStem]?.element || '',
+                    ten_god: getTenGod(dayStemChar, mStem)
+                  },
+                  branch: {
+                    character: mBranch,
+                    animal: BRANCH_META[mBranch]?.animal || ''
+                  },
+                  hidden_stems: mHidden
+                });
+              }
+
               lnData.push({
                 age: ln.getAge(),
                 year: ln.getYear(),
                 stem: lnGanZhi.charAt(0),
                 branch: lnGanZhi.charAt(1),
-                ten_god: getTenGod(dayStemChar, lnGanZhi.charAt(0))
+                ten_god: getTenGod(dayStemChar, lnGanZhi.charAt(0)),
+                monthly_pillars: monthlyPillars
               });
             }
 

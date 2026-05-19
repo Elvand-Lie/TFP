@@ -167,17 +167,7 @@
               <label for="birth-minute">Minute</label>
               <select id="birth-minute"></select>
             </div>
-            <div class="form-group">
-              <label for="target-year">Target Year</label>
-              <select id="target-year">
-                <option value="2025">2025</option>
-                <option value="2026" selected>2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-                <option value="2030">2030</option>
-              </select>
-            </div>
+            <!-- Target year removed per request -->
           </div>
 
           <label class="form-checkbox">
@@ -256,62 +246,30 @@
         </div>
       </div>
 
-      <!-- Luck Pillars -->
-      <div class="luck-section reveal reveal-delay-2">
-        <p class="section-tag">Luck Pillars · 大運</p>
-        <div class="luck-timeline" id="luck-timeline"></div>
-      </div>
-
-      <!-- NEW: Joey Yap Personal Chart Details & 8 Mansions -->
-      <div class="joey-yap-section reveal" style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom: 60px;">
-        <div style="flex:1; min-width:300px;">
-          <p class="section-tag">Personal Chart Details · 命理資訊</p>
-          <div id="personal-chart-details" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden;"></div>
-        </div>
-        <div style="flex:1; min-width:300px;">
-          <p class="section-tag">Favorable Directions · 吉方 (8 Mansions)</p>
-          <div id="eight-mansions-favorable" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden; margin-bottom:20px;"></div>
-          <p class="section-tag">Unfavorable Directions · 凶方</p>
-          <div id="eight-mansions-unfavorable" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden;"></div>
-        </div>
-      </div>
-
-      <!-- NEW: Bazi Profiling System (Radar Chart & Profiles) -->
-      <div class="profiling-section reveal" style="margin-bottom:60px;">
-        <p class="section-tag">Bazi Profiling System · 五型格 & 十神格</p>
-        <div style="display:flex; flex-wrap:wrap; gap:20px; background:var(--card-bg); padding:1.5rem; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
-          <div style="flex:1; min-width:300px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-            <canvas id="profiling-radar" width="400" height="400"></canvas>
-            <div style="margin-top:10px; font-family:var(--font-sans); font-size:0.8rem; color:var(--muted);">Main Structure: <span id="main-structure-text" style="color:var(--gold);"></span></div>
+      <!-- NEW: 3-Tier Time Dashboard -->
+      <div class="dashboard-section reveal reveal-delay-2" style="margin-top:2rem;" id="time-dashboard-section">
+        <p class="section-tag">Time Dashboard · 大運 流年 流月</p>
+        <div class="dashboard-container" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden; padding: 1.5rem;">
+          
+          <!-- Tier 1: Luck Pillars -->
+          <div class="dashboard-tier">
+            <div class="dashboard-tier-title" style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;">10-Year Luck Pillars</div>
+            <div id="tier-luck" class="tier-items" style="display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05);"></div>
           </div>
-          <div style="flex:1; min-width:300px;">
-            <div id="profiling-bars" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+          <!-- Tier 2: Annual Pillars -->
+          <div class="dashboard-tier" style="margin-top:20px;">
+            <div class="dashboard-tier-title" style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;">Annual Pillars</div>
+            <div id="tier-annual" class="tier-items" style="display:flex; gap:10px; overflow-x:auto; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05);"></div>
           </div>
+
+          <!-- Tier 3: Monthly Influences -->
+          <div class="dashboard-tier" style="margin-top:20px;">
+            <div class="dashboard-tier-title" style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;">Monthly Influence</div>
+            <div id="tier-monthly" class="tier-items" style="display:flex; gap:10px; overflow-x:auto; padding-bottom:10px;"></div>
+          </div>
+          
         </div>
-      </div>
-
-      <!-- Element Analysis -->
-      <div class="element-section reveal">
-        <p class="section-tag">Five Elements · 五行</p>
-        <div class="element-grid" id="element-grid"></div>
-      </div>
-
-      <!-- Annual Luck Matrix -->
-      <div class="annual-section reveal reveal-delay-2" style="margin-top:2rem;">
-        <p class="section-tag">Annual Luck Matrix · 六十甲子 (Ages 1 - 90)</p>
-        <div id="annual-luck-matrix" style="background:var(--card-bg); padding:1rem; border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow-x:auto;"></div>
-      </div>
-
-      <!-- NEW: Monthly Influence Calendar -->
-      <div class="monthly-influence-section reveal" style="margin-top:2rem;">
-        <p class="section-tag">Monthly Influence · 流月運程</p>
-        <div id="monthly-influence-grid" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow-x:auto; display:grid; grid-template-columns: repeat(12, 1fr); gap:1px; background-color:rgba(113,1,1,0.15);"></div>
-      </div>
-
-      <!-- NEW: Annual BaZi Stars -->
-      <div class="annual-stars-section reveal" style="margin-top:2rem;">
-        <p class="section-tag">Annual BaZi Stars · 流年吉凶星</p>
-        <div id="annual-stars-table" style="background:var(--card-bg); border-radius:12px; border:1px solid rgba(255,255,255,0.05); overflow:hidden;"></div>
       </div>
 
       <!-- QIMEN DUNJIA (奇門遁甲) -->
