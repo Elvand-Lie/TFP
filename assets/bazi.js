@@ -95,6 +95,12 @@ function populateForm() {
     yearSel.appendChild(o);
   }
   yearSel.value = currentYear;
+  
+  // Set target year to current year dynamically
+  const targetYearEl = document.getElementById('target-year');
+  if (targetYearEl) {
+    targetYearEl.value = currentYear;
+  }
 
   const monthSel = document.getElementById('birth-month');
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
