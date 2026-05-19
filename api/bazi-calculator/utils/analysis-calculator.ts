@@ -28,29 +28,46 @@ export class AnalysisCalculator {
   }
 
   public calculateFiveFactors(pillars: Pillars): FiveFactors {
-    // Collect all elements including hidden stems
-    const elements = [
-      pillars.year.chinese[0],  // Year stem
-      pillars.month.chinese[0], // Month stem
-      pillars.day.chinese[0],   // Day stem
-      pillars.time.chinese[0],  // Hour stem
-      ...this.getHiddenStems(pillars.year.chinese[1]),
-      ...this.getHiddenStems(pillars.month.chinese[1]),
-      ...this.getHiddenStems(pillars.day.chinese[1]),
-      ...this.getHiddenStems(pillars.time.chinese[1])
-    ].map(stem => this.getElementFromStem(stem)).filter(Boolean);
-
     const weights: { [key: string]: number } = {
       WOOD: 0, FIRE: 0, EARTH: 0, METAL: 0, WATER: 0
     };
 
-    elements.forEach(element => {
-      if (weights[element] !== undefined) {
-        weights[element] += 1;
+    const addWeight = (stem: string, weight: number) => {
+      if (!stem) return;
+      const element = this.getElementFromStem(stem);
+      if (element && weights[element] !== undefined) {
+        weights[element] += weight;
       }
-    });
+    };
 
-    const total = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
+    // Heavenly Stems (Weight: 1.0 each)
+    addWeight(pillars.year.chinese[0], 1.0);
+    addWeight(pillars.month.chinese[0], 1.0);
+    addWeight(pillars.day.chinese[0], 1.0);
+    addWeight(pillars.time.chinese[0], 1.0);
+
+    // Earthly Branches (Hidden Stems distribution)
+    const processBranch = (branch: string) => {
+      if (!branch) return;
+      const hidden = this.getHiddenStems(branch);
+      if (hidden.length === 1) {
+        addWeight(hidden[0], 1.0); // Pure energy (Main Qi 100%)
+      } else if (hidden.length === 2) {
+        addWeight(hidden[0], 0.7); // Main Qi 70%
+        addWeight(hidden[1], 0.3); // Middle/Residual Qi 30%
+      } else if (hidden.length === 3) {
+        addWeight(hidden[0], 0.6); // Main Qi 60%
+        addWeight(hidden[1], 0.3); // Middle Qi 30%
+        addWeight(hidden[2], 0.1); // Residual Qi 10%
+      }
+    };
+
+    processBranch(pillars.year.chinese[1]);
+    processBranch(pillars.month.chinese[1]);
+    processBranch(pillars.day.chinese[1]);
+    processBranch(pillars.time.chinese[1]);
+
+    const total = Object.values(weights).reduce((a, b) => a + b, 0) || 1; // prevent div by zero
 
     return {
       WOOD: Math.round((weights.WOOD * 100) / total),
