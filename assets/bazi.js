@@ -308,9 +308,39 @@ function renderChart(data, input) {
     lcEl.innerHTML = bottomHtml;
   });
 
-  // ─── 3-TIER TIME DASHBOARD ───
+  // Luck Pillars
+  const luckContainer = document.getElementById('luck-timeline');
+  luckContainer.innerHTML = '';
+  const currentYear = new Date().getFullYear();
+  const birthYear = input.year;
+
   if (data.luck_pillars && data.luck_pillars.luck_pillars) {
-    renderDashboard(data.luck_pillars.luck_pillars);
+    data.luck_pillars.luck_pillars.forEach(lp => {
+      const age = lp.age;
+      const isCurrent = currentYear >= lp.year_start && currentYear <= lp.year_end;
+      const card = document.createElement('div');
+      card.className = 'luck-card' + (isCurrent ? ' current' : '');
+      
+      const hsTg = lp.heavenly_stem.ten_god ? `${lp.heavenly_stem.ten_god.chinese} <span style="font-size:0.6rem;color:#888;">${lp.heavenly_stem.ten_god.short}</span>` : '';
+      const lc = lp.life_cycle ? lp.life_cycle.chinese : '';
+      const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;" class="${getStemColorClass(h.character)}">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('');
+
+      card.innerHTML = `
+        <div style="font-size:0.8rem; color:var(--gold); margin-bottom:5px; min-height:16px;">${hsTg}</div>
+        <div class="luck-stem-cell" style="margin-bottom:0;">
+          <div class="luck-char ${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
+        </div>
+        <div class="luck-branch-cell" style="margin-bottom:5px;">
+          <div class="luck-char ${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</div>
+        </div>
+        <div style="font-size:0.65rem; color:#aaa; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px; margin-bottom:4px;">${lp.na_yin || ''}</div>
+        <div style="display:flex; flex-direction:column; gap:2px; height:50px; justify-content:center;">${hStemsHtml}</div>
+        <div style="font-size:0.8rem; margin-top:5px; color:var(--beige);">${lc}</div>
+        <div class="luck-years" style="margin-top:auto; font-size:0.75rem; color:#888; padding-top:8px;">${lp.year_start}–${lp.year_end}</div>
+        <div class="luck-age" style="margin-top:2px; font-size:0.85rem; color:#fff; font-weight:600;">${isCurrent ? '▸ ' : ''}Age ${age}</div>
+      `;
+      luckContainer.appendChild(card);
+    });
   }
 
   // Element Analysis
@@ -356,7 +386,36 @@ function renderChart(data, input) {
 
 
 
+  // Annual Luck Matrix
+  const amGrid = document.getElementById('annual-luck-matrix');
+  if (amGrid && data.luck_pillars && data.luck_pillars.luck_pillars) {
+    let html = '<div style="display:flex; flex-direction:column; gap:12px; min-width:800px;">';
+    data.luck_pillars.luck_pillars.forEach(lp => {
+      if (lp.annual_pillars && lp.annual_pillars.length > 0) {
+        html += `<div style="display:flex; gap:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px;">`;
+        html += `<div style="width:70px; font-size:0.85rem; color:var(--gold); display:flex; flex-direction:column; justify-content:center; align-items:center; border-right:1px solid rgba(255,255,255,0.1); padding-right:15px;">
+                   <div style="color:#888;">${lp.year_start}</div>
+                   <div style="font-size:1.4rem; letter-spacing:2px;"><span class="${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</span><span class="${getBranchColorClass(lp.earthly_branch.character)}">${lp.earthly_branch.character}</span></div>
+                   <div>Age ${lp.age}</div>
+                 </div>`;
+        html += `<div style="display:flex; gap:8px; flex:1; justify-content:space-between;">`;
+        lp.annual_pillars.forEach(ap => {
+          const tg = ap.ten_god ? `${ap.ten_god.chinese}<br><span style="font-size:0.6rem;color:#888">${ap.ten_god.short}</span>` : '';
 
+          html += `<div style="display:flex; flex-direction:column; align-items:center; width:45px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:6px 2px; border-radius:6px;">
+                     <div style="color:#aaa; font-size:0.75rem;">${ap.age}</div>
+                     <div style="color:var(--gold); font-size:0.75rem; margin-bottom:4px; min-height:24px; text-align:center; line-height:1.1;">${tg}</div>
+                     <div style="font-size:1.1rem; line-height:1.2;" class="${getStemColorClass(ap.stem)}">${ap.stem}</div>
+                     <div style="font-size:1.1rem; line-height:1.2;" class="${getBranchColorClass(ap.branch)}">${ap.branch}</div>
+                     <div style="color:#666; font-size:0.7rem; margin-top:4px;">${ap.year}</div>
+                   </div>`;
+        });
+        html += `</div></div>`;
+      }
+    });
+    html += '</div>';
+    amGrid.innerHTML = html;
+  }
 
   // ─── JOEY YAP DESTINY METRICS RENDERING ───
   // Branch character → Animal name lookup
@@ -444,7 +503,22 @@ function renderChart(data, input) {
       `;
     }
 
-
+    // 4. Monthly Influence
+    const miGrid = document.getElementById('monthly-influence-grid');
+    if (miGrid && data.analysis.monthly_influence) {
+      const monthsStr = data.analysis.monthly_influence.map(m => `
+        <div style="background:var(--card-bg); padding:15px 10px; text-align:center;">
+          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
+          <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
+          <div style="font-size:1.8rem; font-weight:bold; line-height:1; margin-bottom:10px;" class="${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
+          <div style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
+            ${m.hidden_stems.map(h => `<div style="font-size:0.85rem;" class="${getStemColorClass(h.character)}">${h.character} <span style="font-size:0.65rem; color:var(--muted);">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('')}
+          </div>
+        </div>
+      `).join('');
+      miGrid.innerHTML = monthsStr;
+    }
 
     // 5. Profiling System
     if (data.analysis.profiling) {
@@ -616,6 +690,11 @@ function renderChart(data, input) {
     qmdjSection.style.display = 'none';
   }
 
+  // ─── 3-TIER TIME DASHBOARD ───
+  if (data.luck_pillars && data.luck_pillars.luck_pillars) {
+    renderDashboard(data.luck_pillars.luck_pillars);
+  }
+
   // Show chart
   const chartSection = document.getElementById('bazi-chart');
   chartSection.classList.add('active');
@@ -756,4 +835,3 @@ function renderTier3() {
     container.appendChild(el);
   });
 }
-
