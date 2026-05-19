@@ -28,8 +28,6 @@ export class AnalysisCalculator {
   }
 
   public calculateFiveFactors(pillars: Pillars): FiveFactors {
-    const dayMasterElement = this.getElementFromStem(pillars.day.chinese[0]);
-
     // Collect all elements including hidden stems
     const elements = [
       pillars.year.chinese[0],  // Year stem
@@ -47,8 +45,7 @@ export class AnalysisCalculator {
     };
 
     elements.forEach(element => {
-      const relationship = ELEMENT_RELATIONSHIPS[dayMasterElement][element];
-      weights[element] += RELATIONSHIP_WEIGHTS[relationship];
+      weights[element] += 1;
     });
 
     const total = Object.values(weights).reduce((a, b) => a + b, 0);

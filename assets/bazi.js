@@ -1,16 +1,16 @@
 // ─── BAZI CALCULATOR JS ───────────────────────
 const HIDDEN_STEMS = {
   '子': [{char:'癸',name:'Gui',el:'Water'}],
-  '丑': [{char:'己',name:'Ji',el:'Earth'},{char:'癸',name:'Gui',el:'Water'},{char:'辛',name:'Xin',el:'Metal'}],
-  '寅': [{char:'甲',name:'Jia',el:'Wood'},{char:'丙',name:'Bing',el:'Fire'},{char:'戊',name:'Wu',el:'Earth'}],
+  '丑': [{char:'癸',name:'Gui',el:'Water'},{char:'己',name:'Ji',el:'Earth'},{char:'辛',name:'Xin',el:'Metal'}],
+  '寅': [{char:'戊',name:'Wu',el:'Earth'},{char:'甲',name:'Jia',el:'Wood'},{char:'丙',name:'Bing',el:'Fire'}],
   '卯': [{char:'乙',name:'Yi',el:'Wood'}],
-  '辰': [{char:'戊',name:'Wu',el:'Earth'},{char:'乙',name:'Yi',el:'Wood'},{char:'癸',name:'Gui',el:'Water'}],
-  '巳': [{char:'丙',name:'Bing',el:'Fire'},{char:'庚',name:'Geng',el:'Metal'},{char:'戊',name:'Wu',el:'Earth'}],
+  '辰': [{char:'乙',name:'Yi',el:'Wood'},{char:'戊',name:'Wu',el:'Earth'},{char:'癸',name:'Gui',el:'Water'}],
+  '巳': [{char:'戊',name:'Wu',el:'Earth'},{char:'丙',name:'Bing',el:'Fire'},{char:'庚',name:'Geng',el:'Metal'}],
   '午': [{char:'丁',name:'Ding',el:'Fire'},{char:'己',name:'Ji',el:'Earth'}],
-  '未': [{char:'己',name:'Ji',el:'Earth'},{char:'丁',name:'Ding',el:'Fire'},{char:'乙',name:'Yi',el:'Wood'}],
-  '申': [{char:'庚',name:'Geng',el:'Metal'},{char:'壬',name:'Ren',el:'Water'},{char:'戊',name:'Wu',el:'Earth'}],
+  '未': [{char:'丁',name:'Ding',el:'Fire'},{char:'己',name:'Ji',el:'Earth'},{char:'乙',name:'Yi',el:'Wood'}],
+  '申': [{char:'戊',name:'Wu',el:'Earth'},{char:'庚',name:'Geng',el:'Metal'},{char:'壬',name:'Ren',el:'Water'}],
   '酉': [{char:'辛',name:'Xin',el:'Metal'}],
-  '戌': [{char:'戊',name:'Wu',el:'Earth'},{char:'辛',name:'Xin',el:'Metal'},{char:'丁',name:'Ding',el:'Fire'}],
+  '戌': [{char:'辛',name:'Xin',el:'Metal'},{char:'戊',name:'Wu',el:'Earth'},{char:'丁',name:'Ding',el:'Fire'}],
   '亥': [{char:'壬',name:'Ren',el:'Water'},{char:'甲',name:'Jia',el:'Wood'}]
 };
 
@@ -671,12 +671,18 @@ function renderChart(data, input) {
 
       qmdjHtml += `
         <div class="qmdj-palace${zhifuClass}">
-          <div class="qmdj-palace-header">${directionNames[id]}</div>
-          <div class="qmdj-god">${p.god || ''}</div>
-          <div class="qmdj-heaven">${p.heaven_stem || ''}</div>
-          <div class="qmdj-star">${p.star || ''}</div>
-          <div class="qmdj-door">${p.door || ''}</div>
-          <div class="qmdj-earth">${p.earth_stem || ''}</div>
+          <div class="qmdj-col-left">
+            <div class="qmdj-star">${p.star || ''}</div>
+          </div>
+          <div class="qmdj-col-center">
+            <div class="qmdj-heaven">${p.heaven_stem || ''}</div>
+            <div class="qmdj-door-box">${p.door || ''}</div>
+            <div class="qmdj-earth">${p.earth_stem || ''}</div>
+          </div>
+          <div class="qmdj-col-right">
+            <div class="qmdj-god">${p.god || ''}</div>
+          </div>
+          <div class="qmdj-direction">${directionNames[id]}</div>
           ${badgesHtml}
         </div>
       `;

@@ -419,70 +419,92 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
 
 .qmdj-palace {
   background: rgba(15,15,16,0.85);
-  padding: 18px 14px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
+  padding: 20px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
   transition: background 0.3s, box-shadow 0.3s;
   position: relative;
-  min-height: 160px;
+  min-height: 180px;
 }
 .qmdj-palace:hover {
   background: rgba(28,28,30,0.9);
 }
 
-/* Palace header: direction + number */
-.qmdj-palace-header {
+.qmdj-col-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-bottom: 6px;
+}
+.qmdj-col-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.qmdj-col-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding-top: 6px;
+}
+
+/* Direction label */
+.qmdj-direction {
+  position: absolute;
+  top: 8px;
+  left: 10px;
   font-family: var(--font-sans);
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--muted);
-  margin-bottom: 4px;
+  text-transform: uppercase;
 }
 
-/* God (八神) */
-.qmdj-god {
-  font-size: 0.75rem;
-  color: var(--gold);
+/* Star & God written vertically */
+.qmdj-star, .qmdj-god {
+  font-size: 0.95rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  min-height: 18px;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 4px;
+}
+.qmdj-star {
+  color: var(--beige);
+}
+.qmdj-god {
+  color: var(--gold);
 }
 
-/* Heaven Stem (天盤) */
+/* Center Column Elements */
 .qmdj-heaven {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   line-height: 1;
-  min-height: 28px;
-}
-
-/* Star (九星) */
-.qmdj-star {
-  font-size: 0.85rem;
-  font-weight: 600;
   color: var(--ivory);
-  letter-spacing: 0.06em;
 }
 
-/* Door (天門) */
-.qmdj-door {
-  font-size: 0.8rem;
-  color: var(--beige);
-  font-weight: 500;
-  letter-spacing: 0.06em;
+.qmdj-door-box {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  border: 1px solid rgba(198,169,107,0.4);
+  padding: 6px 8px;
+  background: rgba(198,169,107,0.05);
+  border-radius: 2px;
+  line-height: 1;
 }
 
-/* Earth Stem (地盤) */
 .qmdj-earth {
   font-size: 1.1rem;
   font-weight: 600;
   line-height: 1;
-  margin-top: 4px;
+  color: var(--ivory);
   opacity: 0.6;
 }
 
@@ -494,8 +516,8 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
 .qmdj-palace.zhifu-palace::after {
   content: '值符';
   position: absolute;
-  top: 6px;
-  right: 8px;
+  top: 8px;
+  right: 10px;
   font-size: 0.55rem;
   font-weight: 600;
   color: var(--crimson-text);
@@ -596,7 +618,8 @@ body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
   .qmdj-meta { grid-template-columns: repeat(3, 1fr); }
   .qmdj-palace { padding: 10px 6px; min-height: 120px; }
   .qmdj-heaven { font-size: 1.1rem; }
-  .qmdj-star, .qmdj-door { font-size: 0.7rem; }
+  .qmdj-star, .qmdj-door-box, .qmdj-god { font-size: 0.7rem; }
+  .qmdj-door-box { padding: 4px 6px; }
   .qmdj-badge { width: 18px; height: 18px; font-size: 0.5rem; }
   .qmdj-badges { bottom: 4px; left: 4px; gap: 3px; }
 }
