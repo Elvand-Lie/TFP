@@ -665,6 +665,16 @@ function renderChart(data, input) {
     }
 
     let qmdjHtml = '';
+    
+    // Ming Gong Palace Calculation
+    const BRANCH_PALACE = {
+      '子': 1, '丑': 8, '寅': 8, '卯': 3, '辰': 4, '巳': 4,
+      '午': 9, '未': 2, '申': 2, '酉': 7, '戌': 6, '亥': 6
+    };
+    const mingGongStr = data.analysis?.auxiliary?.ming_gong || '';
+    const mingGongBranch = mingGongStr.length >= 2 ? mingGongStr[1] : '';
+    const mingGongPalace = mingGongBranch ? BRANCH_PALACE[mingGongBranch] : -1;
+
     luoShuOrder.forEach(id => {
       const p = data.qmdj.palaces.find(x => x.id === id);
       if (!p) return;
@@ -673,11 +683,13 @@ function renderChart(data, input) {
       const zhifuClass = isZhiFu ? ' zhifu-palace' : '';
       const palaceClass = ` qmdj-palace-${id}`;
 
-      // Build badges HTML for Kong Wang and Tian Ma
+      // Build badges HTML for Kong Wang, Tian Ma, and Ming Gong
       let badgesHtml = '';
       const isKongWang = kongWangPalaces.includes(id);
       const isTianMa = tianMaPalace === id;
-      if (isKongWang || isTianMa) {
+      const isMingGong = mingGongPalace === id;
+      
+      if (isKongWang || isTianMa || isMingGong) {
         badgesHtml = '<div class="qmdj-badges">';
         if (isKongWang) {
           badgesHtml += '<span class="qmdj-badge qmdj-badge-void" title="Kong Wang (Void · 空亡)">空</span>';
@@ -685,7 +697,15 @@ function renderChart(data, input) {
         if (isTianMa) {
           badgesHtml += '<span class="qmdj-badge qmdj-badge-horse" title="Tian Ma (Sky Horse · 驛馬)">馬</span>';
         }
+        if (isMingGong) {
+          badgesHtml += '<span class="qmdj-badge qmdj-badge-ming" title="Ming Gong (Destiny Palace · 命宮)">命</span>';
+        }
         badgesHtml += '</div>';
+      }
+
+      let doorDisplay = p.door || '';
+      if (id === 5) {
+        doorDisplay = '命'; // Override center placeholder with Ming (Destiny)
       }
 
       qmdjHtml += `
@@ -694,7 +714,7 @@ function renderChart(data, input) {
             <div class="qmdj-star${getQmdjStarClass(p.star)}">${p.star || ''}</div>
             <div class="qmdj-god">${p.god || ''}</div>
             <div class="qmdj-heaven ${getElementClass(STEM_ELEMENT[p.heaven_stem])}">${p.heaven_stem || ''}</div>
-            <div class="qmdj-door-box${getQmdjDoorClass(p.door)}">${p.door || ''}</div>
+            <div class="qmdj-door-box${getQmdjDoorClass(doorDisplay)}">${doorDisplay}</div>
             <div class="qmdj-earth ${getElementClass(STEM_ELEMENT[p.earth_stem])}">${p.earth_stem || ''}</div>
           </div>
           <div class="qmdj-direction">${directionNames[id]}</div>
