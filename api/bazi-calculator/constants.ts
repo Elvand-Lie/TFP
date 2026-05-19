@@ -32,17 +32,17 @@ export const BRANCH_ELEMENTS: { [key: string]: string[] } = {
 
 export const HIDDEN_STEMS: { [key: string]: string[] } = {
   子: ['癸'],
-  丑: ['癸', '己', '辛'],
-  寅: ['戊', '甲', '丙'],
+  丑: ['己', '癸', '辛'], // Earth Main, Water Middle, Metal Residual
+  寅: ['甲', '丙', '戊'], // Wood Main, Fire Middle, Earth Residual
   卯: ['乙'],
-  辰: ['乙', '戊', '癸'],
-  巳: ['戊', '丙', '庚'],
-  午: ['丁', '己'],
-  未: ['丁', '己', '乙'],
-  申: ['戊', '庚', '壬'],
+  辰: ['戊', '乙', '癸'], // Earth Main, Wood Middle, Water Residual
+  巳: ['丙', '戊', '庚'], // Fire Main, Earth Middle, Metal Residual
+  午: ['丁', '己'],       // Fire Main, Earth Middle
+  未: ['己', '丁', '乙'], // Earth Main, Fire Middle, Wood Residual
+  申: ['庚', '壬', '戊'], // Metal Main, Water Middle, Earth Residual
   酉: ['辛'],
-  戌: ['辛', '戊', '丁'],
-  亥: ['壬', '甲'],
+  戌: ['戊', '辛', '丁'], // Earth Main, Metal Middle, Fire Residual
+  亥: ['壬', '甲'],       // Water Main, Wood Middle
 };
 
 export const ELEMENT_RELATIONSHIPS: { [key: string]: { [key: string]: string } } = {
