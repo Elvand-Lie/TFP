@@ -178,8 +178,8 @@ async function handleLiteReportSubmit(e) {
     const opt = {
       margin:       0.2,
       filename:     'BaZi_Report.pdf',
-      image:        { type: 'jpeg', quality: 1 },
-      html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0F0F10', scrollY: 0 },
+      image:        { type: 'jpeg', quality: 0.7 },
+      html2canvas:  { scale: 1, useCORS: true, backgroundColor: '#0F0F10', scrollY: 0 },
       jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
       pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -210,11 +210,22 @@ async function handleLiteReportSubmit(e) {
       })
     });
     
-    const data = await resp.json();
-    
+    // Check if response is not OK before attempting to parse JSON, as Vercel might return a 413 HTML page
     if (!resp.ok) {
-      throw new Error(data.error || 'Failed to send report');
+      if (resp.status === 413) {
+        throw new Error("The generated PDF is too large to send. Please try again later.");
+      }
+      let errorMsg = 'Failed to send report';
+      try {
+        const data = await resp.json();
+        errorMsg = data.error || errorMsg;
+      } catch (e) {
+        errorMsg = `Server error: ${resp.status} ${resp.statusText}`;
+      }
+      throw new Error(errorMsg);
     }
+
+    const data = await resp.json();
     
     msg.innerHTML = `✓ Full Report PDF successfully requested for <strong>${emailInput.value}</strong>. It will be delivered to your inbox shortly.`;
     msg.style.display = 'block';
