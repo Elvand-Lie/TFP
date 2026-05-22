@@ -160,17 +160,44 @@ async function handleLiteReportSubmit(e) {
   if (!emailInput.value || !_chartData) return;
   
   btn.disabled = true;
-  btn.innerHTML = 'Sending... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
+  btn.innerHTML = 'Generating PDF... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
   msg.style.display = 'none';
 
   try {
+    // Generate PDF of the chart
+    const chartElement = document.querySelector('.chart-container');
+    const actionSection = document.querySelector('.bazi-actions-section');
+    if (actionSection) actionSection.style.display = 'none';
+
+    const opt = {
+      margin:       0.2,
+      filename:     'BaZi_Report.pdf',
+      image:        { type: 'jpeg', quality: 0.95 },
+      html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0F0F10', scrollY: 0 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    let pdfBase64;
+    try {
+      const dataUri = await html2pdf().set(opt).from(chartElement).outputPdf('datauristring');
+      pdfBase64 = dataUri.split('base64,')[1];
+    } catch (pdfErr) {
+      console.error("PDF generation failed:", pdfErr);
+      throw new Error("Failed to generate PDF document");
+    } finally {
+      if (actionSection) actionSection.style.display = 'block';
+    }
+
+    btn.innerHTML = 'Sending Email... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
+
     const resp = await fetch('/api/send-lite-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: emailInput.value,
         name: nameInput ? nameInput.value : 'Client',
-        chartData: _chartData
+        chartData: _chartData,
+        pdfBase64: pdfBase64
       })
     });
     
@@ -180,7 +207,7 @@ async function handleLiteReportSubmit(e) {
       throw new Error(data.error || 'Failed to send report');
     }
     
-    msg.innerHTML = `✓ Lite Report successfully requested for <strong>${emailInput.value}</strong>. It will be delivered to your inbox shortly.`;
+    msg.innerHTML = `✓ Full Report PDF successfully requested for <strong>${emailInput.value}</strong>. It will be delivered to your inbox shortly.`;
     msg.style.display = 'block';
     msg.style.backgroundColor = 'rgba(31, 58, 46, 0.4)';
     msg.style.border = '1px solid var(--forest)';

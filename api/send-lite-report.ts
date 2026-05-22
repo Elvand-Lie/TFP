@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, name, chartData } = req.body;
+    const { email, name, chartData, pdfBase64 } = req.body;
 
     if (!email || !chartData) {
       return res.status(400).json({ error: 'Email and chartData are required' });
@@ -26,11 +26,12 @@ export default async function handler(req, res) {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1C1C1E;">
         <div style="text-align: center; margin-bottom: 20px;">
           <h2 style="color: #710101;">The Full Picture</h2>
-          <p style="font-size: 1.2rem;">Your BaZi Lite Report</p>
+          <p style="font-size: 1.2rem;">Your Full BaZi Destiny Report</p>
         </div>
         
         <p>Hello ${name || 'there'},</p>
-        <p>Thank you for using our BaZi Calculator. Here is a brief summary of your Day Master and Chart Structure:</p>
+        <p>Thank you for using our BaZi Calculator. <strong>Please find your complete, highly detailed BaZi Destiny Report attached as a PDF to this email.</strong></p>
+        <p>Here is a brief summary of your core identity (Day Master) and Chart Structure:</p>
         
         <div style="background-color: #F5F5F2; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="margin-top: 0; color: #C6A96B; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Day Master</h3>
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
           <p><strong>Main Structure:</strong> ${structure}</p>
         </div>
 
-        <p>Your Day Master reveals your core identity, while the Main Structure shows your primary approach to the world.</p>
+        <p>If you're ready to dive deeper and decode your potential, career paths, and wealth capacity, we invite you to book a 1-on-1 session.</p>
 
         <div style="margin-top: 30px; text-align: center;">
           <a href="https://thefullpicture.vercel.app/contact" style="display: inline-block; background-color: #710101; color: #FFFFFF; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book a Full Consultation</a>
@@ -51,14 +52,23 @@ export default async function handler(req, res) {
       </div>
     `;
 
+    // Prepare attachments array if PDF is provided
+    const attachments = pdfBase64 ? [
+      {
+        filename: 'Your_BaZi_Report.pdf',
+        content: pdfBase64,
+      }
+    ] : [];
+
     // Send the email via Resend
     // IMPORTANT: Because the domain is not yet verified, we are temporarily using Sandbox Mode.
     // The 'from' address MUST be 'onboarding@resend.dev', and the 'to' address MUST be your Resend account email.
     const { data, error } = await resend.emails.send({
       from: 'The Full Picture <onboarding@resend.dev>', 
       to: [email],
-      subject: 'Your BaZi Lite Report - The Full Picture',
+      subject: 'Your Full BaZi Report - The Full Picture',
       html: htmlContent,
+      attachments: attachments,
     });
 
     if (error) {
