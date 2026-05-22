@@ -167,14 +167,21 @@ async function handleLiteReportSubmit(e) {
     // Generate PDF of the chart
     const chartElement = document.querySelector('.chart-container');
     const actionSection = document.querySelector('.bazi-actions-section');
+    
+    const originalBg = chartElement.style.backgroundColor;
+    const originalPadding = chartElement.style.padding;
+    
+    chartElement.style.backgroundColor = '#0F0F10';
+    chartElement.style.padding = '20px';
     if (actionSection) actionSection.style.display = 'none';
 
     const opt = {
       margin:       0.2,
       filename:     'BaZi_Report.pdf',
-      image:        { type: 'jpeg', quality: 0.95 },
+      image:        { type: 'jpeg', quality: 1 },
       html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0F0F10', scrollY: 0 },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     let pdfBase64;
@@ -185,6 +192,8 @@ async function handleLiteReportSubmit(e) {
       console.error("PDF generation failed:", pdfErr);
       throw new Error("Failed to generate PDF document");
     } finally {
+      chartElement.style.backgroundColor = originalBg;
+      chartElement.style.padding = originalPadding;
       if (actionSection) actionSection.style.display = 'block';
     }
 
