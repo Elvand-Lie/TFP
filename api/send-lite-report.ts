@@ -1,7 +1,25 @@
 import { Resend } from 'resend';
+import PdfPrinter from 'pdfmake';
+import path from 'path';
+import { buildPdfDefinition } from './pdf-generator';
 
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+function generatePdfBuffer(docDefinition: any, fonts: any): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    try {
+      const printer = new PdfPrinter(fonts);
+      const pdfDoc = printer.createPdfKitDocument(docDefinition);
+      const chunks: Buffer[] = [];
+      pdfDoc.on('data', (chunk) => chunks.push(chunk));
+      pdfDoc.on('end', () => resolve(Buffer.concat(chunks)));
+      pdfDoc.end();
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -9,13 +27,37 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, name, chartData, pdfBase64 } = req.body;
+    const { email, name, chartData } = req.body;
 
     if (!email || !chartData) {
       return res.status(400).json({ error: 'Email and chartData are required' });
     }
 
-    // Extract key information from the BaZi chart data
+    // Set up PDF fonts
+    const fontPath = path.join(process.cwd(), 'fonts', 'NotoSansSC.ttf');
+    const fonts = {
+      NotoSansSC: {
+        normal: fontPath,
+        bold: fontPath,
+        italics: fontPath,
+        bolditalics: fontPath,
+      }
+    };
+
+    // Generate PDF Buffer
+    const docDef = buildPdfDefinition({ chartData }, name);
+    let pdfBuffer: Buffer;
+    try {
+      pdfBuffer = await generatePdfBuffer(docDef, fonts);
+    } catch (pdfErr) {
+      console.error("pdfmake error:", pdfErr);
+      return res.status(500).json({ error: 'Failed to generate PDF document internally' });
+    }
+    
+    // Convert to Base64 for Resend
+    const pdfBase64 = pdfBuffer.toString('base64');
+
+    // Extract key information from the BaZi chart data for the email body
     const dm = chartData.four_pillars?.day_pillar?.heavenly_stem?.character || 'Unknown';
     const dmName = chartData.four_pillars?.day_pillar?.heavenly_stem?.name || 'Unknown';
     const strength = chartData.analysis?.dm_strength_label || 'Balanced';
@@ -52,7 +94,7 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    // Prepare attachments array if PDF is provided
+    // Prepare attachments array
     const attachments = pdfBase64 ? [
       {
         filename: 'Your_BaZi_Report.pdf',
@@ -76,16 +118,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: error.message || 'Failed to send email' });
     }
 
-    // Optional: Add to Resend Audience/Contacts if you have an Audience ID setup
-    // await resend.contacts.create({
-    //   email: email,
-    //   firstName: name,
-    //   audienceId: 'YOUR_AUDIENCE_ID'
-    // });
-
     return res.status(200).json({ success: true, data });
   } catch (error) {
-    console.error('Error sending email:', error);
-    return res.status(500).json({ error: 'Failed to send email' });
+    console.error('Error processing report:', error);
+    return res.status(500).json({ error: 'Failed to process report' });
   }
 }

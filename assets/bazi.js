@@ -1,22 +1,22 @@
 // ─── BAZI CALCULATOR JS ───────────────────────
 const HIDDEN_STEMS = {
-  '子': [{char:'癸',name:'Gui',el:'Water'}],
-  '丑': [{char:'癸',name:'Gui',el:'Water'},{char:'己',name:'Ji',el:'Earth'},{char:'辛',name:'Xin',el:'Metal'}],
-  '寅': [{char:'戊',name:'Wu',el:'Earth'},{char:'甲',name:'Jia',el:'Wood'},{char:'丙',name:'Bing',el:'Fire'}],
-  '卯': [{char:'乙',name:'Yi',el:'Wood'}],
-  '辰': [{char:'乙',name:'Yi',el:'Wood'},{char:'戊',name:'Wu',el:'Earth'},{char:'癸',name:'Gui',el:'Water'}],
-  '巳': [{char:'戊',name:'Wu',el:'Earth'},{char:'丙',name:'Bing',el:'Fire'},{char:'庚',name:'Geng',el:'Metal'}],
-  '午': [{char:'丁',name:'Ding',el:'Fire'},{char:'己',name:'Ji',el:'Earth'}],
-  '未': [{char:'丁',name:'Ding',el:'Fire'},{char:'己',name:'Ji',el:'Earth'},{char:'乙',name:'Yi',el:'Wood'}],
-  '申': [{char:'戊',name:'Wu',el:'Earth'},{char:'庚',name:'Geng',el:'Metal'},{char:'壬',name:'Ren',el:'Water'}],
-  '酉': [{char:'辛',name:'Xin',el:'Metal'}],
-  '戌': [{char:'辛',name:'Xin',el:'Metal'},{char:'戊',name:'Wu',el:'Earth'},{char:'丁',name:'Ding',el:'Fire'}],
-  '亥': [{char:'壬',name:'Ren',el:'Water'},{char:'甲',name:'Jia',el:'Wood'}]
+  '子': [{ char: '癸', name: 'Gui', el: 'Water' }],
+  '丑': [{ char: '癸', name: 'Gui', el: 'Water' }, { char: '己', name: 'Ji', el: 'Earth' }, { char: '辛', name: 'Xin', el: 'Metal' }],
+  '寅': [{ char: '戊', name: 'Wu', el: 'Earth' }, { char: '甲', name: 'Jia', el: 'Wood' }, { char: '丙', name: 'Bing', el: 'Fire' }],
+  '卯': [{ char: '乙', name: 'Yi', el: 'Wood' }],
+  '辰': [{ char: '乙', name: 'Yi', el: 'Wood' }, { char: '戊', name: 'Wu', el: 'Earth' }, { char: '癸', name: 'Gui', el: 'Water' }],
+  '巳': [{ char: '戊', name: 'Wu', el: 'Earth' }, { char: '丙', name: 'Bing', el: 'Fire' }, { char: '庚', name: 'Geng', el: 'Metal' }],
+  '午': [{ char: '丁', name: 'Ding', el: 'Fire' }, { char: '己', name: 'Ji', el: 'Earth' }],
+  '未': [{ char: '丁', name: 'Ding', el: 'Fire' }, { char: '己', name: 'Ji', el: 'Earth' }, { char: '乙', name: 'Yi', el: 'Wood' }],
+  '申': [{ char: '戊', name: 'Wu', el: 'Earth' }, { char: '庚', name: 'Geng', el: 'Metal' }, { char: '壬', name: 'Ren', el: 'Water' }],
+  '酉': [{ char: '辛', name: 'Xin', el: 'Metal' }],
+  '戌': [{ char: '辛', name: 'Xin', el: 'Metal' }, { char: '戊', name: 'Wu', el: 'Earth' }, { char: '丁', name: 'Ding', el: 'Fire' }],
+  '亥': [{ char: '壬', name: 'Ren', el: 'Water' }, { char: '甲', name: 'Jia', el: 'Wood' }]
 };
 
 const STEM_ELEMENT = {
-  '甲':'Wood','乙':'Wood','丙':'Fire','丁':'Fire','戊':'Earth','己':'Earth',
-  '庚':'Metal','辛':'Metal','壬':'Water','癸':'Water'
+  '甲': 'Wood', '乙': 'Wood', '丙': 'Fire', '丁': 'Fire', '戊': 'Earth', '己': 'Earth',
+  '庚': 'Metal', '辛': 'Metal', '壬': 'Water', '癸': 'Water'
 };
 
 let _chartData = null; // set during renderChart for global access
@@ -33,9 +33,9 @@ function getElementClass(name) {
 }
 
 const BRANCH_ELEMENT = {
-  '寅':'Wood','卯':'Wood','巳':'Fire','午':'Fire',
-  '丑':'Earth','辰':'Earth','未':'Earth','戌':'Earth',
-  '申':'Metal','酉':'Metal','亥':'Water','子':'Water'
+  '寅': 'Wood', '卯': 'Wood', '巳': 'Fire', '午': 'Fire',
+  '丑': 'Earth', '辰': 'Earth', '未': 'Earth', '戌': 'Earth',
+  '申': 'Metal', '酉': 'Metal', '亥': 'Water', '子': 'Water'
 };
 
 // ─── COLORING SYSTEMS ───
@@ -76,7 +76,7 @@ function getElementBgClass(name) {
 }
 
 function getHiddenElement(char) {
-  const map = {'甲':'Wood','乙':'Wood','丙':'Fire','丁':'Fire','戊':'Earth','己':'Earth','庚':'Metal','辛':'Metal','壬':'Water','癸':'Water'};
+  const map = { '甲': 'Wood', '乙': 'Wood', '丙': 'Fire', '丁': 'Fire', '戊': 'Earth', '己': 'Earth', '庚': 'Metal', '辛': 'Metal', '壬': 'Water', '癸': 'Water' };
   return map[char] || '';
 }
 
@@ -95,7 +95,7 @@ function populateForm() {
     yearSel.appendChild(o);
   }
   yearSel.value = currentYear;
-  
+
   // Set target year to current year dynamically
   const targetYearEl = document.getElementById('target-year');
   if (targetYearEl) {
@@ -103,10 +103,10 @@ function populateForm() {
   }
 
   const monthSel = document.getElementById('birth-month');
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  months.forEach((m,i) => {
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  months.forEach((m, i) => {
     const o = document.createElement('option');
-    o.value = i+1; o.textContent = m;
+    o.value = i + 1; o.textContent = m;
     monthSel.appendChild(o);
   });
   monthSel.value = new Date().getMonth() + 1;
@@ -122,28 +122,28 @@ function populateForm() {
   const hourSel = document.getElementById('birth-hour');
   for (let h = 0; h < 24; h++) {
     const o = document.createElement('option');
-    o.value = h; o.textContent = h.toString().padStart(2,'0');
+    o.value = h; o.textContent = h.toString().padStart(2, '0');
     hourSel.appendChild(o);
   }
 
   const minSel = document.getElementById('birth-minute');
   for (let m = 0; m < 60; m++) {
     const o = document.createElement('option');
-    o.value = m; o.textContent = m.toString().padStart(2,'0');
+    o.value = m; o.textContent = m.toString().padStart(2, '0');
     minSel.appendChild(o);
   }
 }
 
 function setupEventListeners() {
   const unknownTime = document.getElementById('time-unknown');
-  unknownTime.addEventListener('change', function() {
+  unknownTime.addEventListener('change', function () {
     document.getElementById('birth-hour').disabled = this.checked;
     document.getElementById('birth-minute').disabled = this.checked;
   });
 
   document.getElementById('btn-reset').addEventListener('click', resetForm);
   document.getElementById('bazi-input-form').addEventListener('submit', handleSubmit);
-  
+
   const liteForm = document.getElementById('lite-report-form');
   if (liteForm) {
     liteForm.addEventListener('submit', handleLiteReportSubmit);
@@ -156,60 +156,24 @@ async function handleLiteReportSubmit(e) {
   const btn = document.getElementById('btn-lite-report');
   const msg = document.getElementById('lite-report-msg');
   const nameInput = document.getElementById('client-name');
-  
+
   if (!emailInput.value || !_chartData) return;
-  
+
   btn.disabled = true;
-  btn.innerHTML = 'Generating PDF... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
+  btn.innerHTML = 'Sending... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
   msg.style.display = 'none';
 
   try {
-    // Generate PDF of the chart
-    const chartElement = document.querySelector('.chart-container');
-    const actionSection = document.querySelector('.bazi-actions-section');
-    
-    const originalBg = chartElement.style.backgroundColor;
-    const originalPadding = chartElement.style.padding;
-    
-    chartElement.style.backgroundColor = '#0F0F10';
-    chartElement.style.padding = '20px';
-    if (actionSection) actionSection.style.display = 'none';
-
-    const opt = {
-      margin:       0.2,
-      filename:     'BaZi_Report.pdf',
-      image:        { type: 'jpeg', quality: 0.7 },
-      html2canvas:  { scale: 1, useCORS: true, backgroundColor: '#0F0F10', scrollY: 0 },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-      pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
-    let pdfBase64;
-    try {
-      const dataUri = await html2pdf().set(opt).from(chartElement).outputPdf('datauristring');
-      pdfBase64 = dataUri.split('base64,')[1];
-    } catch (pdfErr) {
-      console.error("PDF generation failed:", pdfErr);
-      throw new Error("Failed to generate PDF document");
-    } finally {
-      chartElement.style.backgroundColor = originalBg;
-      chartElement.style.padding = originalPadding;
-      if (actionSection) actionSection.style.display = 'block';
-    }
-
-    btn.innerHTML = 'Sending Email... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
-
     const resp = await fetch('/api/send-lite-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: emailInput.value,
         name: nameInput ? nameInput.value : 'Client',
-        chartData: _chartData,
-        pdfBase64: pdfBase64
+        chartData: _chartData
       })
     });
-    
+
     // Check if response is not OK before attempting to parse JSON, as Vercel might return a 413 HTML page
     if (!resp.ok) {
       if (resp.status === 413) {
@@ -226,13 +190,13 @@ async function handleLiteReportSubmit(e) {
     }
 
     const data = await resp.json();
-    
+
     msg.innerHTML = `✓ Full Report PDF successfully requested for <strong>${emailInput.value}</strong>. It will be delivered to your inbox shortly.`;
     msg.style.display = 'block';
     msg.style.backgroundColor = 'rgba(31, 58, 46, 0.4)';
     msg.style.border = '1px solid var(--forest)';
     msg.style.color = 'var(--ivory)';
-    
+
     emailInput.value = '';
   } catch (err) {
     msg.innerHTML = `✗ Error: ${err.message}. Please try again later.`;
@@ -299,8 +263,8 @@ function renderChart(data, input) {
   const fp = data.four_pillars;
   const name = document.getElementById('client-name').value || 'Client';
   const genderText = input.gender === 1 ? 'Male' : 'Female';
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dateStr = `${input.day} ${months[input.month-1]} ${input.year} (${input.hour.toString().padStart(2,'0')}:${input.minute.toString().padStart(2,'0')})`;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const dateStr = `${input.day} ${months[input.month - 1]} ${input.year} (${input.hour.toString().padStart(2, '0')}:${input.minute.toString().padStart(2, '0')})`;
 
   // Day Master
   const dm = fp.day_pillar.heavenly_stem;
@@ -308,12 +272,12 @@ function renderChart(data, input) {
   document.getElementById('summary-info').textContent = `${dateStr}  |  ${genderText}`;
   document.getElementById('dm-char').textContent = dm.character;
   document.getElementById('dm-char').className = 'day-master-char ' + getElementClass(dm.name);
-  
+
   // Day Master Strength Indicator
   const strengthScore = data.analysis ? data.analysis.dm_strength : 5.0;
   const strengthLabel = data.analysis ? data.analysis.dm_strength_label : 'Balanced';
   const dmBadgeContainer = document.querySelector('.day-master-badge-container') || document.querySelector('.day-master-badge').parentElement;
-  
+
   let dmStrengthEl = document.getElementById('dm-strength-indicator');
   if (!dmStrengthEl) {
     dmStrengthEl = document.createElement('div');
@@ -327,12 +291,12 @@ function renderChart(data, input) {
     const badge = document.querySelector('.day-master-badge');
     badge.parentNode.insertBefore(dmStrengthEl, badge.nextSibling);
   }
-  
+
   const pct = (strengthScore / 10) * 100;
   let strengthColor = 'var(--ivory)';
   if (strengthLabel === 'Strong' || strengthLabel === 'CongGe') strengthColor = 'var(--gold)';
   if (strengthLabel === 'Weak') strengthColor = 'var(--muted)';
-  
+
   dmStrengthEl.innerHTML = `
     <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">Day Master Strength</div>
     <div style="font-size:1.1rem; color:${strengthColor}; font-weight:600; margin-bottom:10px;">${strengthScore}/10 — ${strengthLabel}</div>
@@ -343,7 +307,7 @@ function renderChart(data, input) {
 
   // Display Day Master Name and Main Structure
   const mainStructStr = data.analysis && data.analysis.main_structure ? `  |  Structure: ${data.analysis.main_structure}` : '';
-  document.getElementById('dm-name').textContent = `${dm.spelling.charAt(0).toUpperCase()+dm.spelling.slice(1)} · ${dm.name}${mainStructStr}`;
+  document.getElementById('dm-name').textContent = `${dm.spelling.charAt(0).toUpperCase() + dm.spelling.slice(1)} · ${dm.name}${mainStructStr}`;
 
   // Auxiliary Info
   const aux = data.analysis ? data.analysis.auxiliary : null;
@@ -364,7 +328,7 @@ function renderChart(data, input) {
   pillars.forEach(p => {
     const hs = p.data.heavenly_stem;
     const eb = p.data.earthly_branch;
-    const prefix = p.key.replace('_pillar','');
+    const prefix = p.key.replace('_pillar', '');
     const naYin = p.data.na_yin || '';
 
     // Stem
@@ -374,11 +338,11 @@ function renderChart(data, input) {
     if (prefix !== 'day' && hs.ten_god) {
       tenGodHtml = `<div class="fp-ten-god" style="font-size: 0.9rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 600;">${hs.ten_god.chinese} <span style="font-size: 0.65rem; color: var(--muted); font-weight: 400;">${hs.ten_god.short}</span></div>`;
     }
-    
+
     stemEl.innerHTML = `
       ${tenGodHtml}
       <div class="fp-char ${getStemElementColor(hs.character)}">${hs.character}</div>
-      <div class="fp-pinyin">${hs.spelling.charAt(0).toUpperCase()+hs.spelling.slice(1)}</div>
+      <div class="fp-pinyin">${hs.spelling.charAt(0).toUpperCase() + hs.spelling.slice(1)}</div>
       <div class="fp-element ${getElementBgClass(hs.name)}">${hs.name}</div>
     `;
 
@@ -386,7 +350,7 @@ function renderChart(data, input) {
     const branchEl = document.getElementById(`${prefix}-branch`);
     branchEl.innerHTML = `
       <div class="fp-char ${getBranchElementColor(eb.character)}">${eb.character}</div>
-      <div class="fp-pinyin">${eb.spelling.charAt(0).toUpperCase()+eb.spelling.slice(1)}</div>
+      <div class="fp-pinyin">${eb.spelling.charAt(0).toUpperCase() + eb.spelling.slice(1)}</div>
       <div class="fp-animal">${eb.name}</div>
       <div class="fp-element ${getElementBgClass(eb.element)}">${extractElement(eb.element)}</div>
     `;
@@ -396,7 +360,7 @@ function renderChart(data, input) {
     const hStems = p.data.hidden_stems || [];
     hiddenEl.innerHTML = '<div class="fp-hidden">' + hStems.map(h => {
       const tg = h.ten_god ? `<div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 2px;">${h.ten_god.chinese} <span style="font-size: 0.6rem;">${h.ten_god.short}</span></div>` : '';
-      return `<div class="fp-hidden-stem">${tg}<span class="mini-char ${getStemElementColor(h.character)}">${h.character}</span><span class="mini-name">${h.spelling.charAt(0).toUpperCase()+h.spelling.slice(1)}</span></div>`;
+      return `<div class="fp-hidden-stem">${tg}<span class="mini-char ${getStemElementColor(h.character)}">${h.character}</span><span class="mini-name">${h.spelling.charAt(0).toUpperCase() + h.spelling.slice(1)}</span></div>`;
     }).join('') + '</div>';
 
     // Life Cycle & Na Yin & Shen Sha
@@ -427,7 +391,7 @@ function renderChart(data, input) {
       const isCurrent = currentYear >= lp.year_start && currentYear <= lp.year_end;
       const card = document.createElement('div');
       card.className = 'luck-card' + (isCurrent ? ' current' : '');
-      
+
       const hsTg = lp.heavenly_stem.ten_god ? `${lp.heavenly_stem.ten_god.chinese} <span style="font-size:0.6rem;color:#888;">${lp.heavenly_stem.ten_god.short}</span>` : '';
       const lc = lp.life_cycle ? lp.life_cycle.chinese : '';
       const hStemsHtml = (lp.hidden_stems || []).map(h => `<div style="font-size:0.75rem; letter-spacing:1px;" class="${getStemColorClass(h.character)}">${h.character} <span style="color:#888; font-size:0.65rem;">${h.ten_god ? h.ten_god.chinese : ''}</span></div>`).join('');
@@ -472,7 +436,7 @@ function renderChart(data, input) {
   // Also extract element from earthly branch name (the animal's element)
   // The branch name is like "Tiger" but the element info is in the hidden stems, already counted above
 
-  const total = Object.values(elements).reduce((a,b) => a+b, 1);
+  const total = Object.values(elements).reduce((a, b) => a + b, 1);
   const icons = { Wood: '🌿', Fire: '🔥', Earth: '⛰️', Metal: '⚔️', Water: '💧' };
   const elGrid = document.getElementById('element-grid');
   if (elGrid) {
@@ -527,8 +491,8 @@ function renderChart(data, input) {
   // ─── JOEY YAP DESTINY METRICS RENDERING ───
   // Branch character → Animal name lookup
   const BRANCH_ANIMAL = {
-    '子':'Rat','丑':'Ox','寅':'Tiger','卯':'Rabbit','辰':'Dragon','巳':'Snake',
-    '午':'Horse','未':'Goat','申':'Monkey','酉':'Rooster','戌':'Dog','亥':'Pig'
+    '子': 'Rat', '丑': 'Ox', '寅': 'Tiger', '卯': 'Rabbit', '辰': 'Dragon', '巳': 'Snake',
+    '午': 'Horse', '未': 'Goat', '申': 'Monkey', '酉': 'Rooster', '戌': 'Dog', '亥': 'Pig'
   };
   const toAnimal = (ch) => BRANCH_ANIMAL[ch] || ch;
   const toAnimals = (arr) => arr ? arr.map(toAnimal).join(', ') : '';
@@ -538,7 +502,7 @@ function renderChart(data, input) {
     const pcGrid = document.getElementById('personal-chart-details');
     if (pcGrid) {
       const yearAnimal = data.four_pillars.year_pillar.earthly_branch.name;
-      const ls = data.analysis.life_star || {color:'', element:'', chinese:''};
+      const ls = data.analysis.life_star || { color: '', element: '', chinese: '' };
       pcGrid.innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Celestial Animal</td><td style="padding:10px 15px; color:#fff;">${yearAnimal}</td></tr>
@@ -615,7 +579,7 @@ function renderChart(data, input) {
     if (miGrid && data.analysis.monthly_influence) {
       const monthsStr = data.analysis.monthly_influence.map(m => `
         <div style="background:var(--card-bg); padding:15px 10px; text-align:center;">
-          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month-1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
+          <div style="font-size:0.7rem; color:var(--muted); margin-bottom:10px; font-weight:bold;">${new Date(m.gregorian_year, m.gregorian_month - 1).toLocaleString('default', { month: 'short' }).toUpperCase()}</div>
           <div style="font-size:0.75rem; color:var(--gold); margin-bottom:4px; min-height:16px;">${m.stem.ten_god ? m.stem.ten_god.chinese : ''}</div>
           <div style="font-size:1.8rem; font-weight:bold; line-height:1;" class="${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
           <div style="font-size:1.8rem; font-weight:bold; line-height:1; margin-bottom:10px;" class="${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
@@ -631,14 +595,14 @@ function renderChart(data, input) {
     if (data.analysis.profiling) {
       // Dominant structure group = the 5-structure with highest natal score
       const structNatal = data.analysis.profiling.structures_natal;
-      const dominantStructure = Object.entries(structNatal).sort((a,b) => b[1]-a[1])[0]?.[0] || '';
+      const dominantStructure = Object.entries(structNatal).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
       const structureEl = document.getElementById('main-structure-text');
       if (structureEl) structureEl.innerText = dominantStructure;
-      
+
       const proGrid = document.getElementById('profiling-bars');
       if (proGrid) {
         proGrid.innerHTML = '';
-        const sortedNatal = Object.entries(data.analysis.profiling.natal_percentages).sort((a,b) => b[1] - a[1]);
+        const sortedNatal = Object.entries(data.analysis.profiling.natal_percentages).sort((a, b) => b[1] - a[1]);
         sortedNatal.forEach(([god, pct]) => {
           if (pct === 0) return;
           const annPct = data.analysis.profiling.annual_percentages[god] || 0;
@@ -663,13 +627,13 @@ function renderChart(data, input) {
       if (ctx && window.Chart) {
         // Destroy existing chart if any
         if (window.profilingChartInstance) window.profilingChartInstance.destroy();
-        
+
         const labels = ['Creators (Output)', 'Thinkers (Resource)', 'Supporters (Influence)', 'Connectors (Companion)', 'Managers (Wealth)'];
         const pNatal = data.analysis.profiling.structures_natal;
         const pAnnual = data.analysis.profiling.structures_annual;
-        
-        const dataNatal = [pNatal.Creators||0, pNatal.Thinkers||0, pNatal.Supporters||0, pNatal.Connectors||0, pNatal.Managers||0];
-        const dataAnnual = [pAnnual.Creators||0, pAnnual.Thinkers||0, pAnnual.Supporters||0, pAnnual.Connectors||0, pAnnual.Managers||0];
+
+        const dataNatal = [pNatal.Creators || 0, pNatal.Thinkers || 0, pNatal.Supporters || 0, pNatal.Connectors || 0, pNatal.Managers || 0];
+        const dataAnnual = [pAnnual.Creators || 0, pAnnual.Thinkers || 0, pAnnual.Supporters || 0, pAnnual.Connectors || 0, pAnnual.Managers || 0];
 
         window.profilingChartInstance = new Chart(ctx, {
           type: 'radar',
@@ -714,15 +678,15 @@ function renderChart(data, input) {
       }
     }
   }
-  
+
   // ─── QIMEN DUNJIA (QMDJ) ───
   const qmdjGrid = document.getElementById('qmdj-grid');
   const qmdjMeta = document.getElementById('qmdj-meta');
   const qmdjSection = document.getElementById('qmdj-section');
-  
+
   if (data.qmdj && qmdjGrid && qmdjMeta && qmdjSection) {
     qmdjSection.style.display = 'block';
-    
+
     // Fill Metadata
     document.getElementById('qmdj-solar-term').textContent = data.qmdj.solar_term || '—';
     document.getElementById('qmdj-ju').textContent = data.qmdj.ju || '—';
@@ -772,7 +736,7 @@ function renderChart(data, input) {
     }
 
     let qmdjHtml = '';
-    
+
     // Ming Gong Palace Calculation
     const BRANCH_PALACE = {
       '子': 1, '丑': 8, '寅': 8, '卯': 3, '辰': 4, '巳': 4,
@@ -785,7 +749,7 @@ function renderChart(data, input) {
     luoShuOrder.forEach(id => {
       const p = data.qmdj.palaces.find(x => x.id === id);
       if (!p) return;
-      
+
       const isZhiFu = p.star === data.qmdj.duty_star;
       const zhifuClass = isZhiFu ? ' zhifu-palace' : '';
       const palaceClass = ` qmdj-palace-${id}`;
@@ -795,7 +759,7 @@ function renderChart(data, input) {
       const isKongWang = kongWangPalaces.includes(id);
       const isTianMa = tianMaPalace === id;
       const isMingGong = mingGongPalace === id;
-      
+
       if (isKongWang || isTianMa || isMingGong) {
         badgesHtml = '<div class="qmdj-badges">';
         if (isKongWang) {
@@ -862,12 +826,12 @@ let _dashboardState = {
 
 function renderDashboard(luckPillars) {
   _dashboardState.data = luckPillars;
-  
+
   // Auto-default to current year
   const currentYear = new Date().getFullYear();
   let foundLuck = 0;
   let foundYear = 0;
-  
+
   luckPillars.forEach((lp, i) => {
     if (currentYear >= lp.year_start && currentYear <= lp.year_end) {
       foundLuck = i;
@@ -878,10 +842,10 @@ function renderDashboard(luckPillars) {
       }
     }
   });
-  
+
   _dashboardState.luckIndex = foundLuck;
   _dashboardState.yearIndex = foundYear;
-  
+
   renderTier1();
 }
 
@@ -889,13 +853,13 @@ function renderTier1() {
   const container = document.getElementById('tier-luck');
   if (!container) return;
   container.innerHTML = '';
-  
+
   _dashboardState.data.forEach((lp, i) => {
     const el = document.createElement('div');
     el.className = 'tier-item' + (i === _dashboardState.luckIndex ? ' active' : '');
-    
+
     const hStemsHtml = (lp.hidden_stems || []).map(h => `<span class="${getStemColorClass(h.character)}">${h.character}</span>`).join(' ');
-    
+
     el.innerHTML = `
       <div class="tier-item-header">Age ${lp.age}</div>
       <div class="tier-item-char ${getStemColorClass(lp.heavenly_stem.character)}">${lp.heavenly_stem.character}</div>
@@ -903,16 +867,16 @@ function renderTier1() {
       <div class="tier-item-sub">${lp.year_start} - ${lp.year_end}</div>
       <div class="tier-item-hidden">${hStemsHtml}</div>
     `;
-    
+
     el.addEventListener('click', () => {
       _dashboardState.luckIndex = i;
       _dashboardState.yearIndex = 0; // reset year to first year of the new decade
       renderTier1(); // re-render to update active state
     });
-    
+
     container.appendChild(el);
   });
-  
+
   renderTier2();
 }
 
@@ -920,14 +884,14 @@ function renderTier2() {
   const container = document.getElementById('tier-annual');
   if (!container) return;
   container.innerHTML = '';
-  
+
   const currentLP = _dashboardState.data[_dashboardState.luckIndex];
   if (!currentLP || !currentLP.annual_pillars) return;
-  
+
   currentLP.annual_pillars.forEach((ap, i) => {
     const el = document.createElement('div');
     el.className = 'tier-item' + (i === _dashboardState.yearIndex ? ' active' : '');
-    
+
     el.innerHTML = `
       <div class="tier-item-header">${ap.year}</div>
       <div class="tier-item-char ${getStemColorClass(ap.stem)}">${ap.stem}</div>
@@ -935,15 +899,15 @@ function renderTier2() {
       <div class="tier-item-sub">Age ${ap.age}</div>
       <div class="tier-item-hidden" style="color:var(--gold)">${ap.ten_god ? ap.ten_god.chinese : ''}</div>
     `;
-    
+
     el.addEventListener('click', () => {
       _dashboardState.yearIndex = i;
       renderTier2(); // re-render to update active state
     });
-    
+
     container.appendChild(el);
   });
-  
+
   renderTier3();
 }
 
@@ -951,31 +915,31 @@ function renderTier3() {
   const container = document.getElementById('tier-monthly');
   if (!container) return;
   container.innerHTML = '';
-  
+
   const currentLP = _dashboardState.data[_dashboardState.luckIndex];
   if (!currentLP || !currentLP.annual_pillars) return;
-  
+
   const currentAP = currentLP.annual_pillars[_dashboardState.yearIndex];
   if (!currentAP || !currentAP.monthly_pillars) {
     container.innerHTML = '<div style="color:var(--muted); font-size:0.8rem; padding:10px;">Monthly data not available for this year.</div>';
     return;
   }
-  
+
   currentAP.monthly_pillars.forEach((m, i) => {
     const el = document.createElement('div');
     el.className = 'tier-item';
     el.style.cursor = 'default';
-    
+
     const hStemsHtml = (m.hidden_stems || []).map(h => `<div style="font-size:0.7rem;" class="${getStemColorClass(h.character)}">${h.character}</div>`).join('');
     const monthName = new Date(m.gregorian_year, m.gregorian_month - 1).toLocaleString('default', { month: 'short' }).toUpperCase();
-    
+
     el.innerHTML = `
       <div class="tier-item-header" style="color:var(--muted)">${monthName}</div>
       <div class="tier-item-char ${getStemColorClass(m.stem.character)}">${m.stem.character}</div>
       <div class="tier-item-char ${getBranchColorClass(m.branch.character)}">${m.branch.character}</div>
       <div class="tier-item-hidden">${hStemsHtml}</div>
     `;
-    
+
     container.appendChild(el);
   });
 }
