@@ -143,6 +143,60 @@ function setupEventListeners() {
 
   document.getElementById('btn-reset').addEventListener('click', resetForm);
   document.getElementById('bazi-input-form').addEventListener('submit', handleSubmit);
+  
+  const liteForm = document.getElementById('lite-report-form');
+  if (liteForm) {
+    liteForm.addEventListener('submit', handleLiteReportSubmit);
+  }
+}
+
+async function handleLiteReportSubmit(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById('lite-email');
+  const btn = document.getElementById('btn-lite-report');
+  const msg = document.getElementById('lite-report-msg');
+  const nameInput = document.getElementById('client-name');
+  
+  if (!emailInput.value || !_chartData) return;
+  
+  btn.disabled = true;
+  btn.innerHTML = 'Sending... <span class="spinner" style="display:inline-block; width:12px; height:12px; border-width:2px; margin-left:8px; border-color: #fff; border-right-color: transparent;"></span>';
+  msg.style.display = 'none';
+
+  try {
+    const resp = await fetch('/api/send-lite-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: emailInput.value,
+        name: nameInput ? nameInput.value : 'Client',
+        chartData: _chartData
+      })
+    });
+    
+    const data = await resp.json();
+    
+    if (!resp.ok) {
+      throw new Error(data.error || 'Failed to send report');
+    }
+    
+    msg.innerHTML = `✓ Lite Report successfully requested for <strong>${emailInput.value}</strong>. It will be delivered to your inbox shortly.`;
+    msg.style.display = 'block';
+    msg.style.backgroundColor = 'rgba(31, 58, 46, 0.4)';
+    msg.style.border = '1px solid var(--forest)';
+    msg.style.color = 'var(--ivory)';
+    
+    emailInput.value = '';
+  } catch (err) {
+    msg.innerHTML = `✗ Error: ${err.message}. Please try again later.`;
+    msg.style.display = 'block';
+    msg.style.backgroundColor = 'rgba(113, 1, 1, 0.2)';
+    msg.style.border = '1px solid var(--crimson)';
+    msg.style.color = 'var(--ivory)';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Send to Email <span style="margin-left:8px;">→</span>';
+  }
 }
 
 function resetForm() {
