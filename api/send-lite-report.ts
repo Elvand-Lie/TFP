@@ -1,25 +1,10 @@
 import { Resend } from 'resend';
-import PdfPrinter from 'pdfmake';
+const pdfmake = require('pdfmake');
 import path from 'path';
 import { buildPdfDefinition } from './pdf-generator';
 
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-function generatePdfBuffer(docDefinition: any, fonts: any): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    try {
-      const printer = new PdfPrinter(fonts);
-      const pdfDoc = printer.createPdfKitDocument(docDefinition);
-      const chunks: Buffer[] = [];
-      pdfDoc.on('data', (chunk) => chunks.push(chunk));
-      pdfDoc.on('end', () => resolve(Buffer.concat(chunks)));
-      pdfDoc.end();
-    } catch (e) {
-      reject(e);
-    }
-  });
-}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -35,7 +20,7 @@ export default async function handler(req, res) {
 
     // Set up PDF fonts
     const fontPath = path.join(process.cwd(), 'fonts', 'NotoSansSC.ttf');
-    const fonts = {
+    pdfmake.fonts = {
       NotoSansSC: {
         normal: fontPath,
         bold: fontPath,
@@ -46,16 +31,14 @@ export default async function handler(req, res) {
 
     // Generate PDF Buffer
     const docDef = buildPdfDefinition({ chartData }, name);
-    let pdfBuffer: Buffer;
+    let pdfBase64: string;
     try {
-      pdfBuffer = await generatePdfBuffer(docDef, fonts);
+      const pdfDoc = pdfmake.createPdf(docDef);
+      pdfBase64 = await pdfDoc.getBase64();
     } catch (pdfErr) {
       console.error("pdfmake error:", pdfErr);
       return res.status(500).json({ error: 'Failed to generate PDF document internally' });
     }
-    
-    // Convert to Base64 for Resend
-    const pdfBase64 = pdfBuffer.toString('base64');
 
     // Extract key information from the BaZi chart data for the email body
     const dm = chartData.four_pillars?.day_pillar?.heavenly_stem?.character || 'Unknown';
