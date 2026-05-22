@@ -54,12 +54,17 @@ export default async function handler(req, res) {
     // Send the email via Resend
     // IMPORTANT: Because the domain is not yet verified, we are temporarily using Sandbox Mode.
     // The 'from' address MUST be 'onboarding@resend.dev', and the 'to' address MUST be your Resend account email.
-    const data = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'The Full Picture <onboarding@resend.dev>', 
       to: [email],
       subject: 'Your BaZi Lite Report - The Full Picture',
       html: htmlContent,
     });
+
+    if (error) {
+      console.error('Resend API Error:', error);
+      return res.status(400).json({ error: error.message || 'Failed to send email' });
+    }
 
     // Optional: Add to Resend Audience/Contacts if you have an Audience ID setup
     // await resend.contacts.create({
