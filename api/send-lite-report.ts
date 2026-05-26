@@ -83,18 +83,20 @@ export default async function handler(req, res) {
       }
     ] : [];
 
-    // Configure Nodemailer transport
+    // Configure Nodemailer transport using standard SMTP
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '465'),
+      secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     // Send the email via Nodemailer
     const info = await transporter.sendMail({
-      from: `"The Full Picture" <${process.env.GMAIL_USER}>`, 
+      from: `"The Full Picture" <${process.env.SMTP_USER}>`, 
       to: email,
       subject: 'Your Full BaZi Report - The Full Picture',
       html: htmlContent,
