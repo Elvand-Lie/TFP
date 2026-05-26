@@ -86,10 +86,9 @@ export default async function handler(req, res) {
     ] : [];
 
     // Send the email via Resend
-    // IMPORTANT: Because the domain is not yet verified, we are temporarily using Sandbox Mode.
-    // The 'from' address MUST be 'onboarding@resend.dev', and the 'to' address MUST be your Resend account email.
+    // Now using the verified domain.
     const { data, error } = await resend.emails.send({
-      from: 'The Full Picture <onboarding@resend.dev>', 
+      from: 'The Full Picture <hello@thefullpicture.asia>', 
       to: [email],
       subject: 'Your Full BaZi Report - The Full Picture',
       html: htmlContent,

@@ -212,6 +212,36 @@
         </div>
       </div>
 
+      <!-- EXPORT / CTA SECTION -->
+      <div class="bazi-actions-section reveal" style="margin-top:2rem; margin-bottom:3rem; padding-bottom:3rem; border-bottom:1px solid rgba(113,1,1,0.25); text-align:center;">
+        <h3 style="font-family:var(--font-serif); font-size:2rem; color:var(--ivory); margin-bottom:15px; font-weight:400;">Your Metaphysics Journey Begins Here</h3>
+        <p style="color:var(--muted); max-width:600px; margin:0 auto 30px auto; font-size:0.95rem;">
+          Get a complimentary Lite Report summarizing your BaZi chart delivered to your inbox, or book a comprehensive Destiny Analysis consultation for deep, actionable insights.
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px;">
+          <!-- Lite Report Card -->
+          <div style="background:var(--card-bg); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:30px; flex:1; min-width:300px; max-width:400px; text-align:left;">
+            <div style="font-size:0.8rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;">Free</div>
+            <h4 style="font-size:1.3rem; color:var(--ivory); margin-bottom:10px;">Download Lite Report</h4>
+            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Receive a PDF summary of your Day Master, Elements, and Annual Luck.</p>
+            <form id="lite-report-form" style="display:flex; flex-direction:column; gap:10px;">
+              <input type="email" id="lite-email" placeholder="Enter your email address" required style="width:100%; padding:12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; font-family:var(--font-sans);" />
+              <button type="submit" class="btn-plot" id="btn-lite-report" style="width:100%; justify-content:center;">Send to Email <span style="margin-left:8px;">→</span></button>
+            </form>
+            <div id="lite-report-msg" style="margin-top:15px; font-size:0.85rem; display:none; padding:10px; border-radius:4px;"></div>
+          </div>
+
+          <!-- Full Consultation Card -->
+          <div style="background:linear-gradient(135deg, rgba(113,1,1,0.1) 0%, rgba(0,0,0,0) 100%); border:1px solid rgba(113,1,1,0.3); border-radius:12px; padding:30px; flex:1; min-width:300px; max-width:400px; text-align:left; position:relative; overflow:hidden;">
+            <div style="font-size:0.8rem; color:var(--crimson-text); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px; font-weight:600;">Premium</div>
+            <h4 style="font-size:1.3rem; color:var(--ivory); margin-bottom:10px;">Full Destiny Analysis</h4>
+            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Book a 1-on-1 session to decode your potential, career paths, and wealth capacity.</p>
+            <a href="/contact" class="btn-plot" style="display:flex; width:100%; justify-content:center; text-decoration:none; background:var(--crimson); border-color:var(--crimson);">Book Consultation <span style="margin-left:8px;">→</span></a>
+          </div>
+        </div>
+      </div>
+
       <!-- Four Pillars -->
       <div class="pillars-section reveal reveal-delay-1">
         <p class="section-tag">Natal Chart · 本命八字</p>
@@ -365,35 +395,7 @@
         </div>
       </div>
 
-      <!-- EXPORT / CTA SECTION -->
-      <div class="bazi-actions-section reveal" style="margin-top:4rem; padding-top:3rem; border-top:1px solid rgba(113,1,1,0.25); text-align:center;">
-        <h3 style="font-family:var(--font-serif); font-size:2rem; color:var(--ivory); margin-bottom:15px; font-weight:400;">Your Metaphysics Journey Begins Here</h3>
-        <p style="color:var(--muted); max-width:600px; margin:0 auto 30px auto; font-size:0.95rem;">
-          Get a complimentary Lite Report summarizing your BaZi chart delivered to your inbox, or book a comprehensive Destiny Analysis consultation for deep, actionable insights.
-        </p>
 
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px;">
-          <!-- Lite Report Card -->
-          <div style="background:var(--card-bg); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:30px; flex:1; min-width:300px; max-width:400px; text-align:left;">
-            <div style="font-size:0.8rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;">Free</div>
-            <h4 style="font-size:1.3rem; color:var(--ivory); margin-bottom:10px;">Download Lite Report</h4>
-            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Receive a PDF summary of your Day Master, Elements, and Annual Luck.</p>
-            <form id="lite-report-form" style="display:flex; flex-direction:column; gap:10px;">
-              <input type="email" id="lite-email" placeholder="Enter your email address" required style="width:100%; padding:12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; font-family:var(--font-sans);" />
-              <button type="submit" class="btn-plot" id="btn-lite-report" style="width:100%; justify-content:center;">Send to Email <span style="margin-left:8px;">→</span></button>
-            </form>
-            <div id="lite-report-msg" style="margin-top:15px; font-size:0.85rem; display:none; padding:10px; border-radius:4px;"></div>
-          </div>
-
-          <!-- Full Consultation Card -->
-          <div style="background:linear-gradient(135deg, rgba(113,1,1,0.1) 0%, rgba(0,0,0,0) 100%); border:1px solid rgba(113,1,1,0.3); border-radius:12px; padding:30px; flex:1; min-width:300px; max-width:400px; text-align:left; position:relative; overflow:hidden;">
-            <div style="font-size:0.8rem; color:var(--crimson-text); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px; font-weight:600;">Premium</div>
-            <h4 style="font-size:1.3rem; color:var(--ivory); margin-bottom:10px;">Full Destiny Analysis</h4>
-            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Book a 1-on-1 session to decode your potential, career paths, and wealth capacity.</p>
-            <a href="/contact" class="btn-plot" style="display:flex; width:100%; justify-content:center; text-decoration:none; background:var(--crimson); border-color:var(--crimson);">Book Consultation <span style="margin-left:8px;">→</span></a>
-          </div>
-        </div>
-      </div>
 
     </div>
   </section>
