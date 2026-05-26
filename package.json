@@ -22,8 +22,11 @@
     "bazi-calculator-by-alvamind": "^1.0.2",
     "docx": "^9.6.1",
     "lunar-javascript": "^1.7.7",
+    "nodemailer": "^8.0.8",
     "pdfmake": "^0.3.8",
-    "qimen-dunjia": "^2.1.0",
-    "resend": "^6.12.3"
+    "qimen-dunjia": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^8.0.0"
   }
 }

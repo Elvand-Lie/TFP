@@ -1,10 +1,7 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 const pdfmake = require('pdfmake');
 import path from 'path';
 import { buildPdfDefinition } from './pdf-generator';
-
-// Initialize Resend with your API key
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -77,30 +74,34 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    // Prepare attachments array
-    const attachments = pdfBase64 ? [
+    // Prepare attachments array for Nodemailer
+    const mailAttachments = pdfBase64 ? [
       {
         filename: 'Your_BaZi_Report.pdf',
         content: pdfBase64,
+        encoding: 'base64'
       }
     ] : [];
 
-    // Send the email via Resend
-    // Now using the verified domain.
-    const { data, error } = await resend.emails.send({
-      from: 'The Full Picture <hello@thefullpicture.asia>', 
-      to: [email],
-      subject: 'Your Full BaZi Report - The Full Picture',
-      html: htmlContent,
-      attachments: attachments,
+    // Configure Nodemailer transport
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
     });
 
-    if (error) {
-      console.error('Resend API Error:', error);
-      return res.status(400).json({ error: error.message || 'Failed to send email' });
-    }
+    // Send the email via Nodemailer
+    const info = await transporter.sendMail({
+      from: `"The Full Picture" <${process.env.GMAIL_USER}>`, 
+      to: email,
+      subject: 'Your Full BaZi Report - The Full Picture',
+      html: htmlContent,
+      attachments: mailAttachments,
+    });
 
-    return res.status(200).json({ success: true, data });
+    return res.status(200).json({ success: true, data: info });
   } catch (error) {
     console.error('Error processing report:', error);
     return res.status(500).json({ error: 'Failed to process report' });
