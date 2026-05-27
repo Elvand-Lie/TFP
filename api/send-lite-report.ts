@@ -1,7 +1,10 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 const pdfmake = require('pdfmake');
 import path from 'path';
 import { buildPdfDefinition } from './pdf-generator';
+
+// Initialize Resend with your API key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -75,36 +78,29 @@ export default async function handler(req, res) {
     `;
 
 
-    // Prepare attachments array for Nodemailer
-    const mailAttachments = pdfBase64 ? [
+    // Prepare attachments array
+    const attachments = pdfBase64 ? [
       {
         filename: 'Your_BaZi_Report.pdf',
         content: pdfBase64,
-        encoding: 'base64'
       }
     ] : [];
 
-    // Configure Nodemailer transport using standard SMTP
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '465'),
-      secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    // Send the email via Nodemailer
-    const info = await transporter.sendMail({
-      from: `"The Full Picture" <${process.env.SMTP_USER}>`, 
-      to: email,
+    // Send the email via Resend
+    const { data, error } = await resend.emails.send({
+      from: 'The Full Picture <hello@thefullpicture.asia>', 
+      to: [email],
       subject: 'Your Full BaZi Report - The Full Picture',
       html: htmlContent,
-      attachments: mailAttachments,
+      attachments: attachments,
     });
 
-    return res.status(200).json({ success: true, data: info });
+    if (error) {
+      console.error('Resend API Error:', error);
+      return res.status(400).json({ error: error.message || 'Failed to send email' });
+    }
+
+    return res.status(200).json({ success: true, data });
   } catch (error) {
     console.error('Error processing report:', error);
     return res.status(500).json({ error: 'Failed to process report' });
