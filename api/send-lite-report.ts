@@ -1,4 +1,4 @@
-import sgMail from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
 const pdfmake = require('pdfmake');
 import path from 'path';
 import { buildPdfDefinition } from './pdf-generator';
@@ -75,27 +75,35 @@ export default async function handler(req, res) {
     `;
 
 
+    // Prepare attachments array for Nodemailer
+    const mailAttachments = pdfBase64 ? [
+      {
+        filename: 'Your_BaZi_Report.pdf',
+        content: pdfBase64,
+        encoding: 'base64'
+      }
+    ] : [];
 
-    // Initialize SendGrid
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+    // Configure Nodemailer transport using standard SMTP
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '465'),
+      secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
 
-    // Send the email via SendGrid
-    const msg = {
+    // Send the email via Nodemailer
+    const info = await transporter.sendMail({
+      from: `"The Full Picture" <${process.env.SMTP_USER}>`, 
       to: email,
-      from: `The Full Picture <${process.env.SENDER_EMAIL || 'hello@thefullpicture.asia'}>`,
       subject: 'Your Full BaZi Report - The Full Picture',
       html: htmlContent,
-      attachments: pdfBase64 ? [
-        {
-          filename: 'Your_BaZi_Report.pdf',
-          content: pdfBase64,
-          type: 'application/pdf',
-          disposition: 'attachment'
-        }
-      ] : []
-    };
+      attachments: mailAttachments,
+    });
 
-    const info = await sgMail.send(msg);
     return res.status(200).json({ success: true, data: info });
   } catch (error) {
     console.error('Error processing report:', error);
