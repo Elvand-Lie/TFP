@@ -88,7 +88,7 @@ export default async function handler(req, res) {
 
     // Send the email via Resend
     const { data, error } = await resend.emails.send({
-      from: `The Full Picture <${process.env.SENDER_EMAIL || 'hello@thefullpicture.asia'}>`, 
+      from: `The Full Picture <${process.env.SENDER_EMAIL || 'hello@contact.thefullpicture.asia'}>`,
       to: [email],
       subject: 'Your Full BaZi Report - The Full Picture',
       html: htmlContent,
