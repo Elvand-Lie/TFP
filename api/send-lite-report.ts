@@ -103,6 +103,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, data });
   } catch (error) {
     console.error('Error processing report:', error);
-    return res.status(500).json({ error: 'Failed to process report' });
+    return res.status(500).json({ 
+      error: 'Failed to process report', 
+      details: error.message || String(error), 
+      stack: error.stack 
+    });
   }
 }

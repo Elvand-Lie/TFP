@@ -182,7 +182,7 @@ async function handleLiteReportSubmit(e) {
       let errorMsg = 'Failed to send report';
       try {
         const data = await resp.json();
-        errorMsg = data.error || errorMsg;
+        errorMsg = data.details ? `Server Error: ${data.details}` : (data.error || errorMsg);
       } catch (e) {
         errorMsg = `Server error: ${resp.status} ${resp.statusText}`;
       }
