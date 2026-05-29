@@ -4,27 +4,29 @@ export function buildPdfDefinition(data: any, name: string) {
   const chartData = data.chartData || {};
   const fp = chartData.four_pillars || {};
   const analysis = chartData.analysis || {};
+  const aux = analysis.auxiliary || {};
+
+  // Day Master info
   const dm = fp.day_pillar?.heavenly_stem?.character || '';
   const dmName = fp.day_pillar?.heavenly_stem?.name || '';
   const strength = analysis.dm_strength_label || '';
   const strengthScore = analysis.dm_strength || '';
   const structure = analysis.main_structure || '';
-  const aux = analysis.auxiliary || {};
 
   // ═══════════════════════════════════════════════════
-  // 1. AUXILIARY INFO
+  // Resolve luck_pillars array (API nests it as luck_pillars.luck_pillars)
   // ═══════════════════════════════════════════════════
-  const auxBlock = {
-    columns: [
-      { width: '*', text: [ { text: 'Tai Yuan (Conception)\n', style: 'metricLabel' }, { text: (aux.tai_yuan || '-') + '\n', style: 'metricValue' } ] },
-      { width: '*', text: [ { text: 'Ming Gong (Life Palace)\n', style: 'metricLabel' }, { text: (aux.ming_gong || '-') + '\n', style: 'metricValue' } ] },
-      { width: '*', text: [ { text: 'Kong Wang (Emptiness)\n', style: 'metricLabel' }, { text: `Day: ${aux.kong_wang_day || '-'}, Year: ${aux.kong_wang_year || '-'}\n`, style: 'metricValue' } ] }
-    ],
-    margin: [0, 0, 0, 10] as number[]
-  };
+  let luckPillarsArr: any[] = [];
+  const lpRaw = chartData.luck_pillars;
+  if (Array.isArray(lpRaw)) {
+    luckPillarsArr = lpRaw;
+  } else if (lpRaw && Array.isArray(lpRaw.luck_pillars)) {
+    luckPillarsArr = lpRaw.luck_pillars;
+  }
 
   // ═══════════════════════════════════════════════════
-  // 2. NATAL CHART (FOUR PILLARS) — Full rows
+  // SECTION 1: NATAL CHART (FOUR PILLARS)
+  // Matches bazi.html order: Ten Gods → Heavenly Stems → Earthly Branches → Hidden Stems → Life Cycle → Na Yin → Shen Sha
   // ═══════════════════════════════════════════════════
   const pillarLabels = ['Hour Pillar', 'Day Pillar', 'Month Pillar', 'Year Pillar'];
   const pKeys = ['hour_pillar', 'day_pillar', 'month_pillar', 'year_pillar'];
@@ -77,20 +79,58 @@ export function buildPdfDefinition(data: any, name: string) {
   });
 
   // ═══════════════════════════════════════════════════
-  // 3. FIVE ELEMENTS BALANCE (from five_factors)
+  // SECTION 2: LUCK PILLARS (10-Year)
   // ═══════════════════════════════════════════════════
-  const fiveFactors = analysis.five_factors || {};
-  const elKeys = ['WOOD', 'FIRE', 'EARTH', 'METAL', 'WATER'];
-  const elLabels: Record<string, string> = { WOOD: 'Wood', FIRE: 'Fire', EARTH: 'Earth', METAL: 'Metal', WATER: 'Water' };
-  const elTotal = elKeys.reduce((sum, k) => sum + (fiveFactors[k] || 0), 0) || 1;
-  const elementsList = elKeys.map(k => {
-    const val = fiveFactors[k] || 0;
-    const pct = Math.round((val / elTotal) * 100);
-    return { text: `${elLabels[k]}: ${val} (${pct}%)`, margin: [0, 3, 0, 3] as number[] };
+  const luckHeader = [
+    { text: 'Age', style: 'tableHeader' },
+    { text: 'Years', style: 'tableHeader' },
+    { text: 'Heavenly Stem', style: 'tableHeader' },
+    { text: 'Earthly Branch', style: 'tableHeader' },
+    { text: 'Na Yin', style: 'tableHeader' },
+    { text: 'Hidden Stems', style: 'tableHeader' },
+    { text: 'Life Cycle', style: 'tableHeader' }
+  ];
+
+  const luckBody = luckPillarsArr.map((lp: any) => {
+    const hStems = (lp.hidden_stems || []).map((h: any) => h.character || '').join(' ');
+    const lcStage = lp.life_cycle ? (typeof lp.life_cycle === 'object' ? lp.life_cycle.chinese || '' : lp.life_cycle) : '';
+    return [
+      { text: lp.age?.toString() || '', style: 'tableCell', fontSize: 11 },
+      { text: `${lp.year_start || ''}-${lp.year_end || ''}`, style: 'tableCell', fontSize: 10 },
+      { text: `${lp.heavenly_stem?.character || ''} ${lp.heavenly_stem?.name || ''}`, style: 'tableCell', fontSize: 11 },
+      { text: `${lp.earthly_branch?.character || ''} ${lp.earthly_branch?.name || ''}`, style: 'tableCell', fontSize: 11 },
+      { text: lp.na_yin || '', style: 'hiddenCell' },
+      { text: hStems || '', style: 'hiddenCell' },
+      { text: lcStage || '', style: 'hiddenCell' }
+    ];
   });
 
   // ═══════════════════════════════════════════════════
-  // 4. DESTINY PROFILING — 5 structures + 10 Gods bars
+  // SECTION 3: PERSONAL CHART DETAILS
+  // ═══════════════════════════════════════════════════
+  const ls = analysis.life_star || {};
+  const toStr = (arr: any) => Array.isArray(arr) ? arr.join(', ') : (arr || '-');
+  const personalDetailsRows = [
+    [{ text: 'Celestial Animal', style: 'smallLabel' }, { text: fp.year_pillar?.earthly_branch?.name || '-', style: 'smallVal' }],
+    [{ text: 'Noble People', style: 'smallLabel' }, { text: toStr(analysis.nobleman), style: 'smallVal' }],
+    [{ text: 'Intelligence', style: 'smallLabel' }, { text: analysis.intelligence || '-', style: 'smallVal' }],
+    [{ text: 'Peach Blossom', style: 'smallLabel' }, { text: analysis.peach_blossom || '-', style: 'smallVal' }],
+    [{ text: 'Sky Horse', style: 'smallLabel' }, { text: analysis.sky_horse || '-', style: 'smallVal' }],
+    [{ text: 'Solitary (Gu Chen)', style: 'smallLabel' }, { text: analysis.solitary || '-', style: 'smallVal' }],
+    [{ text: 'Life Palace', style: 'smallLabel' }, { text: aux.ming_gong || '-', style: 'smallVal' }],
+    [{ text: 'Conception', style: 'smallLabel' }, { text: aux.tai_yuan || '-', style: 'smallVal' }],
+    [{ text: 'Life Star / Gua', style: 'smallLabel' }, { text: `${analysis.life_gua || ''} ${ls.color || ''} ${ls.element || ''} ${ls.chinese ? '(' + ls.chinese + ')' : ''}`.trim() || '-', style: 'smallVal' }]
+  ];
+
+  // ═══════════════════════════════════════════════════
+  // SECTION 4: 8 MANSIONS DIRECTIONS
+  // ═══════════════════════════════════════════════════
+  const em = analysis.eight_mansions || {};
+  const lucky = em.lucky || {};
+  const unlucky = em.unlucky || {};
+
+  // ═══════════════════════════════════════════════════
+  // SECTION 5: BAZI PROFILING SYSTEM (5 Structures + 10 Gods)
   // ═══════════════════════════════════════════════════
   const profiling = analysis.profiling || {};
   const structuresNatal = profiling.structures_natal || {};
@@ -98,7 +138,6 @@ export function buildPdfDefinition(data: any, name: string) {
     return { text: `${k}: ${v}%`, margin: [0, 2, 0, 2] as number[] };
   });
 
-  // 10 Gods profiling bars (Friend, Direct Wealth, etc.)
   const natalPct = profiling.natal_percentages || {};
   const annualPct = profiling.annual_percentages || {};
   const sortedGods = Object.entries(natalPct).sort((a: any, b: any) => b[1] - a[1]);
@@ -118,43 +157,23 @@ export function buildPdfDefinition(data: any, name: string) {
   });
 
   // ═══════════════════════════════════════════════════
-  // 5. LUCK PILLARS (10-Year + Annual Pillars inside)
+  // SECTION 6: FIVE ELEMENTS BALANCE
   // ═══════════════════════════════════════════════════
-  let luckPillars = chartData.luck_pillars || [];
-  if (luckPillars && !Array.isArray(luckPillars) && Array.isArray(luckPillars.luck_pillars)) {
-    luckPillars = luckPillars.luck_pillars;
-  }
-  if (!Array.isArray(luckPillars)) luckPillars = [];
-
-  const luckHeader = [
-    { text: 'Age', style: 'tableHeader' },
-    { text: 'Years', style: 'tableHeader' },
-    { text: 'Heavenly Stem', style: 'tableHeader' },
-    { text: 'Earthly Branch', style: 'tableHeader' },
-    { text: 'Na Yin', style: 'tableHeader' },
-    { text: 'Hidden Stems', style: 'tableHeader' },
-    { text: 'Life Cycle', style: 'tableHeader' }
-  ];
-
-  const luckBody = luckPillars.map((lp: any) => {
-    const hStems = (lp.hidden_stems || []).map((h: any) => h.character).join(' ');
-    const lcStage = lp.life_cycle ? (lp.life_cycle.chinese || lp.life_cycle) : '';
-    return [
-      { text: lp.age?.toString() || '', style: 'tableCell', fontSize: 11 },
-      { text: `${lp.year_start}-${lp.year_end}`, style: 'tableCell', fontSize: 10 },
-      { text: `${lp.heavenly_stem?.character || ''} ${lp.heavenly_stem?.name || ''}`, style: 'tableCell', fontSize: 11 },
-      { text: `${lp.earthly_branch?.character || ''} ${lp.earthly_branch?.name || ''}`, style: 'tableCell', fontSize: 11 },
-      { text: lp.na_yin || '', style: 'hiddenCell' },
-      { text: hStems || '', style: 'hiddenCell' },
-      { text: lcStage || '', style: 'hiddenCell' }
-    ];
+  const fiveFactors = analysis.five_factors || {};
+  const elKeys = ['WOOD', 'FIRE', 'EARTH', 'METAL', 'WATER'];
+  const elLabels: Record<string, string> = { WOOD: 'Wood', FIRE: 'Fire', EARTH: 'Earth', METAL: 'Metal', WATER: 'Water' };
+  const elTotal = elKeys.reduce((sum, k) => sum + (fiveFactors[k] || 0), 0) || 1;
+  const elementsList = elKeys.map(k => {
+    const val = fiveFactors[k] || 0;
+    const pct = Math.round((val / elTotal) * 100);
+    return { text: `${elLabels[k]}: ${val} (${pct}%)`, margin: [0, 3, 0, 3] as number[] };
   });
 
   // ═══════════════════════════════════════════════════
-  // 6. ANNUAL LUCK MATRIX
+  // SECTION 7: ANNUAL LUCK MATRIX
   // ═══════════════════════════════════════════════════
   const annualMatrixContent: any[] = [];
-  luckPillars.forEach((lp: any) => {
+  luckPillarsArr.forEach((lp: any) => {
     if (lp.annual_pillars && lp.annual_pillars.length > 0) {
       annualMatrixContent.push({
         text: `Age ${lp.age} (${lp.year_start}-${lp.year_end}): ${lp.heavenly_stem?.character || ''}${lp.earthly_branch?.character || ''}`,
@@ -183,7 +202,52 @@ export function buildPdfDefinition(data: any, name: string) {
   });
 
   // ═══════════════════════════════════════════════════
-  // BUILD DOC DEFINITION
+  // SECTION 8: MONTHLY INFLUENCE
+  // ═══════════════════════════════════════════════════
+  const miBody: any[][] = [];
+  if (analysis.monthly_influence && analysis.monthly_influence.length > 0) {
+    miBody.push(
+      ['Month', 'Stem', 'Branch', 'Ten God', 'Hidden Stems'].map(t => ({ text: t, style: 'tableHeader' }))
+    );
+    analysis.monthly_influence.forEach((m: any) => {
+      const monthName = new Date(m.gregorian_year, m.gregorian_month - 1).toLocaleString('default', { month: 'short' }).toUpperCase();
+      const hStems = (m.hidden_stems || []).map((h: any) => {
+        const tg = h.ten_god ? h.ten_god.chinese : '';
+        return `${h.character}${tg ? ' ' + tg : ''}`;
+      }).join('\n');
+      const stemTg = m.stem?.ten_god ? m.stem.ten_god.chinese : '';
+      miBody.push([
+        { text: `${monthName} ${m.gregorian_year}`, style: 'tableCell', fontSize: 10 },
+        { text: m.stem?.character || '', style: 'tableCell', fontSize: 14, bold: true },
+        { text: m.branch?.character || '', style: 'tableCell', fontSize: 14, bold: true },
+        { text: stemTg, style: 'hiddenCell', color: '#C6A96B' },
+        { text: hStems, style: 'hiddenCell' }
+      ]);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // SECTION 9: ANNUAL BAZI STARS
+  // ═══════════════════════════════════════════════════
+  const renderStars = (stars: any) => {
+    let parts: string[] = [];
+    if (stars?.auspicious?.length) parts.push(...stars.auspicious.map((s: string) => `[+] ${s}`));
+    if (stars?.inauspicious?.length) parts.push(...stars.inauspicious.map((s: string) => `[-] ${s}`));
+    return parts.join('\n') || 'None';
+  };
+
+  // ═══════════════════════════════════════════════════
+  // SECTION 10: QI MEN DUN JIA (QMDJ)
+  // ═══════════════════════════════════════════════════
+  const qmdj = chartData.qmdj;
+
+  // ═══════════════════════════════════════════════════
+  // BUILD DOCUMENT DEFINITION
+  // Order matches bazi.html exactly:
+  // 1) Summary  2) Natal Chart  3) Luck Pillars
+  // 4) Personal Details + 8 Mansions  5) Profiling
+  // 6) Five Elements  7) Annual Luck Matrix
+  // 8) Monthly Influence  9) Annual Stars  10) QMDJ
   // ═══════════════════════════════════════════════════
   const docDefinition: any = {
     pageSize: 'A4',
@@ -201,92 +265,75 @@ export function buildPdfDefinition(data: any, name: string) {
       smallLabel: { fontSize: 10, color: '#666', margin: [5, 6, 5, 6] },
       smallVal: { fontSize: 10, bold: true, color: '#333', margin: [5, 6, 5, 6] }
     },
-    content: [
-      // ── PAGE 1: Title + Summary + Natal Chart ──
-      { text: 'The Full Picture', style: 'header' },
-      { text: 'BaZi Destiny Report', style: 'subheader' },
-      
-      // Client Summary
-      {
-        columns: [
-          { width: '*', text: [{ text: 'Client Name\n', style: 'metricLabel' }, { text: (name || 'Client') + '\n', style: 'metricValue' }] },
-          { width: '*', text: [{ text: 'Day Master\n', style: 'metricLabel' }, { text: `${dm} (${dmName})\n`, style: 'metricValue' }] },
-          { width: '*', text: [{ text: 'Strength\n', style: 'metricLabel' }, { text: `${strengthScore}/10 - ${strength}\n`, style: 'metricValue' }] },
-          { width: '*', text: [{ text: 'Structure\n', style: 'metricLabel' }, { text: structure + '\n', style: 'metricValue' }] }
-        ]
-      },
-      auxBlock,
-
-      // Natal Chart
-      { text: 'Natal Chart (Four Pillars)', style: 'sectionTitle' },
-      {
-        table: {
-          headerRows: 1,
-          widths: ['*', '*', '*', '*'],
-          body: [headerRow, tenGodRow, stemRow, branchRow, hiddenRow, lifeCycleRow, naYinRow, shenShaRow]
-        },
-        layout: 'lightHorizontalLines'
-      },
-
-      // ── PAGE 2: Five Elements + Profiling ──
-      { text: 'Five Elements Balance', style: 'sectionTitle', pageBreak: 'before' },
-      ...elementsList,
-
-      { text: 'Destiny Profiling (5 Structures)', style: 'sectionTitle' },
-      ...structuresList,
-
-      // 10 Gods bars
-      { text: 'Ten Gods Profiling (Natal vs Annual)', style: 'sectionTitle' },
-      profilingBody.length > 0 ? {
-        table: {
-          headerRows: 1,
-          widths: ['*', 'auto', 'auto'],
-          body: [profilingHeader, ...profilingBody]
-        },
-        layout: 'lightHorizontalLines'
-      } : { text: 'No profiling data available.', style: 'hiddenCell' },
-
-      // ── PAGE 3: Personal Chart Details + 8 Mansions ──
-    ] as any[]
+    content: [] as any[]
   };
 
-  // ═══════════════════════════════════════════════════
-  // JOEY YAP PERSONAL CHART DETAILS
-  // ═══════════════════════════════════════════════════
-  if (analysis.life_star || analysis.nobleman) {
-    const ls = analysis.life_star || {};
-    const toStr = (arr: any) => Array.isArray(arr) ? arr.join(', ') : (arr || '-');
-    docDefinition.content.push(
-      { text: 'Personal Chart Details', style: 'sectionTitle', pageBreak: 'before' },
+  const content = docDefinition.content;
+
+  // ─── PAGE 1: TITLE + SUMMARY + NATAL CHART ───
+  content.push(
+    { text: 'The Full Picture', style: 'header' },
+    { text: 'BaZi Destiny Report', style: 'subheader' },
+    // Client Summary
+    {
+      columns: [
+        { width: '*', text: [{ text: 'Client Name\n', style: 'metricLabel' }, { text: (name || 'Client') + '\n', style: 'metricValue' }] },
+        { width: '*', text: [{ text: 'Day Master\n', style: 'metricLabel' }, { text: `${dm} (${dmName})\n`, style: 'metricValue' }] },
+        { width: '*', text: [{ text: 'Strength\n', style: 'metricLabel' }, { text: `${strengthScore}/10 - ${strength}\n`, style: 'metricValue' }] },
+        { width: '*', text: [{ text: 'Structure\n', style: 'metricLabel' }, { text: structure + '\n', style: 'metricValue' }] }
+      ]
+    },
+    // Auxiliary info
+    {
+      columns: [
+        { width: '*', text: [{ text: 'Tai Yuan (Conception)\n', style: 'metricLabel' }, { text: (aux.tai_yuan || '-') + '\n', style: 'metricValue' }] },
+        { width: '*', text: [{ text: 'Ming Gong (Life Palace)\n', style: 'metricLabel' }, { text: (aux.ming_gong || '-') + '\n', style: 'metricValue' }] },
+        { width: '*', text: [{ text: 'Kong Wang (Emptiness)\n', style: 'metricLabel' }, { text: `Day: ${aux.kong_wang_day || '-'}, Year: ${aux.kong_wang_year || '-'}\n`, style: 'metricValue' }] }
+      ],
+      margin: [0, 0, 0, 10] as number[]
+    },
+    // Natal Chart table
+    { text: 'Natal Chart (Four Pillars)', style: 'sectionTitle' },
+    {
+      table: {
+        headerRows: 1,
+        widths: ['*', '*', '*', '*'],
+        body: [headerRow, tenGodRow, stemRow, branchRow, hiddenRow, lifeCycleRow, naYinRow, shenShaRow]
+      },
+      layout: 'lightHorizontalLines'
+    }
+  );
+
+  // ─── SECTION 2: LUCK PILLARS ───
+  if (luckBody.length > 0) {
+    content.push(
+      { text: 'Luck Pillars · 大運', style: 'sectionTitle', pageBreak: 'before' },
       {
         table: {
-          widths: ['*', '*'],
-          body: [
-            [{ text: 'Celestial Animal', style: 'smallLabel' }, { text: fp.year_pillar?.earthly_branch?.name || '-', style: 'smallVal' }],
-            [{ text: 'Noble People', style: 'smallLabel' }, { text: toStr(analysis.nobleman), style: 'smallVal' }],
-            [{ text: 'Intelligence', style: 'smallLabel' }, { text: analysis.intelligence || '-', style: 'smallVal' }],
-            [{ text: 'Peach Blossom', style: 'smallLabel' }, { text: analysis.peach_blossom || '-', style: 'smallVal' }],
-            [{ text: 'Sky Horse', style: 'smallLabel' }, { text: analysis.sky_horse || '-', style: 'smallVal' }],
-            [{ text: 'Solitary (Gu Chen)', style: 'smallLabel' }, { text: analysis.solitary || '-', style: 'smallVal' }],
-            [{ text: 'Life Palace', style: 'smallLabel' }, { text: aux.ming_gong || '-', style: 'smallVal' }],
-            [{ text: 'Conception', style: 'smallLabel' }, { text: aux.tai_yuan || '-', style: 'smallVal' }],
-            [{ text: 'Life Star / Gua', style: 'smallLabel' }, { text: `${analysis.life_gua || ''} ${ls.color || ''} ${ls.element || ''} ${ls.chinese ? '(' + ls.chinese + ')' : ''}`.trim() || '-', style: 'smallVal' }]
-          ]
+          headerRows: 1,
+          widths: ['auto', 'auto', 'auto', 'auto', '*', 'auto', 'auto'],
+          body: [luckHeader, ...luckBody]
         },
-        layout: 'lightHorizontalLines',
-        margin: [0, 0, 0, 20] as number[]
+        layout: 'lightHorizontalLines'
       }
     );
   }
 
-  // ═══════════════════════════════════════════════════
-  // 8 MANSIONS DIRECTIONS
-  // ═══════════════════════════════════════════════════
+  // ─── SECTION 3: PERSONAL CHART DETAILS + 8 MANSIONS ───
+  content.push(
+    { text: 'Personal Chart Details · 命理資訊', style: 'sectionTitle', pageBreak: 'before' },
+    {
+      table: {
+        widths: ['*', '*'],
+        body: personalDetailsRows
+      },
+      layout: 'lightHorizontalLines',
+      margin: [0, 0, 0, 20] as number[]
+    }
+  );
+
   if (analysis.eight_mansions) {
-    const em = analysis.eight_mansions;
-    const lucky = em.lucky || {};
-    const unlucky = em.unlucky || {};
-    docDefinition.content.push(
+    content.push(
       { text: '8 Mansions Directions', style: 'sectionTitle' },
       {
         columns: [
@@ -316,19 +363,67 @@ export function buildPdfDefinition(data: any, name: string) {
     );
   }
 
-  // ═══════════════════════════════════════════════════
-  // ANNUAL STARS
-  // ═══════════════════════════════════════════════════
+  // ─── SECTION 4: BAZI PROFILING ───
+  content.push(
+    { text: 'BaZi Profiling · 五型格 & 十神格', style: 'sectionTitle', pageBreak: 'before' }
+  );
+
+  if (structuresList.length > 0) {
+    content.push(
+      { text: '5 Structures (Natal)', bold: true, fontSize: 12, margin: [0, 5, 0, 5] as number[] },
+      ...structuresList
+    );
+  }
+
+  if (profilingBody.length > 0) {
+    content.push(
+      { text: 'Ten Gods Profiling (Natal vs Annual)', bold: true, fontSize: 12, margin: [0, 15, 0, 5] as number[] },
+      {
+        table: {
+          headerRows: 1,
+          widths: ['*', 'auto', 'auto'],
+          body: [profilingHeader, ...profilingBody]
+        },
+        layout: 'lightHorizontalLines'
+      }
+    );
+  }
+
+  // ─── SECTION 5: FIVE ELEMENTS BALANCE ───
+  content.push(
+    { text: 'Five Elements · 五行', style: 'sectionTitle' },
+    ...elementsList
+  );
+
+  // ─── SECTION 6: ANNUAL LUCK MATRIX ───
+  if (annualMatrixContent.length > 0) {
+    content.push(
+      { text: 'Annual Luck Matrix · 六十甲子', style: 'sectionTitle', pageBreak: 'before' },
+      ...annualMatrixContent
+    );
+  }
+
+  // ─── SECTION 7: MONTHLY INFLUENCE ───
+  if (miBody.length > 0) {
+    content.push(
+      { text: 'Monthly Influence · 流月運程', style: 'sectionTitle', pageBreak: 'before' },
+      {
+        table: {
+          headerRows: 1,
+          widths: ['auto', 'auto', 'auto', 'auto', '*'],
+          body: miBody
+        },
+        layout: 'lightHorizontalLines',
+        margin: [0, 0, 0, 20] as number[]
+      }
+    );
+  }
+
+  // ─── SECTION 8: ANNUAL BAZI STARS ───
   if (analysis.annual_stars) {
     const ast = analysis.annual_stars;
-    const renderStars = (stars: any) => {
-      let parts: string[] = [];
-      if (stars?.auspicious?.length) parts.push(...stars.auspicious.map((s: string) => `[+] ${s}`));
-      if (stars?.inauspicious?.length) parts.push(...stars.inauspicious.map((s: string) => `[-] ${s}`));
-      return parts.join('\n') || 'None';
-    };
-    docDefinition.content.push(
-      { text: `${ast.year} (${ast.pillar}) Annual Stars`, style: 'sectionTitle', pageBreak: 'before' },
+    content.push(
+      { text: `${ast.year} (${ast.pillar}) Annual Stars · 流年吉凶星`, style: 'sectionTitle', pageBreak: 'before' },
       {
         table: {
           headerRows: 1,
@@ -348,73 +443,7 @@ export function buildPdfDefinition(data: any, name: string) {
     );
   }
 
-  // ═══════════════════════════════════════════════════
-  // MONTHLY INFLUENCE (standalone — current year)
-  // ═══════════════════════════════════════════════════
-  if (analysis.monthly_influence && analysis.monthly_influence.length > 0) {
-    const miBody: any[][] = [
-      ['Month', 'Stem', 'Branch', 'Ten God', 'Hidden Stems'].map(t => ({ text: t, style: 'tableHeader' }))
-    ];
-    analysis.monthly_influence.forEach((m: any) => {
-      const monthName = new Date(m.gregorian_year, m.gregorian_month - 1).toLocaleString('default', { month: 'short' }).toUpperCase();
-      const hStems = (m.hidden_stems || []).map((h: any) => {
-        const tg = h.ten_god ? h.ten_god.chinese : '';
-        return `${h.character}${tg ? ' ' + tg : ''}`;
-      }).join('\n');
-      const stemTg = m.stem?.ten_god ? m.stem.ten_god.chinese : '';
-      miBody.push([
-        { text: `${monthName} ${m.gregorian_year}`, style: 'tableCell', fontSize: 10 },
-        { text: m.stem?.character || '', style: 'tableCell', fontSize: 14, bold: true },
-        { text: m.branch?.character || '', style: 'tableCell', fontSize: 14, bold: true },
-        { text: stemTg, style: 'hiddenCell', color: '#C6A96B' },
-        { text: hStems, style: 'hiddenCell' }
-      ]);
-    });
-    docDefinition.content.push(
-      { text: 'Monthly Influence (Current Year)', style: 'sectionTitle', pageBreak: 'before' },
-      {
-        table: {
-          headerRows: 1,
-          widths: ['auto', 'auto', 'auto', 'auto', '*'],
-          body: miBody
-        },
-        layout: 'lightHorizontalLines',
-        margin: [0, 0, 0, 20] as number[]
-      }
-    );
-  }
-
-  // ═══════════════════════════════════════════════════
-  // 10-YEAR LUCK PILLARS TABLE
-  // ═══════════════════════════════════════════════════
-  if (luckBody.length > 0) {
-    docDefinition.content.push(
-      { text: '10-Year Luck Pillars', style: 'sectionTitle', pageBreak: 'before' },
-      {
-        table: {
-          headerRows: 1,
-          widths: ['auto', 'auto', 'auto', 'auto', '*', 'auto', 'auto'],
-          body: [luckHeader, ...luckBody]
-        },
-        layout: 'lightHorizontalLines'
-      }
-    );
-  }
-
-  // ═══════════════════════════════════════════════════
-  // ANNUAL LUCK MATRIX (10 annual pillars per decade)
-  // ═══════════════════════════════════════════════════
-  if (annualMatrixContent.length > 0) {
-    docDefinition.content.push(
-      { text: 'Annual Luck Matrix', style: 'sectionTitle', pageBreak: 'before' },
-      ...annualMatrixContent
-    );
-  }
-
-  // ═══════════════════════════════════════════════════
-  // QI MEN DUN JIA (QMDJ)
-  // ═══════════════════════════════════════════════════
-  const qmdj = chartData.qmdj;  // QMDJ is inside chartData, not at top level
+  // ─── SECTION 9: QI MEN DUN JIA ───
   if (qmdj && qmdj.palaces && qmdj.palaces.length > 0) {
     const pMap: Record<number, any> = {};
     qmdj.palaces.forEach((p: any) => { pMap[p.id] = p; });
@@ -441,19 +470,14 @@ export function buildPdfDefinition(data: any, name: string) {
       return { text: `${badgeStr}${p.god || ''}\n${p.star || ''}\n${p.door || ''}\n${p.heaven_stem || ''} / ${p.earth_stem || ''}`, style: 'tableCell', fontSize: 10 };
     };
 
-    const luoShuLabels = [
-      ['SE 4', 'S 9', 'SW 2'],
-      ['E 3', 'C 5', 'W 7'],
-      ['NE 8', 'N 1', 'NW 6']
-    ];
     const qmdjGrid = [
       [formatPalace(pMap[4]), formatPalace(pMap[9]), formatPalace(pMap[2])],
       [formatPalace(pMap[3]), formatPalace(pMap[5]), formatPalace(pMap[7])],
       [formatPalace(pMap[8]), formatPalace(pMap[1]), formatPalace(pMap[6])]
     ];
 
-    docDefinition.content.push(
-      { text: 'Qi Men Dun Jia (Destiny Palace)', style: 'sectionTitle', pageBreak: 'before' },
+    content.push(
+      { text: 'Qi Men Dun Jia · 奇門遁甲', style: 'sectionTitle', pageBreak: 'before' },
       { text: `Solar Term: ${qmdj.solar_term || '-'}  |  Ju: ${qmdj.ju || '-'}`, style: 'metricLabel' },
       { text: `Zhi Fu: ${qmdj.duty_star || '-'}  |  Zhi Shi: ${qmdj.duty_door || '-'}`, style: 'metricLabel', margin: [0, 0, 0, 5] as number[] },
       { text: `Kong Wang: ${qmdj.kong_wang?.branches || '-'}  |  Tian Ma: ${qmdj.tian_ma?.branch || '-'}`, style: 'metricLabel', margin: [0, 0, 0, 15] as number[] },
@@ -466,6 +490,12 @@ export function buildPdfDefinition(data: any, name: string) {
       }
     );
   }
+
+  // ─── FOOTER ───
+  content.push(
+    { text: '\n\n' },
+    { text: '© 2026 The Full Picture LLP. All rights reserved.', alignment: 'center', fontSize: 8, color: '#888' }
+  );
 
   return docDefinition;
 }
