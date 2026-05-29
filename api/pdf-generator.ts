@@ -42,7 +42,11 @@ export function buildPdfDefinition(data: any, name: string) {
   });
 
   // Luck Pillars
-  const luckPillars = data.chartData?.luck_pillars || [];
+  let luckPillars = data.chartData?.luck_pillars || [];
+  if (luckPillars && !Array.isArray(luckPillars) && Array.isArray(luckPillars.luck_pillars)) {
+    luckPillars = luckPillars.luck_pillars;
+  }
+  if (!Array.isArray(luckPillars)) luckPillars = [];
   const luckHeader = [
     { text: 'Age', style: 'tableHeader' },
     { text: 'Years', style: 'tableHeader' },
