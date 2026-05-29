@@ -104,46 +104,54 @@ export function buildPdfDefinition(data: any, name: string) {
   // Natal Chart rows (with row labels)
   const headerRow = pillarLabels.map((l, i) => ({ text: l, bold: true, fontSize: 9, color: C.white, fillColor: C.crimson, alignment: 'center', margin: [0, 6, 0, 6] as number[] }));
 
-  const tenGodRow = [{ text: 'Ten God\n十神', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
-    if (k === 'day_pillar') return { text: 'Day Master', fontSize: 9, bold: true, alignment: 'center', color: C.crimson };
-    const tg = fp[k]?.heavenly_stem?.ten_god;
-    return tg ? { text: `${tg.chinese}\n${tg.short}`, fontSize: 10, alignment: 'center', color: C.gold } : { text: '-', alignment: 'center' };
-  })];
-
-  const stemRow = [{ text: 'Heavenly\nStem 天干', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
+  // Ten God + Heavenly Stem COMBINED into one row
+  const stemRow = [{ text: 'Heavenly\nStem 天干', fontSize: 8, color: C.textDark, alignment: 'center' }, ...pKeys.map(k => {
     const p = fp[k]?.heavenly_stem;
-    return p ? { text: `${p.character}\n${p.name}`, fontSize: 14, bold: true, alignment: 'center' } : { text: '-', alignment: 'center' };
+    if (!p) return { text: '-', alignment: 'center' };
+    const tg = p.ten_god;
+    if (k === 'day_pillar') {
+      return { stack: [
+        { text: 'Day Master', fontSize: 8, bold: true, color: C.crimson, alignment: 'center' },
+        { text: p.character, fontSize: 18, bold: true, alignment: 'center', margin: [0, 2, 0, 0] as number[] },
+        { text: p.name, fontSize: 9, alignment: 'center', color: C.textDark }
+      ], alignment: 'center' };
+    }
+    return { stack: [
+      tg ? { text: `${tg.chinese} ${tg.short}`, fontSize: 9, color: C.gold, alignment: 'center' } : { text: '', alignment: 'center' },
+      { text: p.character, fontSize: 18, bold: true, alignment: 'center', margin: [0, 2, 0, 0] as number[] },
+      { text: p.name, fontSize: 9, alignment: 'center', color: C.textDark }
+    ], alignment: 'center' };
   })];
 
-  const branchRow = [{ text: 'Earthly\nBranch 地支', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
+  const branchRow = [{ text: 'Earthly\nBranch 地支', fontSize: 8, color: C.textDark, alignment: 'center' }, ...pKeys.map(k => {
     const p = fp[k]?.earthly_branch;
     if (!p) return { text: '-', alignment: 'center' };
     const spelling = p.spelling ? p.spelling.charAt(0).toUpperCase() + p.spelling.slice(1) : '';
-    return { text: `${p.character}\n${spelling}\n${p.name || ''}`, fontSize: 12, bold: true, alignment: 'center' };
+    return { text: `${p.character}\n${spelling}\n${p.name || ''}`, fontSize: 12, bold: true, alignment: 'center', color: C.textDark };
   })];
 
-  const hiddenRow = [{ text: 'Hidden\nStems 藏干', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
+  const hiddenRow = [{ text: 'Hidden\nStems 藏干', fontSize: 8, color: C.textDark, alignment: 'center' }, ...pKeys.map(k => {
     const hStems = fp[k]?.hidden_stems || [];
     const text = hStems.map((h: any) => {
       const tgStr = h.ten_god ? ` (${h.ten_god.short})` : '';
       return `${h.character}${tgStr}`;
     }).join('\n');
-    return { text: text || '-', fontSize: 9, alignment: 'center', color: C.textMed };
+    return { text: text || '-', fontSize: 9, alignment: 'center', color: C.textDark };
   })];
 
-  const lifeCycleRow = [{ text: 'Life\nCycle 長生', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
+  const lifeCycleRow = [{ text: 'Life\nCycle 長生', fontSize: 8, color: C.textDark, alignment: 'center' }, ...pKeys.map(k => {
     const lc = fp[k]?.life_cycle || '';
     const lcc = fp[k]?.life_cycle_chinese || '';
-    return { text: lc ? `${lcc} ${lc}` : '-', fontSize: 9, alignment: 'center', color: C.textMed };
+    return { text: lc ? `${lcc} ${lc}` : '-', fontSize: 9, alignment: 'center', color: C.textDark };
   })];
 
-  const naYinRow = [{ text: 'Na Yin\n納音', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
-    return { text: fp[k]?.na_yin || '-', fontSize: 9, alignment: 'center', color: C.textMed };
+  const naYinRow = [{ text: 'Na Yin\n納音', fontSize: 8, color: C.textDark, alignment: 'center' }, ...pKeys.map(k => {
+    return { text: fp[k]?.na_yin || '-', fontSize: 9, alignment: 'center', color: C.textDark };
   })];
 
-  const shenShaRow = [{ text: 'Shen Sha\n神煞', fontSize: 8, color: C.textLight, alignment: 'center' }, ...pKeys.map(k => {
+  const shenShaRow = [{ text: 'Shen Sha\n神煞', fontSize: 8, color: C.textDark, alignment: 'center' }, ...pKeys.map(k => {
     const stars = fp[k]?.earthly_branch?.shen_sha || [];
-    return { text: stars.length > 0 ? stars.join('\n') : '-', fontSize: 8, alignment: 'center', color: C.textMed };
+    return { text: stars.length > 0 ? stars.join('\n') : '-', fontSize: 8, alignment: 'center', color: C.textDark };
   })];
 
   // ═══════════════════════════════════════════════════
@@ -195,7 +203,7 @@ export function buildPdfDefinition(data: any, name: string) {
     table: {
       headerRows: 1,
       widths: [55, '*', '*', '*', '*'],
-      body: [headerRow, tenGodRow, stemRow, branchRow, hiddenRow, lifeCycleRow, naYinRow, shenShaRow]
+      body: [headerRow, stemRow, branchRow, hiddenRow, lifeCycleRow, naYinRow, shenShaRow]
     },
     layout: natalLayout
   });
@@ -253,7 +261,7 @@ export function buildPdfDefinition(data: any, name: string) {
         {
           width: '48%',
           stack: [
-            { text: '✦ FAVORABLE', fontSize: 9, bold: true, color: C.green, letterSpacing: 1, margin: [0, 0, 0, 8] as number[] },
+            { text: '[+] FAVORABLE', fontSize: 9, bold: true, color: C.green, letterSpacing: 1, margin: [0, 0, 0, 8] as number[] },
             { text: `Sheng Qi (Wealth): ${lucky.wealth || '-'}`, fontSize: 10, margin: [0, 3, 0, 3] as number[] },
             { text: `Tian Yi (Health): ${lucky.health || '-'}`, fontSize: 10, margin: [0, 3, 0, 3] as number[] },
             { text: `Yan Nian (Romance): ${lucky.romance || '-'}`, fontSize: 10, margin: [0, 3, 0, 3] as number[] },
@@ -264,7 +272,7 @@ export function buildPdfDefinition(data: any, name: string) {
         {
           width: '48%',
           stack: [
-            { text: '✦ UNFAVORABLE', fontSize: 9, bold: true, color: C.red, letterSpacing: 1, margin: [0, 0, 0, 8] as number[] },
+            { text: '[-] UNFAVORABLE', fontSize: 9, bold: true, color: C.red, letterSpacing: 1, margin: [0, 0, 0, 8] as number[] },
             { text: `Huo Hai (Mishaps): ${unlucky.obstacles || '-'}`, fontSize: 10, margin: [0, 3, 0, 3] as number[] },
             { text: `Wu Gui (Five Ghosts): ${unlucky.quarrels || '-'}`, fontSize: 10, margin: [0, 3, 0, 3] as number[] },
             { text: `Liu Sha (Six Killings): ${unlucky.setbacks || '-'}`, fontSize: 10, margin: [0, 3, 0, 3] as number[] },
@@ -374,20 +382,25 @@ export function buildPdfDefinition(data: any, name: string) {
   // ─── ANNUAL STARS ───
   if (analysis.annual_stars) {
     const ast = analysis.annual_stars;
-    const renderStars = (stars: any) => {
-      let parts: string[] = [];
-      if (stars?.auspicious?.length) parts.push(...stars.auspicious.map((s: string) => `✦ ${s}`));
-      if (stars?.inauspicious?.length) parts.push(...stars.inauspicious.map((s: string) => `✧ ${s}`));
-      return parts.join('\n') || 'None';
+    const renderStarsRich = (stars: any) => {
+      const items: any[] = [];
+      if (stars?.auspicious?.length) {
+        stars.auspicious.forEach((s: string) => items.push({ text: `[+] ${s}`, fontSize: 9, color: C.green, margin: [0, 1, 0, 1] as number[] }));
+      }
+      if (stars?.inauspicious?.length) {
+        stars.inauspicious.forEach((s: string) => items.push({ text: `[-] ${s}`, fontSize: 9, color: C.red, margin: [0, 1, 0, 1] as number[] }));
+      }
+      if (items.length === 0) items.push({ text: 'None', fontSize: 9, color: C.textDark });
+      return { stack: items, alignment: 'center', margin: [4, 6, 4, 6] as number[] };
     };
     content.push(...sectionTitle(`${ast.year} Annual Stars`, `流年吉凶星 · ${ast.pillar}`, true));
     const starsHeader = ['Hour Branch', 'Day Branch', 'Month Branch', 'Year Branch'].map(t => ({ text: t, fontSize: 9, bold: true, color: C.white, fillColor: C.crimson, alignment: 'center', margin: [0, 5, 0, 5] as number[] }));
     const starsRow = [
-      renderStars(ast.hour_branch_stars),
-      renderStars(ast.day_branch_stars),
-      renderStars(ast.month_branch_stars),
-      renderStars(ast.year_branch_stars)
-    ].map(t => ({ text: t, fontSize: 9, alignment: 'center', margin: [4, 6, 4, 6] as number[] }));
+      renderStarsRich(ast.hour_branch_stars),
+      renderStarsRich(ast.day_branch_stars),
+      renderStarsRich(ast.month_branch_stars),
+      renderStarsRich(ast.year_branch_stars)
+    ];
     content.push({ table: { headerRows: 1, widths: ['*', '*', '*', '*'], body: [starsHeader, starsRow] }, layout: cleanLayout });
   }
 
