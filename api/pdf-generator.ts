@@ -25,8 +25,16 @@ export function buildPdfDefinition(data: any, name: string) {
 
   const hiddenRow = pKeys.map(k => {
     const hStems = fp[k]?.hidden_stems || [];
-    const text = hStems.map((h: any) => `${h.character} (${h.name})`).join('\n');
+    const text = hStems.map((h: any) => {
+      const spelling = h.spelling ? h.spelling.charAt(0).toUpperCase() + h.spelling.slice(1) : '';
+      return `${h.character} (${spelling})`;
+    }).join('\n');
     return { text: text, style: 'hiddenCell' };
+  });
+
+  const shenShaRow = pKeys.map(k => {
+    const stars = fp[k]?.shen_sha || [];
+    return { text: stars.join('\n'), style: 'hiddenCell' };
   });
 
   // Profiling Data
@@ -92,7 +100,7 @@ export function buildPdfDefinition(data: any, name: string) {
         table: {
           headerRows: 1,
           widths: ['*', '*', '*', '*'],
-          body: [ headerRow, stemRow, branchRow, hiddenRow ]
+          body: [ headerRow, stemRow, branchRow, hiddenRow, shenShaRow ]
         },
         layout: 'lightHorizontalLines'
       },
@@ -127,6 +135,37 @@ export function buildPdfDefinition(data: any, name: string) {
       }
     ]
   };
+
+  // Append QMDJ if present
+  if (data.qmdj && data.qmdj.palaces && data.qmdj.palaces.length > 0) {
+    const pMap: Record<number, any> = {};
+    data.qmdj.palaces.forEach((p: any) => { pMap[p.id] = p; });
+    
+    const formatPalace = (p: any) => {
+      if (!p) return { text: '' };
+      if (p.id === 5) return { text: `Center\n\n${p.heaven_stem || ''}\n${p.earth_stem || ''}`, style: 'tableCell' };
+      return { text: `${p.god || ''}\n${p.star || ''}\n${p.door || ''}\n${p.heaven_stem || ''} / ${p.earth_stem || ''}`, style: 'tableCell' };
+    };
+
+    const qmdjGrid = [
+      [formatPalace(pMap[4]), formatPalace(pMap[9]), formatPalace(pMap[2])],
+      [formatPalace(pMap[3]), formatPalace(pMap[5]), formatPalace(pMap[7])],
+      [formatPalace(pMap[8]), formatPalace(pMap[1]), formatPalace(pMap[6])]
+    ];
+
+    docDefinition.content.push(
+      { text: 'Qi Men Dun Jia (Destiny Palace)', style: 'sectionTitle', pageBreak: 'before' } as any,
+      { text: `Solar Term: ${data.qmdj.solar_term || '-'}    |    Ju: ${data.qmdj.ju || '-'}`, style: 'metricLabel' } as any,
+      { text: `Zhi Fu: ${data.qmdj.duty_star || '-'}    |    Zhi Shi: ${data.qmdj.duty_door || '-'}`, style: 'metricLabel', margin: [0, 0, 0, 15] } as any,
+      {
+        table: {
+          widths: ['*', '*', '*'],
+          body: qmdjGrid
+        },
+        layout: 'lightHorizontalLines'
+      } as any
+    );
+  }
 
   return docDefinition;
 }
