@@ -165,17 +165,38 @@ async function handleLiteReportSubmit(e) {
 
   try {
     const chartEl = document.getElementById('bazi-chart');
+    
+    // Save scroll pos and temporarily scroll to top to avoid html2canvas black box bug
+    const originalScroll = window.scrollY;
+    window.scrollTo(0, 0);
+
+    // Give it a tiny delay to ensure scroll has registered
+    await new Promise(r => setTimeout(r, 50));
+
+    // Get exact dimensions of the chart
+    const w = chartEl.offsetWidth;
+    const h = chartEl.offsetHeight;
+
     const opt = {
-      margin:       10,
+      margin:       0,
       filename:     'BaZi_Lite_Report.pdf',
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, backgroundColor: '#0f0f11' },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      html2canvas:  { 
+        scale: 2, 
+        backgroundColor: '#0f0f11',
+        scrollY: 0,
+        useCORS: true
+      },
+      // Generate a SINGLE long page instead of A4 to prevent cutting elements in half
+      jsPDF:        { unit: 'px', format: [w, h], orientation: 'portrait' }
     };
     
     // Generate base64 PDF directly from the page
     const pdfDataUri = await html2pdf().set(opt).from(chartEl).outputPdf('datauristring');
     const pdfBase64 = pdfDataUri.split(',')[1];
+    
+    // Restore scroll
+    window.scrollTo(0, originalScroll);
 
     const resp = await fetch('/api/send-lite-report', {
       method: 'POST',
