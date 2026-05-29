@@ -842,21 +842,45 @@ let _dashboardState = {
 function renderDashboard(luckPillars) {
   _dashboardState.data = luckPillars;
 
-  // Auto-default to current year
-  const currentYear = new Date().getFullYear();
+  // Read targetYear from the form input, if missing fallback to current year
+  const targetYearInput = document.getElementById('target-year');
+  const userTargetYear = targetYearInput && targetYearInput.value ? parseInt(targetYearInput.value, 10) : new Date().getFullYear();
+  
   let foundLuck = 0;
   let foundYear = 0;
+  let isTargetYearInPillars = false;
 
   luckPillars.forEach((lp, i) => {
-    if (currentYear >= lp.year_start && currentYear <= lp.year_end) {
+    if (userTargetYear >= lp.year_start && userTargetYear <= lp.year_end) {
       foundLuck = i;
+      isTargetYearInPillars = true;
       if (lp.annual_pillars) {
         lp.annual_pillars.forEach((ap, j) => {
-          if (ap.year === currentYear) foundYear = j;
+          if (ap.year === userTargetYear) foundYear = j;
         });
       }
     }
   });
+
+  // Handle warning if target year is not found (e.g., childhood limit)
+  let existingWarning = document.getElementById('dashboard-warning');
+  if (existingWarning) existingWarning.remove();
+
+  if (!isTargetYearInPillars && luckPillars.length > 0 && luckPillars[0].annual_pillars) {
+    const shownYear = luckPillars[0].annual_pillars[0].year;
+    const warningText = userTargetYear < shownYear 
+        ? `Note: Target Year ${userTargetYear} is during the childhood period before the first 10-Year Luck Pillar starts. Showing ${shownYear} instead.`
+        : `Note: Target Year ${userTargetYear} is outside the generated 100-year range. Showing ${shownYear} instead.`;
+    
+    const dashContainer = document.querySelector('.dashboard-container');
+    if (dashContainer) {
+      const warnEl = document.createElement('div');
+      warnEl.id = 'dashboard-warning';
+      warnEl.style.cssText = 'background: rgba(113,1,1,0.2); border-left: 3px solid #710101; color: #fff; padding: 10px; font-size: 0.8rem; margin-bottom: 15px; border-radius: 4px;';
+      warnEl.textContent = warningText;
+      dashContainer.insertBefore(warnEl, dashContainer.firstChild);
+    }
+  }
 
   _dashboardState.luckIndex = foundLuck;
   _dashboardState.yearIndex = foundYear;
