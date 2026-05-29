@@ -1271,9 +1271,25 @@ export default function handler(req: any, res: any) {
       else if (['寅', '申', '巳', '亥'].includes(fuTouZhi)) yuan = 1;
       else if (['辰', '戌', '丑', '未'].includes(fuTouZhi)) yuan = 2;
 
+      const JIEQI_SIMP_TO_TRAD: Record<string, string> = {
+        '冬至': '冬至', '小寒': '小寒', '大寒': '大寒',
+        '立春': '立春', '雨水': '雨水', '惊蛰': '驚蟄',
+        '春分': '春分', '清明': '清明', '谷雨': '穀雨',
+        '立夏': '立夏', '小满': '小滿', '芒种': '芒種',
+        '夏至': '夏至', '小暑': '小暑', '大暑': '大暑',
+        '立秋': '立秋', '处暑': '處暑', '白露': '白露',
+        '秋分': '秋分', '寒露': '寒露', '霜降': '霜降',
+        '立冬': '立冬', '小雪': '小雪', '大雪': '大雪'
+      };
+
       const prevJieQi = lunar.getPrevJieQi(true);
-      const jieQiName = prevJieQi.getName();
+      const jieQiSimp = prevJieQi.getName();
+      const jieQiName = JIEQI_SIMP_TO_TRAD[jieQiSimp] || jieQiSimp;
       const jqData = qimen.JIEQI_JUSHU[jieQiName];
+
+      if (!jqData) {
+        throw new Error(`QMDJ Error: JieQi data not found for ${jieQiName} (from ${jieQiSimp})`);
+      }
       
       const juNumber = jqData.ju[yuan];
       const yinYang = jqData.yang ? '陽' : '陰';
