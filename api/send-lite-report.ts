@@ -1,4 +1,7 @@
-import { Resend } from 'resend';
+﻿import { Resend } from 'resend';
+const pdfmake = require('pdfmake');
+import path from 'path';
+import { buildPdfDefinition } from './pdf-generator';
 
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -9,10 +12,32 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, name, chartData, pdfBase64 } = req.body;
+    const { email, name, chartData } = req.body;
 
-    if (!email || !chartData || !pdfBase64) {
-      return res.status(400).json({ error: 'Email, chartData, and pdfBase64 are required' });
+    if (!email || !chartData) {
+      return res.status(400).json({ error: 'Email and chartData are required' });
+    }
+
+    // Set up PDF fonts
+    const fontPath = path.join(process.cwd(), 'fonts', 'NotoSansSC.ttf');
+    pdfmake.fonts = {
+      NotoSansSC: {
+        normal: fontPath,
+        bold: fontPath,
+        italics: fontPath,
+        bolditalics: fontPath,
+      }
+    };
+
+    // Generate PDF Buffer
+    const docDef = buildPdfDefinition({ chartData }, name);
+    let pdfBase64: string;
+    try {
+      const pdfDoc = pdfmake.createPdf(docDef);
+      pdfBase64 = await pdfDoc.getBase64();
+    } catch (pdfErr) {
+      console.error("pdfmake error:", pdfErr);
+      return res.status(500).json({ error: 'Failed to generate PDF document internally' });
     }
 
     // Extract key information from the BaZi chart data for the email body
@@ -47,7 +72,7 @@ export default async function handler(req, res) {
         </div>
         
         <p style="margin-top: 40px; font-size: 0.8rem; color: #888580; text-align: center;">
-          © ${new Date().getFullYear()} The Full Picture LLP. All rights reserved.
+          ┬⌐ ${new Date().getFullYear()} The Full Picture LLP. All rights reserved.
         </p>
       </div>
     `;
