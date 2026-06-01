@@ -443,16 +443,17 @@ export function buildPdfDefinition(data: any, name: string) {
       if (mgPalace === id) badges.push('【命】');
       const badgeStr = badges.length ? badges.join(' ') + '\n' : '';
       const dir = dirLabels[id] || '';
-      if (id === 5) return { stack: [
-        { text: dir, fontSize: 8, color: C.textLight, alignment: 'center' },
-        { text: `${badgeStr}${p.heaven_stem || ''} / ${p.earth_stem || ''}`, fontSize: 10, alignment: 'center', bold: true, margin: [0, 4, 0, 0] as number[] }
-      ], margin: [4, 6, 4, 6] as number[] };
+      let doorDisplay = p.door || '';
+      if (id === 5) {
+        doorDisplay = '命';
+      }
+
       return { stack: [
         { text: dir, fontSize: 8, color: C.textLight, alignment: 'center' },
         badges.length > 0 ? { text: badgeStr.trim(), fontSize: 8, color: C.crimson, bold: true, alignment: 'center', margin: [0, 2, 0, 0] as number[] } : null,
         { text: p.god || '', fontSize: 9, color: C.gold, alignment: 'center', margin: [0, 2, 0, 0] as number[] },
         { text: p.star || '', fontSize: 10, bold: true, alignment: 'center', margin: [0, 1, 0, 0] as number[] },
-        { text: p.door || '', fontSize: 9, color: C.crimson, alignment: 'center', margin: [0, 1, 0, 0] as number[] },
+        { text: doorDisplay, fontSize: 9, color: C.crimson, alignment: 'center', margin: [0, 1, 0, 0] as number[] },
         { text: `${p.heaven_stem || ''} / ${p.earth_stem || ''}`, fontSize: 9, color: C.textMed, alignment: 'center', margin: [0, 2, 0, 0] as number[] }
       ].filter(Boolean), margin: [4, 6, 4, 6] as number[] };
     };

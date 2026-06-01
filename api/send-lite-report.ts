@@ -1,4 +1,4 @@
-﻿import { Resend } from 'resend';
+import { Resend } from 'resend';
 const pdfmake = require('pdfmake');
 import path from 'path';
 import { buildPdfDefinition } from './pdf-generator';
@@ -68,11 +68,11 @@ export default async function handler(req, res) {
         <p>If you're ready to dive deeper and decode your potential, career paths, and wealth capacity, we invite you to book a 1-on-1 session.</p>
 
         <div style="margin-top: 30px; text-align: center;">
-          <a href="https://thefullpicture.vercel.app/contact" style="display: inline-block; background-color: #710101; color: #FFFFFF; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book a Full Consultation</a>
+          <a href="https://thefullpicture.asia/contact" style="display: inline-block; background-color: #710101; color: #FFFFFF; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Book a Full Consultation</a>
         </div>
         
         <p style="margin-top: 40px; font-size: 0.8rem; color: #888580; text-align: center;">
-          ┬⌐ ${new Date().getFullYear()} The Full Picture LLP. All rights reserved.
+          &copy; ${new Date().getFullYear()} The Full Picture LLP. All rights reserved.
         </p>
       </div>
     `;
