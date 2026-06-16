@@ -1,3 +1,39 @@
-.vercel
-.env
+# Dependencies
 node_modules/
+
+# Local environment and deployment state
+.env
+.env.*
+!.env.example
+.vercel/
+
+# Build and compiler output
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Local QA, generated reports, and temporary artifacts
+scratch/
+graphify-out/
+pdf/
+Photos/
+*.log
+diff.txt
+test_bazi.json
+scratch-test.js
+test-pdf.js
+test.ts
+bazi.old.html
+bazi.old.js
+
+# Client/reference material and generated reports
+Daily_Almanac_Brief_for_Elvand*.pdf
+Your_BaZi_Report*.pdf
+
+# Root-level ad-hoc screenshots
+/image*.png
+/image copy*.png
+
+# Local copied skill docs
+SKILL*.md

@@ -116,8 +116,8 @@
 
     .page-title em { font-style: italic; }
 
-    .nav-links { display:flex; gap:36px; list-style:none; }
-    .nav-links a { font-family:var(--font-sans); font-size:0.85rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; }
+    .nav-links { display:flex; gap:24px; list-style:none; }
+    .nav-links a { font-family:var(--font-sans); font-size:0.8rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; white-space:nowrap; }
     .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--crimson-text); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.76,0,.24,1); }
     .nav-links a:hover,.nav-links a.active { color:var(--ivory); }
     .nav-links a:hover::after,.nav-links a.active::after { transform:scaleX(1); transform-origin:left; }
@@ -600,7 +600,7 @@
     .no-results small { font-size: 1rem; font-weight: 400; }
 
     /* ─── RESPONSIVE ──────────────────── */
-    @media (max-width: 1024px) {
+    @media (max-width: 1280px) {
       .page-header { grid-template-columns: 1fr; gap: 32px; padding: 140px 40px 64px; }
       .featured-card { grid-template-columns: 1fr; }
       .featured-right { min-height: 300px; padding: 56px 40px; }
@@ -668,6 +668,7 @@
       <li><a href="/founder">Founder</a></li>
       <li><a href="/services">Services</a></li>
       <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
       <li><a href="/insights" class="active">Insights</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
@@ -684,6 +685,7 @@
     <a href="/founder">Founder</a>
     <a href="/services">Services</a>
     <a href="/bazi">BaZi</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
     <a href="/insights" class="active">Insights</a>
     <a href="/contact">Contact</a>
   </div>
@@ -952,8 +954,10 @@
           <ul class="footer-links">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
-      <li><a href="/founder">Founder</a></li>
+            <li><a href="/founder">Founder</a></li>
             <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
             <li><a href="/insights">Insights</a></li>
           </ul>
         </div>

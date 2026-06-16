@@ -1,5 +1,4 @@
 // src/bazi-calculator.ts
-import { DateMappingLoader } from './utils/date-mapping';
 import { PillarCalculator } from './utils/pillar-calculator';
 import { AnalysisCalculator } from './utils/analysis-calculator';
 import type { GenderType, CompleteAnalysis, BasicAnalysis, Pillars } from './types';
@@ -13,15 +12,16 @@ export class BaziCalculator {
     private month: number,
     private day: number,
     private hour: number,
+    private minute: number = 0,
+    private second: number = 0,
     private gender: GenderType = 'male',
   ) {
-    const dateMappingLoader = new DateMappingLoader();
-    this.pillarCalculator = new PillarCalculator(dateMappingLoader);
+    this.pillarCalculator = new PillarCalculator();
     this.analysisCalculator = new AnalysisCalculator();
   }
 
   public calculatePillars(): Pillars {
-    return this.pillarCalculator.calculatePillars(this.year, this.month, this.day, this.hour);
+    return this.pillarCalculator.calculatePillars(this.year, this.month, this.day, this.hour, this.minute, this.second);
   }
 
   public calculateBasicAnalysis(): BasicAnalysis {

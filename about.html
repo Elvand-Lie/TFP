@@ -84,8 +84,8 @@
       display: inline; 
     }
     
-    .nav-links { display:flex; gap:36px; list-style:none; }
-    .nav-links a { font-family:var(--font-sans); font-size:0.85rem; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; }
+    .nav-links { display:flex; gap:24px; list-style:none; }
+    .nav-links a { font-family:var(--font-sans); font-size:0.8rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; white-space:nowrap; }
     .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--crimson-text); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.76,0,.24,1); }
     .nav-links a:hover,.nav-links a.active { color:var(--ivory); }
     .nav-links a:hover::after,.nav-links a.active::after { transform:scaleX(1); transform-origin:left; }
@@ -367,7 +367,7 @@
     .reveal-delay-4 { transition-delay:.4s; }
 
     /* RESPONSIVE */
-    @media(max-width:1024px){ .footer-top{grid-template-columns:1fr 1fr;gap:40px;} .nav-links,.nav-cta{display:none;} .hamburger{display:flex;} }
+    @media(max-width:1280px){ .footer-top{grid-template-columns:1fr 1fr;gap:40px;} .nav-links,.nav-cta{display:none;} .hamburger{display:flex;} }
     @media(max-width:640px){ nav{padding:0 24px;} .section-inner{padding:0 24px;} .footer-inner{padding:0 24px;} .footer-top{grid-template-columns:1fr;} }
     @media(max-width:1024px){
       .page-hero-inner,.story-grid,.approach-intro,.serve-inner { grid-template-columns:1fr; gap:48px; }
@@ -413,6 +413,7 @@
       <li><a href="/founder">Founder</a></li>
       <li><a href="/services">Services</a></li>
       <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
       <li><a href="/insights">Insights</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
@@ -429,6 +430,7 @@
     <a href="/founder">Founder</a>
     <a href="/services">Services</a>
     <a href="/bazi">BaZi</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
     <a href="/insights">Insights</a>
     <a href="/contact">Contact</a>
   </div>
@@ -620,8 +622,10 @@
           <ul class="footer-links">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
-      <li><a href="/founder">Founder</a></li>
+            <li><a href="/founder">Founder</a></li>
             <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
             <li><a href="/insights">Insights</a></li>
           </ul>
         </div>

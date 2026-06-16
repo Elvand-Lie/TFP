@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Almanac — The Full Picture LLP</title>
+  <meta name="description" content="A daily Chinese almanac reading with auspicious activities, classical details, 12 hour blocks, and a personal timing teaser." />
+  <meta name="author" content="The Full Picture LLP" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.thefullpicture.asia/daily-almanac" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#0F0F10; --dark-grey:#1C1C1E; --panel:#151516; --ivory:#F5F5F2; --beige:#D8CFC4; --muted:#888580;
+      --crimson:#710101; --crimson-text:#E53939; --deep-red:#680806; --gold:#C6A96B; --forest:#1F3A2E;
+      --font-serif:'Cormorant Garamond', Georgia, serif; --font-sans:'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; overflow-x:hidden; }
+    body { background: var(--black); color: var(--ivory); font-family: var(--font-sans); line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity:.025; pointer-events:none; z-index:9999; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px clamp(20px, 3vw, 40px); display:flex; align-items:center; justify-content:space-between; gap:16px; transition:background .4s,border-bottom .4s; }
+    nav.scrolled { background:rgba(15,15,16,.93); backdrop-filter:blur(14px); border-bottom:1px solid rgba(113,1,1,.25); }
+    .nav-logo { font-family:var(--font-serif); font-size:1.2rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--ivory); text-decoration:none; transition:opacity .3s; flex:0 0 auto; }
+    .nav-logo span, .footer-logo span, .page-title em, .section-title em { color:var(--crimson-text); font-weight:600; text-shadow:0 2px 10px rgba(0,0,0,.9); }
+    .nav-links { display:flex; gap:clamp(12px, 1.4vw, 22px); list-style:none; flex:0 1 auto; min-width:0; }
+    .nav-links a { font-size:clamp(.7rem, .9vw, .78rem); font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; white-space:nowrap; }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--crimson-text); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.76,0,.24,1); }
+    .nav-links a:hover, .nav-links a.active { color:var(--ivory); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform:scaleX(1); transform-origin:left; }
+    .nav-cta { font-size:.78rem; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--ivory); border:2px solid var(--crimson); padding:10px 20px; text-decoration:none; white-space:nowrap; flex:0 0 auto; }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+    .hamburger span { width:24px; height:2px; background:var(--ivory); display:block; }
+    .mobile-nav { position:fixed; inset:0; background:var(--black); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:60px 24px; opacity:0; visibility:hidden; transition:opacity .4s,visibility .4s; overflow-y:auto; }
+    .mobile-nav.open { opacity:1; visibility:visible; }
+    .mobile-nav a { font-family:var(--font-serif); font-size:1.65rem; color:var(--ivory); text-decoration:none; letter-spacing:.08em; }
+    .mobile-nav a.active { color:var(--crimson-text); }
+    .mobile-nav-close { position:absolute; top:28px; right:40px; font-size:1.8rem; color:var(--muted); cursor:pointer; background:none; border:none; }
+    .shell { width:min(1240px, calc(100% - 80px)); margin:0 auto; }
+    #tool-head { padding:170px 0 42px; border-bottom:1px solid rgba(113,1,1,.18); position:relative; overflow:hidden; overflow-x:clip; }
+    .hero-mark { position:absolute; right:4vw; top:70px; font-family:var(--font-serif); font-size:clamp(10rem,20vw,22rem); line-height:1; color:rgba(113,1,1,.45); pointer-events:none; max-width:100%; }
+    .tool-grid { display:grid; grid-template-columns:1.15fr minmax(0,.85fr); gap:56px; align-items:end; position:relative; z-index:2; }
+    .tool-grid > *, .gate-grid > *, .whatsapp-inner > *, .date-panel, .gate-panel, .result-panel, .info-card, .hour-card, .pillar { min-width:0; }
+    .eyebrow { font-size:.78rem; font-weight:600; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+    .page-title { font-family:var(--font-serif); font-size:clamp(3.2rem,5vw,5.6rem); font-weight:400; line-height:1.04; margin-bottom:22px; }
+    .page-copy { color:rgba(245,245,242,.78); max-width:620px; font-size:1rem; }
+    .date-panel { border:1px solid rgba(229,57,57,.22); background:rgba(28,28,30,.72); padding:24px; border-radius:6px; }
+    .date-label { font-size:.72rem; font-weight:600; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+    .date-controls { display:grid; grid-template-columns:44px minmax(0, 1fr) 44px; gap:10px; margin-bottom:12px; }
+    .icon-btn, .action-btn, .ghost-btn { min-height:44px; border-radius:4px; border:1px solid rgba(229,57,57,.35); background:rgba(113,1,1,.16); color:var(--ivory); display:inline-flex; align-items:center; justify-content:center; gap:10px; cursor:pointer; font-family:var(--font-sans); font-size:.78rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; transition:background .2s,border-color .2s; }
+    .icon-btn:hover, .action-btn:hover, .ghost-btn:hover { background:rgba(229,57,57,.16); border-color:var(--crimson-text); }
+    input, select { width:100%; min-width:0; min-height:44px; color:var(--ivory); background:#1C1C1E; border:1px solid rgba(229,57,57,.24); border-radius:4px; padding:0 12px; font-family:var(--font-sans); }
+    .today-row { display:flex; gap:10px; align-items:center; justify-content:space-between; color:var(--muted); font-size:.86rem; }
+    .status { margin-top:14px; min-height:22px; color:var(--gold); font-size:.86rem; }
+    .band { padding:70px 0; border-bottom:1px solid rgba(113,1,1,.16); }
+    .band.alt { background:var(--dark-grey); }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:32px; }
+    .section-title { font-family:var(--font-serif); font-size:clamp(2.2rem,3.4vw,3.5rem); font-weight:400; line-height:1.15; }
+    .muted { color:var(--muted); }
+    .summary-card { border-left:2px solid var(--crimson); padding-left:24px; max-width:760px; color:rgba(245,245,242,.84); font-size:1.05rem; }
+    .pillars { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(113,1,1,.28); margin-top:32px; }
+    .pillar { background:var(--panel); padding:22px 18px; }
+    .pillar small, .info-card small, .hour-card small { display:block; color:var(--gold); font-size:.68rem; font-weight:600; letter-spacing:.17em; text-transform:uppercase; margin-bottom:8px; }
+    .pillar strong { font-family:var(--font-serif); font-size:2.2rem; font-weight:500; color:var(--ivory); line-height:1; }
+    .pillar span { display:block; color:var(--muted); margin-top:8px; font-size:.86rem; }
+    .info-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(113,1,1,.2); margin-top:34px; }
+    .info-card { background:var(--black); padding:26px; min-height:180px; }
+    .info-card h3 { font-family:var(--font-serif); font-size:1.45rem; font-weight:500; margin-bottom:12px; }
+    .conversion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(113,1,1,.2); margin-top:30px; }
+    .conversion-card { background:var(--panel); padding:20px; min-height:132px; }
+    .conversion-card h3 { font-family:var(--font-serif); font-size:1.35rem; font-weight:500; margin-bottom:8px; }
+    .path-badge { display:inline-flex; align-items:center; border:1px solid rgba(198,169,107,.4); color:var(--gold); border-radius:999px; padding:5px 10px; font-size:.72rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; margin-top:10px; }
+    .path-badge.caution { border-color:rgba(229,57,57,.42); color:var(--crimson-text); }
+    .domain-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:30px; }
+    .domain-card { border:1px solid rgba(198,169,107,.24); background:var(--black); border-radius:6px; padding:18px; min-height:138px; }
+    .domain-card.suitable { border-color:rgba(198,169,107,.5); }
+    .domain-card.avoid { border-color:rgba(229,57,57,.42); }
+    .domain-card h3 { font-family:var(--font-serif); font-size:1.28rem; font-weight:500; margin-bottom:8px; }
+    .domain-status { color:var(--gold); font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; }
+    .domain-card.avoid .domain-status { color:var(--crimson-text); }
+    .tag-list { display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; }
+    .tag { position:relative; border:1px solid rgba(198,169,107,.38); color:var(--beige); background:rgba(28,28,30,.72); padding:7px 12px; border-radius:999px; font-family:var(--font-sans); font-size:.86rem; line-height:1.3; }
+    button.tag { cursor:pointer; text-align:left; }
+    .tag-main { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px; }
+    .tag-chinese { color:var(--ivory); font-size:.98rem; font-weight:600; }
+    .tag-english { color:var(--beige); font-size:.78rem; }
+    .tag-detail { display:none; position:absolute; left:0; top:calc(100% + 8px); z-index:10; width:max-content; max-width:min(280px, 76vw); border:1px solid rgba(198,169,107,.36); border-radius:6px; background:#111112; color:rgba(245,245,242,.82); padding:10px 12px; box-shadow:0 14px 30px rgba(0,0,0,.38); font-size:.78rem; line-height:1.45; }
+    .tag:hover .tag-detail, .tag:focus-visible .tag-detail, .tag.is-expanded .tag-detail { display:block; }
+    .tag-list.compact { gap:7px; margin-top:8px; }
+    .tag-list.compact .tag { padding:5px 9px; font-size:.76rem; }
+    .tag-list.compact .tag-chinese { font-size:.86rem; }
+    .tag-list.compact .tag-english { font-size:.7rem; }
+    .classical-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; color:rgba(245,245,242,.78); font-size:.92rem; }
+    .classical-row + .classical-row { margin-top:12px; padding-top:12px; border-top:1px solid rgba(113,1,1,.18); }
+    .hour-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .hour-card { border:1px solid rgba(229,57,57,.18); background:var(--black); padding:18px; border-radius:6px; min-height:154px; }
+    .hour-card.favorable { border-color:rgba(198,169,107,.45); }
+    .hour-card.avoid { border-color:rgba(229,57,57,.35); }
+    .hour-title { display:flex; justify-content:space-between; gap:12px; align-items:baseline; margin-bottom:10px; }
+    .hour-title strong { font-family:var(--font-serif); font-size:1.75rem; font-weight:500; }
+    .hour-title span { color:var(--muted); font-size:.78rem; }
+    .gate-grid { display:grid; grid-template-columns:.95fr 1.05fr; gap:34px; align-items:start; }
+    .gate-panel, .result-panel { border:1px solid rgba(229,57,57,.22); background:var(--black); border-radius:6px; padding:26px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .check-row { display:flex; align-items:flex-start; gap:10px; color:rgba(245,245,242,.76); font-size:.86rem; line-height:1.5; }
+    .check-row input { width:18px; min-height:18px; height:18px; margin-top:3px; flex:0 0 auto; accent-color:var(--crimson); }
+    label { font-size:.68rem; font-weight:600; letter-spacing:.16em; color:var(--gold); text-transform:uppercase; }
+    .form-group.full { grid-column:1/-1; }
+    .action-btn { width:100%; margin-top:18px; background:var(--crimson); border-color:var(--crimson); padding:0 20px; }
+    .result-panel { min-height:318px; display:flex; flex-direction:column; justify-content:center; }
+    .score-row { display:flex; align-items:center; gap:22px; margin-bottom:20px; }
+    .score { width:92px; height:92px; border-radius:50%; border:1px solid rgba(198,169,107,.45); display:flex; align-items:center; justify-content:center; font-family:var(--font-serif); font-size:2.1rem; color:var(--gold); flex-shrink:0; }
+    .result-panel h3 { font-family:var(--font-serif); font-size:1.8rem; font-weight:500; }
+    .hour-picks { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:20px; }
+    .pick { border:1px solid rgba(198,169,107,.28); padding:12px; border-radius:4px; }
+    details { border:1px solid rgba(229,57,57,.22); border-radius:6px; background:var(--black); padding:20px 22px; }
+    summary { cursor:pointer; color:var(--gold); font-weight:600; letter-spacing:.12em; text-transform:uppercase; }
+    .whatsapp-band { padding:60px 0; background:var(--forest); }
+    .whatsapp-inner { display:flex; align-items:center; justify-content:space-between; gap:28px; }
+    .whatsapp-inner h2 { font-family:var(--font-serif); font-size:clamp(2rem,3vw,3.1rem); font-weight:400; line-height:1.15; }
+    .whatsapp-btn { border:1px solid rgba(37,211,102,.55); color:#25D366; padding:14px 24px; text-decoration:none; border-radius:4px; display:inline-flex; align-items:center; gap:10px; font-size:.82rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; white-space:nowrap; }
+    footer { border-top:1px solid rgba(113,1,1,.2); padding:76px 0 40px; }
+    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:52px; }
+    .footer-logo { font-family:var(--font-serif); font-size:1.1rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; margin-bottom:16px; }
+    .footer-tagline, .footer-copy { color:var(--muted); font-size:.86rem; }
+    .footer-col-title { color:var(--gold); font-size:.72rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; margin-bottom:18px; }
+    .footer-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .footer-links a { color:var(--beige); text-decoration:none; font-size:.88rem; }
+    .footer-bottom { display:flex; justify-content:space-between; gap:20px; padding-top:28px; border-top:1px solid rgba(113,1,1,.16); }
+    .footer-bottom-links { display:flex; gap:22px; }
+    .footer-bottom-links a { color:var(--muted); text-decoration:none; font-size:.78rem; }
+    @media(max-width:1280px){ .nav-links,.nav-cta{display:none;} .hamburger{display:flex;} nav{padding:16px 24px;} }
+    @media(max-width:920px){ .shell{width:min(100% - 48px, 720px);} .tool-grid,.gate-grid,.whatsapp-inner{grid-template-columns:1fr; display:grid;} .pillars,.info-grid,.conversion-grid,.domain-grid,.hour-grid,.hour-picks{grid-template-columns:1fr 1fr;} .footer-top{grid-template-columns:1fr 1fr;} }
+    @media(max-width:640px){ #tool-head{padding:132px 0 34px;} .shell{width:calc(100% - 32px);} .page-title{font-size:clamp(2.6rem,11vw,3.6rem);} .page-copy{overflow-wrap:anywhere;} .date-panel,.gate-panel,.result-panel,.info-card,.conversion-card{padding:20px;} .pillars,.info-grid,.conversion-grid,.domain-grid,.hour-grid,.hour-picks,.form-grid{grid-template-columns:1fr;} .section-head,.today-row,.footer-bottom{flex-direction:column; align-items:flex-start;} .footer-top{grid-template-columns:1fr;} .whatsapp-btn,.action-btn{width:100%; justify-content:center;} .mobile-nav-close{right:24px;} .nav-logo img{height:54px !important;} .hero-mark{font-size:clamp(8rem,40vw,12rem); right:-24px; opacity:.55;} .date-controls{grid-template-columns:40px minmax(0,1fr) 40px; gap:8px;} .icon-btn{padding:0;} }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <a class="nav-logo" href="/" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:76px;width:auto;display:block;" />
+      <div style="font-size:1rem;line-height:1;">The <span>Full</span> Picture</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/founder">Founder</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/daily-almanac" class="active">Daily Almanac (通书)</a></li>
+      <li><a href="/insights">Insights</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Book a Consultation</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">×</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/founder">Founder</a>
+    <a href="/services">Services</a>
+    <a href="/bazi">BaZi</a>
+    <a href="/daily-almanac" class="active">Daily Almanac (通书)</a>
+    <a href="/insights">Insights</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <section id="tool-head">
+    <div class="hero-mark">历</div>
+    <div class="shell tool-grid">
+      <div>
+        <p class="eyebrow">Daily Almanac · 通胜</p>
+        <h1 class="page-title">Daily<br><em>Almanac</em></h1>
+        <p class="page-copy">Select a Gregorian date to read the open classical almanac, then unlock a personal timing teaser against your birth chart.</p>
+      </div>
+      <div class="date-panel" aria-live="polite">
+        <p class="date-label">Select Date</p>
+        <div class="date-controls">
+          <button class="icon-btn" id="prevDay" type="button" aria-label="Previous day">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <input type="date" id="datePicker" />
+          <button class="icon-btn" id="nextDay" type="button" aria-label="Next day">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="today-row">
+          <button class="ghost-btn" id="todayBtn" type="button">Today</button>
+          <span id="selectedDateLabel">Loading...</span>
+        </div>
+        <div class="status" id="statusText"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Open Reading</p>
+          <h2 class="section-title">Today at a <em>Glance</em></h2>
+        </div>
+        <p class="muted" id="jieqiLabel">Solar term loading...</p>
+      </div>
+      <p class="summary-card" id="summaryText">Loading the almanac reading...</p>
+      <div class="conversion-grid" id="conversionGrid"></div>
+      <div class="pillars" id="pillarGrid"></div>
+      <div class="domain-grid" id="domainGrid"></div>
+      <div class="info-grid">
+        <article class="info-card">
+          <small>Suitable · 宜</small>
+          <h3>Good Openings</h3>
+          <div class="tag-list" id="yiTags"></div>
+        </article>
+        <article class="info-card">
+          <small>Avoid · 忌</small>
+          <h3>Hold Back</h3>
+          <div class="tag-list" id="jiTags"></div>
+        </article>
+        <article class="info-card">
+          <small>Directions</small>
+          <h3>Position Markers</h3>
+          <div id="directionDetails" class="classical-row" style="display:block;"></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">12 Hours · 时辰</p>
+          <h2 class="section-title">Hourly <em>Blocks</em></h2>
+        </div>
+        <p class="muted">Each two-hour block follows the same calibrated hour-pillar engine.</p>
+      </div>
+      <div class="hour-grid" id="hourGrid"></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell gate-grid">
+      <div class="gate-panel">
+        <p class="eyebrow">Personal Teaser</p>
+        <h2 class="section-title">Unlock Your <em>Timing</em></h2>
+        <p class="muted" style="margin:12px 0 24px;">Enter your birth data and email to compare your chart against the selected day. Email lets the advisory team follow up on the teaser; the full chart belongs in consultation.</p>
+        <form id="unlockForm">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="clientName">Name</label>
+              <input id="clientName" type="text" placeholder="Your name" />
+            </div>
+            <div class="form-group full">
+              <label for="clientEmail">Email</label>
+              <input id="clientEmail" type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="birthDate">Birth Date</label>
+              <input id="birthDate" type="date" required />
+            </div>
+            <div class="form-group">
+              <label for="birthTime">Birth Time</label>
+              <input id="birthTime" type="time" value="12:00" required />
+            </div>
+            <div class="form-group full">
+              <label class="check-row" for="timeUnknown">
+                <input id="timeUnknown" type="checkbox" />
+                <span>Time of birth unknown - use 12:00 noon</span>
+              </label>
+            </div>
+            <div class="form-group full">
+              <label class="check-row" for="monthlyOptIn">
+                <input id="monthlyOptIn" type="checkbox" />
+                <span>Send me this month's auspicious dates</span>
+              </label>
+            </div>
+            <div class="form-group full">
+              <label for="birthGender">Gender</label>
+              <select id="birthGender">
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+              </select>
+            </div>
+          </div>
+          <button class="action-btn" type="submit" id="unlockBtn">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 11V7a5 5 0 0 1 10 0v4"/><rect x="3" y="11" width="18" height="10" rx="2"/></svg>
+            Unlock Teaser
+          </button>
+        </form>
+      </div>
+      <div class="result-panel" id="personalResult">
+        <div class="score-row">
+          <div class="score" id="compatScore">--</div>
+          <div>
+            <small class="eyebrow" style="margin-bottom:8px;">Compatibility</small>
+            <h3 id="compatLabel">Awaiting birth data</h3>
+          </div>
+        </div>
+        <p class="muted" id="compatSummary">The personal teaser appears here after unlock.</p>
+        <div class="hour-picks" id="personalHours"></div>
+        <p class="muted" id="personalCaution" style="margin-top:18px;"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="shell">
+      <details>
+        <summary>Classical Details</summary>
+        <div id="classicalDetails" style="margin-top:22px;"></div>
+      </details>
+    </div>
+  </section>
+
+  <section class="whatsapp-band">
+    <div class="shell whatsapp-inner">
+      <div>
+        <p class="eyebrow" style="color:rgba(245,245,242,.75);">Private Consultation</p>
+        <h2>Discuss this date with an advisor.</h2>
+      </div>
+      <a class="whatsapp-btn" id="whatsappLink" href="https://wa.me/6588257687" target="_blank" rel="noopener noreferrer">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.967-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.7 0-3.29-.45-4.667-1.236l-.334-.198-3.461.99.937-3.568-.215-.351A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="shell">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:110px;width:auto;display:block;" />
+            <div>The <span>Full</span> Picture <span style="text-shadow:none;color:rgba(113,1,1,.6);">LLP</span></div>
+          </div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy.</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/founder">Founder</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
+            <li><a href="/insights">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="/services#personal">Personal Destiny</a></li>
+            <li><a href="/services#fengshui">Feng Shui Advisory</a></li>
+            <li><a href="/services#courses">Masterclasses</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="/contact">Book a Consultation</a></li>
+            <li><a href="https://wa.me/6588257687">WhatsApp</a></li>
+            <li><a href="/contact">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+    const state = { date: '', unlocked: false, lastBirth: null, lastEmail: '', data: null };
+    const els = {
+      datePicker: document.getElementById('datePicker'),
+      selectedDateLabel: document.getElementById('selectedDateLabel'),
+      statusText: document.getElementById('statusText'),
+      summaryText: document.getElementById('summaryText'),
+      jieqiLabel: document.getElementById('jieqiLabel'),
+      conversionGrid: document.getElementById('conversionGrid'),
+      pillarGrid: document.getElementById('pillarGrid'),
+      domainGrid: document.getElementById('domainGrid'),
+      yiTags: document.getElementById('yiTags'),
+      jiTags: document.getElementById('jiTags'),
+      directionDetails: document.getElementById('directionDetails'),
+      hourGrid: document.getElementById('hourGrid'),
+      classicalDetails: document.getElementById('classicalDetails'),
+      compatScore: document.getElementById('compatScore'),
+      compatLabel: document.getElementById('compatLabel'),
+      compatSummary: document.getElementById('compatSummary'),
+      personalHours: document.getElementById('personalHours'),
+      personalCaution: document.getElementById('personalCaution'),
+      whatsappLink: document.getElementById('whatsappLink'),
+    };
+
+    const SOLAR_TERM_COPY = {
+      '立春': 'Start of Spring',
+      '雨水': 'Rain Water',
+      '惊蛰': 'Awakening of Insects',
+      '春分': 'Spring Equinox',
+      '清明': 'Clear Brightness',
+      '谷雨': 'Grain Rain',
+      '立夏': 'Start of Summer',
+      '小满': 'Grain Buds',
+      '芒种': 'Grain in Ear',
+      '夏至': 'Summer Solstice',
+      '小暑': 'Minor Heat',
+      '大暑': 'Major Heat',
+      '立秋': 'Start of Autumn',
+      '处暑': 'End of Heat',
+      '白露': 'White Dew',
+      '秋分': 'Autumn Equinox',
+      '寒露': 'Cold Dew',
+      '霜降': 'Frost Descent',
+      '立冬': 'Start of Winter',
+      '小雪': 'Minor Snow',
+      '大雪': 'Major Snow',
+      '冬至': 'Winter Solstice',
+      '小寒': 'Minor Cold',
+      '大寒': 'Major Cold',
+    };
+
+    const ACTIVITY_COPY = {
+      '祭祀': ['Rituals', 'Ancestral, temple, or formal ceremonial activity.'],
+      '祈福': ['Blessings', 'Prayers or rituals for blessings, protection, and support.'],
+      '求嗣': ['Children and family', 'Traditionally used for children, fertility, or family-continuity matters.'],
+      '嫁娶': ['Wedding', 'Marriage, wedding, or ROM-related activity.'],
+      '结婚': ['Wedding', 'Marriage or wedding-related activity.'],
+      '订婚': ['Engagement', 'Engagement or formal marriage commitment.'],
+      '订盟': ['Engagement pact', 'Formal promise, alliance, or engagement agreement.'],
+      '纳采': ['Betrothal rites', 'Traditional proposal, betrothal, or formal wedding preparation.'],
+      '开市': ['Business opening', 'Opening a shop, market, or business activity.'],
+      '开业': ['Business launch', 'Starting commercial operations or a new venture.'],
+      '交易': ['Transactions', 'Buying, selling, or commercial exchange.'],
+      '立券': ['Contracts', 'Signing agreements, deeds, or formal documents.'],
+      '纳财': ['Receive wealth', 'Receiving income, collections, or wealth-related activity.'],
+      '出行': ['Travel', 'Trips, departures, or travel plans.'],
+      '赴任': ['Take office', 'Starting a role, posting, or official assignment.'],
+      '移徙': ['Moving house', 'Relocation or moving household items.'],
+      '入宅': ['Move in', 'Entering or occupying a home.'],
+      '安床': ['Bed placement', 'Setting or positioning the bed.'],
+      '修造': ['Renovation', 'Repairs, construction, or renovation work.'],
+      '动土': ['Ground-breaking', 'Starting earthworks or construction work.'],
+      '破土': ['Break ground', 'Breaking earth, usually for construction or burial contexts.'],
+      '起基': ['Foundation work', 'Laying foundations or starting structural groundwork.'],
+      '上梁': ['Roof beam', 'Installing a main beam or structural topping-out step.'],
+      '开光': ['Consecration', 'Consecrating, blessing, or ritually activating an item or place.'],
+      '解除': ['Release', 'Removing, clearing, or releasing an issue or restriction.'],
+      '酬神': ['Thanks offering', 'Offering thanks to deities or spiritual patrons.'],
+      '谢土': ['Earth thanks', 'Ritual thanks after earth or property work.'],
+      '求财': ['Wealth seeking', 'Seeking income, opportunities, or financial gain.'],
+      '见贵': ['Meet benefactors', 'Meeting helpful people, patrons, or advisors.'],
+      '开仓': ['Open storage', 'Opening a storehouse or releasing stored goods.'],
+      '栽种': ['Planting', 'Planting crops, trees, or garden work.'],
+      '牧养': ['Livestock care', 'Livestock, husbandry, or animal-care matters.'],
+      '纳畜': ['Livestock intake', 'Acquiring or receiving livestock.'],
+      '求医': ['Medical visit', 'Seeking medical advice or treatment.'],
+      '治病': ['Treatment', 'Medical treatment or addressing illness.'],
+      '会亲友': ['Meet relatives', 'Meeting family, friends, or social contacts.'],
+      '沐浴': ['Cleansing', 'Bathing, cleansing, or purification.'],
+      '扫舍': ['House cleaning', 'Cleaning the home or premises.'],
+      '扫除': ['Cleaning', 'Cleaning or clearing out a space.'],
+      '拆卸': ['Dismantling', 'Dismantling, removing, or taking apart structures.'],
+      '安葬': ['Burial', 'Burial or funeral placement rites.'],
+      '行丧': ['Funeral rites', 'Funeral, mourning, or condolence activity.'],
+      '启钻': ['Exhumation', 'Opening or moving burial remains in classical usage.'],
+      '立碑': ['Memorial tablet', 'Setting a memorial tablet or marker.'],
+      '除服': ['End mourning', 'Ending mourning dress or rites.'],
+      '成服': ['Mourning dress', 'Taking up mourning dress or formal rites.'],
+      '破屋': ['Demolition', 'Breaking down a building or structure.'],
+      '坏垣': ['Wall removal', 'Breaking or removing walls.'],
+      '安门': ['Door installation', 'Installing or setting doors and gates.'],
+      '作灶': ['Kitchen setup', 'Stove, kitchen, or cooking-area setup.'],
+      '理发': ['Haircut', 'Haircut or grooming activity.'],
+      '整手足甲': ['Grooming', 'Hand, foot, or nail grooming.'],
+      '冠笄': ['Coming-of-age rites', 'Classical coming-of-age ceremony.'],
+      '裁衣': ['Tailoring', 'Cutting or preparing garments.'],
+      '竖柱': ['Erect pillars', 'Setting upright pillars or structural posts.'],
+      '掘井': ['Dig well', 'Digging or opening a well.'],
+      '词讼': ['Legal disputes', 'Lawsuits, disputes, or legal argument.'],
+      '诉讼': ['Litigation', 'Formal legal action or disputes.'],
+      '出货财': ['Ship goods', 'Sending goods, assets, or money out.'],
+      '取渔': ['Fishing', 'Fishing or fishery activity.'],
+      '捕捉': ['Capture', 'Capturing, trapping, or catching.'],
+      '畋猎': ['Hunting', 'Hunting or field pursuit.'],
+      '乘船': ['Boating', 'Boat travel or water transport.'],
+      '塞穴': ['Seal openings', 'Sealing holes, openings, or passages.'],
+      '筑堤': ['Build embankment', 'Building dikes, banks, or retaining works.'],
+      '平治道涂': ['Road works', 'Road leveling or pathway repair.'],
+      '修饰垣墙': ['Wall repairs', 'Repairing or finishing walls.'],
+      '挂匾': ['Hang plaque', 'Hanging a signboard or plaque.'],
+      '开池': ['Open pond', 'Opening, digging, or preparing a pond.'],
+      '造仓': ['Build storage', 'Building storage, warehouse, or granary.'],
+      '分居': ['Separate residence', 'Separating residences or households.'],
+      '馀事勿取': ['No other matters', 'Avoid taking on extra important matters.'],
+      '余事勿取': ['No other matters', 'Avoid taking on extra important matters.'],
+      '诸事不宜': ['Avoid major matters', 'A broad caution against important activities.'],
+    };
+
+    function localDateIso(date = new Date()) {
+      const copy = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return copy.toISOString().slice(0, 10);
+    }
+    function shiftDate(dateIso, days) {
+      const d = new Date(dateIso + 'T12:00:00');
+      d.setDate(d.getDate() + days);
+      return localDateIso(d);
+    }
+    function setStatus(message) { els.statusText.textContent = message || ''; }
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    function solarTermName(name) {
+      const english = SOLAR_TERM_COPY[name];
+      return english ? `${english} (${name})` : (name || '--');
+    }
+    function activityMeta(term) {
+      const copy = ACTIVITY_COPY[term];
+      return copy
+        ? { english: copy[0], description: copy[1] }
+        : { english: 'Classical activity', description: 'A classical almanac activity. Confirm the exact usage in consultation.' };
+    }
+    function activityText(term) {
+      const meta = activityMeta(term);
+      return `${term} (${meta.english})`;
+    }
+    function termText(items = [], limit = items.length) {
+      const list = items.slice(0, limit);
+      return list.length ? list.map(activityText).join(' · ') : '';
+    }
+    function activityTagMarkup(items, fallback = 'None listed') {
+      const list = items && items.length ? items : [];
+      if (!list.length) return `<span class="tag">${escapeHtml(fallback)}</span>`;
+      return list.map(item => {
+        const meta = activityMeta(item);
+        return `
+          <button type="button" class="tag activity-tag" aria-expanded="false" title="${escapeHtml(meta.description)}">
+            <span class="tag-main">
+              <span class="tag-chinese">${escapeHtml(item)}</span>
+              <span class="tag-english">${escapeHtml(meta.english)}</span>
+            </span>
+            <span class="tag-detail">${escapeHtml(meta.description)}</span>
+          </button>
+        `;
+      }).join('');
+    }
+    function tagList(target, items, fallback = 'None listed') {
+      target.innerHTML = activityTagMarkup(items, fallback);
+    }
+    function renderReadableSummary(data) {
+      const d = data.day;
+      const yi = termText(d.yi || [], 4) || 'careful action';
+      const ji = termText(d.ji || [], 4) || 'heavy commitments';
+      const officer = d.dayOfficer?.english ? `${d.dayOfficer.english} Officer` : 'day officer';
+      return `${solarTermName(data.jieQi.name)} sits over ${data.pillars.day.chinese} (${data.pillars.day.naYin || 'NaYin'}). ${d.yellowPath?.label || 'Almanac day'} with the ${officer}. Favor ${yi}; hold back on ${ji}.`;
+    }
+    function renderJieQiLabel(jieQi) {
+      return `Current Solar Term: ${solarTermName(jieQi.name)}. Next: ${solarTermName(jieQi.nextName)}, ${jieQi.nextStartsAt}.`;
+    }
+    function renderPillars(pillars) {
+      const order = [['year', 'Year'], ['month', 'Month'], ['day', 'Day'], ['time', 'Hour']];
+      els.pillarGrid.innerHTML = order.map(([key, label]) => `
+        <article class="pillar">
+          <small>${label} Pillar</small>
+          <strong>${pillars[key].chinese}</strong>
+          <span>${pillars[key].element || 'Element'} · ${pillars[key].animal || 'Branch'} · ${pillars[key].naYin || 'NaYin'}</span>
+        </article>
+      `).join('');
+    }
+    function renderConversions(data) {
+      const d = data.day;
+      const pathClass = d.yellowPath?.isYellowPath ? '' : ' caution';
+      els.conversionGrid.innerHTML = `
+        <article class="conversion-card">
+          <small>Date Conversion</small>
+          <h3>${data.conversions?.gregorian || data.date}</h3>
+          <p class="muted">Lunar ${data.conversions?.lunar || '--'}</p>
+          <p class="muted">Islamic ${data.conversions?.islamic || '--'}</p>
+        </article>
+        <article class="conversion-card">
+          <small>Auspicious Yellow-Path Day · 黄道吉日</small>
+          <h3>${d.yellowPath?.label || '--'}</h3>
+          <p class="muted">${d.yellowPath?.tianShen || '--'} · ${d.yellowPath?.type || '--'} · ${d.yellowPath?.luck || '--'}</p>
+          <span class="path-badge${pathClass}">${d.yellowPath?.isYellowPath ? 'Yellow Path' : 'Caution'}</span>
+        </article>
+        <article class="conversion-card">
+          <small>Day Officer · 建除十二神</small>
+          <h3>${d.dayOfficer?.english || '--'} ${d.dayOfficer?.chinese ? `(${d.dayOfficer.chinese})` : ''}</h3>
+          <p class="muted">Clash ${d.clashDesc || d.clash || '--'} · Sha ${d.sha || '--'}</p>
+        </article>
+      `;
+    }
+    function renderDomains(domains = []) {
+      const copy = {
+        suitable: 'Suitable',
+        avoid: 'Avoid',
+        neutral: 'No Clear Signal',
+      };
+      els.domainGrid.innerHTML = domains.map(domain => `
+        <article class="domain-card ${domain.status}">
+          <small>${domain.chinese}</small>
+          <h3>${domain.title}</h3>
+          <p class="domain-status">${copy[domain.status] || domain.status}</p>
+          <p class="muted">${termText(domain.matched || []) || "Not specifically named in today's Yi/Ji list."}</p>
+        </article>
+      `).join('');
+    }
+    function renderDirections(day) {
+      els.directionDetails.innerHTML = `
+        <div><strong>Xi:</strong> ${day.directions.xi || '--'} · <strong>Yang Gui:</strong> ${day.directions.yangGui || '--'}</div>
+        <div><strong>Yin Gui:</strong> ${day.directions.yinGui || '--'} · <strong>Fu:</strong> ${day.directions.fu || '--'} · <strong>Cai:</strong> ${day.directions.cai || '--'}</div>
+      `;
+    }
+    function renderHours(hours) {
+      els.hourGrid.innerHTML = hours.map(hour => `
+        <article class="hour-card ${hour.tone}">
+          <small>${hour.branch} Hour</small>
+          <div class="hour-title"><strong>${hour.pillar}</strong><span>${hour.label}</span></div>
+          <div class="tag-list compact">${activityTagMarkup((hour.yi || []).slice(0, 3), 'Steady timing')}</div>
+        </article>
+      `).join('');
+    }
+    function renderClassical(data) {
+      const d = data.day;
+      els.classicalDetails.innerHTML = `
+        <div class="classical-row"><strong>Calendar Conversion</strong><span>Gregorian ${data.conversions?.gregorian || data.date} · Lunar ${data.conversions?.lunar || '--'} · Islamic ${data.conversions?.islamic || '--'}</span></div>
+        <div class="classical-row"><strong>Solar Term</strong><span>${solarTermName(data.jieQi.name)} from ${data.jieQi.startsAt}; next ${solarTermName(data.jieQi.nextName)} at ${data.jieQi.nextStartsAt}</span></div>
+        <div class="classical-row"><strong>Day Officer / Yellow Path</strong><span>${d.dayOfficer?.english || '--'} ${d.dayOfficer?.chinese || ''} · ${d.yellowPath?.label || '--'} · ${d.yellowPath?.tianShen || '--'} ${d.yellowPath?.type || ''}</span></div>
+        <div class="classical-row"><strong>NaYin</strong><span>Year ${data.pillars.year.naYin || '--'} · Month ${data.pillars.month.naYin || '--'} · Day ${data.pillars.day.naYin || '--'} · Hour ${data.pillars.time.naYin || '--'}</span></div>
+        <div class="classical-row"><strong>Clash / Sha</strong><span>${d.clashDesc || d.clash || '--'} · Sha ${d.sha || '--'}</span></div>
+        <div class="classical-row"><strong>Peng Zu</strong><span>${d.pengZu.gan || '--'} · ${d.pengZu.zhi || '--'}</span></div>
+        <div class="classical-row"><strong>Tai Shen</strong><span>${d.taiShen || '--'}</span></div>
+        <div class="classical-row"><strong>Liu Yao / WuHou</strong><span>${d.liuYao || '--'} · ${d.wuHou || '--'}</span></div>
+        <div class="classical-row"><strong>28 Constellation</strong><span>${d.constellation.xiu || '--'} ${d.constellation.zheng || ''}${d.constellation.animal || ''} · ${d.constellation.luck || '--'}</span></div>
+        <div class="classical-row"><strong>Ji Shen / Xiong Sha</strong><span>${(d.dayJiShen || []).join(' · ') || '--'} / ${(d.dayXiongSha || []).join(' · ') || '--'}</span></div>
+        <div class="classical-row"><strong>Classical Yi / Ji</strong><span>${termText(d.yi || []) || '--'} / ${termText(d.ji || []) || '--'}</span></div>
+      `;
+    }
+    function updateWhatsApp(dateIso) {
+      const message = `Hi Jose, I'd like to book a consultation - I was using the Daily Almanac tool for ${dateIso}.`;
+      els.whatsappLink.href = `https://wa.me/6588257687?text=${encodeURIComponent(message)}`;
+    }
+    function renderOpen(data) {
+      state.data = data;
+      els.selectedDateLabel.textContent = data.date;
+      els.summaryText.textContent = renderReadableSummary(data);
+      els.jieqiLabel.textContent = renderJieQiLabel(data.jieQi);
+      renderConversions(data);
+      renderPillars(data.pillars);
+      renderDomains(data.day.domains);
+      tagList(els.yiTags, data.day.yi.slice(0, 12));
+      tagList(els.jiTags, data.day.ji.slice(0, 10));
+      renderDirections(data.day);
+      renderHours(data.hourBlocks);
+      renderClassical(data);
+      updateWhatsApp(data.date);
+    }
+    async function loadOpen(refreshPersonal = true) {
+      setStatus('Loading almanac...');
+      const response = await fetch(`/api/daily-almanac?date=${encodeURIComponent(state.date)}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to load almanac');
+      renderOpen(data);
+      setStatus('');
+      if (state.unlocked && refreshPersonal) {
+        await unlockPersonal({ notify: false, silent: true });
+      }
+    }
+    function getBirthPayload(includeEmail) {
+      const birthDate = document.getElementById('birthDate').value;
+      const timeUnknown = document.getElementById('timeUnknown').checked;
+      const birthTime = timeUnknown ? '12:00' : (document.getElementById('birthTime').value || '12:00');
+      const email = document.getElementById('clientEmail').value.trim() || state.lastEmail;
+      if (!birthDate) throw new Error('Birth date is required');
+      return {
+        date: state.date,
+        name: document.getElementById('clientName').value.trim(),
+        email,
+        notifyLead: includeEmail,
+        monthlyOptIn: document.getElementById('monthlyOptIn').checked,
+        birth: {
+          date: birthDate,
+          time: birthTime,
+          timeUnknown,
+          gender: document.getElementById('birthGender').value,
+        }
+      };
+    }
+    function renderPersonal(data) {
+      els.compatScore.textContent = data.compatibility.score;
+      els.compatLabel.textContent = data.compatibility.label;
+      els.compatSummary.textContent = `${data.compatibility.summary} ${data.compatibility.personalClash?.summary || ''}`;
+      els.personalCaution.textContent = data.compatibility.caution || '';
+      els.personalHours.innerHTML = (data.compatibility.helpfulHours || []).map(hour => {
+        const reasonTerms = (hour.reason || '').split(' · ').filter(term => ACTIVITY_COPY[term]);
+        const reason = reasonTerms.length ? termText(reasonTerms) : (hour.reason || '');
+        return `<div class="pick"><small>${hour.label}</small><strong>${hour.pillar}</strong><p class="muted">${reason}</p></div>`;
+      }).join('') || '<p class="muted">No standout hour ranked.</p>';
+    }
+    async function unlockPersonal({ notify = true, silent = false } = {}) {
+      if (!silent) setStatus('Unlocking personal teaser...');
+      const payload = getBirthPayload(notify);
+      const response = await fetch('/api/daily-almanac', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to unlock teaser');
+      renderPersonal(data);
+      state.unlocked = true;
+      state.lastBirth = payload.birth;
+      state.lastEmail = payload.email;
+      if (!silent) {
+        const lead = data.lead?.notified ? ' Lead notification sent.' : '';
+        setStatus('Personal teaser unlocked.' + lead);
+      }
+    }
+    async function setDate(dateIso, refreshPersonal = true) {
+      state.date = dateIso;
+      els.datePicker.value = dateIso;
+      const url = new URL(window.location.href);
+      url.searchParams.set('date', dateIso);
+      window.history.replaceState({}, '', url);
+      try { await loadOpen(refreshPersonal); }
+      catch (err) { setStatus(err.message || 'Unable to load date'); }
+    }
+    document.getElementById('prevDay').addEventListener('click', () => setDate(shiftDate(state.date, -1)));
+    document.getElementById('nextDay').addEventListener('click', () => setDate(shiftDate(state.date, 1)));
+    document.getElementById('todayBtn').addEventListener('click', () => setDate(localDateIso()));
+    els.datePicker.addEventListener('change', () => setDate(els.datePicker.value));
+    document.getElementById('timeUnknown').addEventListener('change', (event) => {
+      const birthTime = document.getElementById('birthTime');
+      birthTime.value = '12:00';
+      birthTime.disabled = event.target.checked;
+    });
+    document.getElementById('unlockForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try { await unlockPersonal({ notify: true }); }
+      catch (err) { setStatus(err.message || 'Unable to unlock teaser'); }
+    });
+    document.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      const tag = target?.closest('.activity-tag');
+      if (!tag) return;
+      const expanded = tag.classList.toggle('is-expanded');
+      tag.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (event) => {
+      touchStartX = event.changedTouches[0]?.clientX || 0;
+    }, { passive: true });
+    document.addEventListener('touchend', (event) => {
+      if (!touchStartX) return;
+      const delta = (event.changedTouches[0]?.clientX || 0) - touchStartX;
+      touchStartX = 0;
+      if (Math.abs(delta) < 70) return;
+      setDate(shiftDate(state.date, delta > 0 ? -1 : 1));
+    }, { passive: true });
+    const initialDate = new URLSearchParams(window.location.search).get('date') || localDateIso();
+    setDate(initialDate, false);
+  </script>
+</body>
+</html>

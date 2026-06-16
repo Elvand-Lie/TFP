@@ -1,1 +1,0 @@
-const fs = require('fs'); const files = ['bazi.html', 'about.html', 'contact.html', 'founder.html', 'index.html', 'insights.html', 'services.html']; files.forEach(f => { try { let c = fs.readFileSync(f, 'utf8'); c = c.replace(/LLP<\/span>/g, 'PTE. LTD.</span>'); fs.writeFileSync(f, c); } catch(e){} });

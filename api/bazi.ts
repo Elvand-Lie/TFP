@@ -1,6 +1,7 @@
 import { BaziCalculator } from './bazi-calculator/bazi-calculator';
 import { STEMS, BRANCHES, ANIMALS } from './bazi-calculator/constants';
-import { Solar, LunarUtil } from 'lunar-javascript';
+import { LunarUtil } from 'lunar-javascript';
+import { createCalendarContext } from '../lib/calendar';
 
 // ─── STEM / BRANCH METADATA ────────────────────────────────
 const STEM_META: Record<string, { spelling: string; name: string; element: string }> = {
@@ -989,14 +990,14 @@ export default function handler(req: any, res: any) {
     const analysisYear = target_year || new Date().getFullYear();
     const genderInt = gender === 1 ? 1 : 0; // lunar-javascript mapping
 
-    const calculator = new BaziCalculator(year, month, day, hour, genderStr);
+    const calculator = new BaziCalculator(year, month, day, hour, minute, 0, genderStr);
     const pillars = calculator.calculatePillars();
     const analysis = calculator.calculateBasicAnalysis();
 
-    // lunar-javascript calculations
-    const solar = Solar.fromYmdHms(year, month, day, hour, 0, 0);
-    const lunar = solar.getLunar();
-    const bazi = lunar.getEightChar();
+    // lunar-javascript calculations via the shared calendar engine.
+    const calendar = createCalendarContext({ year, month, day, hour, minute, second: 0 });
+    const lunar = calendar.lunar;
+    const bazi = calendar.eightChar;
     const yun = bazi.getYun(genderInt);
 
     const mainStructure = calculateMainStructure(bazi);
@@ -1044,9 +1045,8 @@ export default function handler(req: any, res: any) {
               for (let m = 2; m <= 13; m++) {
                 const yearToUse = m > 12 ? ln.getYear() + 1 : ln.getYear();
                 const monthToUse = m > 12 ? m - 12 : m;
-                const d = new Date(yearToUse, monthToUse - 1, 15);
-                const s = Solar.fromDate(d);
-                const mPillar = s.getLunar().getEightChar().getMonth();
+                const mCalendar = createCalendarContext({ year: yearToUse, month: monthToUse, day: 15, hour: 12, minute: 0, second: 0 });
+                const mPillar = mCalendar.eightChar.getMonth();
                 const mStem = mPillar.charAt(0);
                 const mBranch = mPillar.charAt(1);
                 
@@ -1155,9 +1155,8 @@ export default function handler(req: any, res: any) {
     legacyData.analysis.life_star = lifeStar;
 
     // 2. Annual Pillar
-    const dAnnual = new Date(analysisYear, 6, 1); // Mid year to be safe
-    const solarAnnual = Solar.fromDate(dAnnual);
-    const annualBazi = solarAnnual.getLunar().getEightChar();
+    const annualCalendar = createCalendarContext({ year: analysisYear, month: 7, day: 1, hour: 12, minute: 0, second: 0 });
+    const annualBazi = annualCalendar.eightChar;
     const annualPillar = annualBazi.getYear();
     const annualStem = annualPillar.charAt(0);
     const annualBranch = annualPillar.charAt(1);
@@ -1179,9 +1178,8 @@ export default function handler(req: any, res: any) {
     for (let m = 2; m <= 13; m++) {
       const yearToUse = m > 12 ? analysisYear + 1 : analysisYear;
       const monthToUse = m > 12 ? m - 12 : m;
-      const d = new Date(yearToUse, monthToUse - 1, 15); // 15th guarantees we are well inside the solar month
-      const s = Solar.fromDate(d);
-      const mPillar = s.getLunar().getEightChar().getMonth();
+      const mCalendar = createCalendarContext({ year: yearToUse, month: monthToUse, day: 15, hour: 12, minute: 0, second: 0 });
+      const mPillar = mCalendar.eightChar.getMonth();
       const mStem = mPillar.charAt(0);
       const mBranch = mPillar.charAt(1);
       

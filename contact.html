@@ -166,21 +166,22 @@
 
     .nav-links {
       display: flex;
-      gap: 36px;
+      gap: 24px;
       list-style: none;
     }
 
     .nav-links a {
       font-family: var(--font-sans);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      letter-spacing: .18em;
+      letter-spacing: .14em;
       text-transform: uppercase;
       color: var(--beige);
       text-decoration: none;
       position: relative;
       padding-bottom: 3px;
       transition: color .3s;
+      white-space: nowrap;
     }
 
     .nav-links a::after {
@@ -1158,7 +1159,7 @@
     }
 
     /* ─── RESPONSIVE ──────────────────── */
-    @media (max-width: 1024px) {
+    @media (max-width: 1280px) {
       .page-header {
         grid-template-columns: 1fr;
         gap: 40px;
@@ -1306,6 +1307,7 @@
       <li><a href="/founder">Founder</a></li>
       <li><a href="/services">Services</a></li>
       <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
       <li><a href="/insights">Insights</a></li>
       <li><a href="/contact" class="active">Contact</a></li>
     </ul>
@@ -1320,6 +1322,7 @@
     <a href="/founder">Founder</a>
     <a href="/services">Services</a>
     <a href="/bazi">BaZi</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
     <a href="/insights">Insights</a>
     <a href="/contact" class="active">Contact</a>
   </div>
@@ -1434,9 +1437,6 @@
       </div>
 
       <form id="contactForm" novalidate>
-        <input type="hidden" name="access_key" value="18a1b4f8-c39a-48ee-af36-a6664d79bba6">
-        <input type="hidden" name="subject" value="New Enquiry — The Full Picture">
-        <input type="hidden" name="from_name" value="The Full Picture Website">
         <div class="form-grid">
 
           <div class="form-group reveal">
@@ -1593,6 +1593,8 @@
             <li><a href="/about">About</a></li>
             <li><a href="/founder">Founder</a></li>
             <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
             <li><a href="/insights">Insights</a></li>
           </ul>
         </div>
@@ -1676,13 +1678,23 @@
       if (!valid) return;
 
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 'Sending… <span class="submit-arrow">→</span>';
+      submitBtn.innerHTML = 'Sending... <span class="submit-arrow">→</span>';
 
       try {
         const formData = new FormData(form);
-        const response = await fetch('https://api.web3forms.com/submit', {
+        const response = await fetch('/api/contact', {
           method: 'POST',
-          body: formData
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            source: formData.get('source'),
+            message: formData.get('message'),
+            interests: formData.getAll('interest'),
+            _honey: formData.get('_honey'),
+          })
         });
         const data = await response.json();
 
@@ -1691,7 +1703,7 @@
           formSuccess.classList.add('visible');
           formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-          alert('Something went wrong: ' + (data.message || 'Please try again.'));
+          alert('Something went wrong: ' + (data.error || data.message || 'Please try again.'));
           submitBtn.disabled = false;
           submitBtn.innerHTML = 'Send Enquiry <span class="submit-arrow">→</span>';
         }

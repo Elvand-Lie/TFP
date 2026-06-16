@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check": "tsc --noEmit",
+    "deploy": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1",
+    "deploy:preview": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1 -Preview",
+    "deploy:prod": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1"
   },
   "repository": {
     "type": "git",
@@ -25,5 +28,9 @@
     "pdfmake": "^0.3.8",
     "qimen-dunjia": "^2.1.0",
     "resend": "^6.12.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
   }
 }

@@ -29,6 +29,7 @@ export interface Pillar {
   chinese: string;
   element: string;
   animal: string;
+  naYin: string;
   branch: {
     element: string;
   };
