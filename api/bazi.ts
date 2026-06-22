@@ -832,47 +832,80 @@ const LIU_CHONG: [string, string][] = [
   ['卯','酉'],['辰','戌'],['巳','亥']
 ];
 
-function calculateEnhancedStrength(bazi: any) {
-  const dmChar = bazi.getDayGan();
-  const dmElement = STEM_ELEMENTS[dmChar];
+const ELEMENT_PRODUCES_MAP: Record<string, string> = {
+  Wood: 'Fire',
+  Fire: 'Earth',
+  Earth: 'Metal',
+  Metal: 'Water',
+  Water: 'Wood'
+};
 
-  const produces: Record<string, string> = {'Wood':'Fire','Fire':'Earth','Earth':'Metal','Metal':'Water','Water':'Wood'};
-  const controls: Record<string, string> = {'Wood':'Earth','Earth':'Water','Water':'Fire','Fire':'Metal','Metal':'Wood'};
+const ELEMENT_CONTROLS_MAP: Record<string, string> = {
+  Wood: 'Earth',
+  Earth: 'Water',
+  Water: 'Fire',
+  Fire: 'Metal',
+  Metal: 'Wood'
+};
 
-  const companionElem = dmElement;
-  const resourceElem = Object.keys(produces).find(k => produces[k] === dmElement)!;
-  const outputElem = produces[dmElement];
-  const wealthElem = controls[dmElement];
-  const controlElem = Object.keys(controls).find(k => controls[k] === dmElement)!;
+const YIN_STEMS = new Set(['乙', '丁', '己', '辛', '癸']);
+const PILLAR_POSITIONS = ['year', 'month', 'day', 'hour'];
 
-  const isSupportive = (elem: string) => elem === companionElem || elem === resourceElem;
+function roundTo1(value: number) {
+  return Math.round(value * 10) / 10;
+}
 
-  // Collect all four branches
-  const yearBranch = bazi.getYearZhi();
-  const monthBranch = bazi.getMonthZhi();
-  const dayBranch = bazi.getDayZhi();
-  const hourBranch = bazi.getTimeZhi();
-  const allBranches = [yearBranch, monthBranch, dayBranch, hourBranch];
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
 
-  // ── Step 1: Detect Clashes (position-aware) ──
-  // Only adjacent or closest positions clash. Each branch position can only
-  // be involved in one clash. Track by position index, not character.
+function getControllingElement(element: string) {
+  return Object.keys(ELEMENT_CONTROLS_MAP).find(k => ELEMENT_CONTROLS_MAP[k] === element) || '';
+}
+
+function getProducingElement(element: string) {
+  return Object.keys(ELEMENT_PRODUCES_MAP).find(k => ELEMENT_PRODUCES_MAP[k] === element) || '';
+}
+
+function getElementRelationship(dmElement: string, targetElement: string) {
+  if (targetElement === dmElement) return 'companion';
+  if (ELEMENT_PRODUCES_MAP[targetElement] === dmElement) return 'resource';
+  if (ELEMENT_PRODUCES_MAP[dmElement] === targetElement) return 'output';
+  if (ELEMENT_CONTROLS_MAP[dmElement] === targetElement) return 'wealth';
+  if (ELEMENT_CONTROLS_MAP[targetElement] === dmElement) return 'power';
+  return 'neutral';
+}
+
+function getMainQiElement(branch: string) {
+  const hidden = HIDDEN_STEM_QI[branch] || [];
+  const mainStem = hidden[0]?.[0];
+  return mainStem ? STEM_ELEMENTS[mainStem] : BRANCH_ELEMENT_MAP[branch];
+}
+
+function branchContainsElement(branch: string, element: string) {
+  return (HIDDEN_STEM_QI[branch] || []).some(([stem]) => STEM_ELEMENTS[stem] === element);
+}
+
+function getClashedBranchPositions(allBranches: string[]) {
   const clashedPositions = new Set<number>();
   for (const [a, b] of LIU_CHONG) {
-    // Find positions of a and b
     const posA: number[] = [];
     const posB: number[] = [];
-    allBranches.forEach((br, idx) => {
-      if (br === a && !clashedPositions.has(idx)) posA.push(idx);
-      if (br === b && !clashedPositions.has(idx)) posB.push(idx);
+    allBranches.forEach((branch, idx) => {
+      if (branch === a && !clashedPositions.has(idx)) posA.push(idx);
+      if (branch === b && !clashedPositions.has(idx)) posB.push(idx);
     });
-    // Match closest pairs
+
     for (const pa of posA) {
-      let bestB = -1, bestDist = 99;
+      let bestB = -1;
+      let bestDist = 99;
       for (const pb of posB) {
         if (clashedPositions.has(pb)) continue;
         const dist = Math.abs(pa - pb);
-        if (dist < bestDist) { bestDist = dist; bestB = pb; }
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestB = pb;
+        }
       }
       if (bestB >= 0) {
         clashedPositions.add(pa);
@@ -880,98 +913,264 @@ function calculateEnhancedStrength(bazi: any) {
       }
     }
   }
+  return clashedPositions;
+}
 
-  // ── Step 2: Base Positional Scoring ──
-  // Weight: Month Branch = 40, Day Branch = 12, Year/Hour = 8 each
-  // Stems: Month = 8, Year = 8, Hour = 8
-  // Total possible base = 92 (if all support)
-  let points = 0;
-  const branchWeights: [string, number][] = [
-    [yearBranch,  8],
-    [monthBranch, 40],
-    [dayBranch,   12],
-    [hourBranch,  8]
-  ];
+function calculateEnhancedStrength(bazi: any) {
+  const dmChar = bazi.getDayGan();
+  const dmElement = STEM_ELEMENTS[dmChar];
 
-  branchWeights.forEach(([branch, weight], posIdx) => {
-    const elem = BRANCH_ELEMENT_MAP[branch];
-    if (isSupportive(elem)) {
-      // Clashed positions contribute only 50%
-      const effectiveWeight = clashedPositions.has(posIdx) ? weight * 0.5 : weight;
-      points += effectiveWeight;
-    }
+  const companionElem = dmElement;
+  const resourceElem = getProducingElement(dmElement);
+  const outputElem = ELEMENT_PRODUCES_MAP[dmElement];
+  const wealthElem = ELEMENT_CONTROLS_MAP[dmElement];
+  const controlElem = getControllingElement(dmElement);
+  const opposingElements = [outputElem, wealthElem, controlElem].filter(Boolean);
+
+  const isSupportiveElement = (element: string) => element === companionElem || element === resourceElem;
+
+  const yearStem = bazi.getYearGan();
+  const monthStem = bazi.getMonthGan();
+  const dayStem = bazi.getDayGan();
+  const hourStem = bazi.getTimeGan();
+  const stems = [yearStem, monthStem, dayStem, hourStem];
+
+  const yearBranch = bazi.getYearZhi();
+  const monthBranch = bazi.getMonthZhi();
+  const dayBranch = bazi.getDayZhi();
+  const hourBranch = bazi.getTimeZhi();
+  const allBranches = [yearBranch, monthBranch, dayBranch, hourBranch];
+  const clashedPositions = getClashedBranchPositions(allBranches);
+
+  // Part A: Louis-style 得令 / 得地 / 得势 strength calibration.
+  const monthMainElement = getMainQiElement(monthBranch);
+  const monthRelation = getElementRelationship(dmElement, monthMainElement);
+  const monthClashed = clashedPositions.has(1);
+
+  let seasonScore = 0;
+  if (monthRelation === 'companion') seasonScore = 4.5;
+  else if (monthRelation === 'resource') seasonScore = 4.0;
+  else if (monthRelation === 'output') seasonScore = 1.35;
+  else if (monthRelation === 'wealth') seasonScore = 1.05;
+  else if (monthRelation === 'power') seasonScore = 0.75;
+
+  const monthHiddenSupport = (HIDDEN_STEM_QI[monthBranch] || [])
+    .filter(([stem]) => isSupportiveElement(STEM_ELEMENTS[stem]))
+    .reduce((sum, [, qi]) => sum + qi, 0);
+  seasonScore = clamp(seasonScore + monthHiddenSupport * 0.35, 0, 4.5);
+  if (monthClashed && isSupportiveElement(monthMainElement)) seasonScore *= 0.75;
+
+  const rootDetails: any[] = [];
+  const rootWeights = [0.7, 0, 1.4, 0.9]; // 得地 focuses on year/day/hour roots; month is already 得令.
+  let rootScore = 0;
+  allBranches.forEach((branch, idx) => {
+    const rootStem = (HIDDEN_STEM_QI[branch] || []).find(([stem]) => STEM_ELEMENTS[stem] === dmElement);
+    if (!rootStem || rootWeights[idx] === 0) return;
+
+    const [stem, qi] = rootStem;
+    const raw = rootWeights[idx] * qi;
+    const clashed = clashedPositions.has(idx);
+    const effective = raw * (clashed ? 0.2 : 1);
+    rootScore += effective;
+    rootDetails.push({
+      pillar: PILLAR_POSITIONS[idx],
+      branch,
+      stem,
+      qi,
+      clashed,
+      raw: roundTo1(raw),
+      effective: roundTo1(effective)
+    });
+  });
+  rootScore = clamp(rootScore, 0, 3.0);
+  const solidRootCount = rootDetails.filter(root => !root.clashed && root.effective >= 0.25).length;
+
+  let allianceSupport = 0;
+  let allianceOpposition = 0;
+  const stemWeights = [0.65, 1.05, 0, 0.8];
+  stems.forEach((stem, idx) => {
+    if (idx === 2) return;
+    const element = STEM_ELEMENTS[stem];
+    if (!element) return;
+    const seated = branchContainsElement(allBranches[idx], element);
+    const multiplier = clashedPositions.has(idx) ? 0.55 : (seated ? 1 : 0.85);
+    const effectiveWeight = stemWeights[idx] * multiplier;
+    if (isSupportiveElement(element)) allianceSupport += effectiveWeight;
+    else allianceOpposition += effectiveWeight;
   });
 
-  // Stems (excluding Day Stem)
-  const stems: [string, number][] = [
-    [bazi.getYearGan(), 8],
-    [bazi.getMonthGan(), 8],
-    [bazi.getTimeGan(), 8]
-  ];
-  for (const [stem, weight] of stems) {
-    if (isSupportive(STEM_ELEMENTS[stem])) {
-      points += weight;
-    }
-  }
+  allBranches.forEach((branch, idx) => {
+    const clashFactor = clashedPositions.has(idx) ? 0.5 : 1;
+    (HIDDEN_STEM_QI[branch] || []).forEach(([stem, qi]) => {
+      const element = STEM_ELEMENTS[stem];
+      if (element === resourceElem) allianceSupport += 0.22 * qi * clashFactor;
+      if (opposingElements.includes(element)) allianceOpposition += 0.16 * qi * clashFactor;
+    });
+  });
+  const allianceScore = clamp(allianceSupport, 0, 2.5);
 
-  // ── Step 3: Hidden Stem Root Bonus ──
-  // If the DM's own element has roots (hidden stems) in branches → bonus
-  // Month root is most valuable, Day root second
-  const rootWeights: [string, number][] = [
-    [yearBranch, 3], [monthBranch, 10], [dayBranch, 6], [hourBranch, 3]
-  ];
-  rootWeights.forEach(([branch, bonus], posIdx) => {
-    if (clashedPositions.has(posIdx)) return; // Clashed roots don't count
-    const hiddenStems = HIDDEN_STEM_QI[branch] || [];
-    for (const [hStem, qi] of hiddenStems) {
-      if (STEM_ELEMENTS[hStem] === dmElement) {
-        points += bonus * qi;
-        break; // Only count the strongest root per branch
-      }
-    }
+  const baseScore = roundTo1(clamp(seasonScore + rootScore + allianceScore, 0, 10));
+
+  // Force mix is used for 从格 candidate screening, not as a standalone score.
+  const forceScores: Record<string, number> = { Wood: 0, Fire: 0, Earth: 0, Metal: 0, Water: 0 };
+  const addForce = (element: string, amount: number) => {
+    if (forceScores[element] !== undefined) forceScores[element] += amount;
+  };
+
+  const forceStemWeights = [0.7, 1.0, 0, 0.7];
+  stems.forEach((stem, idx) => {
+    if (idx === 2) return;
+    const element = STEM_ELEMENTS[stem];
+    const factor = clashedPositions.has(idx) ? 0.6 : 1;
+    addForce(element, forceStemWeights[idx] * factor);
   });
 
-  // ── Step 4: Combination Modifiers ──
-  // San Hui (三会 Seasonal) — strongest, +/- 12
-  for (const [a, b, c, resultElem] of SAN_HUI) {
-    if (allBranches.includes(a) && allBranches.includes(b) && allBranches.includes(c)) {
-      points += isSupportive(resultElem) ? 12 : -8;
-    }
+  const branchForceWeights = [0.8, 2.0, 1.2, 0.8];
+  allBranches.forEach((branch, idx) => {
+    const factor = clashedPositions.has(idx) ? 0.75 : 1;
+    (HIDDEN_STEM_QI[branch] || []).forEach(([stem, qi]) => {
+      addForce(STEM_ELEMENTS[stem], branchForceWeights[idx] * qi * factor);
+    });
+  });
+
+  const totalForce = Object.values(forceScores).reduce((sum, value) => sum + value, 0) || 1;
+  const supportiveForce = forceScores[companionElem] + forceScores[resourceElem];
+  const opposingForce = opposingElements.reduce((sum, element) => sum + forceScores[element], 0);
+  const supportivePct = (supportiveForce / totalForce) * 100;
+  const opposingPct = (opposingForce / totalForce) * 100;
+
+  const supportiveVisibleStems = stems
+    .map((stem, idx) => ({ stem, idx, element: STEM_ELEMENTS[stem] }))
+    .filter(item => item.idx !== 2 && isSupportiveElement(item.element));
+
+  const supportCompromised = supportiveVisibleStems.length === 0 || supportiveVisibleStems.every(item => {
+    const seated = branchContainsElement(allBranches[item.idx], item.element);
+    return clashedPositions.has(item.idx) || !seated;
+  });
+
+  const hasResourceBranch = allBranches.some(branch => branchContainsElement(branch, resourceElem));
+  const hasCompanionBranch = allBranches.some(branch => branchContainsElement(branch, companionElem));
+  const noEffectiveRoot = rootScore < 0.35 && solidRootCount === 0;
+  const lossOfSeason = !isSupportiveElement(monthMainElement);
+  const gainedSeason = isSupportiveElement(monthMainElement);
+  const yinDayMaster = YIN_STEMS.has(dmChar);
+  const dominantOpposing = opposingPct >= (yinDayMaster ? 58 : 68);
+
+  const specialStructure: any = {
+    flagged: false,
+    type: null,
+    chinese: null,
+    english: null,
+    confidence: null,
+    confidence_level: null,
+    label: null,
+    message: null,
+    reasons: []
+  };
+
+  const congWeakCandidate = lossOfSeason && noEffectiveRoot && dominantOpposing && (supportCompromised || yinDayMaster);
+  const cleanWeakFollow = congWeakCandidate && opposingPct >= 74 && !hasResourceBranch && !hasCompanionBranch;
+
+  const congStrongCandidate =
+    gainedSeason &&
+    rootScore >= 1.4 &&
+    solidRootCount >= 1 &&
+    supportivePct >= 78 &&
+    opposingPct <= 16 &&
+    allianceOpposition <= 0.35;
+  const cleanStrongFollow = congStrongCandidate && supportivePct >= 86 && opposingPct <= 8;
+
+  if (congWeakCandidate) {
+    specialStructure.flagged = true;
+    specialStructure.type = 'cong_weak';
+    specialStructure.chinese = '从弱格';
+    specialStructure.english = 'Follow-the-Weak Structure';
+    specialStructure.confidence = cleanWeakFollow ? '真从' : '假从';
+    specialStructure.confidence_level = cleanWeakFollow ? 'higher_confidence' : 'master_review_required';
+    specialStructure.label = `Possible ${specialStructure.chinese} / ${specialStructure.english}`;
+    specialStructure.message = 'This chart shows special-structure characteristics (possible 从格 / follow-structure). Standard strength scoring may not fully capture it - charts like this invert the usual rules and require a master’s ruling. Book a consultation for a definitive reading.';
+    specialStructure.reasons = [
+      '失令: the Month Branch does not support the Day Master.',
+      'No solid same-element root is available; any root present is clashed or too weak to rely on.',
+      'Resource or Companion support is absent, floating, or compromised, so it does not block the follow-structure candidate.',
+      `Opposing forces dominate the chart mix (${Math.round(opposingPct)}%).`,
+      yinDayMaster ? 'Yin Day Master: follow-structure screening uses the lenient rule set.' : 'Yang Day Master: stricter follow-structure screening applied.'
+    ];
+  } else if (congStrongCandidate) {
+    specialStructure.flagged = true;
+    specialStructure.type = 'cong_strong';
+    specialStructure.chinese = '从旺格';
+    specialStructure.english = 'Follow-the-Strong Structure';
+    specialStructure.confidence = cleanStrongFollow ? '真从' : '假从';
+    specialStructure.confidence_level = cleanStrongFollow ? 'higher_confidence' : 'master_review_required';
+    specialStructure.label = `Possible ${specialStructure.chinese} / ${specialStructure.english}`;
+    specialStructure.message = 'This chart shows special-structure characteristics (possible 从格 / follow-structure). Standard strength scoring may not fully capture it - charts like this invert the usual rules and require a master’s ruling. Book a consultation for a definitive reading.';
+    specialStructure.reasons = [
+      '得令: the Month Branch strongly supports the Day Master.',
+      'The Day Master has solid same-element roots.',
+      `Supportive forces dominate the chart mix (${Math.round(supportivePct)}%).`,
+      'Opposing Wealth / Output / Power forces are weak enough to trigger follow-structure review.'
+    ];
   }
 
-  // San He (三合 Three Harmony) — strong, +/- 8; half combo +/- 3
-  for (const [a, b, c, resultElem] of SAN_HE) {
-    const count = [a, b, c].filter(x => allBranches.includes(x)).length;
-    if (count === 3) {
-      points += isSupportive(resultElem) ? 8 : -5;
-    } else if (count === 2) {
-      points += isSupportive(resultElem) ? 3 : -2;
-    }
+  let finalScore = baseScore;
+  let label = finalScore > 4.0 ? 'Strong' : 'Weak';
+
+  if (specialStructure.flagged && specialStructure.type === 'cong_weak') {
+    finalScore = specialStructure.confidence === '真从'
+      ? roundTo1(clamp(4.8 + (opposingPct - 74) / 60, 4.8, 5.4))
+      : roundTo1(clamp(4.4 + (opposingPct - 60) / 100, 4.2, 4.7));
+    label = 'Strong';
+  } else if (specialStructure.flagged && specialStructure.type === 'cong_strong') {
+    finalScore = specialStructure.confidence === '真从'
+      ? roundTo1(clamp(5.0 + (supportivePct - 86) / 60, 5.0, 5.6))
+      : roundTo1(clamp(Math.max(finalScore, 4.6), 4.6, 5.2));
+    label = 'Strong';
   }
 
-  // Liu He (六合 Six Harmony) — mild, +/- 3
-  for (const [a, b, resultElem] of LIU_HE) {
-    if (allBranches.includes(a) && allBranches.includes(b)) {
-      points += isSupportive(resultElem) ? 3 : -2;
-    }
-  }
-  // ── Step 5: Determine Strength ──
-  // Two-tier threshold: Classical BaZi allows "失令但得势得根" (lost season but
-  // gained support and roots) to still be Strong. When Month Branch opposes,
-  // use a lower threshold since max achievable points are reduced.
-  const monthSupports = isSupportive(BRANCH_ELEMENT_MAP[monthBranch]);
-  const threshold = monthSupports ? 50 : 40;
-  const isStrong = points >= threshold;
+  const usefulElements = (label === 'Strong' || specialStructure.flagged)
+    ? opposingElements
+    : [companionElem, resourceElem];
+  const harmfulElements = (label === 'Strong' || specialStructure.flagged)
+    ? [companionElem, resourceElem]
+    : opposingElements;
 
   return {
-    points: Math.round(points * 10) / 10,
-    label: isStrong ? 'Strong' : 'Weak',
-    useful_god: isStrong
-      ? [outputElem, wealthElem, controlElem].join(',')
-      : [companionElem, resourceElem].join(','),
-    harmful_god: isStrong
-      ? [companionElem, resourceElem].join(',')
-      : [outputElem, wealthElem, controlElem].join(',')
+    score: finalScore,
+    label,
+    threshold: 4.0,
+    scale_label: 'Louis-style 4.0 threshold',
+    useful_god: usefulElements.join(','),
+    harmful_god: harmfulElements.join(','),
+    special_structure: specialStructure,
+    details: {
+      season: {
+        chinese: '得令',
+        score: roundTo1(seasonScore),
+        month_branch: monthBranch,
+        month_main_element: monthMainElement,
+        relationship: monthRelation,
+        clashed: monthClashed
+      },
+      roots: {
+        chinese: '得地',
+        score: roundTo1(rootScore),
+        solid_root_count: solidRootCount,
+        details: rootDetails
+      },
+      alliance: {
+        chinese: '得势',
+        score: roundTo1(allianceScore),
+        support: roundTo1(allianceSupport),
+        opposition: roundTo1(allianceOpposition)
+      },
+      force_mix: {
+        supportive_pct: Math.round(supportivePct),
+        opposing_pct: Math.round(opposingPct),
+        elements: Object.fromEntries(Object.entries(forceScores).map(([element, value]) => [element, roundTo1(value)]))
+      },
+      root_vs_resource_note: 'Root requires the Day Master element inside branch hidden stems. Resource produces the Day Master but is not counted as a root.'
+    }
   };
 }
 
@@ -1003,8 +1202,6 @@ export default function handler(req: any, res: any) {
     const mainStructure = calculateMainStructure(bazi);
     const dynamicScoresResult = calculateTenGodsScores(bazi);
     const tenGodsScores = dynamicScoresResult.normalizedScores;
-    const dmStrengthScore = dynamicScoresResult.dmStrengthScore;
-    const dmStrengthLabel = dynamicScoresResult.structure;
 
     const simpleStrength = calculateEnhancedStrength(bazi);
 
@@ -1126,8 +1323,12 @@ export default function handler(req: any, res: any) {
           nature: analysis.dayMaster.nature
         },
         main_structure: `${mainStructure.chinese}格 ${mainStructure.english}`,
-        dm_strength: dmStrengthScore,
+        dm_strength: simpleStrength.score,
         dm_strength_label: simpleStrength.label,
+        dm_strength_threshold: simpleStrength.threshold,
+        dm_strength_scale: simpleStrength.scale_label,
+        strength_details: simpleStrength.details,
+        special_structure: simpleStrength.special_structure,
         useful_god: simpleStrength.useful_god,
         harmful_god: simpleStrength.harmful_god,
         ten_gods_scores: tenGodsScores,

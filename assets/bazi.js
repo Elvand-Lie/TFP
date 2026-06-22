@@ -86,6 +86,47 @@ function extractElement(stemName) {
   return parts.length > 1 ? parts[1] : parts[0];
 }
 
+function renderSpecialStructureNotice(special) {
+  let notice = document.getElementById('special-structure-notice');
+  if (!special || !special.flagged) {
+    if (notice) notice.remove();
+    return;
+  }
+
+  const summary = document.querySelector('#bazi-chart .chart-summary');
+  if (!notice) {
+    notice = document.createElement('div');
+    notice.id = 'special-structure-notice';
+  }
+  if (summary && notice.parentElement !== summary.parentElement) {
+    summary.parentNode.insertBefore(notice, summary.nextSibling);
+  } else if (summary && notice.previousElementSibling !== summary) {
+    summary.parentNode.insertBefore(notice, summary.nextSibling);
+  }
+
+  const reasons = (special.reasons || []).slice(0, 4).map(reason => `
+    <li style="margin-bottom:6px;">${reason}</li>
+  `).join('');
+  const label = special.label || 'Possible follow-structure';
+  const confidence = special.confidence || 'Master review required';
+  const message = special.message || 'This chart shows special-structure characteristics and should be reviewed by a master before making a final ruling.';
+  const whatsappText = encodeURIComponent(`Hi, I plotted my BaZi chart and it shows ${label}. I would like to book a consultation for a definitive reading.`);
+
+  notice.innerHTML = `
+    <div style="margin-top:22px; margin-bottom:10px; padding:24px; border:1px solid rgba(198,169,107,0.35); background:linear-gradient(135deg, rgba(113,1,1,0.18), rgba(0,0,0,0.35)); border-radius:8px;">
+      <div style="font-size:0.72rem; color:var(--gold); letter-spacing:0.16em; text-transform:uppercase; margin-bottom:10px;">Special Structure Review · 特殊格局复核</div>
+      <div style="font-family:var(--font-serif); font-size:1.55rem; color:var(--ivory); margin-bottom:8px;">${label}</div>
+      <div style="display:inline-flex; align-items:center; gap:8px; padding:5px 10px; border:1px solid rgba(198,169,107,0.3); border-radius:999px; color:var(--gold); font-size:0.78rem; margin-bottom:14px;">${confidence} · Candidate flag only</div>
+      <p style="color:var(--muted); line-height:1.7; margin:0 0 14px 0; max-width:920px;">${message}</p>
+      ${reasons ? `<ul style="margin:0 0 18px 18px; padding:0; color:var(--beige); line-height:1.55; font-size:0.9rem;">${reasons}</ul>` : ''}
+      <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <a href="/contact" class="btn-plot" style="display:inline-flex; text-decoration:none; padding:10px 16px;">Book Consultation</a>
+        <a href="https://wa.me/6588257687?text=${whatsappText}" target="_blank" rel="noopener" class="btn-reset" style="display:inline-flex; text-decoration:none; padding:10px 16px;">WhatsApp</a>
+      </div>
+    </div>
+  `;
+}
+
 function populateForm() {
   const yearSel = document.getElementById('birth-year');
   const currentYear = new Date().getFullYear();
@@ -292,18 +333,26 @@ function renderChart(data, input) {
     badge.parentNode.insertBefore(dmStrengthEl, badge.nextSibling);
   }
 
-  const pct = (strengthScore / 10) * 100;
+  const numericStrength = Number(strengthScore);
+  const strengthThreshold = data.analysis ? Number(data.analysis.dm_strength_threshold || 4.0) : 4.0;
+  const pct = Math.max(3, Math.min(97, (numericStrength / 8) * 100));
+  const thresholdPct = Math.max(3, Math.min(97, (strengthThreshold / 8) * 100));
+  const scoreText = Number.isFinite(numericStrength) ? numericStrength.toFixed(1) : strengthScore;
+  const thresholdText = Number.isFinite(strengthThreshold) ? strengthThreshold.toFixed(1) : '4.0';
   let strengthColor = 'var(--ivory)';
   if (strengthLabel === 'Strong' || strengthLabel === 'CongGe') strengthColor = 'var(--gold)';
   if (strengthLabel === 'Weak') strengthColor = 'var(--muted)';
 
   dmStrengthEl.innerHTML = `
     <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">Day Master Strength</div>
-    <div style="font-size:1.1rem; color:${strengthColor}; font-weight:600; margin-bottom:10px;">${strengthScore}/10 — ${strengthLabel}</div>
+    <div style="font-size:1.1rem; color:${strengthColor}; font-weight:600; margin-bottom:4px;">${scoreText} - ${strengthLabel}</div>
+    <div style="font-size:0.72rem; color:var(--muted); margin-bottom:10px;">Threshold: &gt; ${thresholdText} = Strong</div>
     <div style="position:relative; width:100%; height:8px; border-radius:4px; background:linear-gradient(to right, rgba(136,133,128,0.5), rgba(245,245,242,0.8), rgba(198,169,107,0.8));">
+      <div style="position:absolute; top:-3px; bottom:-3px; width:1px; background:rgba(198,169,107,0.7); left:${thresholdPct}%; transform:translateX(-50%);"></div>
       <div style="position:absolute; top:-4px; bottom:-4px; width:2px; background:#fff; left:${pct}%; box-shadow:0 0 5px rgba(255,255,255,0.8); transform:translateX(-50%);"></div>
     </div>
   `;
+  renderSpecialStructureNotice(data.analysis ? data.analysis.special_structure : null);
 
   // Display Day Master Name and Main Structure
   const mainStructStr = data.analysis && data.analysis.main_structure ? `  |  Structure: ${data.analysis.main_structure}` : '';
