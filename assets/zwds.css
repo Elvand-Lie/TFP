@@ -1,0 +1,517 @@
+/* ─── ZWDS PAGE STYLES ─────────────────────── */
+
+/* ─── HERO ─── */
+#zwds-hero {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 140px 48px 80px;
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+}
+#zwds-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(113,1,1,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(198,169,107,0.06) 0%, transparent 50%);
+  z-index: 0;
+}
+.zwds-hero-content {
+  position: relative; z-index: 2;
+  max-width: 1240px; margin: 0 auto; width: 100%;
+}
+.zwds-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 400; line-height: 1.1;
+  color: var(--ivory); margin-bottom: 24px;
+}
+.zwds-hero-title em {
+  font-style: italic; color: var(--crimson-text);
+  font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+}
+.zwds-hero-sub {
+  font-family: var(--font-sans); font-size: 1.1rem;
+  color: var(--beige); max-width: 640px; line-height: 1.8;
+}
+
+/* ─── FORM SECTION ─── */
+#zwds-form-section {
+  padding: 80px 0;
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+}
+.zwds-form-container {
+  max-width: 900px; margin: 0 auto; padding: 0 48px;
+}
+.zwds-form-card {
+  background: rgba(28,28,30,0.6);
+  border: 1px solid rgba(113,1,1,0.2);
+  padding: 48px; border-radius: 2px;
+  backdrop-filter: blur(10px);
+}
+.zwds-form-row {
+  display: grid; gap: 20px; margin-bottom: 24px;
+}
+.zwds-form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.zwds-form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.zwds-form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.zwds-form-group { display: flex; flex-direction: column; }
+.zwds-form-group label {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.zwds-form-group input, .zwds-form-group select {
+  background: rgba(15,15,16,0.8);
+  border: 1px solid rgba(113,1,1,0.3);
+  color: var(--ivory); padding: 12px 14px;
+  font-family: var(--font-sans); font-size: 0.95rem;
+  outline: none; border-radius: 2px;
+  transition: border-color 0.3s;
+}
+.zwds-form-group input:focus, .zwds-form-group select:focus {
+  border-color: var(--crimson-text);
+}
+.zwds-form-group select { cursor: pointer; }
+.zwds-form-group select option { background: var(--dark-grey); color: var(--ivory); }
+
+/* Calendar Toggle */
+.cal-toggle {
+  display: flex; gap: 0;
+}
+.cal-toggle label {
+  flex: 1; text-align: center; padding: 12px 14px;
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.1em;
+  color: var(--muted); cursor: pointer;
+  border: 1px solid rgba(113,1,1,0.3);
+  background: rgba(15,15,16,0.8);
+  transition: all 0.3s; margin-bottom: 0;
+}
+.cal-toggle label:first-of-type { border-right: none; }
+.cal-toggle input { display: none; }
+.cal-toggle input:checked + label {
+  background: var(--crimson); color: var(--ivory);
+  border-color: var(--crimson);
+}
+
+/* Gender Toggle */
+.zwds-gender-toggle {
+  display: flex; gap: 0;
+}
+.zwds-gender-toggle label {
+  flex: 1; text-align: center; padding: 12px 14px;
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.1em;
+  color: var(--muted); cursor: pointer;
+  border: 1px solid rgba(113,1,1,0.3);
+  background: rgba(15,15,16,0.8);
+  transition: all 0.3s; margin-bottom: 0;
+}
+.zwds-gender-toggle label:first-of-type { border-right: none; }
+.zwds-gender-toggle input { display: none; }
+.zwds-gender-toggle input:checked + label {
+  background: var(--crimson); color: var(--ivory);
+  border-color: var(--crimson);
+}
+
+/* Checkbox */
+.zwds-checkbox {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; cursor: pointer;
+}
+.zwds-checkbox input { accent-color: var(--crimson); width: 16px; height: 16px; cursor: pointer; }
+.zwds-checkbox span {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  color: var(--beige);
+}
+
+/* Buttons */
+.zwds-form-actions {
+  display: flex; gap: 16px; margin-top: 8px;
+}
+.zwds-btn-plot {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  background: var(--crimson); color: var(--ivory);
+  border: none; padding: 14px 40px; cursor: pointer;
+  position: relative; overflow: hidden; z-index: 1;
+  transition: opacity 0.35s;
+}
+.zwds-btn-plot::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--deep-red); transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s cubic-bezier(.76,0,.24,1); z-index: -1;
+}
+.zwds-btn-plot:hover::before { transform: scaleX(1); transform-origin: left; }
+.zwds-btn-plot:disabled { opacity: 0.5; cursor: not-allowed; }
+.zwds-btn-plot:disabled::before { display: none; }
+
+.zwds-btn-reset {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  background: transparent; color: var(--muted);
+  border: 1px solid rgba(136,133,128,0.3); padding: 14px 28px;
+  cursor: pointer; transition: all 0.3s;
+}
+.zwds-btn-reset:hover { border-color: var(--muted); color: var(--ivory); }
+
+/* Loading */
+.zwds-loading {
+  display: none; align-items: center; gap: 12px;
+  padding: 16px 0;
+}
+.zwds-loading.active { display: flex; }
+.zwds-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(113,1,1,0.3); border-top-color: var(--crimson-text);
+  border-radius: 50%; animation: zwds-spin 0.8s linear infinite;
+}
+@keyframes zwds-spin { to { transform: rotate(360deg); } }
+.zwds-loading-text { font-size: 0.85rem; color: var(--muted); }
+
+/* Error */
+.zwds-error {
+  display: none; padding: 14px 18px; margin-top: 16px;
+  background: rgba(113,1,1,0.15); border: 1px solid rgba(113,1,1,0.4);
+  color: var(--crimson-text); font-size: 0.9rem; border-radius: 2px;
+}
+.zwds-error.active { display: block; }
+
+/* ─── CHART OUTPUT ─── */
+#zwds-chart {
+  display: none; padding: 60px 0 80px;
+}
+#zwds-chart.active { display: block; }
+
+.zwds-chart-container {
+  max-width: 1240px; margin: 0 auto; padding: 0 48px;
+}
+
+/* Metadata Banner */
+.zwds-meta {
+  display: flex; flex-wrap: wrap; gap: 24px;
+  padding: 24px 32px; margin-bottom: 32px;
+  background: linear-gradient(135deg, rgba(113,1,1,0.12) 0%, rgba(28,28,30,0.5) 100%);
+  border: 1px solid rgba(113,1,1,0.2); border-radius: 2px;
+  align-items: center;
+}
+.zwds-meta-item {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.zwds-meta-label {
+  font-family: var(--font-sans); font-size: 0.65rem;
+  font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold);
+}
+.zwds-meta-value {
+  font-family: var(--font-sans); font-size: 0.9rem;
+  color: var(--ivory);
+}
+.zwds-approx-badge {
+  display: inline-block; padding: 4px 12px;
+  background: rgba(198,169,107,0.15); border: 1px solid rgba(198,169,107,0.3);
+  color: var(--gold); font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  border-radius: 2px;
+}
+
+/* ─── TIME VIEW CONTROLS ─── */
+.zwds-time-controls {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+}
+.zwds-time-btn {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  font-weight: 500; letter-spacing: 0.1em;
+  padding: 8px 16px; cursor: pointer;
+  border: 1px solid rgba(113,1,1,0.3);
+  background: rgba(15,15,16,0.6); color: var(--beige);
+  transition: all 0.3s; border-radius: 2px;
+}
+.zwds-time-btn:hover {
+  border-color: var(--crimson); color: var(--ivory);
+}
+.zwds-time-btn.active {
+  background: var(--crimson); color: var(--ivory);
+  border-color: var(--crimson);
+}
+
+/* Horoscope date picker row */
+.zwds-horoscope-picker {
+  display: none; flex-wrap: wrap; gap: 12px;
+  align-items: center; margin-bottom: 24px;
+  padding: 16px 20px;
+  background: rgba(28,28,30,0.4);
+  border: 1px solid rgba(113,1,1,0.15);
+  border-radius: 2px;
+}
+.zwds-horoscope-picker.active { display: flex; }
+.zwds-horoscope-picker label {
+  font-family: var(--font-sans); font-size: 0.7rem;
+  font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold);
+}
+.zwds-horoscope-picker input,
+.zwds-horoscope-picker select {
+  background: rgba(15,15,16,0.8);
+  border: 1px solid rgba(113,1,1,0.3);
+  color: var(--ivory); padding: 8px 12px;
+  font-family: var(--font-sans); font-size: 0.85rem;
+  outline: none; border-radius: 2px;
+}
+
+/* ─── PALACE GRID (4×4 ZWDS layout) ─── */
+.zwds-grid-wrapper {
+  position: relative;
+}
+.zwds-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, auto);
+  gap: 0;
+  border: 1px solid rgba(113,1,1,0.3);
+}
+
+/* Palace cell */
+.zwds-palace {
+  border: 1px solid rgba(113,1,1,0.2);
+  padding: 10px 8px;
+  min-height: 120px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.zwds-palace:hover {
+  background: rgba(113,1,1,0.08);
+}
+.zwds-palace.selected {
+  background: rgba(113,1,1,0.15);
+  box-shadow: inset 0 0 0 2px var(--crimson-text);
+}
+.zwds-palace.flight-dest {
+  background: rgba(198,169,107,0.08);
+}
+
+/* Center area (spans 2×2) */
+.zwds-center {
+  grid-column: 2 / 4;
+  grid-row: 2 / 4;
+  border: 1px solid rgba(113,1,1,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  min-height: 240px;
+}
+.zwds-center-title {
+  font-family: var(--font-serif); font-size: 1.4rem;
+  color: var(--ivory); margin-bottom: 8px;
+}
+.zwds-center-info {
+  font-family: var(--font-sans); font-size: 0.8rem;
+  color: var(--muted); line-height: 1.8;
+}
+
+/* Palace header row */
+.zwds-palace-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 4px;
+}
+.zwds-palace-name {
+  font-family: var(--font-sans); font-size: 0.72rem;
+  font-weight: 600; color: var(--gold);
+  letter-spacing: 0.08em;
+}
+.zwds-palace-stem-branch {
+  font-family: var(--font-sans); font-size: 0.65rem;
+  color: var(--muted);
+}
+.zwds-palace-markers {
+  display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 2px;
+}
+.zwds-marker {
+  font-size: 0.6rem; padding: 1px 4px;
+  border-radius: 2px; font-weight: 600;
+}
+.zwds-marker-soul {
+  background: rgba(113,1,1,0.3); color: var(--crimson-text);
+}
+.zwds-marker-body {
+  background: rgba(198,169,107,0.2); color: var(--gold);
+}
+
+/* Stars in palace */
+.zwds-stars {
+  display: flex; flex-direction: column; gap: 1px;
+  flex: 1;
+}
+.zwds-star {
+  font-family: var(--font-sans); font-size: 0.68rem;
+  color: var(--ivory); line-height: 1.4;
+  display: flex; align-items: center; gap: 3px;
+  flex-wrap: wrap;
+}
+.zwds-star-major {
+  font-weight: 600; font-size: 0.72rem;
+}
+.zwds-star-minor {
+  color: var(--beige); font-size: 0.65rem;
+}
+.zwds-star-adj {
+  color: var(--muted); font-size: 0.6rem;
+}
+.zwds-brightness {
+  font-size: 0.55rem; color: var(--muted);
+  margin-left: 1px;
+}
+
+/* Mutagen badges */
+.zwds-mutagen {
+  font-size: 0.55rem; font-weight: 700; padding: 0 3px;
+  border-radius: 2px; margin-left: 2px;
+}
+.zwds-mutagen-lu { color: #4CAF50; }
+.zwds-mutagen-quan { color: #FF9800; }
+.zwds-mutagen-ke { color: #42A5F5; }
+.zwds-mutagen-ji { color: #EF5350; }
+
+/* Palace footer: ages/stage */
+.zwds-palace-footer {
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid rgba(113,1,1,0.1);
+}
+.zwds-palace-ages {
+  font-family: var(--font-sans); font-size: 0.58rem;
+  color: var(--muted); letter-spacing: 0.05em;
+}
+.zwds-palace-decadal {
+  font-family: var(--font-sans); font-size: 0.6rem;
+  color: var(--gold); font-weight: 500;
+  margin-bottom: 2px;
+}
+.zwds-palace-aux {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  margin-top: 2px;
+}
+.zwds-aux-tag {
+  font-family: var(--font-sans); font-size: 0.52rem;
+  color: var(--muted); padding: 0 3px;
+  border: 1px solid rgba(136,133,128,0.2);
+  border-radius: 2px; letter-spacing: 0.03em;
+}
+
+/* ─── FLYING STAR SVG OVERLAY ─── */
+.zwds-svg-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+.zwds-flight-line {
+  stroke-width: 2;
+  fill: none;
+  opacity: 0.8;
+}
+.zwds-flight-lu { stroke: #4CAF50; }
+.zwds-flight-quan { stroke: #FF9800; }
+.zwds-flight-ke { stroke: #42A5F5; }
+.zwds-flight-ji { stroke: #EF5350; }
+.zwds-flight-dot {
+  r: 4;
+}
+
+/* Flight info panel */
+.zwds-flight-info {
+  display: none; margin-top: 16px;
+  padding: 16px 20px;
+  background: rgba(28,28,30,0.5);
+  border: 1px solid rgba(113,1,1,0.15);
+  border-radius: 2px;
+}
+.zwds-flight-info.active { display: block; }
+.zwds-flight-info-title {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  font-weight: 600; color: var(--gold);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.zwds-flight-info-row {
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+.zwds-flight-info-item {
+  font-family: var(--font-sans); font-size: 0.8rem;
+  color: var(--ivory); display: flex; align-items: center; gap: 6px;
+}
+.zwds-flight-dot-indicator {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: inline-block;
+}
+.zwds-no-flights {
+  font-family: var(--font-sans); font-size: 0.8rem;
+  color: var(--muted); font-style: italic;
+}
+
+/* ─── HOROSCOPE OVERLAY STARS ─── */
+.zwds-horoscope-stars {
+  margin-top: 4px;
+  padding-top: 3px;
+  border-top: 1px dashed rgba(198,169,107,0.2);
+}
+.zwds-horoscope-label {
+  font-size: 0.55rem; color: var(--gold);
+  font-weight: 600; letter-spacing: 0.1em;
+  margin-bottom: 1px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1280px) {
+  #zwds-hero { padding: 120px 24px 60px; }
+  .zwds-form-container { padding: 0 24px; }
+  .zwds-chart-container { padding: 0 24px; }
+}
+
+@media (max-width: 960px) {
+  .zwds-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .zwds-palace {
+    min-height: auto;
+    padding: 12px 16px;
+  }
+  .zwds-center {
+    min-height: auto;
+    padding: 20px 16px;
+    order: -1;
+  }
+  .zwds-svg-overlay { display: none; }
+  .zwds-palace-header { flex-direction: row; }
+  .zwds-stars { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .zwds-star { white-space: nowrap; }
+}
+
+@media (max-width: 768px) {
+  #zwds-hero { padding: 100px 16px 40px; }
+  .zwds-hero-title { font-size: clamp(2rem, 8vw, 3rem); }
+  .zwds-form-container { padding: 0 16px; }
+  .zwds-form-card { padding: 28px 20px; }
+  .zwds-form-row.cols-2,
+  .zwds-form-row.cols-3,
+  .zwds-form-row.cols-4 { grid-template-columns: 1fr; }
+  .zwds-chart-container { padding: 0 16px; }
+  .zwds-meta { padding: 16px; gap: 16px; }
+  .zwds-time-controls { gap: 4px; }
+  .zwds-time-btn { padding: 6px 10px; font-size: 0.7rem; }
+}

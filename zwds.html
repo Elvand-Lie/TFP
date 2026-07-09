@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZWDS Calculator — The Full Picture | 紫微斗数</title>
+  <meta name="description" content="Explore your Zi Wei Dou Shu (紫微斗数) chart with our interactive Purple Star Astrology calculator. Generate natal charts, view time-based horoscopes, and analyze flying-star interactions." />
+  <meta name="keywords" content="Zi Wei Dou Shu, 紫微斗数, ZWDS calculator, Purple Star Astrology, Chinese astrology, The Full Picture" />
+  <meta name="author" content="The Full Picture LLP" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0F0F10; --dark-grey: #1C1C1E; --ivory: #F5F5F2; --beige: #D8CFC4; --pure-white: #FFFFFF; --muted: #888580;
+      --crimson: #710101; --maroon: #591f16; --deep-red: #680806; --crimson-text: #E53939;
+      --gold: #C6A96B; --forest: #1F3A2E; --blue: #42A5F5;
+      --font-serif: 'Cormorant Garamond', Georgia, serif; --font-sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--ivory); font-family: var(--font-sans); font-weight: 400; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: var(--black); } ::-webkit-scrollbar-thumb { background: var(--crimson); border-radius: 2px; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; pointer-events: none; z-index: 9999; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; transition: background .4s, border-bottom .4s; }
+    nav.scrolled { background: rgba(15,15,16,0.93); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(113,1,1,0.25); }
+    .nav-logo { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ivory); text-decoration: none; transition: opacity .3s; }
+    .nav-logo:hover { opacity: .85; }
+    .nav-logo span { color: var(--crimson-text); font-weight: 600; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a { font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--beige); text-decoration: none; position: relative; padding-bottom: 3px; transition: color .3s; white-space: nowrap; }
+    .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--crimson-text); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.76,0,.24,1); }
+    .nav-links a:hover, .nav-links a.active { color: var(--ivory); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); transform-origin: left; }
+    .nav-cta { font-family: var(--font-sans); font-size: 0.85rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--ivory); border: 2px solid var(--crimson); padding: 10px 24px; text-decoration: none; position: relative; overflow: hidden; transition: color .35s; z-index: 1; }
+    .nav-cta::before { content: ''; position: absolute; inset: 0; background: var(--crimson); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.76,0,.24,1); z-index: -1; }
+    .nav-cta:hover::before { transform: scaleX(1); transform-origin: left; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--ivory); display: block; transition: .3s; }
+    .mobile-nav { position: fixed; inset: 0; background: var(--black); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 60px 24px; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
+    .mobile-nav.open { opacity: 1; visibility: visible; }
+    .mobile-nav a { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; color: var(--ivory); text-decoration: none; letter-spacing: .08em; transition: color .3s, transform .4s, opacity .4s; opacity: 0; transform: translateY(20px); }
+    .mobile-nav.open a { opacity: 1; transform: translateY(0); }
+    .mobile-nav a:hover { color: var(--crimson-text); }
+    .mobile-nav-close { position: absolute; top: 28px; right: 48px; font-size: 1.8rem; color: var(--muted); cursor: pointer; background: none; border: none; }
+    .section-tag { font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .primary-line { width: 60px; height: 2px; background: var(--crimson); margin-bottom: 24px; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid rgba(113,1,1,0.15); padding: 80px 0 40px; }
+    .footer-inner { max-width: 1240px; margin: 0 auto; padding: 0 48px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 60px; }
+    .footer-logo { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ivory); margin-bottom: 16px; }
+    .footer-tagline { font-size: 0.9rem; color: var(--muted); line-height: 1.8; max-width: 320px; }
+    .footer-col-title { font-family: var(--font-sans); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { font-size: 0.9rem; color: var(--beige); text-decoration: none; transition: color .3s; }
+    .footer-links a:hover { color: var(--ivory); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(113,1,1,0.15); }
+    .footer-copy { font-size: 0.8rem; color: var(--muted); }
+    .footer-bottom-links { display: flex; gap: 24px; }
+    .footer-bottom-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; }
+    @media (max-width: 1280px) {
+      nav { padding: 16px 24px; } .nav-links { display: none; } .nav-cta { display: none; } .hamburger { display: flex; }
+    }
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/zwds.css" />
+</head>
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <a class="nav-logo" href="/"
+      style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
+      <div style="font-size: 1rem; line-height: 1;">The <span>Full</span> Picture</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/founder">Founder</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/zwds" class="active">ZWDS (紫微)</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+      <li><a href="/insights">Insights</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Contact</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/founder">Founder</a>
+    <a href="/services">Services</a>
+    <a href="/bazi">BaZi</a>
+    <a href="/zwds" class="active">ZWDS (紫微)</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/insights">Insights</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="zwds-hero">
+    <div class="zwds-hero-content">
+      <div class="primary-line reveal"></div>
+      <p class="section-tag reveal">Purple Star Astrology · 紫微斗数</p>
+      <h1 class="zwds-hero-title reveal reveal-delay-1">Chart Your<br><em>Stars</em></h1>
+      <p class="zwds-hero-sub reveal reveal-delay-2">Enter your birth details to generate a full Zi Wei Dou Shu chart. Explore natal palaces, time-period views, and flying-star interactions — all powered by the iztro engine.</p>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section id="zwds-form-section">
+    <div class="zwds-form-container">
+      <div class="zwds-form-card reveal">
+        <form id="zwds-input-form">
+          <!-- Calendar Type -->
+          <div class="zwds-form-row cols-2">
+            <div class="zwds-form-group">
+              <label>Calendar Type</label>
+              <div class="cal-toggle">
+                <input type="radio" name="cal-type" id="cal-solar" value="solar" checked /><label for="cal-solar">☀ Solar</label>
+                <input type="radio" name="cal-type" id="cal-lunar" value="lunar" /><label for="cal-lunar">☽ Lunar</label>
+              </div>
+            </div>
+            <div class="zwds-form-group">
+              <label>Gender</label>
+              <div class="zwds-gender-toggle">
+                <input type="radio" name="zwds-gender" id="zwds-gender-m" value="1" checked /><label for="zwds-gender-m">♂ Male</label>
+                <input type="radio" name="zwds-gender" id="zwds-gender-f" value="0" /><label for="zwds-gender-f">♀ Female</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="zwds-form-row cols-3">
+            <div class="zwds-form-group">
+              <label for="zwds-year">Year</label>
+              <select id="zwds-year" required></select>
+            </div>
+            <div class="zwds-form-group">
+              <label for="zwds-month">Month</label>
+              <select id="zwds-month" required></select>
+            </div>
+            <div class="zwds-form-group">
+              <label for="zwds-day">Day</label>
+              <select id="zwds-day" required></select>
+            </div>
+          </div>
+
+          <!-- Leap Month (lunar only) -->
+          <div id="leap-month-row" style="display:none;">
+            <label class="zwds-checkbox">
+              <input type="checkbox" id="leap-month" />
+              <span>闰月 Leap Lunar Month</span>
+            </label>
+          </div>
+
+          <!-- Time -->
+          <div class="zwds-form-row cols-2">
+            <div class="zwds-form-group">
+              <label for="zwds-time">Birth Time (时辰)</label>
+              <select id="zwds-time"></select>
+            </div>
+            <div class="zwds-form-group" style="justify-content: flex-end;">
+              <label class="zwds-checkbox" style="margin-bottom:0;">
+                <input type="checkbox" id="zwds-time-unknown" />
+                <span>Time Unknown (defaults to 午时)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="zwds-form-actions">
+            <button type="submit" class="zwds-btn-plot" id="zwds-btn-submit">Plot Chart <span>→</span></button>
+            <button type="button" class="zwds-btn-reset" id="zwds-btn-reset">Reset</button>
+          </div>
+
+          <div class="zwds-loading" id="zwds-loading">
+            <div class="zwds-spinner"></div>
+            <span class="zwds-loading-text">Calculating your ZWDS chart...</span>
+          </div>
+          <div class="zwds-error" id="zwds-error"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHART OUTPUT -->
+  <section id="zwds-chart">
+    <div class="zwds-chart-container">
+      <!-- Metadata -->
+      <div class="zwds-meta" id="zwds-meta"></div>
+
+      <!-- Time View Controls -->
+      <div class="zwds-time-controls" id="zwds-time-controls"></div>
+
+      <!-- Horoscope Date Picker -->
+      <div class="zwds-horoscope-picker" id="zwds-horoscope-picker">
+        <label>Target Date</label>
+        <input type="date" id="zwds-horo-date" />
+        <label>Target Hour</label>
+        <select id="zwds-horo-hour"></select>
+      </div>
+
+      <!-- Palace Grid -->
+      <div class="zwds-grid-wrapper">
+        <div class="zwds-grid" id="zwds-grid"></div>
+        <svg class="zwds-svg-overlay" id="zwds-svg-overlay" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <!-- Flight Info -->
+      <div class="zwds-flight-info" id="zwds-flight-info"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+            <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span style="text-shadow:none;color:rgba(113,1,1,0.6);font-weight:600;">LLP</span></div>
+          </div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy.</p>
+          <p style="font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:16px;opacity:0.7;">A Huang He Group Platform</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li><li><a href="/about">About</a></li><li><a href="/founder">Founder</a></li><li><a href="/services">Services</a></li><li><a href="/bazi">BaZi</a></li><li><a href="/zwds">ZWDS (紫微)</a></li><li><a href="/daily-almanac">Daily Almanac</a></li><li><a href="/insights">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="/services#personal">Personal Destiny</a></li><li><a href="/services#fengshui">Feng Shui Advisory</a></li><li><a href="/services#courses">Masterclasses</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="/contact">Book a Consultation</a></li><li><a href="https://wa.me/6588257687">WhatsApp</a></li><li><a href="/contact">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- iztro CDN (UMD, pinned v2.4.7) -->
+  <script src="https://cdn.jsdelivr.net/npm/iztro@2.4.7/dist/iztro.min.js"></script>
+  <script src="/assets/zwds.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

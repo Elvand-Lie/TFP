@@ -33,6 +33,8 @@ $include = @(
   "fonts"
   "lib"
   "scripts"
+  "tests"
+  "NewThings"
 )
 
 $include += Get-ChildItem -File -Filter *.html | ForEach-Object { $_.Name }

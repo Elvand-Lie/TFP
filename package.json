@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "check": "tsc --noEmit",
+    "test:zwds": "node tests/zwds-integration.test.mjs",
     "deploy": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1",
     "deploy:preview": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1 -Preview",
     "deploy:prod": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1"
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "iztro": "^2.4.7",
     "typescript": "^5.9.3"
   }
 }
