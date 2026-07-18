@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "check": "tsc --noEmit",
-    "test:zwds": "node tests/zwds-integration.test.mjs",
+    "check:zwds": "node node_modules/typescript/bin/tsc --project tsconfig.zwds.json",
+    "test:zwds": "node tests/zwds-integration.test.mjs && node --test tests/zwds-characterization.test.mjs tests/zwds-model.test.mjs",
+    "validate:zwds-browser": "node tests/zwds-browser-validation.mjs",
     "deploy": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1",
     "deploy:preview": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1 -Preview",
     "deploy:prod": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1"

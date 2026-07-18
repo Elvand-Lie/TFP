@@ -38,3 +38,10 @@ Your_BaZi_Report*.pdf
 
 # Local copied skill docs
 SKILL*.md
+
+# Local ZWDS audit/reference material. The canonical fixture is intentionally
+# force-added as a tracked test dependency.
+/zwds-codex-agent-kit/
+
+# Unrelated local proposal document
+/OurKeys Proposal v2 NoPricing (1).pdf

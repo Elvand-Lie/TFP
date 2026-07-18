@@ -1,0 +1,31 @@
+{
+  "fixtureId": "reference-app-jose-1981-02-11-1534",
+  "purpose": "Same-input comparison against the supplied target chart screenshots",
+  "input": {
+    "name": "Jose",
+    "calendarType": "solar",
+    "gender": "male",
+    "birthDate": "1981-02-11",
+    "birthTime": "15:34",
+    "birthHourBranch": "申",
+    "timezone": "Asia/Shanghai",
+    "timeStandard": "Beijing time",
+    "trueSolarTimeCorrection": false,
+    "location": null
+  },
+  "visibleReferenceAnchors": {
+    "yinYangGender": "陰男",
+    "fiveElementBureau": "金四局",
+    "lunarDateTime": "一九八一年正月初七申時",
+    "fourPillars": ["辛酉", "庚寅", "庚申", "甲申"],
+    "lifeMaster": "破軍",
+    "bodyMaster": "天同",
+    "ziDou": "申",
+    "transformationLegend": ["祿", "權", "科", "忌"]
+  },
+  "notes": [
+    "Treat these anchors as screenshot observations, not as permission to hard-code results.",
+    "Confirm timezone and calendar assumptions against the repository's existing domain model.",
+    "The screenshot states that true solar time is not being applied."
+  ]
+}

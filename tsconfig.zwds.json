@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "lib": ["ES2020", "DOM"]
+  },
+  "include": [
+    "assets/zwds-engine-adapter.js",
+    "assets/zwds-view-model.js",
+    "assets/zwds-time-state.js",
+    "assets/zwds.js",
+    "assets/zwds-types.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}
