@@ -122,6 +122,40 @@ try {
   await cdp.send('Page.navigate', { url: `http://127.0.0.1:${serverPort}/zwds.html` });
   await waitForChart(cdp);
 
+  await cdp.send('Emulation.setDeviceMetricsOverride', {
+    width: 900,
+    height: 900,
+    deviceScaleFactor: 1,
+    mobile: false
+  });
+  await delay(80);
+  const unknownTimeControl = await evaluate(cdp, `(() => {
+    const input = document.getElementById('zwds-time-unknown');
+    const label = input.closest('label');
+    const time = document.getElementById('zwds-birth-time');
+    const labelRect = label.getBoundingClientRect();
+    const timeRect = time.getBoundingClientRect();
+    input.click();
+    const checked = {
+      disabled: time.disabled,
+      helper: document.getElementById('zwds-time-branch').textContent
+    };
+    input.click();
+    return {
+      labelText: label.textContent.trim(),
+      topDifference: Math.abs(labelRect.top - timeRect.top),
+      heightDifference: Math.abs(labelRect.height - timeRect.height),
+      checked,
+      restored: !time.disabled
+    };
+  })()`);
+  assert.equal(unknownTimeControl.labelText, 'Unknown birth time');
+  assert.ok(unknownTimeControl.topDifference <= 2, `unknown-time control is vertically misaligned: ${JSON.stringify(unknownTimeControl)}`);
+  assert.ok(unknownTimeControl.heightDifference <= 1, `unknown-time control height differs from time input: ${JSON.stringify(unknownTimeControl)}`);
+  assert.equal(unknownTimeControl.checked.disabled, true);
+  assert.ok(unknownTimeControl.checked.helper.includes('午時 / Wu hour'));
+  assert.equal(unknownTimeControl.restored, true);
+
   await evaluate(cdp, `(() => {
     const set = (id, value) => {
       const control = document.getElementById(id);
@@ -228,6 +262,8 @@ try {
         chartScrollWidth: document.querySelector('.zwds-chart-viewport').scrollWidth,
         slots,
         center,
+        regularStarFontSize: parseFloat(getComputedStyle(document.querySelector('.zwds-star')).fontSize),
+        majorStarFontSize: parseFloat(getComputedStyle(document.querySelector('.zwds-star--major')).fontSize),
         overlap,
         clipped
       };
@@ -236,6 +272,8 @@ try {
     assert.ok(geometry.bodyWidth <= viewport.width + 1, `body overflow at ${viewport.width}px`);
     assert.equal(geometry.overlap, false, `palace overlap at ${viewport.width}px`);
     assert.equal(geometry.clipped, false, `palace content clipping at ${viewport.width}px`);
+    assert.ok(geometry.regularStarFontSize >= 10, `regular star text is too small at ${viewport.width}px`);
+    assert.ok(geometry.majorStarFontSize >= 12, `major star text is too small at ${viewport.width}px`);
     assert.ok(Math.abs(geometry.slots.si.top - geometry.slots.shen.top) < 2);
     assert.ok(Math.abs(geometry.slots.yin.top - geometry.slots.hai.top) < 2);
     assert.ok(geometry.slots.chen.left < geometry.center.left);

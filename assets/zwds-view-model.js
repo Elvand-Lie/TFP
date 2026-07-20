@@ -24,7 +24,8 @@
   }
 
   function buildDecadeOptions(raw) {
-    const birthYear = Number(String(raw.solarDate).split('-')[0]);
+    const engineLunarYear = raw.rawDates && raw.rawDates.lunarDate && Number(raw.rawDates.lunarDate.lunarYear);
+    const birthYear = Number.isInteger(engineLunarYear) ? engineLunarYear : Number(String(raw.solarDate).split('-')[0]);
     return raw.palaces.map((palace) => {
       const startAge = palace.decadal.range[0];
       const endAge = palace.decadal.range[1];

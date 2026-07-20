@@ -1448,3 +1448,137 @@
     opacity: .55;
   }
 }
+
+/* High-legibility chart canvas: site shell outside, chart-paper contrast inside. */
+#zwds-app .zwds-check--unknown {
+  align-self: end;
+  height: 46px;
+  min-height: 46px;
+  margin-bottom: 22px;
+  padding-block: 0;
+  white-space: nowrap;
+}
+
+#zwds-app .zwds-check--unknown > span {
+  color: var(--beige);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+
+#zwds-app .zwds-chart-shell { width: min(1280px, calc(100% - 32px)); }
+
+#zwds-app .zwds-period-button strong,
+#zwds-app .zwds-year-button strong { font-size: .8rem; }
+
+#zwds-app .zwds-period-button span,
+#zwds-app .zwds-year-button span { font-size: .68rem; }
+
+#zwds-app .zwds-chart-viewport {
+  border-color: rgba(198, 169, 107, .62);
+  background: #f3eee4;
+}
+
+#zwds-app .zwds-grid { grid-template-rows: repeat(4, minmax(184px, auto)); }
+
+#zwds-app .zwds-palace {
+  min-height: 184px;
+  padding: 9px;
+  border-color: rgba(69, 48, 37, .28);
+  background: #f8f4eb;
+  color: #1d1916;
+}
+
+#zwds-app .zwds-palace:hover { background: #fffaf0; }
+#zwds-app .zwds-palace.is-flight-destination { background: #f8e6df; }
+
+#zwds-app .zwds-palace__heading strong {
+  color: #781c19;
+  font-size: clamp(.84rem, 1.3vw, 1.02rem);
+  line-height: 1.12;
+}
+
+#zwds-app .zwds-palace__heading strong::before {
+  color: #625b54;
+  font-size: .56rem;
+}
+
+#zwds-app .zwds-palace__heading b {
+  color: #554f49;
+  font-size: .72rem;
+}
+
+#zwds-app .zwds-scope-role { color: #245b86; font-size: .66rem; }
+#zwds-app .zwds-scope-role--year { color: #a11f37; }
+
+#zwds-app .zwds-palace__stars,
+#zwds-app .zwds-palace__transient,
+#zwds-app .zwds-palace__aux { gap: 3px 6px; }
+
+#zwds-app .zwds-star {
+  color: #29231f;
+  font-size: clamp(.67rem, .82vw, .82rem);
+  line-height: 1.38;
+}
+
+#zwds-app .zwds-star--major {
+  color: #a31d24;
+  font-size: clamp(.78rem, 1vw, 1rem);
+}
+
+#zwds-app .zwds-star--minor { color: #1e5f86; }
+
+#zwds-app .zwds-star--adjective,
+#zwds-app .zwds-star small,
+#zwds-app .zwds-palace__aux,
+#zwds-app .zwds-palace__footer { color: #625b54; }
+
+#zwds-app .zwds-star--transient { color: #a11f37; font-size: .68rem; }
+#zwds-app .zwds-star small { font-size: .56rem; }
+#zwds-app .zwds-palace__aux { font-size: clamp(.59rem, .72vw, .7rem); line-height: 1.34; }
+#zwds-app .zwds-palace__footer { font-size: clamp(.58rem, .68vw, .68rem); }
+
+#zwds-app .zwds-center {
+  border-color: rgba(69, 48, 37, .28);
+  background: radial-gradient(circle at 50% 50%, rgba(113, 1, 1, .06), transparent 62%), #fffaf1;
+  color: #1d1916;
+}
+
+#zwds-app .zwds-center header { flex-wrap: wrap; border-color: rgba(69, 48, 37, .25); }
+#zwds-app .zwds-center h2 { color: #6f1a16; font-size: clamp(1.2rem, 2.2vw, 1.8rem); }
+
+#zwds-app .zwds-center header > strong,
+#zwds-app .zwds-center dd { color: #201d1a; }
+
+#zwds-app .zwds-center dt { color: #655e56; font-size: clamp(.64rem, .72vw, .74rem); }
+
+#zwds-app .zwds-center dd {
+  overflow: visible;
+  font-size: clamp(.69rem, .78vw, .82rem);
+  text-overflow: clip;
+  white-space: normal;
+}
+
+#zwds-app .zwds-center__pillars span {
+  border-color: rgba(69, 48, 37, .25);
+  background: #f3eadc;
+}
+
+#zwds-app .zwds-center__pillars small { color: #655e56; font-size: clamp(.58rem, .65vw, .68rem); }
+#zwds-app .zwds-center__pillars b { color: #7b1715; font-size: clamp(.82rem, 1vw, 1.08rem); }
+#zwds-app .zwds-center__legend { color: #4f4943; font-size: clamp(.62rem, .7vw, .74rem); }
+
+#zwds-app .zwds-flight-info {
+  border-color: rgba(198, 169, 107, .45);
+  background: #f8f4eb;
+  color: #514a44;
+  font-size: .76rem;
+}
+
+@media (max-width: 760px) {
+  #zwds-app .zwds-grid { grid-template-rows: repeat(4, minmax(174px, auto)); }
+  #zwds-app .zwds-palace { min-height: 174px; padding: 6px; }
+  #zwds-app .zwds-center__facts { grid-template-columns: 1fr; }
+  #zwds-app .zwds-center__facts div,
+  #zwds-app .zwds-center__facts div:nth-child(-n+2) { grid-column: 1 / -1; }
+}

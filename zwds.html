@@ -178,7 +178,7 @@
 
             <label class="zwds-field zwds-field--time" for="zwds-birth-time"><span>Birth Time</span><input id="zwds-birth-time" name="birth-time" type="time" value="12:00" step="60" required /><small id="zwds-time-branch" aria-live="polite"></small></label>
 
-            <label class="zwds-check zwds-field"><input type="checkbox" id="zwds-time-unknown" name="time-unknown" /><span>Birth time unknown (uses 午時 / Wu hour)</span></label>
+            <label class="zwds-check zwds-check--unknown"><input type="checkbox" id="zwds-time-unknown" name="time-unknown" aria-describedby="zwds-time-branch" /><span>Unknown birth time</span></label>
           </div>
 
           <p class="zwds-form-note">The exact minute is retained for display; calculation uses the corresponding two-hour Chinese birth-time branch.</p>

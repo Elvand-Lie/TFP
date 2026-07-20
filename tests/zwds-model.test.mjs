@@ -123,6 +123,20 @@ test('Jose decade and annual options drive real characterized calculations', () 
   assert.equal(session.getHoroscope(2026).decadal.index, engineIndex);
 });
 
+test('pre-Lunar-New-Year decade labels follow iztro nominal age', () => {
+  const session = adapter.createChartSession(iztro, {
+    profileName: 'Boundary', calendarType: 'solar', gender: 'male', birthDate: '1990-01-01',
+    birthTime: '', isUnknownTime: true, isLeapMonth: false
+  });
+  const decades = viewModel.buildDecadeOptions(session.raw);
+  const decade = decades.find((item) => item.startAge === 35);
+  const horoscope = session.getHoroscope(2023);
+  const expectedIndex = session.raw.palaces.find((palace) => palace.slotId === decade.slotId).engineIndex;
+  assert.deepEqual([decade.startYear, decade.endYear], [2023, 2032]);
+  assert.equal(horoscope.age.nominalAge, 35);
+  assert.equal(horoscope.decadal.index, expectedIndex);
+});
+
 test('decade boundary selection changes the real active engine decade', () => {
   const { session, decades, state } = createJoseModel();
   const next = decades.find((decade) => decade.startYear === 2034);
