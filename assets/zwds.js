@@ -7,6 +7,9 @@
   if (root) host.ZwdsApp = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (host) {
   'use strict';
+  const PALACE_ENGLISH_LABELS = Object.freeze({ life: "Life", siblings: "Siblings", spouse: "Partner", children: "Children", wealth: "Wealth", health: "Health", travel: "Travel", friends: "Friends", career: "Career", property: "Property", fortune: "Fortune", parents: "Parents" });
+  const TRANSFORMATION_ENGLISH_LABELS = Object.freeze({ lu: "Prosperity", quan: "Power", ke: "Recognition", ji: "Obstacle" });
+
 
   /** @param {unknown} value */
   function escapeHtml(value) {
@@ -23,7 +26,7 @@
     if (!value) return '';
     const labels = { lu: '祿', quan: '權', ke: '科', ji: '忌' };
     const label = labels[value] || value;
-    return `<span class="zwds-transform zwds-transform--${escapeHtml(value)}" aria-label="化${escapeHtml(label)}">${escapeHtml(label)}</span>`;
+    return `<span class="zwds-transform zwds-transform--${escapeHtml(value)}" aria-label="Four Transformation · 化${escapeHtml(label)}">${escapeHtml(label)}</span>`;
   }
 
   /** @param {any} star */
@@ -33,15 +36,15 @@
       `zwds-star--${escapeHtml(star.category)}`,
       star.brightness ? `zwds-star--brightness-${escapeHtml(star.brightness)}` : ''
     ].filter(Boolean).join(' ');
-    const scope = star.scope === 'decadal' ? '<small>限</small>' : star.scope === 'yearly' ? '<small>年</small>' : '';
+    const scope = star.scope === 'decadal' ? '<small aria-label="Decade cycle">D</small>' : star.scope === 'yearly' ? '<small aria-label="Annual year">Y</small>' : '';
     return `<span class="${classes}" data-star-id="${escapeHtml(star.id)}">${escapeHtml(star.label)}${transformationBadge(star.natalTransformation)}${transformationBadge(star.decadalTransformation)}${transformationBadge(star.yearlyTransformation || star.scopeTransformation)}${scope}</span>`;
   }
 
   /** @param {any} palace */
   function renderPalaceMarkup(palace) {
     const roles = [
-      palace.decadalRoleLabel ? `<span class="zwds-scope-role">限・${escapeHtml(palace.decadalRoleLabel)}</span>` : '',
-      palace.yearlyRoleLabel ? `<span class="zwds-scope-role zwds-scope-role--year">年・${escapeHtml(palace.yearlyRoleLabel)}</span>` : ''
+      palace.decadalRoleLabel ? `<span class="zwds-scope-role">Decade · ${escapeHtml(palace.decadalRoleLabel)}</span>` : '',
+      palace.yearlyRoleLabel ? `<span class="zwds-scope-role zwds-scope-role--year">Year · ${escapeHtml(palace.yearlyRoleLabel)}</span>` : ''
     ].filter(Boolean).join('');
     const markers = [
       palace.isLifePalace ? '<span class="zwds-palace-marker">命</span>' : '',
@@ -51,7 +54,8 @@
     const transient = palace.activeScopeStars.map(renderStar).join('');
     const auxiliary = palace.auxiliaryLabels.map((label) => `<span>${escapeHtml(label)}</span>`).join('');
     const range = `${palace.decadeAgeRange[0]}–${palace.decadeAgeRange[1]}`;
-    const aria = `${palace.branchLabel}宮，${palace.label}，大限${range}歲`;
+    const palaceEnglishLabel = PALACE_ENGLISH_LABELS[palace.roleId] || "Palace";
+    const aria = `${palaceEnglishLabel} palace (${palace.label}), ${palace.branchLabel} branch, decade ages ${range} years`;
 
     return `<button type="button" class="zwds-palace" data-slot="${escapeHtml(palace.slotId)}" data-role-id="${escapeHtml(palace.roleId)}" aria-label="${escapeHtml(aria)}" aria-pressed="false">
       <span class="zwds-palace__heading"><strong>${escapeHtml(palace.label)}</strong><span>${markers}</span><b>${escapeHtml(palace.stemLabel + palace.branchLabel)}</b></span>
@@ -59,33 +63,33 @@
       <span class="zwds-palace__stars">${stars}</span>
       <span class="zwds-palace__transient">${transient}</span>
       <span class="zwds-palace__aux">${auxiliary}</span>
-      <span class="zwds-palace__footer"><span>${escapeHtml(range)}歲</span><span>${escapeHtml(palace.nominalAges.slice(0, 4).join('・'))}</span></span>
+      <span class="zwds-palace__footer"><span>${escapeHtml(range)} yrs</span><span>${escapeHtml(palace.nominalAges.slice(0, 4).join(' · '))}</span></span>
     </button>`;
   }
 
   /** @param {any} model */
   function renderCenterMarkup(model) {
-    const name = model.identity.name || '未命名';
-    const pillarLabels = ['年柱', '月柱', '日柱', '時柱'];
+    const name = model.identity.name || 'Unnamed Chart';
+    const pillarLabels = ['Year · 年', 'Month · 月', 'Day · 日', 'Hour · 時'];
     const pillars = model.dates.pillars.map((pillar, index) =>
       `<span><small>${escapeHtml(pillarLabels[index] || '')}</small><b>${escapeHtml(pillar)}</b></span>`
     ).join('');
     const legend = Object.entries(model.transformationLegend).map(([id, label]) =>
-      `<span>${transformationBadge(id)}化${escapeHtml(label)}</span>`
+      `<span>${transformationBadge(id)}${escapeHtml(TRANSFORMATION_ENGLISH_LABELS[id] || label)}</span>`
     ).join('');
     const warnings = model.warnings.map((warning) => `<p class="zwds-center__warning">${escapeHtml(warning)}</p>`).join('');
 
-    return `<section class="zwds-center" aria-label="命盤資料">
+    return `<section class="zwds-center" aria-label="Chart details">
       <header><span class="zwds-center__mode">${escapeHtml(model.supportedMode)}</span><h2>${escapeHtml(name)}</h2><strong>${escapeHtml(model.identity.yinYangGenderLabel)}</strong></header>
       <dl class="zwds-center__facts">
-        <div><dt>公曆</dt><dd>${escapeHtml(model.dates.solarDateTimeLabel)}</dd></div>
-        <div><dt>農曆</dt><dd>${escapeHtml(model.dates.lunarDateTimeLabel)}</dd></div>
-        <div><dt>五行局</dt><dd>${escapeHtml(model.core.bureauLabel)}</dd></div>
-        <div><dt>命主</dt><dd>${escapeHtml(model.core.lifeMasterLabel)}</dd></div>
-        <div><dt>身主</dt><dd>${escapeHtml(model.core.bodyMasterLabel)}</dd></div>
+        <div><dt>Solar</dt><dd>${escapeHtml(model.dates.solarDateTimeLabel)}</dd></div>
+        <div><dt>Lunar</dt><dd>${escapeHtml(model.dates.lunarDateTimeLabel)}</dd></div>
+        <div><dt>Bureau · 五行局</dt><dd>${escapeHtml(model.core.bureauLabel)}</dd></div>
+        <div><dt>Life · 命主</dt><dd>${escapeHtml(model.core.lifeMasterLabel)}</dd></div>
+        <div><dt>Body · 身主</dt><dd>${escapeHtml(model.core.bodyMasterLabel)}</dd></div>
       </dl>
-      <div class="zwds-center__pillars" aria-label="四柱">${pillars}</div>
-      <div class="zwds-center__legend" aria-label="四化圖例">${legend}</div>
+      <div class="zwds-center__pillars" aria-label="Four Pillars 四柱">${pillars}</div>
+      <div class="zwds-center__legend" aria-label="Four Transformations legend">${legend}</div>
       ${warnings}
     </section>`;
   }
@@ -99,7 +103,7 @@
   function renderDecadesMarkup(model) {
     return model.decadeOptions.map((item) => {
       const label = `${item.startYear}–${item.endYear}`;
-      const detail = `${item.startAge}–${item.endAge}歲・${item.heavenlyStem}${item.earthlyBranch}`;
+      const detail = `${item.startAge}–${item.endAge} yrs · ${item.heavenlyStem}${item.earthlyBranch}`;
       return `<button type="button" class="zwds-period-button" data-decade-id="${escapeHtml(item.id)}" aria-pressed="${item.selected ? 'true' : 'false'}"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(detail)}</span></button>`;
     }).join('');
   }
@@ -107,20 +111,20 @@
   /** @param {any} model */
   function renderAnnualsMarkup(model) {
     return model.annualOptions.map((item) =>
-      `<button type="button" class="zwds-year-button" data-year="${item.year}" aria-pressed="${item.selected ? 'true' : 'false'}"><strong>${item.year}</strong><span>${escapeHtml(item.heavenlyStem + item.earthlyBranch)}・${item.age}歲</span></button>`
+      `<button type="button" class="zwds-year-button" data-year="${item.year}" aria-pressed="${item.selected ? 'true' : 'false'}"><strong>${item.year}</strong><span>${escapeHtml(item.heavenlyStem + item.earthlyBranch)} · ${item.age} yrs</span></button>`
     ).join('');
   }
 
   /** @param {any} model */
   function renderSelectionSummary(model) {
-    const age = model.selection.nominalAge == null ? '—' : `${model.selection.nominalAge}歲`;
-    return `<strong>${escapeHtml(String(model.selection.year))} ${escapeHtml(model.selection.yearStemBranch)}</strong><span>大限 ${escapeHtml(model.selection.decadeStemBranch)}・虛歲 ${escapeHtml(age)}</span>`;
+    const age = model.selection.nominalAge == null ? 'Not available' : `${model.selection.nominalAge} yrs`;
+    return `<strong>${escapeHtml(String(model.selection.year))} ${escapeHtml(model.selection.yearStemBranch)}</strong><span>Decade ${escapeHtml(model.selection.decadeStemBranch)} · Nominal age ${escapeHtml(age)}</span>`;
   }
 
   /** @param {any} flight */
   function renderFlightInfoMarkup(flight) {
-    if (!flight) return '<span>點選任一宮位，可查看該宮的生年四化飛宮。</span>';
-    if (flight.blocked) return '<span>福德宮依目前沿用規則不發出飛化。</span>';
+    if (!flight) return '<span>Select a palace to view its natal Four Transformations (四化) paths.</span>';
+    if (flight.blocked) return '<span>The Fortune palace (福德宮) has no outgoing transformations under the current method.</span>';
     return flight.destinations.map((destination) =>
       `<span class="zwds-flight-item"><b class="zwds-transform zwds-transform--${escapeHtml(destination.transformationId)}">${escapeHtml(destination.transformationLabel)}</b> → ${escapeHtml(destination.roleLabel)}</span>`
     ).join('');
@@ -194,7 +198,7 @@
       if (timeInput) timeInput.disabled = unknown;
       const index = unknown ? engine.TIME_OPTIONS.find((item) => item.index === 6).index : engine.timeToIndex(timeInput && timeInput.value ? timeInput.value : '12:00');
       const option = engine.TIME_OPTIONS.find((item) => item.index === index);
-      if (timeBranch) timeBranch.textContent = unknown ? '時間不詳・以午時近似' : `${option.branchLabel}・${option.range}`;
+      if (timeBranch) timeBranch.textContent = unknown ? 'Unknown time · approximated as 午時 / Wu hour' : `${option.branchLabel} · ${option.range}`;
     }
 
     function readInput() {
@@ -222,7 +226,7 @@
       const summaries = viewModel.makeYearSummaries(session, years);
       const horoscope = session.getHoroscope(state.selectedYear);
       model = viewModel.buildViewModel(session.raw, state, horoscope, summaries, engine, timeState);
-      if (!viewModel.isPlainSerializable(model)) throw new Error('顯示資料不是可序列化的純資料。');
+      if (!viewModel.isPlainSerializable(model)) throw new Error('The chart view data could not be rendered safely.');
 
       grid.innerHTML = renderChartMarkup(model);
       decadesNode.innerHTML = renderDecadesMarkup(model);
@@ -286,7 +290,7 @@
         chart.scrollIntoView({ behavior: host.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
       } catch (error) {
         chart.hidden = true;
-        errorNode.textContent = error instanceof Error ? error.message : '排盤失敗，請檢查輸入。';
+        errorNode.textContent = error instanceof Error ? error.message : 'Unable to calculate the chart. Please check your entries.';
         errorNode.focus();
       }
     });

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>紫微斗數命盤 — The Full Picture</title>
-  <meta name="description" content="使用紫微斗數命盤檢視本命十二宮、大限、流年與四化飛宮。" />
+  <title>Zi Wei Dou Shu Chart | The Full Picture</title>
+  <meta name="description" content="Create a Zi Wei Dou Shu chart and explore the Twelve Palaces, decade cycles, annual influences, and Four Transformations." />
   <meta name="keywords" content="Zi Wei Dou Shu, 紫微斗數, ZWDS calculator, Purple Star Astrology, Chinese astrology, The Full Picture" />
   <meta name="author" content="The Full Picture LLP" />
   <meta name="robots" content="index, follow" />
@@ -112,10 +112,10 @@
       <li><a href="/contact">Contact</a></li>
     </ul>
     <a href="/contact" class="nav-cta">Contact</a>
-    <button type="button" class="hamburger" id="hamburger" aria-label="開啟導覽選單" aria-controls="mobileNav" aria-expanded="false"><span></span><span></span><span></span></button>
+    <button type="button" class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-controls="mobileNav" aria-expanded="false"><span></span><span></span><span></span></button>
   </nav>
   <div class="mobile-nav" id="mobileNav">
-    <button type="button" class="mobile-nav-close" id="mobileClose" aria-label="關閉導覽選單">✕</button>
+    <button type="button" class="mobile-nav-close" id="mobileClose" aria-label="Close navigation menu">✕</button>
     <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/founder">Founder</a>
@@ -129,10 +129,12 @@
 
   <main id="zwds-app">
     <section id="zwds-hero" aria-labelledby="zwds-page-title">
+      <div class="zwds-hero-mark" aria-hidden="true">紫</div>
       <div class="zwds-hero-content">
-        <p class="zwds-eyebrow">紫微斗數・傳統命盤</p>
-        <h1 id="zwds-page-title">紫微斗數命盤</h1>
-        <p>以出生資料排出十二宮，檢視本命、大限與流年。排盤時間以北京時間（UTC+8）民用時間處理，不啟用真太陽時校正。</p>
+        <div class="primary-line"></div>
+        <p class="zwds-eyebrow">Purple Star Astrology · 紫微斗數</p>
+        <h1 id="zwds-page-title">Chart Your<br><em>Stars</em></h1>
+        <p>Enter your birth details to map the Twelve Palaces, decade cycles, and annual influences. Birth time is interpreted as Beijing civil time (UTC+8), without true-solar-time correction.</p>
       </div>
     </section>
 
@@ -140,50 +142,50 @@
       <div class="zwds-form-container">
         <form id="zwds-form" class="zwds-form-card" novalidate>
           <div class="zwds-form-heading">
-            <div><p class="zwds-kicker">建立命盤</p><h2 id="zwds-input-title">出生資料</h2></div>
-            <span>資料僅於本頁暫存</span>
+            <div><p class="zwds-kicker">Create Your Chart</p><h2 id="zwds-input-title">Birth Details</h2></div>
+            <span>Kept only on this page</span>
           </div>
 
           <div class="zwds-form-grid">
-            <label class="zwds-field zwds-field--name" for="zwds-name"><span>姓名</span><input id="zwds-name" name="profile-name" type="text" maxlength="40" autocomplete="name" placeholder="選填" /></label>
+            <label class="zwds-field zwds-field--name" for="zwds-name"><span>Name</span><input id="zwds-name" name="profile-name" type="text" maxlength="40" autocomplete="name" placeholder="Optional" /></label>
 
             <fieldset class="zwds-field zwds-segment">
-              <legend>曆法</legend>
+              <legend>Calendar</legend>
               <input type="radio" name="calendar-type" id="cal-solar" value="solar" checked />
-              <label for="cal-solar">公曆</label>
+              <label for="cal-solar">Solar</label>
               <input type="radio" name="calendar-type" id="cal-lunar" value="lunar" />
-              <label for="cal-lunar">農曆</label>
+              <label for="cal-lunar">Lunar</label>
             </fieldset>
 
             <fieldset class="zwds-field zwds-segment">
-              <legend>性別</legend>
+              <legend>Gender</legend>
               <input type="radio" name="gender" id="zwds-gender-m" value="male" checked />
-              <label for="zwds-gender-m">男</label>
+              <label for="zwds-gender-m">Male</label>
               <input type="radio" name="gender" id="zwds-gender-f" value="female" />
-              <label for="zwds-gender-f">女</label>
+              <label for="zwds-gender-f">Female</label>
             </fieldset>
 
             <div class="zwds-field zwds-date-field">
-              <span id="zwds-date-label">出生日期</span>
+              <span id="zwds-date-label">Date of Birth</span>
               <div aria-labelledby="zwds-date-label">
-                <label><span class="sr-only">年</span><select id="zwds-year" name="year" required aria-label="出生年"></select></label>
-                <label><span class="sr-only">月</span><select id="zwds-month" name="month" required aria-label="出生月"></select></label>
-                <label><span class="sr-only">日</span><select id="zwds-day" name="day" required aria-label="出生日"></select></label>
+                <label><span class="sr-only">Year</span><select id="zwds-year" name="year" required aria-label="Birth year"></select></label>
+                <label><span class="sr-only">Month</span><select id="zwds-month" name="month" required aria-label="Birth month"></select></label>
+                <label><span class="sr-only">Day</span><select id="zwds-day" name="day" required aria-label="Birth day"></select></label>
               </div>
             </div>
 
-            <label class="zwds-check zwds-field" id="zwds-leap-row" hidden><input type="checkbox" id="leap-month" name="is-leap-month" /><span>閏月</span></label>
+            <label class="zwds-check zwds-field" id="zwds-leap-row" hidden><input type="checkbox" id="leap-month" name="is-leap-month" /><span>Leap lunar month</span></label>
 
-            <label class="zwds-field zwds-field--time" for="zwds-birth-time"><span>出生時間</span><input id="zwds-birth-time" name="birth-time" type="time" value="12:00" step="60" required /><small id="zwds-time-branch" aria-live="polite"></small></label>
+            <label class="zwds-field zwds-field--time" for="zwds-birth-time"><span>Birth Time</span><input id="zwds-birth-time" name="birth-time" type="time" value="12:00" step="60" required /><small id="zwds-time-branch" aria-live="polite"></small></label>
 
-            <label class="zwds-check zwds-field"><input type="checkbox" id="zwds-time-unknown" name="time-unknown" /><span>時間不詳（以午時近似）</span></label>
+            <label class="zwds-check zwds-field"><input type="checkbox" id="zwds-time-unknown" name="time-unknown" /><span>Birth time unknown (uses 午時 / Wu hour)</span></label>
           </div>
 
-          <p class="zwds-form-note">保留輸入分鐘供顯示；排盤會將時間正規化為對應時辰。</p>
+          <p class="zwds-form-note">The exact minute is retained for display; calculation uses the corresponding two-hour Chinese birth-time branch.</p>
           <p class="zwds-form-error" id="zwds-form-error" role="alert" tabindex="-1"></p>
           <div class="zwds-form-actions">
-            <button type="submit" class="zwds-btn-primary">排出命盤</button>
-            <button type="reset" class="zwds-btn-secondary">重設</button>
+            <button type="submit" class="zwds-btn-primary">Plot Chart <span aria-hidden="true">→</span></button>
+            <button type="reset" class="zwds-btn-secondary">Reset</button>
           </div>
         </form>
       </div>
@@ -191,27 +193,27 @@
 
     <section id="zwds-chart" class="zwds-chart-shell" aria-labelledby="zwds-chart-title" hidden>
       <header class="zwds-chart-header">
-        <div><p class="zwds-kicker">三合命盤</p><h2 id="zwds-chart-title">本命十二宮</h2></div>
+        <div><p class="zwds-kicker">Natal Chart · 本命</p><h2 id="zwds-chart-title">The Twelve Palaces</h2></div>
         <div id="zwds-selection-summary" class="zwds-selection-summary" aria-live="polite"></div>
       </header>
 
-      <div class="zwds-tabs" role="tablist" aria-label="命盤功能">
-        <button type="button" id="zwds-tab-chart" role="tab" aria-selected="true" aria-controls="zwds-chart-panel">命盤</button>
-        <span aria-label="目前排盤模式">三合</span>
+      <div class="zwds-tabs" role="tablist" aria-label="Chart views">
+        <button type="button" id="zwds-tab-chart" role="tab" aria-selected="true" aria-controls="zwds-chart-panel">Chart</button>
+        <span aria-label="Current chart method">Three Harmony · 三合</span>
       </div>
 
       <div id="zwds-chart-panel" role="tabpanel" aria-labelledby="zwds-tab-chart">
       <section class="zwds-period-section" aria-labelledby="zwds-decade-title">
-        <div class="zwds-period-heading"><h3 id="zwds-decade-title">大限</h3><span>選擇十年運程</span></div>
-        <div class="zwds-period-row" id="zwds-decade-options" aria-label="大限選擇"></div>
+        <div class="zwds-period-heading"><h3 id="zwds-decade-title">Decade Cycles · 大限</h3><span>Select a ten-year cycle</span></div>
+        <div class="zwds-period-row" id="zwds-decade-options" aria-label="Decade cycle selection"></div>
       </section>
 
       <section class="zwds-period-section" aria-labelledby="zwds-annual-title">
-        <div class="zwds-period-heading"><h3 id="zwds-annual-title">流年</h3><span>選擇年份</span></div>
-        <div class="zwds-period-row zwds-period-row--years" id="zwds-annual-options" aria-label="流年選擇"></div>
+        <div class="zwds-period-heading"><h3 id="zwds-annual-title">Annual Influence · 流年</h3><span>Select a year</span></div>
+        <div class="zwds-period-row zwds-period-row--years" id="zwds-annual-options" aria-label="Annual year selection"></div>
       </section>
 
-      <div class="zwds-chart-viewport" tabindex="0" aria-label="十二宮命盤，可在窄螢幕水平捲動">
+      <div class="zwds-chart-viewport" tabindex="0" aria-label="Twelve Palace chart; scroll horizontally on narrow screens">
         <div class="zwds-grid-stage">
           <div class="zwds-grid" id="zwds-grid"></div>
           <svg class="zwds-flight-overlay" id="zwds-flight-overlay" aria-hidden="true"></svg>
@@ -219,7 +221,7 @@
       </div>
 
       <aside class="zwds-flight-info" id="zwds-flight-info" aria-live="polite">
-        <span>點選任一宮位，可查看該宮的生年四化飛宮。</span>
+        <span>Select a palace to view its natal Four Transformations (四化) paths.</span>
       </aside>
       </div>
     </section>

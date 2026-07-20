@@ -39,7 +39,7 @@ const BRANCH_ELEMENT = {
 };
 
 // ─── COLORING SYSTEMS ───
-// 1. Five Element Colors (Natal Chart) — informational only
+// 1. Five Element Colors (Natal Chart): informational only
 //    Wood=Green, Fire=Red, Earth=Gold, Metal=Silver, Water=Blue
 function getStemElementColor(char) {
   const el = STEM_ELEMENT[char];
@@ -50,7 +50,7 @@ function getBranchElementColor(char) {
   return el ? 'el-' + el.toLowerCase() : '';
 }
 
-// 2. Favorable/Unfavorable (Luck Pillars, Annual, Monthly) — favorability
+// 2. Favorable/Unfavorable (Luck Pillars, Annual, Monthly): favorability
 //    Red (stem-auspicious) = element is favorable for this chart
 //    White (stem-inauspicious) = element is unfavorable
 //    Uses the backend's useful_god calculation (Day Master strength analysis)
@@ -109,8 +109,7 @@ function renderSpecialStructureNotice(special) {
   `).join('');
   const label = special.label || 'Possible follow-structure';
   const confidence = special.confidence || 'Master review required';
-  const message = special.message || 'This chart shows special-structure characteristics and should be reviewed by a master before making a final ruling.';
-  const whatsappText = encodeURIComponent(`Hi, I plotted my BaZi chart and it shows ${label}. I would like to book a consultation for a definitive reading.`);
+  const message = special.message || 'This chart may follow a special structure in which the usual strength rules are reversed. Treat this result as a candidate flag that requires specialist review.';
 
   notice.innerHTML = `
     <div style="margin-top:22px; margin-bottom:10px; padding:24px; border:1px solid rgba(198,169,107,0.35); background:linear-gradient(135deg, rgba(113,1,1,0.18), rgba(0,0,0,0.35)); border-radius:8px;">
@@ -119,10 +118,6 @@ function renderSpecialStructureNotice(special) {
       <div style="display:inline-flex; align-items:center; gap:8px; padding:5px 10px; border:1px solid rgba(198,169,107,0.3); border-radius:999px; color:var(--gold); font-size:0.78rem; margin-bottom:14px;">${confidence} · Candidate flag only</div>
       <p style="color:var(--muted); line-height:1.7; margin:0 0 14px 0; max-width:920px;">${message}</p>
       ${reasons ? `<ul style="margin:0 0 18px 18px; padding:0; color:var(--beige); line-height:1.55; font-size:0.9rem;">${reasons}</ul>` : ''}
-      <div style="display:flex; flex-wrap:wrap; gap:10px;">
-        <a href="/contact" class="btn-plot" style="display:inline-flex; text-decoration:none; padding:10px 16px;">Book Consultation</a>
-        <a href="https://wa.me/6588257687?text=${whatsappText}" target="_blank" rel="noopener" class="btn-reset" style="display:inline-flex; text-decoration:none; padding:10px 16px;">WhatsApp</a>
-      </div>
     </div>
   `;
 }
@@ -578,18 +573,18 @@ function renderChart(data, input) {
       const unlucky = em.unlucky || {};
       emFavorable.innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Sheng Qi (Life Generating)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.wealth || '—'}</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Tian Yi (Heavenly Doctor)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.health || '—'}</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Yan Nian (Longevity)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.romance || '—'}</td></tr>
-          <tr><td style="padding:10px 15px; color:var(--muted);">Fu Wei (Stability)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.career || '—'}</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Sheng Qi (Life Generating)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.wealth || 'Not available'}</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Tian Yi (Heavenly Doctor)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.health || 'Not available'}</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Yan Nian (Longevity)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.romance || 'Not available'}</td></tr>
+          <tr><td style="padding:10px 15px; color:var(--muted);">Fu Wei (Stability)</td><td style="padding:10px 15px; color:var(--gold); font-weight:bold;">${lucky.career || 'Not available'}</td></tr>
         </table>
       `;
       emUnfavorable.innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Huo Hai (Mishaps)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.obstacles || '—'}</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Wu Gui (Five Ghosts)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.quarrels || '—'}</td></tr>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Liu Sha (Six Killings)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.setbacks || '—'}</td></tr>
-          <tr><td style="padding:10px 15px; color:var(--muted);">Jue Ming (Life Threatening)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.totalLoss || '—'}</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Huo Hai (Mishaps)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.obstacles || 'Not available'}</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Wu Gui (Five Ghosts)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.quarrels || 'Not available'}</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:10px 15px; color:var(--muted);">Liu Sha (Six Killings)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.setbacks || 'Not available'}</td></tr>
+          <tr><td style="padding:10px 15px; color:var(--muted);">Jue Ming (Life Threatening)</td><td style="padding:10px 15px; color:var(--crimson-text); font-weight:bold;">${unlucky.totalLoss || 'Not available'}</td></tr>
         </table>
       `;
     }
@@ -737,19 +732,19 @@ function renderChart(data, input) {
     qmdjSection.style.display = 'block';
 
     // Fill Metadata
-    document.getElementById('qmdj-solar-term').textContent = data.qmdj.solar_term || '—';
-    document.getElementById('qmdj-ju').textContent = data.qmdj.ju || '—';
-    document.getElementById('qmdj-zhifu').textContent = data.qmdj.duty_star || '—';
-    document.getElementById('qmdj-zhishi').textContent = data.qmdj.duty_door || '—';
+    document.getElementById('qmdj-solar-term').textContent = data.qmdj.solar_term || 'Not available';
+    document.getElementById('qmdj-ju').textContent = data.qmdj.ju || 'Not available';
+    document.getElementById('qmdj-zhifu').textContent = data.qmdj.duty_star || 'Not available';
+    document.getElementById('qmdj-zhishi').textContent = data.qmdj.duty_door || 'Not available';
 
     // Kong Wang & Tian Ma metadata display
     const kwMetaEl = document.getElementById('qmdj-kongwang');
     const tmMetaEl = document.getElementById('qmdj-tianma');
     if (kwMetaEl && data.qmdj.kong_wang) {
-      kwMetaEl.textContent = data.qmdj.kong_wang.branches || '—';
+      kwMetaEl.textContent = data.qmdj.kong_wang.branches || 'Not available';
     }
     if (tmMetaEl && data.qmdj.tian_ma) {
-      tmMetaEl.textContent = data.qmdj.tian_ma.branch || '—';
+      tmMetaEl.textContent = data.qmdj.tian_ma.branch || 'Not available';
     }
 
     // Map palaces to Luo Shu Order (SE:4, S:9, SW:2, E:3, C:5, W:7, NE:8, N:1, NW:6)

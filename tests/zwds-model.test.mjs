@@ -94,6 +94,9 @@ test('renderer emits twelve accessible branch-identified palace controls and a c
   assert.ok(markup.includes('金四局'));
   assert.ok(markup.includes('祿存'));
   assert.ok(markup.includes('天馬'));
+  assert.ok(markup.includes("Life palace (命宮)"));
+  assert.ok(markup.includes("Bureau · 五行局"));
+  assert.ok(markup.includes("Prosperity"));
 });
 
 test('renderer escapes transient profile data and exposes real selected semantics', () => {

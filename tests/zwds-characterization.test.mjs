@@ -169,7 +169,7 @@ test('Gregorian validation rejects impossible days and accepts real boundaries',
   assert.equal(adapter.isValidGregorianDate('1981-02-29'), false);
   assert.equal(adapter.isValidGregorianDate('1981-04-30'), true);
   assert.equal(adapter.isValidGregorianDate('1981-04-31'), false);
-  assert.throws(() => adapter.normalizeInput({ ...rawFixtureInput, birthDate: '1981-02-31' }), /公曆日期無效/);
+  assert.throws(() => adapter.normalizeInput({ ...rawFixtureInput, birthDate: '1981-02-31' }), /solar date is invalid/);
 });
 
 test('lunar input accepts valid leap month and rejects nonexistent leap selection', () => {
@@ -180,7 +180,7 @@ test('lunar input accepts valid leap month and rejects nonexistent leap selectio
   assert.equal(valid.raw.rawDates.lunarDate.isLeap, true);
   assert.throws(() => adapter.createChartSession(iztro, {
     ...rawFixtureInput, calendarType: 'lunar', birthDate: '1981-01-07', isLeapMonth: true
-  }), /不是閏月/);
+  }), /not a leap month/);
 });
 
 test('zh-CN and zh-TW outputs are structurally equivalent', () => {

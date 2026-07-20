@@ -620,21 +620,21 @@ function calculateDynamicScores(chartStems: string[], chartBranches: string[], d
   let harmfulGod = '';
   
   if (structure === 'CongGe') {
-    // Follow the dominant flow — all draining elements are useful
+    // Follow the dominant flow: all draining elements are useful
     primaryUsefulGod = [outputElem, wealthElem, controlElem].join(',');
     harmfulGod = '';
   } else if (structure === 'Strong') {
-    // Strong DM needs to be drained — output, wealth, control are ALL useful
+    // Strong DM needs to be drained: output, wealth, control are ALL useful
     primaryUsefulGod = [outputElem, wealthElem, controlElem].join(',');
     // Companion and resource make it worse
     harmfulGod = [companionElem, resourceElem].join(',');
   } else if (structure === 'Weak') {
-    // Weak DM needs support — companion and resource are BOTH useful
+    // Weak DM needs support: companion and resource are BOTH useful
     primaryUsefulGod = [companionElem, resourceElem].join(',');
     // Output, wealth, control drain it further
     harmfulGod = [outputElem, wealthElem, controlElem].join(',');
   } else {
-    // Balanced — slightly favor what keeps equilibrium; treat like mild weak
+    // Balanced: slightly favor what keeps equilibrium; treat like mild weak
     primaryUsefulGod = [companionElem, resourceElem].join(',');
     harmfulGod = [outputElem, wealthElem, controlElem].join(',');
   }
@@ -808,7 +808,7 @@ const SAN_HE: [string, string, string, string][] = [
   ['巳','酉','丑','Metal']
 ];
 
-// Seasonal combinations (三会局) — strongest type
+// Seasonal combinations (三会局): strongest type
 const SAN_HUI: [string, string, string, string][] = [
   ['寅','卯','辰','Wood'],
   ['巳','午','未','Fire'],
@@ -1088,7 +1088,7 @@ function calculateEnhancedStrength(bazi: any) {
     specialStructure.confidence = cleanWeakFollow ? '真从' : '假从';
     specialStructure.confidence_level = cleanWeakFollow ? 'higher_confidence' : 'master_review_required';
     specialStructure.label = `Possible ${specialStructure.chinese} / ${specialStructure.english}`;
-    specialStructure.message = 'This chart shows special-structure characteristics (possible 从格 / follow-structure). Standard strength scoring may not fully capture it - charts like this invert the usual rules and require a master’s ruling. Book a consultation for a definitive reading.';
+    specialStructure.message = 'This chart may follow a special structure in which the usual strength rules are reversed. Treat this result as a candidate flag that requires specialist review.';
     specialStructure.reasons = [
       '失令: the Month Branch does not support the Day Master.',
       'No solid same-element root is available; any root present is clashed or too weak to rely on.',
@@ -1104,7 +1104,7 @@ function calculateEnhancedStrength(bazi: any) {
     specialStructure.confidence = cleanStrongFollow ? '真从' : '假从';
     specialStructure.confidence_level = cleanStrongFollow ? 'higher_confidence' : 'master_review_required';
     specialStructure.label = `Possible ${specialStructure.chinese} / ${specialStructure.english}`;
-    specialStructure.message = 'This chart shows special-structure characteristics (possible 从格 / follow-structure). Standard strength scoring may not fully capture it - charts like this invert the usual rules and require a master’s ruling. Book a consultation for a definitive reading.';
+    specialStructure.message = 'This chart may follow a special structure in which the usual strength rules are reversed. Treat this result as a candidate flag that requires specialist review.';
     specialStructure.reasons = [
       '得令: the Month Branch strongly supports the Day Master.',
       'The Day Master has solid same-element roots.',
@@ -1526,7 +1526,7 @@ export default function handler(req: any, res: any) {
           '酉': 7, '戌': 6, '亥': 6
         };
 
-        // Kong Wang (空/Void) — Day Pillar's Xun Kong (日旬空)
+        // Kong Wang (空/Void): Day Pillar's Xun Kong (日旬空)
         const dayKongWang = bazi.getDayXunKong(); // e.g. "戌亥"
         const kwBranch1 = dayKongWang.charAt(0);
         const kwBranch2 = dayKongWang.charAt(1);
@@ -1534,7 +1534,7 @@ export default function handler(req: any, res: any) {
           [BRANCH_PALACE[kwBranch1], BRANCH_PALACE[kwBranch2]].filter(Boolean)
         )];
 
-        // Tian Ma (馬/Sky Horse) — Day Branch's Yi Ma (驛馬)
+        // Tian Ma (馬/Sky Horse): Day Branch's Yi Ma (驛馬)
         const tianMaBranch = SHEN_SHA_RULES.YiMa[dayZhi as keyof typeof SHEN_SHA_RULES.YiMa] || '';
         const tianMaPalace = BRANCH_PALACE[tianMaBranch] || null;
 

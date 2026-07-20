@@ -132,7 +132,7 @@
       };
     });
 
-    const exactTime = raw.input.exactBirthTime || '時間不詳';
+    const exactTime = raw.input.exactBirthTime || 'Unknown time';
     const pillars = String(raw.chineseDate || '').trim().split(/\s+/).filter(Boolean);
     const selectedYearSummary = yearSummaries && yearSummaries[state.selectedYear];
 
@@ -172,7 +172,7 @@
         decadeStemBranch: decadal ? `${decadal.heavenlyStem}${decadal.earthlyBranch}` : '',
         yearStemBranch: yearly ? `${yearly.heavenlyStem}${yearly.earthlyBranch}` : ''
       },
-      warnings: raw.input.isUnknownTime ? ['出生時間不詳，目前以午時作近似排盤。'] : [],
+      warnings: raw.input.isUnknownTime ? ['Birth time is unknown; the chart currently uses 午時 / Wu hour as an approximation.'] : [],
       supportedMode: '三合'
     };
   }

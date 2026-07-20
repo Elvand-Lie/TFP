@@ -147,7 +147,7 @@
 
   function normalizeDateString(value) {
     const parts = normalizeDateParts(value);
-    if (!parts) throw new Error('日期格式必須為 YYYY-MM-DD。');
+    if (!parts) throw new Error('Date must use the YYYY-MM-DD format.');
     return `${parts.year}-${pad2(parts.month)}-${pad2(parts.day)}`;
   }
 
@@ -162,7 +162,7 @@
 
   function timeToIndex(value) {
     const parsed = parseExactTime(value);
-    if (!parsed) throw new Error('請輸入有效的出生時間。');
+    if (!parsed) throw new Error('Enter a valid birth time.');
     if (parsed.hour === 0) return 0;
     if (parsed.hour === 23) return 12;
     return Math.floor((parsed.hour + 1) / 2);
@@ -170,19 +170,19 @@
 
   function branchIdFromSymbol(symbol) {
     const item = BRANCHES.find((branch) => branch.symbol === symbol);
-    if (!item) throw new Error(`不支援的地支：${symbol}`);
+    if (!item) throw new Error(`Unsupported Earthly Branch: ${symbol}`);
     return item.id;
   }
 
   function branchSymbolFromId(id) {
     const item = BRANCHES.find((branch) => branch.id === id);
-    if (!item) throw new Error(`不支援的地支識別碼：${id}`);
+    if (!item) throw new Error(`Unsupported Earthly Branch ID: ${id}`);
     return item.symbol;
   }
 
   function palaceRoleId(label) {
     const id = ROLE_BY_LABEL[label];
-    if (!id) throw new Error(`不支援的宮位名稱：${label}`);
+    if (!id) throw new Error(`Unsupported palace name: ${label}`);
     return id;
   }
 
@@ -205,29 +205,29 @@
   }
 
   function normalizeInput(raw) {
-    if (!raw || typeof raw !== 'object') throw new Error('缺少出生資料。');
+    if (!raw || typeof raw !== 'object') throw new Error('Birth details are missing.');
     const calendarType = raw.calendarType === 'lunar' ? 'lunar' : 'solar';
     const gender = raw.gender === 'female' ? 'female' : 'male';
     const birthDate = normalizeDateString(raw.birthDate);
 
     if (calendarType === 'solar' && !isValidGregorianDate(birthDate)) {
-      throw new Error('公曆日期無效，請檢查月份與日期。');
+      throw new Error('The solar date is invalid. Check the month and day.');
     }
     if (calendarType === 'lunar' && !isConservativeLunarDate(birthDate)) {
-      throw new Error('農曆日期無效，日期必須介於初一至三十。');
+      throw new Error('The lunar date is invalid. Lunar days must be between 1 and 30.');
     }
 
     const isUnknownTime = raw.isUnknownTime === true;
     const parsedTime = isUnknownTime ? null : parseExactTime(raw.birthTime);
-    if (!isUnknownTime && !parsedTime) throw new Error('請輸入有效的出生時間。');
+    if (!isUnknownTime && !parsedTime) throw new Error('Enter a valid birth time.');
     const iztroTimeIndex = isUnknownTime ? 6 : timeToIndex(parsedTime.label);
     const timeOption = TIME_OPTIONS[iztroTimeIndex];
     const suppliedBranch = raw.birthHourBranch ? branchIdFromSymbol(raw.birthHourBranch) : null;
     if (!isUnknownTime && suppliedBranch && suppliedBranch !== timeOption.branchId) {
-      throw new Error('出生時間與時辰不一致。');
+      throw new Error('The birth time does not match the supplied Chinese hour branch.');
     }
 
-    const profileName = String(raw.profileName || raw.name || '').trim().slice(0, 80) || '命主';
+    const profileName = String(raw.profileName || raw.name || '').trim().slice(0, 80) || 'Chart Owner';
 
     return {
       profileName,
@@ -248,7 +248,7 @@
 
   function configureIztro(iztroLib) {
     if (!iztroLib || !iztroLib.astro || typeof iztroLib.astro.config !== 'function') {
-      throw new Error('iztro 2.4.7 尚未載入。');
+      throw new Error('The ZWDS calculation engine did not load.');
     }
     iztroLib.astro.config({ mutagens: MUTAGEN_CONFIG });
     return iztroLib.astro;
@@ -307,7 +307,7 @@
 
   function snapshotAstrolabe(astrolabe, input) {
     if (!astrolabe || !Array.isArray(astrolabe.palaces) || astrolabe.palaces.length !== 12) {
-      throw new Error('排盤引擎未回傳十二個宮位。');
+      throw new Error('The calculation engine did not return twelve palaces.');
     }
 
     const palaces = astrolabe.palaces.map((palace, engineIndex) => {
@@ -334,9 +334,9 @@
     });
 
     const uniqueSlots = new Set(palaces.map((palace) => palace.slotId));
-    if (uniqueSlots.size !== 12) throw new Error('宮位地支必須是十二個不重複的穩定識別碼。');
+    if (uniqueSlots.size !== 12) throw new Error('The palace branches must contain twelve unique stable IDs.');
     BRANCHES.forEach((branch, index) => {
-      if (palaces[index].slotId !== branch.id) throw new Error(`宮位順序異常：索引 ${index} 應為 ${branch.symbol}。`);
+      if (palaces[index].slotId !== branch.id) throw new Error(`Unexpected palace order at index ${index}; expected ${branch.symbol}.`);
     });
 
     const rawDates = JSON.parse(JSON.stringify(astrolabe.rawDates || {}));
@@ -376,9 +376,9 @@
       const lunar = astrolabe.rawDates && astrolabe.rawDates.lunarDate;
       const parts = normalizeDateParts(input.sourceDate);
       if (!lunar || !parts || lunar.lunarYear !== parts.year || lunar.lunarMonth !== parts.month || lunar.lunarDay !== parts.day) {
-        throw new Error('農曆日期無效或已被引擎調整，請重新選擇。');
+        throw new Error('The lunar date is invalid or was adjusted by the engine. Choose another date.');
       }
-      if (input.isLeapMonth && lunar.isLeap !== true) throw new Error('所選農曆月份不是閏月。');
+      if (input.isLeapMonth && lunar.isLeap !== true) throw new Error('The selected lunar month is not a leap month.');
     } else {
       astrolabe = astro.bySolar(dateForEngine, input.iztroTimeIndex, genderLabel, true, 'zh-TW');
     }
@@ -389,12 +389,12 @@
       input,
       raw,
       getHoroscope(year) {
-        if (!Number.isInteger(year) || year < 1900 || year > 2200) throw new Error('流年年份無效。');
+        if (!Number.isInteger(year) || year < 1900 || year > 2200) throw new Error('The selected annual year is invalid.');
         return snapshotHoroscope(astrolabe.horoscope(`${year}-7-1`, input.iztroTimeIndex), raw.palaces);
       },
       getFlights(slotId) {
         const source = raw.palaces.find((palace) => palace.slotId === slotId);
-        if (!source) throw new Error('找不到所選宮位。');
+        if (!source) throw new Error('The selected palace could not be found.');
         if (source.roleId === 'fortune') {
           return { sourceSlotId: slotId, sourceRoleId: source.roleId, blocked: true, destinations: [] };
         }

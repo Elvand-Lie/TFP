@@ -8,9 +8,9 @@
   'use strict';
 
   function assertDecades(decades) {
-    if (!Array.isArray(decades) || decades.length !== 12) throw new Error('大限選項必須包含十二個宮位。');
+    if (!Array.isArray(decades) || decades.length !== 12) throw new Error('Decade options must contain all twelve palaces.');
     const ids = new Set(decades.map((item) => item.id));
-    if (ids.size !== decades.length) throw new Error('大限識別碼不得重複。');
+    if (ids.size !== decades.length) throw new Error('Decade option IDs must be unique.');
   }
 
   function yearsForDecade(decade) {
@@ -30,7 +30,7 @@
   function selectDecade(state, decades, decadeId, referenceYear) {
     assertDecades(decades);
     const decade = decades.find((item) => item.id === decadeId);
-    if (!decade) throw new Error('找不到所選大限。');
+    if (!decade) throw new Error('The selected decade cycle could not be found.');
     const selectedYear = referenceYear >= decade.startYear && referenceYear <= decade.endYear ? referenceYear : decade.startYear;
     return { activeDecadeId: decade.id, selectedYear };
   }
@@ -38,14 +38,14 @@
   function selectYear(state, decades, year) {
     assertDecades(decades);
     const decade = decades.find((item) => item.id === state.activeDecadeId);
-    if (!decade) throw new Error('目前沒有有效的大限。');
-    if (!Number.isInteger(year) || year < decade.startYear || year > decade.endYear) throw new Error('所選流年不在目前大限內。');
+    if (!decade) throw new Error('There is no active decade cycle.');
+    if (!Number.isInteger(year) || year < decade.startYear || year > decade.endYear) throw new Error('The selected year is outside the active decade cycle.');
     return { activeDecadeId: decade.id, selectedYear: year };
   }
 
   function activeDecade(state, decades) {
     const decade = decades.find((item) => item.id === state.activeDecadeId);
-    if (!decade) throw new Error('目前沒有有效的大限。');
+    if (!decade) throw new Error('There is no active decade cycle.');
     return decade;
   }
 
