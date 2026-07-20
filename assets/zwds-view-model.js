@@ -82,11 +82,11 @@
   function buildViewModel(raw, state, horoscope, yearSummaries, engineApi, stateApi) {
     const { engine, timeState } = dependencies(engineApi, stateApi);
     const decades = buildDecadeOptions(raw);
-    const decade = timeState.activeDecade(state, decades);
-    const annualYears = timeState.yearsForDecade(decade);
+    const decade = state.activeDecadeId ? timeState.activeDecade(state, decades) : null;
+    const annualYears = decade ? timeState.yearsForDecade(decade) : [];
     const identity = yinYangIdentity(raw);
-    const yearly = horoscope ? horoscope.yearly : null;
-    const decadal = horoscope ? horoscope.decadal : null;
+    const decadal = decade && horoscope ? horoscope.decadal : null;
+    const yearly = state.selectedYear != null && horoscope ? horoscope.yearly : null;
     const yearlyMutagens = yearly ? yearly.mutagenStarIds : [];
     const decadalMutagens = decadal ? decadal.mutagenStarIds : [];
 
@@ -135,7 +135,7 @@
 
     const exactTime = raw.input.exactBirthTime || 'Unknown time';
     const pillars = String(raw.chineseDate || '').trim().split(/\s+/).filter(Boolean);
-    const selectedYearSummary = yearSummaries && yearSummaries[state.selectedYear];
+    const selectedYearSummary = state.selectedYear != null && yearSummaries ? yearSummaries[state.selectedYear] : null;
 
     return {
       schemaVersion: 1,
@@ -166,12 +166,16 @@
       decadeOptions: decades.map((item) => ({ ...item, selected: item.id === state.activeDecadeId })),
       annualOptions,
       selection: {
-        scope: 'yearly',
+        scope: yearly ? 'yearly' : decadal ? 'decadal' : 'natal',
         decadeId: state.activeDecadeId,
         year: state.selectedYear,
-        nominalAge: horoscope && horoscope.age ? horoscope.age.nominalAge : selectedYearSummary ? selectedYearSummary.age : null,
+        nominalAge: yearly && horoscope && horoscope.age ? horoscope.age.nominalAge : selectedYearSummary ? selectedYearSummary.age : null,
         decadeStemBranch: decadal ? `${decadal.heavenlyStem}${decadal.earthlyBranch}` : '',
-        yearStemBranch: yearly ? `${yearly.heavenlyStem}${yearly.earthlyBranch}` : ''
+        yearStemBranch: yearly ? `${yearly.heavenlyStem}${yearly.earthlyBranch}` : '',
+        decadeStartYear: decade ? decade.startYear : null,
+        decadeEndYear: decade ? decade.endYear : null,
+        decadeStartAge: decade ? decade.startAge : null,
+        decadeEndAge: decade ? decade.endAge : null
       },
       warnings: raw.input.isUnknownTime ? ['Birth time is unknown; the chart currently uses 午時 / Wu hour as an approximation.'] : [],
       supportedMode: '三合'

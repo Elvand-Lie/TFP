@@ -174,21 +174,76 @@ try {
   await waitForChart(cdp);
   await delay(250);
 
+  const natal = await evaluate(cdp, `(() => {
+    return {
+      scope: document.getElementById('zwds-chart').dataset.scope,
+      selectedYear: Boolean(document.querySelector('.zwds-year-button[aria-pressed="true"]')),
+      selectedDecade: Boolean(document.querySelector('.zwds-period-button[aria-pressed="true"]')),
+      annualCount: document.querySelectorAll('.zwds-year-button').length,
+      natalPressed: document.getElementById('zwds-return-natal').getAttribute('aria-pressed'),
+      scopeRoleCount: document.querySelectorAll('.zwds-scope-role').length,
+      transientCount: document.querySelectorAll('.zwds-star--transient').length,
+      summary: document.getElementById('zwds-selection-summary').textContent
+    };
+  })()`);
+  assert.equal(natal.scope, 'natal');
+  assert.equal(natal.selectedYear, false);
+  assert.equal(natal.selectedDecade, false);
+  assert.equal(natal.annualCount, 0);
+  assert.equal(natal.natalPressed, 'true');
+  assert.equal(natal.scopeRoleCount, 0);
+  assert.equal(natal.transientCount, 0);
+  assert.ok(natal.summary.includes('Default Life'));
+
+  const decade = await evaluate(cdp, `(async () => {
+    const button = [...document.querySelectorAll('[data-decade-id]')].find((item) => item.textContent.includes('2024–2033'));
+    if (!button) throw new Error('Jose 2024–2033 decade option was not rendered');
+    button.click();
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, 20));
+    const selectedDecade = document.querySelector('.zwds-period-button[aria-pressed="true"]');
+    return {
+      scope: document.getElementById('zwds-chart').dataset.scope,
+      selectedYear: Boolean(document.querySelector('.zwds-year-button[aria-pressed="true"]')),
+      annualCount: document.querySelectorAll('.zwds-year-button').length,
+      selectedDecade: selectedDecade && selectedDecade.textContent,
+      natalPressed: document.getElementById('zwds-return-natal').getAttribute('aria-pressed'),
+      decadalRoleCount: document.querySelectorAll('.zwds-scope-role:not(.zwds-scope-role--year)').length,
+      yearlyRoleCount: document.querySelectorAll('.zwds-scope-role--year').length,
+      summary: document.getElementById('zwds-selection-summary').textContent
+    };
+  })()`);
+  assert.equal(decade.scope, 'decadal');
+  assert.equal(decade.selectedYear, false);
+  assert.equal(decade.annualCount, 10);
+  assert.ok(decade.selectedDecade.includes('2024–2033'));
+  assert.equal(decade.natalPressed, 'false');
+  assert.equal(decade.decadalRoleCount, 12);
+  assert.equal(decade.yearlyRoleCount, 0);
+  assert.ok(decade.summary.includes('Current Decade'));
+  await evaluate(cdp, `document.querySelector('[data-year="2026"]').click()`);
+  await delay(50);
+
   const jose = await evaluate(cdp, `(() => {
     const center = document.querySelector('.zwds-center').textContent;
     const selectedYear = document.querySelector('.zwds-year-button[aria-pressed="true"]');
     return {
       center,
+      scope: document.getElementById('zwds-chart').dataset.scope,
       selectedYear: selectedYear && selectedYear.dataset.year,
       palaceCount: document.querySelectorAll('.zwds-palace').length,
       centerCount: document.querySelectorAll('.zwds-center').length,
+      decadalRoleCount: document.querySelectorAll('.zwds-scope-role:not(.zwds-scope-role--year)').length,
+      yearlyRoleCount: document.querySelectorAll('.zwds-scope-role--year').length,
       hasLucun: document.getElementById('zwds-grid').textContent.includes('祿存'),
       hasTianma: document.getElementById('zwds-grid').textContent.includes('天馬')
     };
   })()`);
+  assert.equal(jose.scope, 'yearly');
   assert.equal(jose.palaceCount, 12);
   assert.equal(jose.centerCount, 1);
   assert.equal(jose.selectedYear, '2026');
+  assert.equal(jose.decadalRoleCount, 12);
+  assert.equal(jose.yearlyRoleCount, 12);
   assert.ok(jose.center.includes('Jose'));
   assert.ok(jose.center.includes('1981-02-11 15:34'));
   assert.ok(jose.center.includes('金四局'));
@@ -217,8 +272,11 @@ try {
   await cdp.send('Input.dispatchKeyEvent', { type: 'keyUp', ...enterKey });
   await delay(50);
   assert.equal(await evaluate(cdp, `document.activeElement.classList.contains('zwds-palace') && document.activeElement.getAttribute('aria-pressed') === 'true'`), true);
-  await evaluate(cdp, `document.querySelector('[data-year="2026"]').click()`);
+  await evaluate(cdp, `document.getElementById('zwds-return-natal').click()`);
   await delay(50);
+  assert.equal(await evaluate(cdp, `document.getElementById('zwds-chart').dataset.scope`), 'natal');
+  assert.equal(await evaluate(cdp, `document.activeElement.id`), 'zwds-return-natal');
+  await evaluate(cdp, `document.activeElement.blur()`);
 
   mkdirSync(reportDir, { recursive: true });
   const results = [];

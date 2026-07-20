@@ -197,12 +197,13 @@
         <div id="zwds-selection-summary" class="zwds-selection-summary" aria-live="polite"></div>
       </header>
 
-      <div class="zwds-tabs" role="tablist" aria-label="Chart views">
-        <button type="button" id="zwds-tab-chart" role="tab" aria-selected="true" aria-controls="zwds-chart-panel">Chart</button>
-        <span aria-label="Current chart method">Three Harmony · 三合</span>
+      <div class="zwds-tabs" role="toolbar" aria-label="Chart scope and method">
+        <span class="zwds-tab-label">Chart</span>
+        <button type="button" id="zwds-return-natal" class="zwds-natal-button" aria-pressed="true">Default Life · 本命</button>
+        <span class="zwds-method-label" aria-label="Current chart method">Three Harmony · 三合</span>
       </div>
 
-      <div id="zwds-chart-panel" role="tabpanel" aria-labelledby="zwds-tab-chart">
+      <div id="zwds-chart-panel">
       <section class="zwds-period-section" aria-labelledby="zwds-decade-title">
         <div class="zwds-period-heading"><h3 id="zwds-decade-title">Decade Cycles · 大限</h3><span>Select a ten-year cycle</span></div>
         <div class="zwds-period-row" id="zwds-decade-options" aria-label="Decade cycle selection"></div>

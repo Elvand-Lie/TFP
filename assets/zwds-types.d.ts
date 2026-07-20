@@ -22,8 +22,8 @@ interface ZwdsNormalizedBirthInput {
 }
 
 interface ZwdsTimeSelectionState {
-  activeDecadeId: string;
-  selectedYear: number;
+  activeDecadeId: string | null;
+  selectedYear: number | null;
 }
 
 interface ZwdsDecadeOption {
@@ -82,12 +82,16 @@ interface ZwdsChartViewModel {
   decadeOptions: ZwdsDecadeOption[];
   annualOptions: unknown[];
   selection: {
-    scope: 'yearly';
-    decadeId: string;
-    year: number;
+    scope: 'natal' | 'decadal' | 'yearly';
+    decadeId: string | null;
+    year: number | null;
     nominalAge: number | null;
     decadeStemBranch: string;
     yearStemBranch: string;
+    decadeStartYear: number | null;
+    decadeEndYear: number | null;
+    decadeStartAge: number | null;
+    decadeEndAge: number | null;
   };
   warnings: string[];
   supportedMode: '三合';

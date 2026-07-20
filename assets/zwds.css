@@ -1582,3 +1582,66 @@
   #zwds-app .zwds-center__facts div,
   #zwds-app .zwds-center__facts div:nth-child(-n+2) { grid-column: 1 / -1; }
 }
+
+/* Progressive natal, decade, and annual chart scopes. */
+#zwds-app .zwds-tabs > .zwds-tab-label {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  margin-right: auto;
+  padding: 12px 8px 10px;
+  border: 0;
+  border-bottom: 3px solid var(--crimson-text);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ivory);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+#zwds-app .zwds-tabs .zwds-natal-button {
+  margin-left: auto;
+  padding: 7px 11px;
+  border: 1px solid rgba(198, 169, 107, .42);
+  border-radius: 2px;
+  background: rgba(198, 169, 107, .07);
+  color: var(--beige);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: none;
+  cursor: pointer;
+}
+
+#zwds-app .zwds-tabs .zwds-natal-button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+#zwds-app .zwds-tabs .zwds-natal-button[aria-pressed="true"] {
+  border-color: var(--crimson-text);
+  background: var(--crimson);
+  color: var(--ivory);
+}
+
+#zwds-app .zwds-tabs > .zwds-method-label { margin-left: 0; }
+
+#zwds-app .zwds-period-empty {
+  flex: 1 0 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid rgba(113, 1, 1, .24);
+  background: rgba(113, 1, 1, .08);
+  color: var(--beige);
+  font-size: .72rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  #zwds-app .zwds-tabs { flex-wrap: wrap; gap: 6px; }
+  #zwds-app .zwds-tabs > .zwds-tab-label { flex: 1 1 auto; }
+  #zwds-app .zwds-tabs .zwds-natal-button { flex: 0 1 auto; margin-left: 0; }
+  #zwds-app .zwds-tabs > .zwds-method-label { flex: 0 1 auto; }

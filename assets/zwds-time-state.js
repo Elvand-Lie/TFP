@@ -19,20 +19,16 @@
     return years;
   }
 
-  function createState(decades, referenceYear) {
+  function createState(decades) {
     assertDecades(decades);
-    const ordered = [...decades].sort((a, b) => a.startAge - b.startAge);
-    const preferred = ordered.find((item) => referenceYear >= item.startYear && referenceYear <= item.endYear) || ordered[0];
-    const selectedYear = referenceYear >= preferred.startYear && referenceYear <= preferred.endYear ? referenceYear : preferred.startYear;
-    return { activeDecadeId: preferred.id, selectedYear };
+    return { activeDecadeId: null, selectedYear: null };
   }
 
-  function selectDecade(state, decades, decadeId, referenceYear) {
+  function selectDecade(state, decades, decadeId) {
     assertDecades(decades);
     const decade = decades.find((item) => item.id === decadeId);
     if (!decade) throw new Error('The selected decade cycle could not be found.');
-    const selectedYear = referenceYear >= decade.startYear && referenceYear <= decade.endYear ? referenceYear : decade.startYear;
-    return { activeDecadeId: decade.id, selectedYear };
+    return { activeDecadeId: decade.id, selectedYear: null };
   }
 
   function selectYear(state, decades, year) {

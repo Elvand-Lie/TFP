@@ -14,15 +14,34 @@ const joseInput = {
   birthTime: '15:34', birthHourBranch: '申', isUnknownTime: false, isLeapMonth: false
 };
 
-function createJoseModel(year = 2026) {
+function createJoseScopeModel(scope = 'natal', year = 2026) {
   const session = adapter.createChartSession(iztro, joseInput);
   const decades = viewModel.buildDecadeOptions(session.raw);
-  const state = timeState.createState(decades, year);
-  const active = timeState.activeDecade(state, decades);
-  const summaries = viewModel.makeYearSummaries(session, timeState.yearsForDecade(active));
-  const horoscope = session.getHoroscope(state.selectedYear);
+  let state = timeState.createState(decades);
+  let summaries = {};
+  let horoscope = null;
+  if (scope !== 'natal') {
+    const active = decades.find((item) => year >= item.startYear && year <= item.endYear);
+    assert.ok(active, `No decade contains ${year}`);
+    state = timeState.selectDecade(state, decades, active.id);
+    summaries = viewModel.makeYearSummaries(session, timeState.yearsForDecade(active));
+    horoscope = session.getHoroscope(year);
+    if (scope === 'yearly') state = timeState.selectYear(state, decades, year);
+  }
   const model = viewModel.buildViewModel(session.raw, state, horoscope, summaries, adapter, timeState);
   return { session, decades, state, summaries, horoscope, model };
+}
+
+function createJoseModel(year = 2026) {
+  return createJoseScopeModel('yearly', year);
+}
+
+function scopeStars(model, scope) {
+  return model.palaces.flatMap((palace) => palace.activeScopeStars).filter((star) => star.scope === scope);
+}
+
+function transformationCount(model, scope) {
+  return model.palaces.flatMap((palace) => palace[`${scope}Transformations`]).length;
 }
 
 test('renderer-facing model is plain, serializable, and method-free', () => {
@@ -140,9 +159,9 @@ test('pre-Lunar-New-Year decade labels follow iztro nominal age', () => {
 test('decade boundary selection changes the real active engine decade', () => {
   const { session, decades, state } = createJoseModel();
   const next = decades.find((decade) => decade.startYear === 2034);
-  const nextState = timeState.selectDecade(state, decades, next.id, 2026);
-  assert.equal(nextState.selectedYear, 2034);
-  const horoscope = session.getHoroscope(nextState.selectedYear);
+  const nextState = timeState.selectDecade(state, decades, next.id);
+  assert.equal(nextState.selectedYear, null);
+  const horoscope = session.getHoroscope(next.startYear);
   const expectedIndex = session.raw.palaces.find((palace) => palace.slotId === next.slotId).engineIndex;
   assert.equal(horoscope.decadal.index, expectedIndex);
 });
@@ -167,4 +186,37 @@ test('flying-star policy uses stable role identity and applies the 福德 source
   assert.deepEqual(blocked.destinations, []);
   const allFlights = session.raw.palaces.filter((palace) => palace.roleId !== 'fortune').map((palace) => session.getFlights(palace.slotId));
   assert.ok(allFlights.every((flight) => flight.destinations.length === 4));
+});
+
+test('Default Life opens as natal data without decade or annual overlays', () => {
+  const { state, model } = createJoseScopeModel('natal');
+  assert.equal(state.activeDecadeId, null);
+  assert.equal(state.selectedYear, null);
+  assert.equal(model.selection.scope, 'natal');
+  assert.equal(model.annualOptions.length, 0);
+  assert.equal(model.decadeOptions.some((item) => item.selected), false);
+  assert.ok(model.palaces.every((palace) => palace.decadalRoleLabel === null));
+  assert.ok(model.palaces.every((palace) => palace.yearlyRoleLabel === null));
+  assert.equal(transformationCount(model, 'decadal'), 0);
+  assert.equal(transformationCount(model, 'yearly'), 0);
+  assert.equal(scopeStars(model, 'decadal').length, 0);
+  assert.equal(scopeStars(model, 'yearly').length, 0);
+  assert.match(renderer.renderSelectionSummary(model), /Default Life/);
+  assert.match(renderer.renderAnnualsMarkup(model), /Select a decade cycle/);
+});
+
+test('selecting a decade applies only the real decade overlay', () => {
+  const { state, model } = createJoseScopeModel('decadal', 2026);
+  assert.ok(state.activeDecadeId);
+  assert.equal(state.selectedYear, null);
+  assert.equal(model.selection.scope, 'decadal');
+  assert.equal(model.annualOptions.length, 10);
+  assert.equal(model.annualOptions.some((item) => item.selected), false);
+  assert.ok(model.palaces.every((palace) => palace.decadalRoleLabel));
+  assert.ok(model.palaces.every((palace) => palace.yearlyRoleLabel === null));
+  assert.equal(transformationCount(model, 'decadal'), 4);
+  assert.equal(transformationCount(model, 'yearly'), 0);
+  assert.ok(scopeStars(model, 'decadal').length > 0);
+  assert.equal(scopeStars(model, 'yearly').length, 0);
+  assert.match(renderer.renderSelectionSummary(model), /Current Decade/);
 });

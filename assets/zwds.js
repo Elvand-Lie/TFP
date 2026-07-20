@@ -110,6 +110,7 @@
 
   /** @param {any} model */
   function renderAnnualsMarkup(model) {
+    if (!model.annualOptions.length) return '<p class="zwds-period-empty" role="status">Select a decade cycle to view its annual years.</p>';
     return model.annualOptions.map((item) =>
       `<button type="button" class="zwds-year-button" data-year="${item.year}" aria-pressed="${item.selected ? 'true' : 'false'}"><strong>${item.year}</strong><span>${escapeHtml(item.heavenlyStem + item.earthlyBranch)} · ${item.age} yrs</span></button>`
     ).join('');
@@ -117,8 +118,16 @@
 
   /** @param {any} model */
   function renderSelectionSummary(model) {
+    if (model.selection.scope === 'natal') {
+      return '<strong>Default Life · 本命</strong><span>Natal chart · No decade or annual overlay</span>';
+    }
+    if (model.selection.scope === 'decadal') {
+      const years = `${model.selection.decadeStartYear}–${model.selection.decadeEndYear}`;
+      const ages = `${model.selection.decadeStartAge}–${model.selection.decadeEndAge} yrs`;
+      return `<strong>Current Decade · 大限 ${escapeHtml(model.selection.decadeStemBranch)}</strong><span>${escapeHtml(years)} · ${escapeHtml(ages)} · Select an annual year</span>`;
+    }
     const age = model.selection.nominalAge == null ? 'Not available' : `${model.selection.nominalAge} yrs`;
-    return `<strong>${escapeHtml(String(model.selection.year))} ${escapeHtml(model.selection.yearStemBranch)}</strong><span>Decade ${escapeHtml(model.selection.decadeStemBranch)} · Nominal age ${escapeHtml(age)}</span>`;
+    return `<strong>Annual ${escapeHtml(String(model.selection.year))} · 流年 ${escapeHtml(model.selection.yearStemBranch)}</strong><span>Decade ${escapeHtml(model.selection.decadeStemBranch)} · Nominal age ${escapeHtml(age)}</span>`;
   }
 
   /** @param {any} flight */
@@ -154,6 +163,7 @@
     const grid = byId('zwds-grid');
     const decadesNode = byId('zwds-decade-options');
     const annualsNode = byId('zwds-annual-options');
+    const natalButton = byId('zwds-return-natal');
     const summaryNode = byId('zwds-selection-summary');
     const errorNode = byId('zwds-form-error');
     const flightNode = byId('zwds-flight-info');
@@ -165,7 +175,7 @@
     const monthSelect = /** @type {HTMLSelectElement | null} */ (byId('zwds-month'));
     const daySelect = /** @type {HTMLSelectElement | null} */ (byId('zwds-day'));
     const svg = /** @type {SVGSVGElement | null} */ (doc.getElementById('zwds-flight-overlay'));
-    if (!form || !chart || !grid || !decadesNode || !annualsNode || !summaryNode || !errorNode || !flightNode || !yearSelect || !monthSelect || !daySelect) return null;
+    if (!form || !chart || !grid || !decadesNode || !annualsNode || !natalButton || !summaryNode || !errorNode || !flightNode || !yearSelect || !monthSelect || !daySelect) return null;
 
     function selectedCalendar() {
       const selected = /** @type {HTMLInputElement | null} */ (form.querySelector('input[name="calendar-type"]:checked'));
@@ -221,10 +231,11 @@
     function refresh(focusSelector) {
       if (!session || !state) return;
       const decades = viewModel.buildDecadeOptions(session.raw);
-      const active = timeState.activeDecade(state, decades);
-      const years = timeState.yearsForDecade(active);
-      const summaries = viewModel.makeYearSummaries(session, years);
-      const horoscope = session.getHoroscope(state.selectedYear);
+      const active = state.activeDecadeId ? timeState.activeDecade(state, decades) : null;
+      const years = active ? timeState.yearsForDecade(active) : [];
+      const summaries = active ? viewModel.makeYearSummaries(session, years) : {};
+      const calculationYear = state.selectedYear != null ? state.selectedYear : active ? active.startYear : null;
+      const horoscope = calculationYear != null ? session.getHoroscope(calculationYear) : null;
       model = viewModel.buildViewModel(session.raw, state, horoscope, summaries, engine, timeState);
       if (!viewModel.isPlainSerializable(model)) throw new Error('The chart view data could not be rendered safely.');
 
@@ -232,6 +243,8 @@
       decadesNode.innerHTML = renderDecadesMarkup(model);
       annualsNode.innerHTML = renderAnnualsMarkup(model);
       summaryNode.innerHTML = renderSelectionSummary(model);
+      natalButton.setAttribute('aria-pressed', String(model.selection.scope === 'natal'));
+      chart.dataset.scope = model.selection.scope;
       selectedFlight = null;
       flightNode.innerHTML = renderFlightInfoMarkup(null);
       chart.hidden = false;
@@ -285,7 +298,7 @@
       try {
         session = engine.createChartSession(iztroLib, readInput());
         const decades = viewModel.buildDecadeOptions(session.raw);
-        state = timeState.createState(decades, new Date().getFullYear());
+        state = timeState.createState(decades);
         refresh(null);
         chart.scrollIntoView({ behavior: host.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
       } catch (error) {
@@ -306,6 +319,8 @@
         selectedFlight = null;
         chart.hidden = true;
         chart.classList.remove('is-active');
+        chart.removeAttribute('data-scope');
+        natalButton.setAttribute('aria-pressed', 'true');
         grid.replaceChildren();
         decadesNode.replaceChildren();
         annualsNode.replaceChildren();
@@ -318,13 +333,20 @@
     if (timeInput) timeInput.addEventListener('input', updateTimePreview);
     if (unknownInput) unknownInput.addEventListener('change', updateTimePreview);
 
+    natalButton.addEventListener('click', () => {
+      if (!session) return;
+      const decades = viewModel.buildDecadeOptions(session.raw);
+      state = timeState.createState(decades);
+      refresh('#zwds-return-natal');
+    });
+
     decadesNode.addEventListener('click', (event) => {
       const target = /** @type {any} */ (event.target);
       const button = /** @type {HTMLElement | null} */ (target && typeof target.closest === 'function' ? target.closest('[data-decade-id]') : null);
       if (!button || !state || !session) return;
       const id = button.getAttribute('data-decade-id');
       const decades = viewModel.buildDecadeOptions(session.raw);
-      state = timeState.selectDecade(state, decades, id, new Date().getFullYear());
+      state = timeState.selectDecade(state, decades, id);
       refresh(`[data-decade-id="${id}"]`);
     });
 
