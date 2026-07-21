@@ -579,21 +579,34 @@
       setStatus('Sending the download notification to The Full Picture…', false);
 
       try {
-        const response = await host.fetch('/api/zwds-lead', {
+        const response = await host.fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            type: 'zwds_download_lead',
             email,
             action: 'ZWDS profile backup download',
             profileCount: store.list().length,
-            source: 'ZWDS web app'
+            source: 'ZWDS web app',
+            _honey: ''
           })
         });
+
         const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.error || 'The download notification could not be sent.');
+
+        if (!response.ok) {
+          throw new Error(
+            result.error ||
+            'The download notification could not be sent.'
+          );
+        }
 
         downloadProfileBackup();
-        setStatus(`Backup downloaded. The Full Picture was notified that ${email} downloaded ZWDS.`, false);
+
+        setStatus(
+          `Backup downloaded. The Full Picture was notified that ${email} downloaded ZWDS.`,
+          false
+        );
       } catch (error) {
         setStatus(error instanceof Error ? error.message : 'The download notification could not be sent.', true);
       } finally {
