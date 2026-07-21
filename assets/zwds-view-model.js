@@ -10,6 +10,9 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (engineGlobal, stateGlobal) {
   'use strict';
 
+  const MONTH_NAMES = Object.freeze(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
+  const SCOPE_KEYS = Object.freeze(['decadal', 'yearly', 'monthly', 'daily', 'hourly']);
+
   function dependencies(engineApi, stateApi) {
     const engine = engineApi || engineGlobal;
     const timeState = stateApi || stateGlobal;
@@ -50,11 +53,11 @@
   }
 
   function transformationForStar(stableId, mutagenStarIds) {
-    const index = mutagenStarIds.indexOf(stableId);
+    const index = (mutagenStarIds || []).indexOf(stableId);
     return index >= 0 ? ['lu', 'quan', 'ke', 'ji'][index] : null;
   }
 
-  function mapStar(star, slotId, category, decadalMutagens, yearlyMutagens) {
+  function mapStar(star, slotId, category, mutagens) {
     return {
       id: `${slotId}-${category}-${star.stableId}`,
       engineStarId: star.stableId,
@@ -63,20 +66,37 @@
       engineType: star.type,
       brightness: star.brightness,
       natalTransformation: star.mutagen,
-      decadalTransformation: transformationForStar(star.stableId, decadalMutagens || []),
-      yearlyTransformation: transformationForStar(star.stableId, yearlyMutagens || []),
-      scopeTransformation: transformationForStar(star.stableId, yearlyMutagens || []),
+      decadalTransformation: transformationForStar(star.stableId, mutagens.decadal),
+      yearlyTransformation: transformationForStar(star.stableId, mutagens.yearly),
+      monthlyTransformation: transformationForStar(star.stableId, mutagens.monthly),
+      dailyTransformation: transformationForStar(star.stableId, mutagens.daily),
+      hourlyTransformation: transformationForStar(star.stableId, mutagens.hourly),
       scope: star.scope || null
     };
   }
 
-  function mapTransientStars(scope, slotId, prefix, decadalMutagens, yearlyMutagens) {
+  function mapTransientStars(scope, slotId, prefix, mutagens) {
     if (!scope || !scope.starsBySlot || !Array.isArray(scope.starsBySlot[slotId])) return [];
     return scope.starsBySlot[slotId].map((star) => ({
-      ...mapStar(star, slotId, 'transient', decadalMutagens, yearlyMutagens),
+      ...mapStar(star, slotId, 'transient', mutagens),
       id: `${slotId}-${prefix}-${star.stableId}`,
       scope: prefix
     }));
+  }
+
+  function scopeEnabled(state, scope) {
+    const order = { decadal: 1, yearly: 2, monthly: 3, daily: 4, hourly: 5 };
+    const current = state.selectedTimeIndex != null ? 5 : state.selectedDay != null ? 4 : state.selectedMonth != null ? 3 : state.selectedYear != null ? 2 : state.activeDecadeId ? 1 : 0;
+    return current >= order[scope];
+  }
+
+  function roleLabel(scope, slotId) {
+    const role = scope && scope.rolesBySlot ? scope.rolesBySlot[slotId] : null;
+    return role ? role.label : null;
+  }
+
+  function scopeStemBranch(scope) {
+    return scope ? `${scope.heavenlyStem || ''}${scope.earthlyBranch || ''}` : '';
   }
 
   function buildViewModel(raw, state, horoscope, yearSummaries, engineApi, stateApi) {
@@ -85,20 +105,24 @@
     const decade = state.activeDecadeId ? timeState.activeDecade(state, decades) : null;
     const annualYears = decade ? timeState.yearsForDecade(decade) : [];
     const identity = yinYangIdentity(raw);
-    const decadal = decade && horoscope ? horoscope.decadal : null;
-    const yearly = state.selectedYear != null && horoscope ? horoscope.yearly : null;
-    const yearlyMutagens = yearly ? yearly.mutagenStarIds : [];
-    const decadalMutagens = decadal ? decadal.mutagenStarIds : [];
+    const scopes = {};
+    SCOPE_KEYS.forEach((key) => { scopes[key] = scopeEnabled(state, key) && horoscope ? horoscope[key] : null; });
+
+    const mutagens = {};
+    SCOPE_KEYS.forEach((key) => { mutagens[key] = scopes[key] ? scopes[key].mutagenStarIds : []; });
 
     const palacesBySlot = {};
     raw.palaces.forEach((palace) => {
       const natalStars = [];
-      palace.majorStars.forEach((star) => natalStars.push(mapStar(star, palace.slotId, 'major', decadalMutagens, yearlyMutagens)));
-      palace.minorStars.forEach((star) => natalStars.push(mapStar(star, palace.slotId, 'minor', decadalMutagens, yearlyMutagens)));
-      palace.adjectiveStars.forEach((star) => natalStars.push(mapStar(star, palace.slotId, 'adjective', decadalMutagens, yearlyMutagens)));
+      palace.majorStars.forEach((star) => natalStars.push(mapStar(star, palace.slotId, 'major', mutagens)));
+      palace.minorStars.forEach((star) => natalStars.push(mapStar(star, palace.slotId, 'minor', mutagens)));
+      palace.adjectiveStars.forEach((star) => natalStars.push(mapStar(star, palace.slotId, 'adjective', mutagens)));
 
-      const decadalRole = decadal && decadal.rolesBySlot[palace.slotId];
-      const yearlyRole = yearly && yearly.rolesBySlot[palace.slotId];
+      const activeScopeStars = [];
+      SCOPE_KEYS.forEach((key) => {
+        if (scopes[key]) activeScopeStars.push(...mapTransientStars(scopes[key], palace.slotId, key, mutagens));
+      });
+
       palacesBySlot[palace.slotId] = {
         slotId: palace.slotId,
         roleId: palace.roleId,
@@ -111,14 +135,14 @@
         auxiliaryLabels: [...palace.auxiliaryLabels],
         decadeAgeRange: [...palace.decadal.range],
         nominalAges: [...palace.ages],
-        decadalRoleLabel: decadalRole ? decadalRole.label : null,
-        yearlyRoleLabel: yearlyRole ? yearlyRole.label : null,
-        decadalTransformations: natalStars.filter((star) => star.decadalTransformation).map((star) => ({ id: star.decadalTransformation, label: star.label })),
-        yearlyTransformations: natalStars.filter((star) => star.yearlyTransformation).map((star) => ({ id: star.yearlyTransformation, label: star.label })),
-        activeScopeStars: [
-          ...mapTransientStars(decadal, palace.slotId, 'decadal', decadalMutagens, yearlyMutagens),
-          ...mapTransientStars(yearly, palace.slotId, 'yearly', decadalMutagens, yearlyMutagens)
-        ]
+        scopeRoles: {
+          decadal: roleLabel(scopes.decadal, palace.slotId),
+          yearly: roleLabel(scopes.yearly, palace.slotId),
+          monthly: roleLabel(scopes.monthly, palace.slotId),
+          daily: roleLabel(scopes.daily, palace.slotId),
+          hourly: roleLabel(scopes.hourly, palace.slotId)
+        },
+        activeScopeStars
       };
     });
 
@@ -133,12 +157,29 @@
       };
     });
 
+    const monthOptions = state.selectedYear == null ? [] : MONTH_NAMES.map((label, index) => ({
+      month: index + 1,
+      label,
+      selected: state.selectedMonth === index + 1
+    }));
+
+    const dayOptions = state.selectedYear == null || state.selectedMonth == null ? [] : Array.from(
+      { length: timeState.daysInMonth(state.selectedYear, state.selectedMonth) },
+      (_, index) => ({ day: index + 1, selected: state.selectedDay === index + 1 })
+    );
+
+    const timeOptions = state.selectedDay == null ? [] : engine.TIME_OPTIONS.map((item) => ({
+      ...item,
+      selected: state.selectedTimeIndex === item.index
+    }));
+
     const exactTime = raw.input.exactBirthTime || 'Unknown time';
     const pillars = String(raw.chineseDate || '').trim().split(/\s+/).filter(Boolean);
     const selectedYearSummary = state.selectedYear != null && yearSummaries ? yearSummaries[state.selectedYear] : null;
+    const deepest = timeState.deepestScope(state);
 
     return {
-      schemaVersion: 1,
+      schemaVersion: 2,
       locale: 'zh-TW',
       input: JSON.parse(JSON.stringify(raw.input)),
       identity: {
@@ -150,7 +191,9 @@
       dates: {
         solarDateTimeLabel: `${padDate(raw.solarDate)} ${exactTime}`,
         lunarDateTimeLabel: `${raw.lunarDate}${raw.timeLabel}`,
-        pillars
+        pillars,
+        selectedSolarDate: horoscope ? padDate(horoscope.solarDate) : null,
+        selectedLunarDate: horoscope ? horoscope.lunarDate : null
       },
       core: {
         bureauLabel: raw.bureauLabel,
@@ -165,19 +208,31 @@
       palacesBySlot,
       decadeOptions: decades.map((item) => ({ ...item, selected: item.id === state.activeDecadeId })),
       annualOptions,
+      monthOptions,
+      dayOptions,
+      timeOptions,
       selection: {
-        scope: yearly ? 'yearly' : decadal ? 'decadal' : 'natal',
+        scope: deepest,
         decadeId: state.activeDecadeId,
         year: state.selectedYear,
-        nominalAge: yearly && horoscope && horoscope.age ? horoscope.age.nominalAge : selectedYearSummary ? selectedYearSummary.age : null,
-        decadeStemBranch: decadal ? `${decadal.heavenlyStem}${decadal.earthlyBranch}` : '',
-        yearStemBranch: yearly ? `${yearly.heavenlyStem}${yearly.earthlyBranch}` : '',
+        month: state.selectedMonth,
+        day: state.selectedDay,
+        timeIndex: state.selectedTimeIndex,
+        nominalAge: scopes.yearly && horoscope && horoscope.age ? horoscope.age.nominalAge : selectedYearSummary ? selectedYearSummary.age : null,
+        decadeStemBranch: scopeStemBranch(scopes.decadal),
+        yearStemBranch: scopeStemBranch(scopes.yearly),
+        monthStemBranch: scopeStemBranch(scopes.monthly),
+        dayStemBranch: scopeStemBranch(scopes.daily),
+        hourStemBranch: scopeStemBranch(scopes.hourly),
         decadeStartYear: decade ? decade.startYear : null,
         decadeEndYear: decade ? decade.endYear : null,
         decadeStartAge: decade ? decade.startAge : null,
         decadeEndAge: decade ? decade.endAge : null
       },
-      warnings: raw.input.isUnknownTime ? ['Birth time is unknown; the chart currently uses 午時 / Wu hour as an approximation.'] : [],
+      warnings: [
+        ...(raw.input.isUnknownTime ? ['Birth time is unknown; the natal chart currently uses 午時 / Wu hour as an approximation.'] : []),
+        ...(deepest === 'monthly' ? ['Month selection uses the 15th day as a representative solar date until a specific day is selected.'] : [])
+      ],
       supportedMode: '三合'
     };
   }
@@ -185,7 +240,7 @@
   function makeYearSummaries(session, years) {
     const result = {};
     years.forEach((year) => {
-      const horoscope = session.getHoroscope(year);
+      const horoscope = session.getHoroscope({ year, month: 7, day: 1, timeIndex: 6 });
       result[year] = {
         age: horoscope.age.nominalAge,
         heavenlyStem: horoscope.yearly.heavenlyStem,
@@ -204,5 +259,12 @@
     return Object.values(value).every(isPlainSerializable);
   }
 
-  return Object.freeze({ buildDecadeOptions, yinYangIdentity, buildViewModel, makeYearSummaries, isPlainSerializable });
+  return Object.freeze({
+    MONTH_NAMES,
+    buildDecadeOptions,
+    yinYangIdentity,
+    buildViewModel,
+    makeYearSummaries,
+    isPlainSerializable
+  });
 });

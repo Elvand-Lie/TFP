@@ -1,0 +1,221 @@
+:root {
+  --black: #0f0f10;
+  --dark-grey: #1c1c1e;
+  --ivory: #f5f5f2;
+  --beige: #d8cfc4;
+  --pure-white: #ffffff;
+  --muted: #888580;
+  --crimson: #710101;
+  --maroon: #591f16;
+  --deep-red: #680806;
+  --crimson-text: #e53939;
+  --gold: #c6a96b;
+  --forest: #1f3a2e;
+  --blue: #42a5f5;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--black); scroll-behavior: smooth; }
+body { margin: 0; background: var(--black); color: var(--ivory); font-family: var(--font-sans); }
+button, input, select { font: inherit; }
+.primary-line { width: 60px; height: 2px; margin-bottom: 24px; background: var(--crimson); }
+
+#zwds-app #zwds-hero { min-height: 360px; }
+#zwds-app #zwds-form-section { padding-top: 22px; }
+
+#zwds-profile-section {
+  padding: 34px 16px 0;
+}
+
+#zwds-app .zwds-profile-card {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: 22px;
+  border: 1px solid rgba(198, 169, 107, .22);
+  background: rgba(28, 28, 30, .72);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, .24);
+}
+
+#zwds-app .zwds-profile-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+#zwds-app .zwds-profile-heading h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+#zwds-app .zwds-profile-heading > span,
+#zwds-app .zwds-profile-status {
+  color: var(--muted);
+  font-size: .76rem;
+}
+
+#zwds-app .zwds-profile-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) repeat(4, auto);
+  gap: 8px;
+  align-items: end;
+}
+
+#zwds-app .zwds-profile-select-wrap {
+  display: grid;
+  gap: 5px;
+  color: var(--beige);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+#zwds-app .zwds-profile-select-wrap select,
+#zwds-app .zwds-profile-toolbar button,
+#zwds-app .zwds-import-button {
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid rgba(198, 169, 107, .32);
+  border-radius: 2px;
+  background: rgba(15, 15, 16, .74);
+  color: var(--ivory);
+}
+
+#zwds-app .zwds-profile-toolbar button,
+#zwds-app .zwds-import-button {
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+#zwds-app .zwds-profile-toolbar button:hover,
+#zwds-app .zwds-import-button:hover {
+  border-color: var(--gold);
+  background: rgba(113, 1, 1, .32);
+}
+
+#zwds-app .zwds-profile-status { min-height: 1.3em; margin: 10px 0 0; }
+#zwds-app .zwds-profile-status[data-kind="error"] { color: #ff8a80; }
+
+#zwds-app .zwds-month-button,
+#zwds-app .zwds-day-button,
+#zwds-app .zwds-time-button {
+  flex: 0 0 auto;
+  min-height: 46px;
+  padding: 6px 10px;
+  border: 1px solid rgba(113, 1, 1, .42);
+  border-radius: 2px;
+  background: rgba(15, 15, 16, .7);
+  color: var(--beige);
+  cursor: pointer;
+}
+
+#zwds-app .zwds-month-button { min-width: 88px; }
+#zwds-app .zwds-day-button { min-width: 46px; }
+#zwds-app .zwds-time-button { min-width: 112px; }
+
+#zwds-app .zwds-month-button strong,
+#zwds-app .zwds-month-button span,
+#zwds-app .zwds-day-button strong,
+#zwds-app .zwds-time-button strong,
+#zwds-app .zwds-time-button span { display: block; white-space: nowrap; }
+
+#zwds-app .zwds-month-button strong,
+#zwds-app .zwds-day-button strong,
+#zwds-app .zwds-time-button strong { color: var(--ivory); font-size: .74rem; }
+#zwds-app .zwds-month-button span,
+#zwds-app .zwds-time-button span { font-size: .61rem; }
+
+#zwds-app .zwds-month-button[aria-pressed="true"],
+#zwds-app .zwds-day-button[aria-pressed="true"],
+#zwds-app .zwds-time-button[aria-pressed="true"] {
+  border-color: var(--crimson-text);
+  background: var(--crimson);
+  color: var(--ivory);
+}
+
+#zwds-app .zwds-period-row--days { flex-wrap: wrap; max-height: 170px; overflow-y: auto; }
+
+#zwds-app .zwds-scope-role--monthly { color: #a97822; }
+#zwds-app .zwds-scope-role--daily { color: #277965; }
+#zwds-app .zwds-scope-role--hourly { color: #7d4bc1; }
+#zwds-app .zwds-scope-marker { margin-left: 2px; font-weight: 900; }
+
+#zwds-app .zwds-kit-note {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto 48px;
+  padding: 18px 20px;
+  border: 1px solid rgba(198, 169, 107, .24);
+  background: rgba(198, 169, 107, .06);
+  color: var(--beige);
+  font-size: .8rem;
+}
+
+#zwds-app .zwds-kit-note strong { color: var(--gold); }
+#zwds-app .zwds-kit-note p { margin: 5px 0 0; }
+
+@media (max-width: 760px) {
+  #zwds-app #zwds-hero { min-height: 300px; padding: 104px 20px 56px; }
+  #zwds-app .zwds-profile-heading { flex-direction: column; gap: 6px; }
+  #zwds-app .zwds-profile-toolbar { grid-template-columns: repeat(2, 1fr); }
+  #zwds-app .zwds-profile-select-wrap { grid-column: 1 / -1; }
+  #zwds-app .zwds-import-button { width: 100%; }
+  #zwds-app .zwds-selection-summary { align-items: flex-start; text-align: left; }
+}
+
+/* Email-gated backup download */
+#zwds-app .zwds-profile-toolbar {
+  grid-template-columns: minmax(200px, 1fr) auto auto minmax(230px, .85fr) auto auto;
+}
+
+#zwds-app .zwds-download-email-wrap {
+  display: grid;
+  gap: 5px;
+  color: var(--beige);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+#zwds-app .zwds-download-email-wrap input {
+  min-height: 42px;
+  width: 100%;
+  padding: 9px 13px;
+  border: 1px solid rgba(198, 169, 107, .32);
+  border-radius: 2px;
+  background: rgba(15, 15, 16, .74);
+  color: var(--ivory);
+  outline: none;
+}
+
+#zwds-app .zwds-download-email-wrap input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(198, 169, 107, .14);
+}
+
+#zwds-app .zwds-download-email-wrap input[aria-invalid="true"] {
+  border-color: #ff8a80;
+}
+
+#zwds-app .zwds-download-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 1050px) {
+  #zwds-app .zwds-profile-toolbar {
+    grid-template-columns: minmax(220px, 1fr) repeat(2, auto);
+  }
+  #zwds-app .zwds-download-email-wrap { grid-column: 1 / -1; }
+}
+
+@media (max-width: 760px) {
+  #zwds-app .zwds-profile-toolbar { grid-template-columns: repeat(2, 1fr); }
+  #zwds-app .zwds-download-email-wrap { grid-column: 1 / -1; }
+}

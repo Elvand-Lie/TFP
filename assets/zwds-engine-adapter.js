@@ -1,4 +1,5 @@
 // @ts-check
+//zwds-engine-adapter.js
 
 (function (root, factory) {
   const api = factory();
@@ -388,9 +389,23 @@
     return {
       input,
       raw,
-      getHoroscope(year) {
+      getHoroscope(selection) {
+        const source = typeof selection === 'number' ? { year: selection } : (selection || {});
+        const year = Number(source.year);
+        const month = source.month == null ? 7 : Number(source.month);
+        const day = source.day == null ? 1 : Number(source.day);
+        const timeIndex = source.timeIndex == null ? input.iztroTimeIndex : Number(source.timeIndex);
+
         if (!Number.isInteger(year) || year < 1900 || year > 2200) throw new Error('The selected annual year is invalid.');
-        return snapshotHoroscope(astrolabe.horoscope(`${year}-7-1`, input.iztroTimeIndex), raw.palaces);
+        if (!Number.isInteger(month) || month < 1 || month > 12) throw new Error('The selected month is invalid.');
+        if (!Number.isInteger(day) || day < 1 || day > 31) throw new Error('The selected day is invalid.');
+        const date = new Date(Date.UTC(year, month - 1, day));
+        if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+          throw new Error('The selected date is invalid.');
+        }
+        if (!TIME_OPTIONS.some((item) => item.index === timeIndex)) throw new Error('The selected two-hour period is invalid.');
+
+        return snapshotHoroscope(astrolabe.horoscope(`${year}-${month}-${day}`, timeIndex), raw.palaces);
       },
       getFlights(slotId) {
         const source = raw.palaces.find((palace) => palace.slotId === slotId);
