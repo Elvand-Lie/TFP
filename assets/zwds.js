@@ -257,6 +257,10 @@
     function updateCalendarControls() {
       const isLunar = selectedCalendar() === 'lunar';
       if (leapRow) leapRow.hidden = !isLunar;
+      if (!isLunar) {
+        const leap = /** @type {HTMLInputElement | null} */ (byId('leap-month'));
+        if (leap) leap.checked = false;
+      }
       updateDays();
     }
 
@@ -280,7 +284,7 @@
         gender: String(data.get('gender') || 'male'),
         birthTime: timeInput ? timeInput.value : '12:00',
         isUnknownTime: Boolean(unknownInput && unknownInput.checked),
-        isLeapMonth: Boolean(data.get('is-leap-month'))
+        isLeapMonth: selectedCalendar() === 'lunar' && Boolean(data.get('is-leap-month'))
       };
     }
 
@@ -300,7 +304,7 @@
       if (timeInput) timeInput.value = input.birthTime || '12:00';
       if (unknownInput) unknownInput.checked = input.isUnknownTime === true;
       const leap = /** @type {HTMLInputElement | null} */ (byId('leap-month'));
-      if (leap) leap.checked = input.isLeapMonth === true;
+      if (leap) leap.checked = input.calendarType === 'lunar' && input.isLeapMonth === true;
       updateTimePreview();
     }
 
@@ -656,24 +660,22 @@
       monthSelect.append(option);
     }
 
-    if (!store.list().length) {
-      const sample = store.upsert({
-        input: {
-          profileName: 'Sample Chart',
-          calendarType: 'solar',
-          birthDate: '1990-01-01',
-          gender: 'male',
-          birthTime: '12:00',
-          isUnknownTime: false,
-          isLeapMonth: false
-        }
-      });
-      editingProfileId = sample.id;
-    }
-
     refreshProfiles();
     const initialId = store.selectedId() || (store.list()[0] && store.list()[0].id);
-    if (initialId) loadProfile(initialId);
+    if (initialId) {
+      loadProfile(initialId);
+    } else {
+      fillForm({
+        profileName: '',
+        calendarType: 'solar',
+        birthDate: '1990-01-01',
+        gender: 'male',
+        birthTime: '12:00',
+        isUnknownTime: false,
+        isLeapMonth: false
+      });
+      setStatus('Enter your birth details and choose Plot \u0026 Save Profile to create your first chart.', false);
+    }
     if (!store.persistent) setStatus('Browser storage is unavailable; profiles will last only until this tab is closed.', true);
 
     return Object.freeze({ refresh, loadProfile, store });

@@ -219,3 +219,9 @@ button, input, select { font: inherit; }
   #zwds-app .zwds-profile-toolbar { grid-template-columns: repeat(2, 1fr); }
   #zwds-app .zwds-download-email-wrap { grid-column: 1 / -1; }
 }
+
+/* Ensure the leap-month row is truly hidden when the hidden attribute is set,
+   even though the form grid layout would otherwise override display. */
+#zwds-leap-row[hidden] {
+  display: none !important;
+}
