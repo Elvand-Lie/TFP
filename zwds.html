@@ -637,6 +637,14 @@
         <span class="zwds-tab-label">Chart</span>
         <button type="button" id="zwds-return-natal" class="zwds-natal-button" aria-pressed="true">Default Life ·
           本命</button>
+        <div class="zwds-scope-selector" id="zwds-scope-selector" role="group" aria-label="Relationship scope">
+          <button type="button" data-scope="natal" class="zwds-scope-btn is-active" title="Natal">本</button>
+          <button type="button" data-scope="decadal" class="zwds-scope-btn" title="Decade" disabled>限</button>
+          <button type="button" data-scope="yearly" class="zwds-scope-btn" title="Year" disabled>年</button>
+          <button type="button" data-scope="monthly" class="zwds-scope-btn" title="Month" disabled>月</button>
+          <button type="button" data-scope="daily" class="zwds-scope-btn" title="Day" disabled>日</button>
+          <button type="button" data-scope="hourly" class="zwds-scope-btn" title="Hour" disabled>時</button>
+        </div>
         <span class="zwds-method-label" aria-label="Current chart method">Three Harmony · 三合</span>
       </div>
 
@@ -686,7 +694,7 @@
         </div>
 
         <aside class="zwds-flight-info" id="zwds-flight-info" aria-live="polite">
-          <span>Select a palace to view its natal Four Transformations (四化) paths.</span>
+          <span>Select a palace to view its 三方四正 (Three Directions and Four Palaces).</span>
         </aside>
       </div>
     </section>

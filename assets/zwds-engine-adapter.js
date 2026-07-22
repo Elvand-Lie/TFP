@@ -431,6 +431,24 @@
     };
   }
 
+  /**
+   * 三方四正 — Three Directions and Four Palaces.
+   * Given a physical palace slot, return the three related slots at
+   * offsets +4 (first trine), +6 (opposite), and +8 (second trine)
+   * in the canonical twelve Earthly Branch circular order (BRANCHES).
+   * @param {string} slotId
+   * @returns {[string, string, string]}
+   */
+  function getTrineSlots(slotId) {
+    const index = BRANCHES.findIndex(function (b) { return b.id === slotId; });
+    if (index < 0) throw new Error('Unknown palace slot: ' + slotId);
+    return [
+      BRANCHES[(index + 4) % 12].id,
+      BRANCHES[(index + 6) % 12].id,
+      BRANCHES[(index + 8) % 12].id
+    ];
+  }
+
   return Object.freeze({
     MUTAGEN_CONFIG,
     STAR_ID_BY_LABEL,
@@ -455,6 +473,7 @@
     configureIztro,
     snapshotAstrolabe,
     snapshotHoroscope,
-    createChartSession
+    createChartSession,
+    getTrineSlots
   });
 });

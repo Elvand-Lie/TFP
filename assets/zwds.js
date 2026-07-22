@@ -175,13 +175,42 @@
     return `<strong>${selection.year}-${String(selection.month).padStart(2, '0')}-${String(selection.day).padStart(2, '0')} · 流時 ${escapeHtml(selection.hourStemBranch)}</strong><span>${escapeHtml(time ? `${time.branchLabel} · ${time.range}` : '')}</span>`;
   }
 
-  /** @param {any} flight */
-  function renderFlightInfoMarkup(flight) {
-    if (!flight) return '<span>Select a palace to view its natal Four Transformations (四化) paths.</span>';
-    if (flight.blocked) return '<span>The Fortune palace (福德宮) has no outgoing transformations under the current method.</span>';
-    return flight.destinations.map((destination) =>
-      `<span class="zwds-flight-item"><b class="zwds-transform zwds-transform--${escapeHtml(destination.transformationId)}">${escapeHtml(destination.transformationLabel)}</b> → ${escapeHtml(destination.roleLabel)}</span>`
-    ).join('');
+  /** Resolve palace role label for a given relationship scope.
+   *  Does NOT fall back to the natal role for missing time-scope data.
+   *  @param {any} palacesBySlot @param {string} slotId @param {string} scope */
+  function resolveRoleForScope(palacesBySlot, slotId, scope) {
+    var palace = palacesBySlot[slotId];
+    if (!palace) return null;
+    if (scope === 'natal') return palace.label;
+    return (palace.scopeRoles && palace.scopeRoles[scope]) || null;
+  }
+
+  var SCOPE_SELECTOR_ITEMS = Object.freeze([
+    { key: 'natal',   label: '本', title: 'Natal',  depth: 0 },
+    { key: 'decadal', label: '限', title: 'Decade', depth: 1 },
+    { key: 'yearly',  label: '年', title: 'Year',   depth: 2 },
+    { key: 'monthly', label: '月', title: 'Month',  depth: 3 },
+    { key: 'daily',   label: '日', title: 'Day',    depth: 4 },
+    { key: 'hourly',  label: '時', title: 'Hour',   depth: 5 }
+  ]);
+
+  /** Map deepest scope string to a numeric depth for comparison. */
+  function scopeDepth(scope) {
+    var item = SCOPE_SELECTOR_ITEMS.find(function (s) { return s.key === scope; });
+    return item ? item.depth : 0;
+  }
+
+  /** @param {string | null} sourceSlotId @param {string[]} targetSlotIds @param {string} scope @param {any} palacesBySlot */
+  function renderTrineInfoMarkup(sourceSlotId, targetSlotIds, scope, palacesBySlot) {
+    if (!sourceSlotId) return '<span>Select a palace to view its 三方四正 (Three Directions and Four Palaces).</span>';
+    var scopeLabel = SCOPE_SELECTOR_ITEMS.find(function (s) { return s.key === scope; });
+    var scopeTag = scopeLabel ? scopeLabel.label : '本';
+    var sourceRole = resolveRoleForScope(palacesBySlot, sourceSlotId, scope);
+    var targets = targetSlotIds.map(function (slotId) {
+      var role = resolveRoleForScope(palacesBySlot, slotId, scope);
+      return role || '—';
+    });
+    return '<span class="zwds-flight-item"><b>三方四正</b> [' + escapeHtml(scopeTag) + '] ' + escapeHtml(sourceRole || '—') + ' → ' + targets.map(function (r) { return escapeHtml(r); }).join(' · ') + '</span>';
   }
 
   function browserController() {
@@ -197,7 +226,10 @@
     let session = null;
     let state = null;
     let model = null;
-    let selectedFlight = null;
+    /** @type {string} Active relationship scope for 三方四正 display */
+    let relationshipScope = 'natal';
+    /** @type {string | null} Physical slot of the currently selected palace */
+    let selectedRelationshipSourceSlotId = null;
     let editingProfileId = null;
 
     const store = profileStoreApi.createStore(host.localStorage);
@@ -225,6 +257,7 @@
     const profileStatus = byId('zwds-profile-status');
     const importInput = /** @type {HTMLInputElement | null} */ (byId('zwds-import-input'));
     const svg = /** @type {SVGSVGElement | null} */ (doc.getElementById('zwds-flight-overlay'));
+    const scopeSelectorNode = byId('zwds-scope-selector');
 
     if (!form || !chart || !grid || !decadesNode || !annualsNode || !monthsNode || !daysNode || !timesNode || !natalButton || !summaryNode || !errorNode || !flightNode || !yearSelect || !monthSelect || !daySelect || !profileSelect) return null;
 
@@ -339,6 +372,8 @@
       session = engine.createChartSession(iztroLib, input);
       const decades = viewModel.buildDecadeOptions(session.raw);
       state = timeState.createState(decades);
+      relationshipScope = 'natal';
+      selectedRelationshipSourceSlotId = null;
       refresh(null);
       if (shouldScroll) chart.scrollIntoView({ behavior: host.matchMedia && host.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     }
@@ -364,48 +399,99 @@
       summaryNode.innerHTML = renderSelectionSummary(model);
       natalButton.setAttribute('aria-pressed', String(model.selection.scope === 'natal'));
       chart.dataset.scope = model.selection.scope;
-      selectedFlight = null;
-      flightNode.innerHTML = renderFlightInfoMarkup(null);
+      updateScopeSelector();
+      recomputeRelationship();
       chart.hidden = false;
       chart.classList.add('is-active');
-      drawFlights(null);
       if (focusSelector) {
         const target = /** @type {HTMLElement | null} */ (doc.querySelector(focusSelector));
         if (target) target.focus({ preventScroll: true });
       }
     }
 
-    /** @param {any} flight */
-    function drawFlights(flight) {
+    /**
+     * Draw relationship lines on the SVG overlay.
+     * Handles trine (三方四正) relationships — lines from the source
+     * palace to each target palace slot.
+     * @param {{ sourceSlotId: string, type: string, targetSlotIds: string[] } | null} relationship
+     */
+    function drawRelationshipLines(relationship) {
       if (!svg || !grid) return;
       while (svg.firstChild) svg.removeChild(svg.firstChild);
       grid.querySelectorAll('.is-flight-source, .is-flight-destination').forEach((node) => {
         node.classList.remove('is-flight-source', 'is-flight-destination');
         node.setAttribute('aria-pressed', 'false');
       });
-      if (!flight) return;
-      const source = /** @type {HTMLElement | null} */ (grid.querySelector(`[data-slot="${flight.sourceSlotId}"]`));
+      if (!relationship) return;
+      const source = /** @type {HTMLElement | null} */ (grid.querySelector(`[data-slot="${relationship.sourceSlotId}"]`));
       if (!source) return;
       source.classList.add('is-flight-source');
       source.setAttribute('aria-pressed', 'true');
-      if (flight.blocked) return;
       const gridRect = grid.getBoundingClientRect();
       svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
-      flight.destinations.forEach((destination) => {
-        const target = /** @type {HTMLElement | null} */ (grid.querySelector(`[data-slot="${destination.slotId}"]`));
+      relationship.targetSlotIds.forEach((targetSlotId) => {
+        const target = /** @type {HTMLElement | null} */ (grid.querySelector(`[data-slot="${targetSlotId}"]`));
         if (!target) return;
         target.classList.add('is-flight-destination');
         const sourceRect = source.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
         const line = doc.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', String(sourceRect.left - gridRect.left + sourceRect.width / 2));
         line.setAttribute('y1', String(sourceRect.top - gridRect.top + sourceRect.height / 2));
-        const targetRectNow = target.getBoundingClientRect();
-        line.setAttribute('x2', String(targetRectNow.left - gridRect.left + targetRectNow.width / 2));
-        line.setAttribute('y2', String(targetRectNow.top - gridRect.top + targetRectNow.height / 2));
-        line.setAttribute('class', `zwds-flight-line zwds-flight-line--${destination.transformationId}`);
+        const targetRect = target.getBoundingClientRect();
+        line.setAttribute('x2', String(targetRect.left - gridRect.left + targetRect.width / 2));
+        line.setAttribute('y2', String(targetRect.top - gridRect.top + targetRect.height / 2));
+        // 'trine' is a relationship-line class, not a transformation.
+        line.setAttribute('class', 'zwds-flight-line zwds-flight-line--trine');
         svg.append(line);
       });
+    }
+
+    /** Build the current relationship object from stored source slot, or null. */
+    function buildCurrentRelationship() {
+      if (!selectedRelationshipSourceSlotId) return null;
+      var targetSlotIds = engine.getTrineSlots(selectedRelationshipSourceSlotId);
+      return {
+        sourceSlotId: selectedRelationshipSourceSlotId,
+        type: 'trine',
+        targetSlotIds: targetSlotIds
+      };
+    }
+
+    /** Recompute and redraw the 三方四正 relationship for the current source slot and scope. */
+    function recomputeRelationship() {
+      var relationship = buildCurrentRelationship();
+      var palacesBySlot = model ? model.palacesBySlot : {};
+      var targetSlotIds = relationship ? relationship.targetSlotIds : [];
+      flightNode.innerHTML = renderTrineInfoMarkup(
+        selectedRelationshipSourceSlotId, targetSlotIds, relationshipScope, palacesBySlot
+      );
+      drawRelationshipLines(relationship);
+    }
+
+    /** Update the scope selector button states (enabled/disabled, active). */
+    function updateScopeSelector() {
+      if (!scopeSelectorNode) return;
+      var currentDepth = state ? scopeDepth(timeState.deepestScope(state)) : 0;
+      scopeSelectorNode.querySelectorAll('.zwds-scope-btn').forEach(function (btn) {
+        var scope = btn.getAttribute('data-scope');
+        var depth = scopeDepth(scope);
+        var available = depth <= currentDepth;
+        /** @type {HTMLButtonElement} */ (btn).disabled = !available;
+        btn.classList.toggle('is-active', scope === relationshipScope);
+        // If current relationship scope became unavailable, clamp it
+        if (scope === relationshipScope && !available) {
+          relationshipScope = 'natal';
+          btn.classList.remove('is-active');
+          var natalBtn = scopeSelectorNode.querySelector('[data-scope="natal"]');
+          if (natalBtn) natalBtn.classList.add('is-active');
+        }
+      });
+    }
+
+    /** Set relationship scope to the deepest currently available level. */
+    function autoTrackScope() {
+      if (!state) return;
+      relationshipScope = timeState.deepestScope(state);
     }
 
     function loadProfile(id) {
@@ -454,6 +540,8 @@
     natalButton.addEventListener('click', () => {
       if (!session) return;
       state = timeState.createState(viewModel.buildDecadeOptions(session.raw));
+      relationshipScope = 'natal';
+      selectedRelationshipSourceSlotId = null;
       refresh('#zwds-return-natal');
     });
 
@@ -463,6 +551,7 @@
       if (!button || !state || !session) return;
       const id = button.getAttribute('data-decade-id');
       state = timeState.selectDecade(state, viewModel.buildDecadeOptions(session.raw), id);
+      autoTrackScope();
       refresh(`[data-decade-id="${id}"]`);
     });
 
@@ -472,6 +561,7 @@
       if (!button || !state || !session) return;
       const year = Number(button.getAttribute('data-year'));
       state = timeState.selectYear(state, viewModel.buildDecadeOptions(session.raw), year);
+      autoTrackScope();
       refresh(`[data-year="${year}"]`);
     });
 
@@ -481,6 +571,7 @@
       if (!button || !state) return;
       const month = Number(button.getAttribute('data-month'));
       state = timeState.selectMonth(state, month);
+      autoTrackScope();
       refresh(`[data-month="${month}"]`);
     });
 
@@ -490,6 +581,7 @@
       if (!button || !state) return;
       const day = Number(button.getAttribute('data-day'));
       state = timeState.selectDay(state, day);
+      autoTrackScope();
       refresh(`[data-day="${day}"]`);
     });
 
@@ -499,17 +591,32 @@
       if (!button || !state) return;
       const index = Number(button.getAttribute('data-time-index'));
       state = timeState.selectTime(state, index, engine.TIME_OPTIONS.map((item) => item.index));
+      autoTrackScope();
       refresh(`[data-time-index="${index}"]`);
     });
 
+    /* Palace click → 三方四正 trine relationship (not Four Transformations flights) */
     grid.addEventListener('click', (event) => {
       const target = /** @type {any} */ (event.target);
       const button = /** @type {HTMLElement | null} */ (target && typeof target.closest === 'function' ? target.closest('.zwds-palace') : null);
       if (!button || !session) return;
-      selectedFlight = session.getFlights(button.getAttribute('data-slot'));
-      flightNode.innerHTML = renderFlightInfoMarkup(selectedFlight);
-      drawFlights(selectedFlight);
+      selectedRelationshipSourceSlotId = button.getAttribute('data-slot');
+      recomputeRelationship();
     });
+
+    /* Relationship-scope selector (本 · 限 · 年 · 月 · 日 · 時) */
+    if (scopeSelectorNode) {
+      scopeSelectorNode.addEventListener('click', (event) => {
+        const target = /** @type {any} */ (event.target);
+        const btn = /** @type {HTMLElement | null} */ (target && typeof target.closest === 'function' ? target.closest('.zwds-scope-btn') : null);
+        if (!btn || /** @type {HTMLButtonElement} */ (btn).disabled) return;
+        var scope = btn.getAttribute('data-scope');
+        if (!scope) return;
+        relationshipScope = scope;
+        updateScopeSelector();
+        recomputeRelationship();
+      });
+    }
 
     profileSelect.addEventListener('change', () => loadProfile(profileSelect.value));
 
@@ -645,7 +752,7 @@
       }
     });
 
-    host.addEventListener('resize', () => drawFlights(selectedFlight), { passive: true });
+    host.addEventListener('resize', () => drawRelationshipLines(buildCurrentRelationship()), { passive: true });
 
     for (let year = new Date().getFullYear(); year >= 1900; year -= 1) {
       const option = doc.createElement('option');
@@ -699,7 +806,8 @@
     renderDaysMarkup,
     renderTimesMarkup,
     renderSelectionSummary,
-    renderFlightInfoMarkup,
+    renderTrineInfoMarkup,
+    resolveRoleForScope,
     browserController
   });
 });

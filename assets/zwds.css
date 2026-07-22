@@ -1924,3 +1924,71 @@
   font-size: .52rem;
   line-height: 1;
 }
+
+/* ── Relationship-scope selector (三方四正) ── */
+#zwds-app .zwds-scope-selector {
+  display: inline-flex;
+  gap: 0;
+  border: 1px solid rgba(198, 169, 107, .35);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+#zwds-app .zwds-scope-btn {
+  min-width: 30px;
+  min-height: 28px;
+  padding: 4px 7px;
+  border: 0;
+  border-right: 1px solid rgba(198, 169, 107, .18);
+  background: rgba(198, 169, 107, .06);
+  color: var(--beige);
+  font-size: .72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+
+#zwds-app .zwds-scope-btn:last-child {
+  border-right: 0;
+}
+
+#zwds-app .zwds-scope-btn:hover:not(:disabled) {
+  background: rgba(198, 169, 107, .18);
+}
+
+#zwds-app .zwds-scope-btn.is-active {
+  background: var(--crimson);
+  color: var(--ivory);
+}
+
+#zwds-app .zwds-scope-btn:disabled {
+  opacity: .32;
+  cursor: not-allowed;
+}
+
+#zwds-app .zwds-scope-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -2px;
+}
+
+/* ── Trine relationship lines (三方四正 arrows) ── */
+#zwds-app .zwds-flight-line--trine {
+  stroke: var(--gold, #C6A96B);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 6 3;
+  opacity: .72;
+}
+
+@media (max-width: 760px) {
+  #zwds-app .zwds-scope-selector {
+    order: 10;
+    flex: 1 0 100%;
+    justify-content: stretch;
+  }
+
+  #zwds-app .zwds-scope-btn {
+    flex: 1;
+    min-width: 0;
+  }
+}
