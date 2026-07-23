@@ -226,52 +226,46 @@ button, input, select { font: inherit; }
   display: none !important;
 }
 
-/* ── 三方四正 subtle arrow interaction ── */
+/* ── 三方四正 reference-style subtle destination arrows ── */
 
 #zwds-app .zwds-palace.is-trine-source {
-  z-index: 3;
-  box-shadow: inset 0 0 0 2px rgba(239, 107, 107, .90);
+  background: rgba(113, 1, 1, .28) !important;
+  box-shadow: inset 0 0 0 1.35px rgba(239, 107, 107, .90) !important;
 }
 
 #zwds-app .zwds-palace.is-trine-target,
 #zwds-app .zwds-palace.is-trine-opposite {
-  z-index: 3;
-  box-shadow: inset 0 0 0 1px rgba(198, 169, 107, .45);
+  background: rgba(198, 169, 107, .075) !important;
+  box-shadow: inset 0 0 0 1px rgba(198, 169, 107, .30) !important;
 }
 
 #zwds-app .zwds-flight-overlay {
-  display: block;
+  z-index: 6;
   overflow: visible;
-  z-index: 4;
 }
 
-#zwds-app .zwds-palace {
-  position: relative;
-  z-index: 2;
-}
-
-#zwds-app .zwds-center {
-  position: relative;
-  z-index: 5;
-}
-
-#zwds-app .zwds-trine-route {
+#zwds-app .zwds-trine-path,
+#zwds-app .zwds-trine-path--opposite {
   fill: none;
-  stroke: rgba(198, 169, 107, .55);
-  stroke-width: 1.2;
+  stroke: rgba(216, 208, 196, .10);
+  stroke-width: .72;
   stroke-linecap: round;
   stroke-linejoin: round;
-  pointer-events: none;
   vector-effect: non-scaling-stroke;
+  pointer-events: none;
+  filter: none;
 }
 
 #zwds-app .zwds-trine-arrowhead {
-  fill: #e35b63;
+  fill: rgba(223, 82, 92, .88);
+  stroke: rgba(15, 15, 16, .52);
+  stroke-width: .35;
 }
 
 @media (max-width: 760px) {
-  #zwds-app .zwds-trine-route {
-    stroke-width: 1;
+  #zwds-app .zwds-trine-path,
+  #zwds-app .zwds-trine-path--opposite {
+    stroke-width: .62;
   }
 }
 
