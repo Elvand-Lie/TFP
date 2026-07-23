@@ -445,16 +445,29 @@
       var sourceRect = source.getBoundingClientRect();
       var center = grid.querySelector('.zwds-center');
       var centerRect = center ? center.getBoundingClientRect() : null;
+      /** Convert DOMRect to local {left,top,right,bottom,width,height} relative to grid. */
+      function toLocal(r) {
+        return {
+          left: r.left - gridRect.left, top: r.top - gridRect.top,
+          right: r.right - gridRect.left, bottom: r.bottom - gridRect.top,
+          width: r.width, height: r.height
+        };
+      }
+      var localGrid = { left: 0, top: 0, right: gridRect.width, bottom: gridRect.height, width: gridRect.width, height: gridRect.height };
+      var localSource = toLocal(sourceRect);
+      var localCenter = centerRect ? toLocal(centerRect) : localGrid;
       relationship.targetSlotIds.forEach(function (targetSlotId, index) {
         var target = grid.querySelector('[data-slot="' + targetSlotId + '"]');
         if (!target) return;
         target.classList.add(index === 1 ? 'is-trine-opposite' : 'is-trine-target');
         var targetRect = target.getBoundingClientRect();
+        var localTarget = toLocal(targetRect);
         var route = relationshipRouter.route(
-          { x: sourceRect.left - gridRect.left, y: sourceRect.top - gridRect.top, w: sourceRect.width, h: sourceRect.height },
-          { x: targetRect.left - gridRect.left, y: targetRect.top - gridRect.top, w: targetRect.width, h: targetRect.height },
-          centerRect ? { x: centerRect.left - gridRect.left, y: centerRect.top - gridRect.top, w: centerRect.width, h: centerRect.height } : null,
-          { fan: relationship.targetSlotIds.length, fanIndex: index, inset: 9 }
+          localSource,
+          localTarget,
+          localCenter,
+          localGrid,
+          index
         );
         var gradientId = 'zwds-trine-route-' + index;
         appendRouteGradient(defs, gradientId, route.points[0], route.points[route.points.length - 1]);

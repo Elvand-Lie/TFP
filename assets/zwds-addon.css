@@ -264,3 +264,21 @@ button, input, select { font: inherit; }
     stroke-width: .62;
   }
 }
+
+/* ── Toolbar spacing & method label ── */
+
+#zwds-app .zwds-tabs {
+  gap: 12px;
+}
+
+#zwds-app .zwds-method-label {
+  font-size: .7rem;
+  color: var(--zwds-muted, #888580);
+  opacity: .7;
+  pointer-events: none;
+  user-select: none;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: default;
+}
