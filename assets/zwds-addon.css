@@ -225,3 +225,215 @@ button, input, select { font: inherit; }
 #zwds-leap-row[hidden] {
   display: none !important;
 }
+
+
+/* ================================================================
+   FINAL THREE-HARMONY INTERACTION PATCH
+   One clicked palace + fixed +4/+6/+8 targets at every time layer.
+   ================================================================ */
+#zwds-app .zwds-relationship-standard {
+  flex: 1 1 320px;
+  color: var(--muted);
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+#zwds-app .zwds-palace.is-trine-source {
+  z-index: 5;
+  background: rgba(113, 1, 1, .32);
+  box-shadow:
+    inset 0 0 0 2px #ef6b6b,
+    inset 0 0 28px rgba(113, 1, 1, .22);
+}
+
+#zwds-app .zwds-palace.is-trine-target {
+  z-index: 3;
+  background: rgba(198, 169, 107, .13);
+  box-shadow: inset 0 0 0 1px rgba(198, 169, 107, .5);
+}
+
+#zwds-app .zwds-palace.is-trine-opposite {
+  z-index: 3;
+  background: rgba(113, 1, 1, .19);
+  box-shadow: inset 0 0 0 1px rgba(229, 57, 57, .52);
+}
+
+#zwds-app .zwds-flight-overlay {
+  z-index: 6;
+  overflow: visible;
+}
+
+#zwds-app .zwds-trine-path {
+  fill: none;
+  stroke: rgba(223, 196, 137, .76);
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .7));
+}
+
+#zwds-app .zwds-trine-path--opposite {
+  stroke: rgba(239, 107, 107, .78);
+}
+
+#zwds-app .zwds-trine-arrowhead {
+  fill: #e4c98f;
+  stroke: rgba(15, 15, 16, .72);
+  stroke-width: .8;
+}
+
+#zwds-app .zwds-flight-info {
+  min-height: 54px;
+  gap: 9px;
+}
+
+#zwds-app .zwds-relationship-source,
+#zwds-app .zwds-relationship-target,
+#zwds-app .zwds-relationship-targets {
+  display: inline-flex;
+  align-items: center;
+}
+
+#zwds-app .zwds-relationship-source,
+#zwds-app .zwds-relationship-target {
+  gap: 5px;
+}
+
+#zwds-app .zwds-relationship-source small,
+#zwds-app .zwds-relationship-target small {
+  color: var(--muted);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+#zwds-app .zwds-relationship-source b {
+  color: #ef6b6b;
+}
+
+#zwds-app .zwds-relationship-targets {
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+#zwds-app .zwds-relationship-target--trine b {
+  color: var(--gold);
+}
+
+#zwds-app .zwds-relationship-target--opposite b {
+  color: #ef6b6b;
+}
+
+#zwds-app .zwds-relationship-arrow {
+  color: var(--gold);
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  #zwds-app .zwds-relationship-standard {
+    flex-basis: 100%;
+    order: 5;
+  }
+
+  #zwds-app .zwds-flight-info {
+    align-items: flex-start;
+  }
+
+  #zwds-app .zwds-relationship-arrow {
+    display: none;
+  }
+}
+
+/* ================================================================
+   INNER-PERIMETER RELATIONSHIP ROUTING
+   The SVG remains below a transparent centre shell. An opaque inner
+   card protects chart metadata while three thin routes use dedicated
+   lanes around its perimeter.
+   ================================================================ */
+#zwds-app .zwds-center {
+  z-index: 7;
+  isolation: isolate;
+  overflow: visible;
+  padding: clamp(42px, 4.2vw, 58px);
+  background: transparent !important;
+}
+
+#zwds-app .zwds-center::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: clamp(30px, 3vw, 40px);
+  border: 1px solid rgba(198, 169, 107, .18);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(113, 1, 1, .15), transparent 62%),
+    rgba(23, 23, 25, .975);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, .34);
+  pointer-events: none;
+}
+
+#zwds-app .zwds-center > * {
+  position: relative;
+  z-index: 1;
+}
+
+#zwds-app .zwds-flight-overlay { z-index: 6; }
+
+#zwds-app .zwds-trine-path {
+  stroke: rgba(223, 196, 137, .48);
+  stroke-width: 1.05;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .42));
+}
+
+#zwds-app .zwds-trine-path--opposite {
+  stroke: rgba(239, 107, 107, .58);
+}
+
+#zwds-app .zwds-trine-arrowhead {
+  fill: rgba(228, 201, 143, .88);
+  stroke-width: .55;
+}
+
+@media (max-width: 760px) {
+  #zwds-app .zwds-center { padding: 30px; }
+  #zwds-app .zwds-center::before { inset: 22px; }
+  #zwds-app .zwds-trine-path { stroke-width: .88; }
+}
+
+
+/* ================================================================
+   REFERENCE-STYLE SUBTLE DESTINATION ARROWS
+   The selected and related palace surfaces remain the primary signal.
+   Routes fade from nearly invisible at the source to a tiny crimson
+   arrowhead precisely at each destination border.
+   ================================================================ */
+#zwds-app .zwds-palace.is-trine-source {
+  background: rgba(113, 1, 1, .28) !important;
+  box-shadow: inset 0 0 0 1.35px rgba(239, 107, 107, .90) !important;
+}
+#zwds-app .zwds-palace.is-trine-target,
+#zwds-app .zwds-palace.is-trine-opposite {
+  background: rgba(198, 169, 107, .075) !important;
+  box-shadow: inset 0 0 0 1px rgba(198, 169, 107, .30) !important;
+}
+#zwds-app .zwds-trine-path,
+#zwds-app .zwds-trine-path--opposite {
+  stroke: rgba(216, 208, 196, .10);
+  stroke-width: .72;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: none;
+}
+#zwds-app .zwds-trine-arrowhead {
+  fill: rgba(223, 82, 92, .88);
+  stroke: rgba(15, 15, 16, .52);
+  stroke-width: .35;
+}
+#zwds-app .zwds-center::before {
+  border-color: rgba(198, 169, 107, .13);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .28);
+}
+@media (max-width: 760px) {
+  #zwds-app .zwds-trine-path,
+  #zwds-app .zwds-trine-path--opposite { stroke-width: .62; }
+}

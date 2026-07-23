@@ -82,12 +82,18 @@ interface ZwdsChartViewModel {
   decadeOptions: ZwdsDecadeOption[];
   annualOptions: unknown[];
   selection: {
-    scope: 'natal' | 'decadal' | 'yearly';
+    scope: 'natal' | 'decadal' | 'yearly' | 'monthly' | 'daily' | 'hourly';
     decadeId: string | null;
     year: number | null;
+    month: number | null;
+    day: number | null;
+    timeIndex: number | null;
     nominalAge: number | null;
     decadeStemBranch: string;
     yearStemBranch: string;
+    monthStemBranch: string;
+    dayStemBranch: string;
+    hourStemBranch: string;
     decadeStartYear: number | null;
     decadeEndYear: number | null;
     decadeStartAge: number | null;
