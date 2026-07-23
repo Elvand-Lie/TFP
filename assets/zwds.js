@@ -158,7 +158,7 @@
   /** @param {any} model */
   function renderSelectionSummary(model) {
     const selection = model.selection;
-    if (selection.scope === 'natal') return '<strong>Natal Chart · 本命</strong><span>Click any palace to show its fixed 三方四正 group</span>';
+    if (selection.scope === 'natal') return '<strong>本命</strong><span>Natal chart</span>';
     if (selection.scope === 'decadal') {
       return `<strong>Decade · 大限 ${escapeHtml(selection.decadeStemBranch)}</strong><span>${selection.decadeStartYear}–${selection.decadeEndYear} · Ages ${selection.decadeStartAge}–${selection.decadeEndAge}</span>`;
     }
@@ -185,29 +185,14 @@
     return (palace.scopeRoles && palace.scopeRoles[scope]) || null;
   }
 
-  var RELATIONSHIP_LAYER_ITEMS = Object.freeze([
-    { key: 'natal',   label: '本', title: 'Natal' },
-    { key: 'decadal', label: '限', title: 'Decade' },
-    { key: 'yearly',  label: '年', title: 'Year' },
-    { key: 'monthly', label: '月', title: 'Month' },
-    { key: 'daily',   label: '日', title: 'Day' },
-    { key: 'hourly',  label: '時', title: 'Hour' }
-  ]);
-
   /** @param {string | null} sourceSlotId @param {string[]} targetSlotIds @param {string} scope @param {any} palacesBySlot */
   function renderTrineInfoMarkup(sourceSlotId, targetSlotIds, scope, palacesBySlot) {
-    if (!sourceSlotId) return '<span><b>三方四正</b> · Select any palace. Three arrows will point to its two trines and opposite palace.</span>';
-    var scopeLabel = RELATIONSHIP_LAYER_ITEMS.find(function (item) { return item.key === scope; });
-    var scopeTag = scopeLabel ? scopeLabel.label : '本';
-    var sourceRole = resolveRoleForScope(palacesBySlot, sourceSlotId, scope) || resolveRoleForScope(palacesBySlot, sourceSlotId, 'natal') || '—';
-    var targetRoles = targetSlotIds.map(function (slotId) {
-      return resolveRoleForScope(palacesBySlot, slotId, scope) || resolveRoleForScope(palacesBySlot, slotId, 'natal') || '—';
+    if (!sourceSlotId) return '<span>Select a palace to view its 三方四正.</span>';
+    var sourceRole = resolveRoleForScope(palacesBySlot, sourceSlotId, scope) || '—';
+    var targets = targetSlotIds.map(function (slotId) {
+      return resolveRoleForScope(palacesBySlot, slotId, scope) || '—';
     });
-    var labels = ['三方', '對宮', '三方'];
-    var targets = targetRoles.map(function (role, index) {
-      return '<span class="zwds-relationship-target zwds-relationship-target--' + (index === 1 ? 'opposite' : 'trine') + '"><small>' + labels[index] + '</small><b>' + escapeHtml(role) + '</b></span>';
-    }).join('');
-    return '<span class="zwds-relationship-source"><small>目前層級 [' + escapeHtml(scopeTag) + '] · 本宮</small><b>' + escapeHtml(sourceRole) + '</b></span><span class="zwds-relationship-arrow" aria-hidden="true">→</span><span class="zwds-relationship-targets">' + targets + '</span>';
+    return '<span class="zwds-flight-item">' + escapeHtml(sourceRole) + ' → ' + targets.map(function (r) { return escapeHtml(r); }).join(' · ') + '</span>';
   }
 
   function browserController() {
@@ -391,7 +376,8 @@
       daysNode.innerHTML = renderDaysMarkup(model);
       timesNode.innerHTML = renderTimesMarkup(model);
       summaryNode.innerHTML = renderSelectionSummary(model);
-      natalButton.setAttribute('aria-pressed', String(model.selection.scope === 'natal'));
+      var isNatal = model.selection.scope === 'natal';
+      natalButton.hidden = isNatal;
       chart.dataset.scope = model.selection.scope;
       recomputeRelationship();
       chart.hidden = false;
@@ -402,148 +388,104 @@
       }
     }
 
-    /** @param {DOMRect} rect @param {{x:number,y:number}} toward @param {DOMRect} gridRect @param {number=} inset */
-    function pointOnRectEdge(rect, toward, gridRect, inset) {
-      const padding = Number.isFinite(inset) ? Number(inset) : 3;
-      const center = {
-        x: rect.left - gridRect.left + rect.width / 2,
-        y: rect.top - gridRect.top + rect.height / 2
-      };
-      const dx = toward.x - center.x;
-      const dy = toward.y - center.y;
-      if (dx === 0 && dy === 0) return center;
-      const halfWidth = Math.max(1, rect.width / 2 - padding);
-      const halfHeight = Math.max(1, rect.height / 2 - padding);
-      const scaleX = dx === 0 ? Number.POSITIVE_INFINITY : halfWidth / Math.abs(dx);
-      const scaleY = dy === 0 ? Number.POSITIVE_INFINITY : halfHeight / Math.abs(dy);
-      const scale = Math.min(scaleX, scaleY);
-      return { x: center.x + dx * scale, y: center.y + dy * scale };
-    }
-
-    /** @param {SVGSVGElement} targetSvg */
+    /** Create <defs> with arrowhead marker for trine routes. */
     function appendArrowDefinitions(targetSvg) {
-      const defs = doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      const marker = doc.createElementNS('http://www.w3.org/2000/svg', 'marker');
+      var defs = doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      var marker = doc.createElementNS('http://www.w3.org/2000/svg', 'marker');
       marker.setAttribute('id', 'zwds-trine-arrowhead');
-      marker.setAttribute('viewBox', '0 0 10 10');
-      marker.setAttribute('refX', '9.1');
-      marker.setAttribute('refY', '5');
       marker.setAttribute('markerWidth', '5');
-      marker.setAttribute('markerHeight', '5');
+      marker.setAttribute('markerHeight', '4');
+      marker.setAttribute('refX', '4.5');
+      marker.setAttribute('refY', '2');
       marker.setAttribute('orient', 'auto');
-      marker.setAttribute('markerUnits', 'userSpaceOnUse');
-      const shape = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
-      shape.setAttribute('d', 'M 0 1.2 L 10 5 L 0 8.8 z');
+      marker.setAttribute('markerUnits', 'strokeWidth');
+      var shape = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+      shape.setAttribute('d', 'M0,0 L5,2 L0,4 Z');
       shape.setAttribute('class', 'zwds-trine-arrowhead');
-      marker.append(shape);
-      defs.append(marker);
-      targetSvg.append(defs);
+      marker.appendChild(shape);
+      defs.appendChild(marker);
+      targetSvg.appendChild(defs);
       return defs;
     }
 
-    /** @param {SVGDefsElement} defs @param {string} id @param {{x:number,y:number}} source @param {{x:number,y:number}} target */
-    function appendRouteGradient(defs, id, source, target) {
-      const gradient = doc.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-      gradient.setAttribute('id', id);
-      gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
-      gradient.setAttribute('x1', String(source.x));
-      gradient.setAttribute('y1', String(source.y));
-      gradient.setAttribute('x2', String(target.x));
-      gradient.setAttribute('y2', String(target.y));
-      [
-        ['0%', '#d8d0c4', '0.015'],
-        ['58%', '#d8d0c4', '0.055'],
-        ['84%', '#d8d0c4', '0.12'],
-        ['100%', '#d8d0c4', '0.23']
-      ].forEach((entry) => {
-        const stop = doc.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop.setAttribute('offset', entry[0]);
-        stop.setAttribute('stop-color', entry[1]);
-        stop.setAttribute('stop-opacity', entry[2]);
-        gradient.append(stop);
-      });
-      defs.append(gradient);
+    /** Create a linearGradient element for a route. */
+    function appendRouteGradient(defs, id, src, tgt) {
+      var grad = doc.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      grad.setAttribute('id', id);
+      grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+      grad.setAttribute('x1', String(src.x)); grad.setAttribute('y1', String(src.y));
+      grad.setAttribute('x2', String(tgt.x)); grad.setAttribute('y2', String(tgt.y));
+      var stop1 = doc.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%'); stop1.setAttribute('stop-color', 'rgba(113,1,1,.06)');
+      var stop2 = doc.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%'); stop2.setAttribute('stop-color', 'rgba(113,1,1,.38)');
+      grad.appendChild(stop1); grad.appendChild(stop2);
+      defs.appendChild(grad);
     }
 
     /**
-     * Draw exactly three 三方四正 arrows from the selected palace to
-     * offsets +4, +6 and +8. Lines begin and end at palace borders.
+     * Draw relationship routes on the SVG overlay using the perimeter router.
      * @param {{ sourceSlotId: string, type: string, targetSlotIds: string[] } | null} relationship
      */
     function drawRelationshipLines(relationship) {
       if (!svg || !grid) return;
       while (svg.firstChild) svg.removeChild(svg.firstChild);
-      grid.querySelectorAll('.is-trine-source, .is-trine-target, .is-trine-opposite').forEach((node) => {
+      grid.querySelectorAll('.is-trine-source, .is-trine-target, .is-trine-opposite').forEach(function (node) {
         node.classList.remove('is-trine-source', 'is-trine-target', 'is-trine-opposite');
         node.setAttribute('aria-pressed', 'false');
       });
       if (!relationship) return;
-      const source = /** @type {HTMLElement | null} */ (grid.querySelector(`[data-slot="${relationship.sourceSlotId}"]`));
+      var source = grid.querySelector('[data-slot="' + relationship.sourceSlotId + '"]');
       if (!source) return;
       source.classList.add('is-trine-source');
       source.setAttribute('aria-pressed', 'true');
-
-      const gridRect = grid.getBoundingClientRect();
-      const centerNode = /** @type {HTMLElement | null} */ (grid.querySelector('.zwds-center'));
-      const centerRect = centerNode ? centerNode.getBoundingClientRect() : gridRect;
-      svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
-      svg.setAttribute('preserveAspectRatio', 'none');
-      const defs = appendArrowDefinitions(svg);
-
-      const sourceRect = source.getBoundingClientRect();
-      relationship.targetSlotIds.forEach((targetSlotId, index) => {
-        const target = /** @type {HTMLElement | null} */ (grid.querySelector(`[data-slot="${targetSlotId}"]`));
+      var gridRect = grid.getBoundingClientRect();
+      svg.setAttribute('viewBox', '0 0 ' + gridRect.width + ' ' + gridRect.height);
+      var defs = appendArrowDefinitions(svg);
+      var sourceRect = source.getBoundingClientRect();
+      var center = grid.querySelector('.zwds-center');
+      var centerRect = center ? center.getBoundingClientRect() : null;
+      relationship.targetSlotIds.forEach(function (targetSlotId, index) {
+        var target = grid.querySelector('[data-slot="' + targetSlotId + '"]');
         if (!target) return;
         target.classList.add(index === 1 ? 'is-trine-opposite' : 'is-trine-target');
-        const route = relationshipRouter.route(
-          sourceRect,
-          target.getBoundingClientRect(),
-          centerRect,
-          gridRect,
-          index,
-          {
-            baseInset: Math.max(7, Math.min(12, gridRect.width * 0.012)),
-            laneSpacing: Math.max(5, Math.min(8, gridRect.width * 0.007)),
-            fanSpacing: Math.max(6, Math.min(10, gridRect.width * 0.009)),
-            cornerRadius: 9,
-            protectedInset: 22
-          }
+        var targetRect = target.getBoundingClientRect();
+        var route = relationshipRouter.route(
+          { x: sourceRect.left - gridRect.left, y: sourceRect.top - gridRect.top, w: sourceRect.width, h: sourceRect.height },
+          { x: targetRect.left - gridRect.left, y: targetRect.top - gridRect.top, w: targetRect.width, h: targetRect.height },
+          centerRect ? { x: centerRect.left - gridRect.left, y: centerRect.top - gridRect.top, w: centerRect.width, h: centerRect.height } : null,
+          { fan: relationship.targetSlotIds.length, fanIndex: index, inset: 9 }
         );
-        const gradientId = `zwds-trine-route-${index}`;
+        var gradientId = 'zwds-trine-route-' + index;
         appendRouteGradient(defs, gradientId, route.points[0], route.points[route.points.length - 1]);
-        const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', route.d);
-        path.setAttribute('class', `zwds-trine-path ${index === 1 ? 'zwds-trine-path--opposite' : 'zwds-trine-path--trine'}`);
-        path.setAttribute('stroke', `url(#${gradientId})`);
+        var path = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', relationshipRouter.roundedPath(route.points, 18));
+        path.setAttribute('class', 'zwds-trine-path');
+        path.setAttribute('stroke', 'url(#' + gradientId + ')');
         path.setAttribute('marker-end', 'url(#zwds-trine-arrowhead)');
-        path.setAttribute('data-source-slot', relationship.sourceSlotId);
-        path.setAttribute('data-target-slot', targetSlotId);
-        path.setAttribute('data-relation', index === 1 ? 'opposite' : 'trine');
-        path.setAttribute('data-route', 'inner-rail-subtle');
-        path.setAttribute('data-source-side', route.sourceSide);
-        path.setAttribute('data-target-side', route.targetSide);
-        svg.append(path);
+        svg.appendChild(path);
       });
     }
 
-    /** Build the fixed 三方四正 group for the selected physical palace slot. */
+    /** Build the current relationship object from stored source slot, or null. */
     function buildCurrentRelationship() {
       if (!selectedRelationshipSourceSlotId) return null;
+      var targetSlotIds = engine.getTrineSlots(selectedRelationshipSourceSlotId);
       return {
         sourceSlotId: selectedRelationshipSourceSlotId,
         type: 'trine',
-        targetSlotIds: engine.getTrineSlots(selectedRelationshipSourceSlotId)
+        targetSlotIds: targetSlotIds
       };
     }
 
-    /** Recompute labels for the currently displayed layer and redraw the fixed geometry. */
+    /** Recompute and redraw the 三方四正 relationship for the current source slot. */
     function recomputeRelationship() {
-      const relationship = buildCurrentRelationship();
-      const palacesBySlot = model ? model.palacesBySlot : {};
-      const targetSlotIds = relationship ? relationship.targetSlotIds : [];
-      const currentScope = state ? timeState.deepestScope(state) : 'natal';
+      var relationship = buildCurrentRelationship();
+      var scope = state ? timeState.deepestScope(state) : 'natal';
+      var palacesBySlot = model ? model.palacesBySlot : {};
+      var targetSlotIds = relationship ? relationship.targetSlotIds : [];
       flightNode.innerHTML = renderTrineInfoMarkup(
-        selectedRelationshipSourceSlotId, targetSlotIds, currentScope, palacesBySlot
+        selectedRelationshipSourceSlotId, targetSlotIds, scope, palacesBySlot
       );
       drawRelationshipLines(relationship);
     }
@@ -594,7 +536,7 @@
     natalButton.addEventListener('click', () => {
       if (!session) return;
       state = timeState.createState(viewModel.buildDecadeOptions(session.raw));
-      refresh('#zwds-return-natal');
+      refresh(null);
     });
 
     decadesNode.addEventListener('click', (event) => {
@@ -650,6 +592,7 @@
       selectedRelationshipSourceSlotId = button.getAttribute('data-slot');
       recomputeRelationship();
     });
+
 
 
     profileSelect.addEventListener('change', () => loadProfile(profileSelect.value));
@@ -841,7 +784,6 @@
     renderTimesMarkup,
     renderSelectionSummary,
     renderTrineInfoMarkup,
-    resolveRoleForScope,
     browserController
   });
 });
