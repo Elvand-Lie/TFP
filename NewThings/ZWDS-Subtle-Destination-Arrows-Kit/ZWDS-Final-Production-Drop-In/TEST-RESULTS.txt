@@ -1,0 +1,127 @@
+ZWDS Final Production Drop-In — Test Results
+===============================================
+
+Server command:   py -m http.server 8765
+Server CWD:       ZWDS-Final-Production-Drop-In/
+Tested URL:       http://127.0.0.1:8765/zwds.html
+Test date:        2026-07-23
+
+A. STRUCTURAL CHECKS
+---------------------
+  #zwds-grid                  : FOUND
+  #zwds-flight-overlay        : FOUND
+  #zwds-chart-panel           : FOUND
+  relationship-routing.js     : FOUND (script tag added)
+  ZwdsRelationshipRouter      : FOUND (in zwds.js)
+  scope-selector (old)        : REMOVED (good)
+  relationship-standard       : FOUND (replacement)
+  Return to Natal button      : FOUND
+  #zwds-flight-info           : FOUND
+  Twelve .zwds-palace elements: generated after chart plot
+  Duplicate IDs               : none detected
+  Missing script files        : none (all 200 from server log)
+  Syntax errors               : none (page loads and plots correctly)
+
+B. 命宮 RELATIONSHIP VERIFICATION
+----------------------------------
+  BRANCHES order: yin(0), mao(1), chen(2), si(3), wu(4), wei(5),
+                  shen(6), you(7), xu(8), hai(9), zi(10), chou(11)
+
+  Palace role ring (from 命宮 at index 0):
+    0=命宮, 1=兄弟, 2=夫妻, 3=子女, 4=財帛宮, 5=疾厄,
+    6=遷移宮, 7=僕役, 8=官祿宮, 9=田宅, 10=福德, 11=父母
+
+  命宮 (yin, index 0):
+    +4 = wu  = 財帛宮  ✓
+    +6 = shen = 遷移宮  ✓
+    +8 = xu  = 官祿宮  ✓
+
+  Result: PASS — destinations match specification exactly.
+
+C. JS FUNCTION VALIDATION
+---------------------------
+  Required functions FOUND:
+    selectedRelationshipSourceSlotId, recomputeRelationship,
+    drawRelationshipLines, buildCurrentRelationship,
+    renderTrineInfoMarkup, appendArrowDefinitions,
+    appendRouteGradient, ZwdsRelationshipRouter,
+    getTrineSlots, marker-end
+
+  Required CSS classes used:
+    is-trine-source, is-trine-target, is-trine-opposite,
+    zwds-trine-path, zwds-trine-arrowhead
+
+  Old functions REMOVED:
+    autoTrackScope, scopeSelectorNode, SCOPE_SELECTOR_ITEMS,
+    updateScopeSelector, scopeDepth, is-flight-source,
+    is-flight-destination, zwds-flight-line
+
+D. CSS VALIDATION
+------------------
+  is-trine-source             : FOUND in zwds-addon.css
+  is-trine-target             : FOUND
+  is-trine-opposite           : FOUND
+  zwds-trine-path             : FOUND
+  zwds-trine-arrowhead        : FOUND
+  zwds-relationship-standard  : FOUND
+  zwds-relationship-source    : FOUND
+  zwds-relationship-target    : FOUND
+  zwds-relationship-arrow     : FOUND
+  zwds-center::before         : FOUND (inner card protection)
+  stroke-width: .72           : FOUND (subtle route width)
+  pointer-events: none        : FOUND (overlay non-blocking)
+
+E. ROUTING MODULE VALIDATION
+------------------------------
+  ZwdsRelationshipRouter      : FOUND
+  route()                     : FOUND
+  facingSide()                : FOUND
+  edgeAnchor()                : FOUND
+  makeRail()                  : FOUND
+  railPoint()                 : FOUND
+  roundedPath()               : FOUND
+  perimeterValue()            : FOUND
+  pointAtPerimeter()          : FOUND
+
+F. ENGINE ADAPTER VALIDATION
+------------------------------
+  getTrineSlots()             : FOUND
+  (index + 4) % 12            : FOUND
+  (index + 6) % 12            : FOUND
+  (index + 8) % 12            : FOUND
+
+G. SERVER LOG (all resources loaded)
+-------------------------------------
+  zwds.html                   : 200
+  zwds.css                    : 200
+  zwds-addon.css              : 200
+  zwds-engine-adapter.js      : 200
+  zwds-time-state.js          : 200
+  zwds-view-model.js          : 200
+  zwds-profile-store.js       : 200
+  relationship-routing.js     : 200
+  zwds.js                     : 200
+  logo.png                    : 404 (expected — not in drop-in scope)
+  favicon.ico                 : 404 (expected — not in drop-in scope)
+
+H. BROWSER VALIDATION (from subagent before rate limit)
+---------------------------------------------------------
+  Page loaded without errors  : PASS
+  Chart plotted from form     : PASS
+  命宮 click applied is-trine-source : PASS
+  Three target palaces highlighted   : PASS (官祿+財帛 = is-trine-target, 遷移 = is-trine-opposite)
+  Flight-info text updated    : PASS
+  Console errors              : 0
+
+I. KNOWN LIMITATIONS
+---------------------
+  - logo.png and favicon.ico are not included (they are site-wide
+    assets not part of the ZWDS module set; they exist in the
+    production assets/ folder and don't need replacing).
+  - Full 12-palace click-through and time-persistence testing could
+    not be completed via automated browser agent due to API rate
+    limits. The logic was verified programmatically and the first
+    browser test confirmed correct behavior.
+  - Mobile viewport testing not performed via automated agent.
+    The CSS includes @media (max-width: 760px) rules for mobile
+    with reduced stroke-width (.62px).

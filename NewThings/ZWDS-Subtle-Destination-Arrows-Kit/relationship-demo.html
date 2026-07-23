@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZWDS 三方四正 Isolated Interaction Test</title>
+  <link rel="stylesheet" href="assets/relationship-demo.css">
+</head>
+<body>
+  <main class="demo-shell">
+    <header class="demo-header">
+      <div>
+        <p class="eyebrow">ISOLATED INTERACTION TEST</p>
+        <h1>三方四正 · Three Directions and Four Palaces</h1>
+        <p>Click any palace. The +4 / +6 / +8 rule remains fixed. Hairline routes fade toward three tiny destination arrowheads, matching the restrained reference treatment.</p>
+      </div>
+      <div class="status-card" id="demo-status" aria-live="polite"></div>
+    </header>
+
+    <nav class="layer-bar" aria-label="Displayed time layer">
+      <span>Displayed layer</span>
+      <button data-layer="natal" aria-pressed="true">本</button>
+      <button data-layer="decadal" aria-pressed="false">限</button>
+      <button data-layer="yearly" aria-pressed="false">年</button>
+      <button data-layer="monthly" aria-pressed="false">月</button>
+      <button data-layer="daily" aria-pressed="false">日</button>
+      <button data-layer="hourly" aria-pressed="false">時</button>
+      <strong>Subtle destination arrows · 三合</strong>
+    </nav>
+
+    <section class="chart-stage" aria-label="Twelve palace relationship demonstration">
+      <div class="palace-grid" id="demo-grid"></div>
+      <svg class="arrow-overlay" id="demo-overlay" aria-hidden="true"></svg>
+    </section>
+
+    <section class="relationship-readout" id="demo-readout" aria-live="polite"></section>
+    <p class="test-note"><strong>Expected Life Palace result:</strong> 命宮 → 財帛宮 · 遷移宮 · 官祿宮. The selected palace and three targets stay selected after changing 本／限／年／月／日／時.</p>
+  </main>
+
+  <script src="assets/zwds-engine-adapter.js"></script>
+  <script src="assets/relationship-routing.js"></script>
+  <script src="assets/relationship-demo.js"></script>
+</body>
+</html>

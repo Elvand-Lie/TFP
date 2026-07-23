@@ -1,0 +1,8 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/tests/test-routing.js	2026-07-23 09:05:51.416342461 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/tests/test-routing.js	2026-07-23 09:26:35.520311334 +0000
+@@ -37,4 +37,4 @@
+ assert.strictEqual(router.facingSide(palaces.bottomLeft, center), 'right');
+ assert.strictEqual(router.facingSide(palaces.rightMid, center), 'left');
+ 
+-console.log('inner-rail routing tests: PASS');
++console.log('subtle inner-rail routing tests: PASS');

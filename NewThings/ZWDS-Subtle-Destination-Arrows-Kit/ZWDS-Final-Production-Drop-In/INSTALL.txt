@@ -1,0 +1,36 @@
+ZWDS Final Production Drop-In — Installation Instructions
+==========================================================
+
+1. Back up the existing production files.
+   The original-backup/ folder in this package contains copies of the
+   files as they were before this patch.
+
+2. Copy zwds.html into the site root (overwriting the existing file).
+
+3. Copy the contents of assets/ into the existing assets/ folder.
+   Approve overwrite for all files.
+
+4. Hard-refresh with Ctrl+F5.
+
+5. No npm install or build step is required.
+   This remains a static HTML/CSS/JavaScript application.
+
+What changed:
+- zwds.html       — scope-selector buttons replaced with auto-tracking
+                     三方四正 label; relationship-routing.js script added;
+                     natal button text and flight-info default text updated.
+- assets/zwds.js  — Old straight-line drawRelationshipLines replaced with
+                     the approved subtle inner-rail router; scope selector
+                     logic removed; selection persists across time layers.
+- assets/zwds-addon.css — Subtle trine arrow styling, centre protection,
+                     source/target/opposite highlight treatment added.
+- assets/relationship-routing.js — NEW file: approved perimeter-rail
+                     routing module (ZwdsRelationshipRouter).
+- assets/zwds-types.d.ts — Updated with ZwdsRelationshipRouter interface.
+
+Unchanged files (included for completeness):
+- assets/zwds.css
+- assets/zwds-engine-adapter.js
+- assets/zwds-time-state.js
+- assets/zwds-view-model.js
+- assets/zwds-profile-store.js

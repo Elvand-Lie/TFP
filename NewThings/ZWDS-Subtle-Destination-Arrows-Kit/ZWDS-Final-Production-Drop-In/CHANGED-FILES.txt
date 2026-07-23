@@ -1,0 +1,72 @@
+ZWDS Final Production Drop-In — Changed Files
+================================================
+
+MODIFIED FILES
+--------------
+
+1. zwds.html
+   - Lines 636-649: Replaced scope-selector div (6 buttons) with single
+     <span class="zwds-relationship-standard"> auto-tracking label.
+   - Line 638: Natal button text changed from "Default Life · 本命" to
+     "Return to Natal · 返回本命".
+   - Line 636: aria-label changed from "Chart scope and method" to
+     "Chart state and method".
+   - Lines 696-698: Default flight-info text updated to include <b>三方四正</b>
+     and more descriptive instruction.
+   - Line 762: Added <script src="/assets/relationship-routing.js"></script>
+     between profile-store.js and zwds.js.
+
+2. assets/zwds.js
+   - Lines 158-176: renderSelectionSummary — natal message updated to
+     "Natal Chart · 本命" with 三方四正 guidance.
+   - Lines 188-211: SCOPE_SELECTOR_ITEMS/scopeDepth replaced with
+     RELATIONSHIP_LAYER_ITEMS; renderTrineInfoMarkup rewritten with rich
+     HTML (source label, arrow, three target labels with trine/opposite).
+   - Lines 216-222: browserController now requires ZwdsRelationshipRouter.
+   - Lines 228-232: Removed relationshipScope variable.
+   - Line 370-373: plot() no longer sets relationshipScope.
+   - Lines 396-403: refresh() no longer calls updateScopeSelector();
+     recomputeRelationship uses deepestScope(state) automatically.
+   - Lines 405-527: Old drawRelationshipLines (SVG <line>) replaced with
+     new version using ZwdsRelationshipRouter.route(), SVG <path>,
+     gradient strokes, and arrowhead markers.
+   - Lines 529-549: buildCurrentRelationship and recomputeRelationship
+     use deepestScope(state) instead of separate relationshipScope.
+   - Lines 540-546: natalButton click no longer sets relationshipScope
+     or clears selectedRelationshipSourceSlotId.
+   - Lines 548-596: decade/year/month/day/hour handlers no longer call
+     autoTrackScope() — scope tracking is automatic.
+   - Lines 607-619: scopeSelectorNode event handler removed entirely.
+   - Line 789: resize handler preserved.
+
+3. assets/zwds-addon.css
+   - Lines 230-347: Added "FINAL THREE-HARMONY INTERACTION PATCH" block:
+     .is-trine-source, .is-trine-target, .is-trine-opposite highlight rules;
+     .zwds-trine-path route styling; .zwds-trine-arrowhead fill;
+     .zwds-flight-info layout; .zwds-relationship-source/target/arrow labels.
+   - Lines 348-401: Added "INNER-PERIMETER RELATIONSHIP ROUTING" block:
+     .zwds-center transparent shell with ::before opaque inner card;
+     z-index ordering for overlay, center, and paths.
+   - Lines 404-440: Added "REFERENCE-STYLE SUBTLE DESTINATION ARROWS" block:
+     Final approved visual treatment with 0.72px stroke width, gradient
+     opacity from near-invisible at source to crimson arrowhead at target.
+
+NEW FILES
+---------
+
+4. assets/relationship-routing.js (9,358 bytes)
+   ZwdsRelationshipRouter module. Exports: route(), facingSide(),
+   edgeAnchor(), makeRail(), railPoint(), roundedPath(), etc.
+   Uses inner-perimeter rail routing around the centre panel.
+
+5. assets/zwds-types.d.ts (3,139 bytes, updated)
+   Added ZwdsRelationshipRouter to Window interface.
+
+UNCHANGED FILES (copied for completeness)
+------------------------------------------
+
+6. assets/zwds.css           — 41,321 bytes (unchanged)
+7. assets/zwds-engine-adapter.js — 23,384 bytes (unchanged, already has getTrineSlots)
+8. assets/zwds-time-state.js — 5,181 bytes (unchanged)
+9. assets/zwds-view-model.js — 11,726 bytes (unchanged)
+10. assets/zwds-profile-store.js — 5,047 bytes (unchanged)

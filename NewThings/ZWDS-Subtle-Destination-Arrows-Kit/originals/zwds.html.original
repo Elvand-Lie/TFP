@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zi Wei Dou Shu Chart | The Full Picture</title>
+  <meta name="description"
+    content="Create a Zi Wei Dou Shu chart and explore the Twelve Palaces, decade cycles, annual influences, and Four Transformations." />
+  <meta name="keywords"
+    content="Zi Wei Dou Shu, 紫微斗數, ZWDS calculator, Purple Star Astrology, Chinese astrology, The Full Picture" />
+  <meta name="author" content="The Full Picture LLP" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black: #0F0F10;
+      --dark-grey: #1C1C1E;
+      --ivory: #F5F5F2;
+      --beige: #D8CFC4;
+      --pure-white: #FFFFFF;
+      --muted: #888580;
+      --crimson: #710101;
+      --maroon: #591f16;
+      --deep-red: #680806;
+      --crimson-text: #E53939;
+      --gold: #C6A96B;
+      --forest: #1F3A2E;
+      --blue: #42A5F5;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'DM Sans', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--black);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--crimson);
+      border-radius: 2px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .4s, border-bottom .4s;
+    }
+
+    nav.scrolled {
+      background: rgba(15, 15, 16, 0.93);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(113, 1, 1, 0.25);
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      text-decoration: none;
+      transition: opacity .3s;
+    }
+
+    .nav-logo:hover {
+      opacity: .85;
+    }
+
+    .nav-logo span {
+      color: var(--crimson-text);
+      font-weight: 600;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--beige);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 3px;
+      transition: color .3s;
+      white-space: nowrap;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--crimson-text);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s cubic-bezier(.76, 0, .24, 1);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--ivory);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-cta {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      border: 2px solid var(--crimson);
+      padding: 10px 24px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color .35s;
+      z-index: 1;
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--crimson);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s cubic-bezier(.76, 0, .24, 1);
+      z-index: -1;
+    }
+
+    .nav-cta:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--ivory);
+      display: block;
+      transition: .3s;
+    }
+
+    .mobile-nav {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 60px 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+
+    .mobile-nav.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav a {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--ivory);
+      text-decoration: none;
+      letter-spacing: .08em;
+      transition: color .3s, transform .4s, opacity .4s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .mobile-nav.open a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-nav a:hover {
+      color: var(--crimson-text);
+    }
+
+    .mobile-nav-close {
+      position: absolute;
+      top: 28px;
+      right: 48px;
+      font-size: 1.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .section-tag {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .primary-line {
+      width: 60px;
+      height: 2px;
+      background: var(--crimson);
+      margin-bottom: 24px;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.15s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.3s;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(113, 1, 1, 0.15);
+      padding: 80px 0 40px;
+    }
+
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      margin-bottom: 16px;
+    }
+
+    .footer-tagline {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-size: 0.9rem;
+      color: var(--beige);
+      text-decoration: none;
+      transition: color .3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--ivory);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(113, 1, 1, 0.15);
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    @media (max-width: 1280px) {
+      nav {
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-cta {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 320px) {
+      nav {
+        padding: 10px 8px;
+      }
+
+      .nav-logo {
+        max-width: 132px;
+        letter-spacing: .1em;
+      }
+
+      .nav-logo img {
+        height: 52px !important;
+      }
+
+      .nav-logo>div {
+        max-width: 132px;
+        overflow: hidden;
+        font-size: .62rem !important;
+        letter-spacing: .1em;
+        white-space: nowrap;
+      }
+
+      .hamburger {
+        padding: 4px;
+      }
+
+      .footer-inner {
+        padding: 0 14px;
+      }
+
+      .footer-logo>div {
+        max-width: 100%;
+        font-size: .68rem !important;
+        letter-spacing: .08em;
+        white-space: normal;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .footer-bottom-links {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/zwds.css" />
+  <link rel="stylesheet" href="/assets/zwds-addon.css" />
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <a class="nav-logo" href="/"
+      style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
+      <div style="font-size: 1rem; line-height: 1;">The <span>Full</span> Picture</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/founder">Founder</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/zwds" class="active">ZWDS (紫微)</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+      <li><a href="/insights">Insights</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Contact</a>
+    <button type="button" class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-controls="mobileNav"
+      aria-expanded="false"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button type="button" class="mobile-nav-close" id="mobileClose" aria-label="Close navigation menu">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/founder">Founder</a>
+    <a href="/services">Services</a>
+    <a href="/bazi">BaZi</a>
+    <a href="/zwds" class="active">ZWDS (紫微)</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/insights">Insights</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <main id="zwds-app">
+    <section id="zwds-hero" aria-labelledby="zwds-page-title">
+      <div class="zwds-hero-mark" aria-hidden="true">紫</div>
+      <div class="zwds-hero-content">
+        <div class="primary-line"></div>
+        <p class="zwds-eyebrow">Purple Star Astrology · 紫微斗數</p>
+        <h1 id="zwds-page-title">Chart Your<br><em>Stars</em></h1>
+        <p>Enter your birth details to map the Twelve Palaces, then explore decade, annual, monthly, daily, and two-hour
+          influences. Birth time is interpreted as Beijing civil time (UTC+8), without true-solar-time correction.</p>
+      </div>
+    </section>
+
+
+    <section id="zwds-profile-section" aria-labelledby="zwds-profile-title">
+      <div class="zwds-profile-card">
+        <div class="zwds-profile-heading">
+          <div>
+            <p class="zwds-kicker">Saved Profiles</p>
+            <h2 id="zwds-profile-title">Saved Charts</h2>
+          </div>
+          <span>Browser-only storage · no account</span>
+        </div>
+
+        <div class="zwds-profile-toolbar">
+          <label class="zwds-profile-select-wrap" for="zwds-profile-select">
+            <span>Switch Profile</span>
+            <select id="zwds-profile-select" aria-label="Switch saved chart profile"></select>
+          </label>
+
+          <button type="button" id="zwds-new-profile">New</button>
+          <button type="button" id="zwds-delete-profile">Delete</button>
+
+          <label class="zwds-download-email-wrap" for="zwds-download-email">
+            <span>Email required for download</span>
+            <input id="zwds-download-email" type="email" inputmode="email" autocomplete="email"
+              placeholder="name@example.com" />
+          </label>
+
+          <button type="button" id="zwds-export-profiles">Download Backup</button>
+          <label class="zwds-import-button" for="zwds-import-input">Import</label>
+          <input type="file" id="zwds-import-input" accept="application/json,.json" hidden />
+        </div>
+
+        <p class="zwds-download-note">When a backup is downloaded, The Full Picture receives a notification containing
+          the submitted email address and the action performed.</p>
+        <p id="zwds-profile-status" class="zwds-profile-status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="zwds-form-section" aria-labelledby="zwds-input-title">
+      <div class="zwds-form-container">
+        <form id="zwds-form" class="zwds-form-card" novalidate>
+          <div class="zwds-form-heading">
+            <div>
+              <p class="zwds-kicker">Create or Update</p>
+              <h2 id="zwds-input-title">Birth Details</h2>
+            </div>
+            <span>Saved locally when plotted</span>
+          </div>
+
+          <div class="zwds-form-grid">
+            <label class="zwds-field zwds-field--name" for="zwds-name"><span>Name</span><input id="zwds-name"
+                name="profile-name" type="text" maxlength="40" autocomplete="name" placeholder="Optional" /></label>
+
+            <fieldset class="zwds-field zwds-segment">
+              <legend>Calendar</legend>
+              <input type="radio" name="calendar-type" id="cal-solar" value="solar" checked />
+              <label for="cal-solar">Solar</label>
+              <input type="radio" name="calendar-type" id="cal-lunar" value="lunar" />
+              <label for="cal-lunar">Lunar</label>
+            </fieldset>
+
+            <fieldset class="zwds-field zwds-segment">
+              <legend>Gender</legend>
+              <input type="radio" name="gender" id="zwds-gender-m" value="male" checked />
+              <label for="zwds-gender-m">Male</label>
+              <input type="radio" name="gender" id="zwds-gender-f" value="female" />
+              <label for="zwds-gender-f">Female</label>
+            </fieldset>
+
+            <div class="zwds-field zwds-date-field">
+              <span id="zwds-date-label">Date of Birth</span>
+              <div aria-labelledby="zwds-date-label">
+                <label><span class="sr-only">Year</span><select id="zwds-year" name="year" required
+                    aria-label="Birth year"></select></label>
+                <label><span class="sr-only">Month</span><select id="zwds-month" name="month" required
+                    aria-label="Birth month"></select></label>
+                <label><span class="sr-only">Day</span><select id="zwds-day" name="day" required
+                    aria-label="Birth day"></select></label>
+              </div>
+            </div>
+
+            <label class="zwds-check zwds-field" id="zwds-leap-row" hidden><input type="checkbox" id="leap-month"
+                name="is-leap-month" /><span>Leap lunar month</span></label>
+
+            <label class="zwds-field zwds-field--time" for="zwds-birth-time"><span>Birth Time</span><input
+                id="zwds-birth-time" name="birth-time" type="time" value="12:00" step="60" required /><small
+                id="zwds-time-branch" aria-live="polite"></small></label>
+
+            <label class="zwds-check zwds-check--unknown"><input type="checkbox" id="zwds-time-unknown"
+                name="time-unknown" aria-describedby="zwds-time-branch" /><span>Unknown birth time</span></label>
+          </div>
+
+          <p class="zwds-form-note">The exact minute is retained for display; calculation uses the corresponding
+            two-hour Chinese birth-time branch.</p>
+          <p class="zwds-form-error" id="zwds-form-error" role="alert" tabindex="-1"></p>
+          <div class="zwds-form-actions">
+            <button type="submit" class="zwds-btn-primary">Plot &amp; Save Profile <span
+                aria-hidden="true">→</span></button>
+            <button type="reset" class="zwds-btn-secondary">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="zwds-chart" class="zwds-chart-shell" aria-labelledby="zwds-chart-title" hidden>
+      <header class="zwds-chart-header">
+        <div>
+          <p class="zwds-kicker">Natal Chart · 本命</p>
+          <h2 id="zwds-chart-title">The Twelve Palaces</h2>
+        </div>
+        <div id="zwds-selection-summary" class="zwds-selection-summary" aria-live="polite"></div>
+      </header>
+
+      <div class="zwds-tabs" role="toolbar" aria-label="Chart scope and method">
+        <span class="zwds-tab-label">Chart</span>
+        <button type="button" id="zwds-return-natal" class="zwds-natal-button" aria-pressed="true">Default Life ·
+          本命</button>
+        <div class="zwds-scope-selector" id="zwds-scope-selector" role="group" aria-label="Relationship scope">
+          <button type="button" data-scope="natal" class="zwds-scope-btn is-active" title="Natal">本</button>
+          <button type="button" data-scope="decadal" class="zwds-scope-btn" title="Decade" disabled>限</button>
+          <button type="button" data-scope="yearly" class="zwds-scope-btn" title="Year" disabled>年</button>
+          <button type="button" data-scope="monthly" class="zwds-scope-btn" title="Month" disabled>月</button>
+          <button type="button" data-scope="daily" class="zwds-scope-btn" title="Day" disabled>日</button>
+          <button type="button" data-scope="hourly" class="zwds-scope-btn" title="Hour" disabled>時</button>
+        </div>
+        <span class="zwds-method-label" aria-label="Current chart method">Three Harmony · 三合</span>
+      </div>
+
+      <div id="zwds-chart-panel">
+        <section class="zwds-period-section" aria-labelledby="zwds-decade-title">
+          <div class="zwds-period-heading">
+            <h3 id="zwds-decade-title">1. Decade Cycles · 大限</h3><span>Select a ten-year cycle</span>
+          </div>
+          <div class="zwds-period-row" id="zwds-decade-options" aria-label="Decade cycle selection"></div>
+        </section>
+
+        <section class="zwds-period-section" aria-labelledby="zwds-annual-title">
+          <div class="zwds-period-heading">
+            <h3 id="zwds-annual-title">2. Annual Influence · 流年</h3><span>Select a year</span>
+          </div>
+          <div class="zwds-period-row zwds-period-row--years" id="zwds-annual-options"
+            aria-label="Annual year selection"></div>
+        </section>
+
+        <section class="zwds-period-section" aria-labelledby="zwds-month-title">
+          <div class="zwds-period-heading">
+            <h3 id="zwds-month-title">3. Monthly Influence · 流月</h3><span>Select a month</span>
+          </div>
+          <div class="zwds-period-row" id="zwds-month-options" aria-label="Month selection"></div>
+        </section>
+
+        <section class="zwds-period-section" aria-labelledby="zwds-day-title">
+          <div class="zwds-period-heading">
+            <h3 id="zwds-day-title">4. Daily Influence · 流日</h3><span>Select a specific day</span>
+          </div>
+          <div class="zwds-period-row zwds-period-row--days" id="zwds-day-options" aria-label="Day selection"></div>
+        </section>
+
+        <section class="zwds-period-section" aria-labelledby="zwds-time-title">
+          <div class="zwds-period-heading">
+            <h3 id="zwds-time-title">5. Two-Hour Influence · 流時</h3><span>Select a Chinese two-hour period</span>
+          </div>
+          <div class="zwds-period-row" id="zwds-time-options" aria-label="Two-hour period selection"></div>
+        </section>
+
+        <div class="zwds-chart-viewport" tabindex="0"
+          aria-label="Twelve Palace chart; scroll horizontally on narrow screens">
+          <div class="zwds-grid-stage">
+            <div class="zwds-grid" id="zwds-grid"></div>
+            <svg class="zwds-flight-overlay" id="zwds-flight-overlay" aria-hidden="true"></svg>
+          </div>
+        </div>
+
+        <aside class="zwds-flight-info" id="zwds-flight-info" aria-live="polite">
+          <span>Select a palace to view its 三方四正 (Three Directions and Four Palaces).</span>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+            <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span
+                style="text-shadow:none;color:rgba(113,1,1,0.6);font-weight:600;">LLP</span></div>
+          </div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with
+            modern strategy.</p>
+          <p
+            style="font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:16px;opacity:0.7;">
+            A Huang He Group Platform</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/founder">Founder</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/zwds">ZWDS (紫微)</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
+            <li><a href="/insights">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="/services#personal">Personal Destiny</a></li>
+            <li><a href="/services#fengshui">Feng Shui Advisory</a></li>
+            <li><a href="/services#courses">Masterclasses</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="/contact">Book a Consultation</a></li>
+            <li><a href="https://wa.me/6588257687">WhatsApp</a></li>
+            <li><a href="/contact">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- iztro CDN (UMD, pinned v2.4.7) -->
+  <script src="https://cdn.jsdelivr.net/npm/iztro@2.4.7/dist/iztro.min.js"></script>
+  <script src="/assets/zwds-engine-adapter.js"></script>
+  <script src="/assets/zwds-time-state.js"></script>
+  <script src="/assets/zwds-view-model.js"></script>
+  <script src="/assets/zwds-profile-store.js"></script>
+  <script src="/assets/zwds.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => { mobileNav.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); mobileClose.focus(); });
+    mobileClose.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); hamburger.focus(); });
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); }));
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+
+</html>

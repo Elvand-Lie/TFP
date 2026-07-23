@@ -1,0 +1,707 @@
+/* ─── BAZI PAGE STYLES ─────────────────────── */
+
+/* ─── HERO ─── */
+#bazi-hero {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 140px 48px 80px;
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+}
+#bazi-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(113,1,1,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(198,169,107,0.06) 0%, transparent 50%);
+  z-index: 0;
+}
+.bazi-hero-content {
+  position: relative; z-index: 2;
+  max-width: 1240px; margin: 0 auto; width: 100%;
+}
+.bazi-hero-content .section-tag { margin-bottom: 16px; }
+.bazi-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 400; line-height: 1.1;
+  color: var(--ivory); margin-bottom: 24px;
+}
+.bazi-hero-title em {
+  font-style: italic; color: var(--crimson-text);
+  font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+}
+.bazi-hero-sub {
+  font-family: var(--font-sans); font-size: 1.1rem;
+  color: var(--beige); max-width: 640px; line-height: 1.8;
+}
+
+/* ─── FORM SECTION ─── */
+#bazi-form-section {
+  padding: 100px 0;
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+}
+.bazi-form-container {
+  max-width: 900px; margin: 0 auto; padding: 0 48px;
+}
+.bazi-form-card {
+  background: rgba(28,28,30,0.6);
+  border: 1px solid rgba(113,1,1,0.2);
+  padding: 56px; border-radius: 2px;
+  backdrop-filter: blur(10px);
+}
+.form-row {
+  display: grid; gap: 24px; margin-bottom: 28px;
+}
+.form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.form-group { display: flex; flex-direction: column; }
+.form-group label {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+.form-group input, .form-group select {
+  background: rgba(15,15,16,0.8);
+  border: 1px solid rgba(113,1,1,0.3);
+  color: var(--ivory); padding: 14px 16px;
+  font-family: var(--font-sans); font-size: 0.95rem;
+  outline: none; border-radius: 2px;
+  transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: var(--crimson-text);
+}
+.form-group select { cursor: pointer; }
+.form-group select option { background: var(--dark-grey); color: var(--ivory); }
+
+/* Gender Toggle */
+.gender-toggle {
+  display: flex; gap: 0;
+}
+.gender-toggle label {
+  flex: 1; text-align: center; padding: 14px 16px;
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.1em;
+  color: var(--muted); cursor: pointer;
+  border: 1px solid rgba(113,1,1,0.3);
+  background: rgba(15,15,16,0.8);
+  transition: all 0.3s; margin-bottom: 0;
+}
+.gender-toggle label:first-of-type { border-right: none; }
+.gender-toggle input { display: none; }
+.gender-toggle input:checked + label {
+  background: var(--crimson); color: var(--ivory);
+  border-color: var(--crimson);
+}
+
+/* Checkbox */
+.form-checkbox {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 28px; cursor: pointer;
+}
+.form-checkbox input { accent-color: var(--crimson); width: 16px; height: 16px; cursor: pointer; }
+.form-checkbox span {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  color: var(--beige);
+}
+
+/* Buttons */
+.form-actions {
+  display: flex; gap: 16px; margin-top: 8px;
+}
+.btn-plot {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  background: var(--crimson); color: var(--ivory);
+  border: none; padding: 16px 48px; cursor: pointer;
+  position: relative; overflow: hidden; z-index: 1;
+  transition: opacity 0.35s;
+}
+.btn-plot::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--deep-red); transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s cubic-bezier(.76,0,.24,1); z-index: -1;
+}
+.btn-plot:hover::before { transform: scaleX(1); transform-origin: left; }
+.btn-plot:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-plot:disabled::before { display: none; }
+
+.btn-reset {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  background: transparent; color: var(--muted);
+  border: 1px solid rgba(136,133,128,0.3); padding: 16px 36px;
+  cursor: pointer; transition: all 0.3s;
+}
+.btn-reset:hover { border-color: var(--muted); color: var(--ivory); }
+
+/* Loading */
+.loading-spinner {
+  display: none; align-items: center; gap: 12px;
+  padding: 20px 0;
+}
+.loading-spinner.active { display: flex; }
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(113,1,1,0.3); border-top-color: var(--crimson-text);
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 0.85rem; color: var(--muted); }
+
+/* Error */
+.error-msg {
+  display: none; padding: 16px 20px; margin-top: 20px;
+  background: rgba(113,1,1,0.15); border: 1px solid rgba(113,1,1,0.4);
+  color: var(--crimson-text); font-size: 0.9rem; border-radius: 2px;
+}
+.error-msg.active { display: block; }
+
+/* ─── CHART OUTPUT ─── */
+#bazi-chart {
+  display: none; padding: 100px 0;
+}
+#bazi-chart.active { display: block; }
+
+.chart-container {
+  max-width: 1240px; margin: 0 auto; padding: 0 48px;
+}
+
+/* Summary Banner */
+.chart-summary {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 32px 40px; margin-bottom: 60px;
+  background: linear-gradient(135deg, rgba(113,1,1,0.15) 0%, rgba(28,28,30,0.6) 100%);
+  border: 1px solid rgba(113,1,1,0.25); border-radius: 2px;
+}
+.chart-summary-left h2 {
+  font-family: var(--font-serif); font-size: 1.6rem;
+  font-weight: 500; color: var(--ivory); margin-bottom: 4px;
+}
+.chart-summary-left p {
+  font-size: 0.85rem; color: var(--muted); letter-spacing: 0.1em;
+}
+.day-master-badge {
+  text-align: center; padding: 20px 32px;
+  border: 1px solid rgba(198,169,107,0.3); border-radius: 2px;
+}
+.day-master-char {
+  font-size: 3rem; line-height: 1; margin-bottom: 6px;
+  font-weight: 600;
+}
+.day-master-label {
+  font-family: var(--font-sans); font-size: 0.7rem;
+  font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold);
+}
+.day-master-name {
+  font-family: var(--font-sans); font-size: 0.85rem;
+  color: var(--ivory); margin-top: 2px;
+}
+
+/* Four Pillars Table */
+.pillars-section { margin-bottom: 80px; }
+.pillars-section .section-tag { margin-bottom: 32px; }
+
+.four-pillars-grid {
+  display: grid; grid-template-columns: 120px repeat(4, 1fr);
+  border: 1px solid rgba(113,1,1,0.25);
+}
+.fp-header {
+  background: var(--crimson); padding: 16px;
+  font-family: var(--font-sans); font-size: 0.75rem;
+  font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--ivory); text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.fp-header:last-child { border-right: none; }
+.fp-label {
+  padding: 20px 16px;
+  font-family: var(--font-sans); font-size: 0.7rem;
+  font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(28,28,30,0.8);
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+  border-right: 1px solid rgba(113,1,1,0.15);
+  display: flex; align-items: center;
+}
+.fp-cell {
+  padding: 20px 16px; text-align: center;
+  background: rgba(15,15,16,0.6);
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+  border-right: 1px solid rgba(113,1,1,0.15);
+  transition: background 0.3s;
+}
+.fp-cell:hover { background: rgba(28,28,30,0.8); }
+.fp-cell:last-child { border-right: none; }
+
+.fp-char {
+  font-size: 2.4rem; line-height: 1; margin-bottom: 6px;
+  font-weight: 600;
+}
+.fp-pinyin {
+  font-family: var(--font-sans); font-size: 0.8rem;
+  color: var(--ivory); text-transform: capitalize;
+  margin-bottom: 2px;
+}
+.fp-element {
+  font-family: var(--font-sans); font-size: 0.7rem;
+  font-weight: 500; letter-spacing: 0.1em;
+  padding: 3px 8px; border-radius: 2px; display: inline-block;
+  margin-top: 4px;
+}
+.fp-animal {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  color: var(--beige); margin-top: 4px;
+}
+.fp-lifecycle {
+  font-family: var(--font-sans); font-size: 0.7rem;
+  color: var(--muted); margin-top: 6px; font-style: italic;
+}
+
+/* Hidden stems cell */
+.fp-hidden { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.fp-hidden-stem {
+  display: flex; flex-direction: column; align-items: center;
+}
+.fp-hidden-stem .mini-char { font-size: 1.2rem; line-height: 1.2; }
+.fp-hidden-stem .mini-name { font-size: 0.65rem; color: var(--muted); }
+
+/* Element colors */
+.el-wood { color: #4CAF50; }
+.el-fire { color: #E53939; }
+.el-earth { color: #C6A96B; }
+.el-metal { color: #CFD8DC; }
+.el-water { color: #42A5F5; }
+
+.el-bg-wood { background: rgba(76,175,80,0.15); color: #4CAF50; }
+.el-bg-fire { background: rgba(229,57,57,0.15); color: #E53939; }
+.el-bg-earth { background: rgba(198,169,107,0.15); color: #C6A96B; }
+.el-bg-metal { background: rgba(207,216,220,0.15); color: #CFD8DC; }
+.el-bg-water { background: rgba(66,165,245,0.15); color: #42A5F5; }
+
+/* Red/Black Text Coloring (Yang/Yin stems + Auspicious branches) */
+.stem-auspicious { color: #E53935 !important; }
+.stem-inauspicious { color: #1a1a1a !important; text-shadow: 0 0 0 transparent; }
+
+/* Dark theme override for inauspicious (black text won't show on dark bg) */
+@media (prefers-color-scheme: dark) {
+  .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
+}
+/* Force light-on-dark since our app is always dark themed */
+body .stem-inauspicious { color: rgba(255,255,255,0.65) !important; }
+
+
+
+/* ─── LUCK PILLARS ─── */
+.luck-section { margin-bottom: 80px; }
+.luck-section .section-tag { margin-bottom: 32px; }
+.luck-timeline {
+  display: flex; gap: 0; overflow-x: auto;
+  border: 1px solid rgba(113,1,1,0.25);
+  scrollbar-width: thin; scrollbar-color: var(--crimson) var(--black);
+}
+.luck-timeline::-webkit-scrollbar { height: 4px; }
+.luck-timeline::-webkit-scrollbar-track { background: var(--black); }
+.luck-timeline::-webkit-scrollbar-thumb { background: var(--crimson); }
+
+.luck-card {
+  flex: 1;
+  min-width: 120px; text-align: center;
+  border-right: 1px solid rgba(113,1,1,0.15);
+  transition: background 0.3s;
+}
+.luck-card:last-child { border-right: none; }
+.luck-card:hover { background: rgba(28,28,30,0.8); }
+.luck-card.current {
+  background: rgba(113,1,1,0.12);
+  border-bottom: 3px solid var(--crimson-text);
+}
+.luck-age {
+  padding: 12px 16px;
+  font-family: var(--font-sans); font-size: 0.7rem;
+  font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); background: rgba(28,28,30,0.6);
+  border-bottom: 1px solid rgba(113,1,1,0.15);
+}
+.luck-card.current .luck-age { background: var(--crimson); color: var(--ivory); }
+.luck-stem-cell, .luck-branch-cell {
+  padding: 16px 12px;
+  border-bottom: 1px solid rgba(113,1,1,0.1);
+}
+.luck-char { font-size: 1.8rem; line-height: 1; margin-bottom: 4px; font-weight: 600; }
+.luck-name { font-size: 0.7rem; color: var(--beige); }
+.luck-years {
+  padding: 10px 12px; font-size: 0.7rem; color: var(--muted);
+  font-family: var(--font-sans);
+}
+
+/* ─── ELEMENT ANALYSIS ─── */
+.element-section { margin-bottom: 60px; }
+.element-section .section-tag { margin-bottom: 32px; }
+.element-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+  background: rgba(113,1,1,0.15);
+}
+.element-card {
+  background: var(--black); padding: 32px 20px; text-align: center;
+  transition: background 0.3s;
+}
+.element-card:hover { background: rgba(28,28,30,0.6); }
+.element-icon { font-size: 2rem; margin-bottom: 8px; }
+.element-name {
+  font-family: var(--font-sans); font-size: 0.75rem;
+  font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.element-count {
+  font-family: var(--font-serif); font-size: 2rem;
+  font-weight: 500; color: var(--ivory);
+}
+.element-bar {
+  height: 3px; margin-top: 12px; border-radius: 2px;
+  background: rgba(255,255,255,0.1); overflow: hidden;
+}
+.element-bar-fill {
+  height: 100%; border-radius: 2px;
+  transition: width 0.8s cubic-bezier(.76,0,.24,1);
+}
+
+/* ─── QIMEN DUNJIA (QMDJ) MATRIX ─── */
+.qmdj-section { margin-bottom: 60px; }
+
+.qmdj-meta {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: rgba(113,1,1,0.15);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  margin-bottom: 1px;
+}
+.qmdj-meta-item {
+  background: rgba(15,15,16,0.8);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.qmdj-meta-label {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.qmdj-meta-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ivory);
+  letter-spacing: 0.05em;
+}
+
+.qmdj-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(113,1,1,0.2);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+.qmdj-palace {
+  background: rgba(15,15,16,0.85);
+  padding: 16px 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s, box-shadow 0.3s;
+  position: relative;
+  min-height: 180px;
+}
+.qmdj-palace:hover {
+  background: rgba(28,28,30,0.9);
+}
+
+.qmdj-palace-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 12px 16px;
+  width: 100%;
+  align-items: center;
+}
+
+/* Direction label */
+.qmdj-direction {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.qmdj-palace.zhifu-palace::after {
+  content: '值符';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--crimson-text);
+  letter-spacing: 0.1em;
+  background: rgba(229,57,57,0.12);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* QMDJ Markers: Kong Wang (Void) & Tian Ma (Sky Horse) Badges */
+.qmdj-badges {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+.qmdj-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.qmdj-badge:hover {
+  transform: scale(1.15);
+}
+.qmdj-badge-void {
+  background: rgba(136, 133, 128, 0.2);
+  color: var(--muted);
+  border: 1px solid rgba(136, 133, 128, 0.4);
+  box-shadow: 0 0 6px rgba(136, 133, 128, 0.15);
+}
+.qmdj-badge-void:hover {
+  box-shadow: 0 0 10px rgba(136, 133, 128, 0.3);
+}
+.qmdj-badge-horse {
+  background: rgba(198, 169, 107, 0.18);
+  color: var(--gold);
+  border: 1px solid rgba(198, 169, 107, 0.45);
+  box-shadow: 0 0 6px rgba(198, 169, 107, 0.15);
+}
+.qmdj-badge-horse:hover {
+  box-shadow: 0 0 10px rgba(198, 169, 107, 0.35);
+}
+
+/* ─── RED/WHITE AUSPICIOUSNESS COLORING ─── */
+.annual-auspicious {
+  background: rgba(229, 57, 57, 0.12) !important;
+  border-left: 2px solid rgba(229, 57, 57, 0.6);
+}
+.annual-inauspicious {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.25);
+}
+.annual-inauspicious .fp-char,
+.annual-inauspicious div[style*="font-size:1.1rem"] {
+  opacity: 0.55;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  #bazi-hero { padding: 120px 24px 60px; }
+  .bazi-form-card { padding: 32px 24px; }
+  .form-row.cols-2, .form-row.cols-3, .form-row.cols-4 {
+    grid-template-columns: 1fr;
+  }
+  .chart-container { padding: 0 24px; }
+  .chart-summary { flex-direction: column; gap: 24px; text-align: center; }
+  .four-pillars-grid {
+    grid-template-columns: 80px repeat(4, 1fr);
+    font-size: 0.85rem;
+  }
+  .fp-char { font-size: 1.6rem; }
+  .fp-label { font-size: 0.6rem; padding: 12px 8px; }
+  .fp-cell { padding: 12px 8px; }
+  .element-grid { grid-template-columns: repeat(3, 1fr); }
+  .luck-card { min-width: 100px; }
+  .form-actions { flex-direction: column; }
+  .btn-plot, .btn-reset { width: 100%; text-align: center; }
+  .qmdj-meta { grid-template-columns: repeat(3, 1fr); }
+  .qmdj-palace { padding: 14px 10px; min-height: 140px; }
+  .qmdj-heaven { font-size: 1.3rem; }
+  .qmdj-badge { width: 20px; height: 20px; font-size: 0.55rem; }
+}
+@media (max-width: 480px) {
+  .four-pillars-grid { grid-template-columns: 60px repeat(4, 1fr); }
+  .fp-char { font-size: 1.3rem; }
+  .fp-pinyin { font-size: 0.65rem; }
+  .qmdj-meta { grid-template-columns: repeat(3, 1fr); }
+  .qmdj-palace { padding: 10px 6px; min-height: 120px; }
+  .qmdj-heaven { font-size: 1.1rem; }
+  .qmdj-star, .qmdj-door-box, .qmdj-god { font-size: 0.7rem; }
+  .qmdj-door-box { padding: 4px 6px; }
+  .qmdj-badge { width: 18px; height: 18px; font-size: 0.5rem; }
+  .qmdj-badges { bottom: 4px; left: 4px; gap: 3px; }
+}
+
+/* ─── TIME DASHBOARD (3-TIER) ─── */
+.dashboard-section { margin-bottom: 60px; }
+.dashboard-tier::-webkit-scrollbar { display: none; } /* Hide default scrollbar on tiers if needed */
+.tier-items::-webkit-scrollbar { height: 4px; }
+.tier-items::-webkit-scrollbar-track { background: var(--black); }
+.tier-items::-webkit-scrollbar-thumb { background: var(--crimson); }
+
+.tier-item {
+  flex: 0 0 auto;
+  min-width: 100px;
+  text-align: center;
+  background: rgba(15,15,16,0.6);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.tier-item:hover {
+  background: rgba(28,28,30,0.9);
+  border-color: rgba(255,255,255,0.15);
+}
+.tier-item.active {
+  background: rgba(113,1,1,0.15);
+  border-color: var(--crimson-text);
+  box-shadow: 0 4px 15px rgba(113,1,1,0.3);
+}
+.tier-item.active::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--crimson-text);
+}
+
+.tier-item-header {
+  font-size: 0.75rem; color: var(--gold);
+  margin-bottom: 8px; font-weight: 500;
+  min-height: 14px;
+}
+.tier-item-char {
+  font-size: 1.6rem; font-weight: 700; line-height: 1.1; margin-bottom: 2px;
+}
+.tier-item-sub {
+  font-size: 0.65rem; color: var(--muted);
+  margin-top: 6px; padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.tier-item-hidden {
+  display: flex; flex-direction: column; gap: 2px; margin-top: 6px;
+}
+/* --- QMDJ ENHANCEMENTS --- */
+.qmdj-auspicious {
+  color: #4ade80 !important;
+  text-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
+}
+.qmdj-inauspicious {
+  color: #f87171 !important;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.2);
+}
+
+/* Palace Background Tints based on Luo Shu Element */
+.qmdj-palace-9 { background-color: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.15); } /* Li: Fire */
+.qmdj-palace-1 { background-color: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.15); } /* Kan: Water */
+.qmdj-palace-3, .qmdj-palace-4 { background-color: rgba(34, 197, 94, 0.05); border-color: rgba(34, 197, 94, 0.15); } /* Zhen/Xun: Wood */
+.qmdj-palace-6, .qmdj-palace-7 { background-color: rgba(250, 204, 21, 0.05); border-color: rgba(250, 204, 21, 0.15); } /* Qian/Dui: Metal */
+.qmdj-palace-2, .qmdj-palace-8 { background-color: rgba(168, 162, 158, 0.05); border-color: rgba(168, 162, 158, 0.15); } /* Kun/Gen: Earth */
+
+/* Center Palace */
+.qmdj-palace-5 {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+.qmdj-direction {
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.qmdj-palace.zhifu-palace {
+  background: rgba(113,1,1,0.18);
+  box-shadow: inset 0 0 0 1px rgba(229,57,57,0.35);
+}
+
+.qmdj-star {
+  grid-column: 1;
+  grid-row: 3;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--beige);
+  justify-self: flex-start;
+}
+
+.qmdj-god {
+  grid-column: 3;
+  grid-row: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--gold);
+  justify-self: flex-end;
+}
+
+/* Center Column Elements */
+.qmdj-heaven {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  justify-self: center;
+}
+
+.qmdj-door-box {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 1px solid rgba(198,169,107,0.4);
+  padding: 6px 8px;
+  background: rgba(198,169,107,0.05);
+  border-radius: 2px;
+  line-height: 1;
+  justify-self: center;
+}
+
+.qmdj-earth {
+  grid-column: 2;
+  grid-row: 3;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.8;
+  justify-self: center;
+}
+.qmdj-badge-ming {
+  background: rgba(229, 57, 57, 0.18);
+  color: var(--crimson-text);
+  border: 1px solid rgba(229, 57, 57, 0.45);
+  box-shadow: 0 0 6px rgba(229, 57, 57, 0.15);
+}
+.qmdj-badge-ming:hover {
+  box-shadow: 0 0 10px rgba(229, 57, 57, 0.35);
+}

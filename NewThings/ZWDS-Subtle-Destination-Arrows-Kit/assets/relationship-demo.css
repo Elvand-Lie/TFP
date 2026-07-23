@@ -1,0 +1,141 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f0f10;
+  --panel: #171719;
+  --cell: #1a1a1d;
+  --line: rgba(198, 169, 107, .26);
+  --gold: #c6a96b;
+  --red: #e95d62;
+  --ivory: #f5f5f2;
+  --muted: #9b968e;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; background: radial-gradient(circle at 50% 0, #241616, var(--bg) 36%); color: var(--ivory); font-family: Inter, system-ui, sans-serif; }
+button { font: inherit; }
+.demo-shell { width: min(1200px, calc(100% - 24px)); margin: 0 auto; padding: 32px 0 56px; }
+.demo-header { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 18px; }
+.eyebrow { margin: 0 0 6px; color: var(--gold); letter-spacing: .22em; font-size: .67rem; }
+h1 { margin: 0; font-family: Georgia, serif; font-weight: 500; font-size: clamp(1.8rem, 4vw, 3rem); }
+.demo-header p:last-child { color: var(--muted); max-width: 760px; }
+.status-card { min-width: 170px; padding: 12px 14px; border: 1px solid var(--line); background: var(--panel); color: var(--gold); font-size: .78rem; }
+.layer-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0; margin-bottom: 12px; border: 1px solid var(--line); background: var(--panel); }
+.layer-bar > span, .layer-bar > strong { padding: 10px 14px; color: var(--muted); font-size: .75rem; }
+.layer-bar > strong { margin-left: auto; color: var(--gold); }
+.layer-bar button { min-width: 42px; min-height: 38px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--ivory); cursor: pointer; }
+.layer-bar button[aria-pressed="true"] { background: #710101; color: #fff; }
+.chart-stage { position: relative; min-width: 680px; border: 1px solid var(--line); background: #111113; }
+.palace-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 150px); grid-template-areas: "si wu wei shen" "chen center center you" "mao center center xu" "yin chou zi hai"; }
+.palace { position: relative; z-index: 1; display: flex; flex-direction: column; padding: 12px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--cell); color: var(--ivory); text-align: left; cursor: pointer; }
+.palace:hover { background: #242126; }
+.palace strong { color: var(--gold); font-family: Georgia, serif; font-size: 1.08rem; }
+.palace small { color: var(--muted); text-transform: uppercase; letter-spacing: .12em; }
+.palace .branch { margin-left: auto; color: var(--muted); }
+.palace .stars { margin-top: 14px; color: #eee9df; font-size: .8rem; }
+.palace .footer { margin-top: auto; display: flex; justify-content: space-between; color: var(--muted); font-size: .68rem; }
+.palace.is-source { z-index: 5; background: rgba(113,1,1,.38); box-shadow: inset 0 0 0 2px var(--red); }
+.palace.is-trine { z-index: 3; background: rgba(198,169,107,.15); box-shadow: inset 0 0 0 1px rgba(198,169,107,.55); }
+.palace.is-opposite { z-index: 3; background: rgba(113,1,1,.19); box-shadow: inset 0 0 0 1px rgba(233,93,98,.55); }
+.center { grid-area: center; position: relative; z-index: 2; display: grid; place-items: center; padding: 28px; text-align: center; background: radial-gradient(circle, rgba(113,1,1,.15), transparent 64%), #151517; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.center b { color: var(--gold); font-family: Georgia, serif; font-size: 2rem; }
+.center span { color: var(--muted); }
+.arrow-overlay { position: absolute; z-index: 6; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.relationship-path { fill: none; stroke: rgba(226,199,140,.82); stroke-width: 1.7; stroke-linecap: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 1px 1px #000); }
+.relationship-path.opposite { stroke: rgba(233,93,98,.84); }
+.relationship-arrowhead { fill: #e2c78c; stroke: #111; stroke-width: .7; }
+.relationship-readout { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; min-height: 56px; padding: 12px 14px; border: 1px solid var(--line); border-top: 0; background: var(--panel); }
+.relationship-readout .source { color: var(--red); }
+.relationship-readout .target { color: var(--gold); }
+.relationship-readout .opposite { color: var(--red); }
+.test-note { color: var(--muted); font-size: .8rem; }
+[data-slot="si"] { grid-area: si; } [data-slot="wu"] { grid-area: wu; } [data-slot="wei"] { grid-area: wei; } [data-slot="shen"] { grid-area: shen; }
+[data-slot="chen"] { grid-area: chen; } [data-slot="you"] { grid-area: you; } [data-slot="mao"] { grid-area: mao; } [data-slot="xu"] { grid-area: xu; }
+[data-slot="yin"] { grid-area: yin; } [data-slot="chou"] { grid-area: chou; } [data-slot="zi"] { grid-area: zi; } [data-slot="hai"] { grid-area: hai; }
+@media (max-width: 760px) {
+  .demo-header { align-items: flex-start; flex-direction: column; }
+  .status-card { width: 100%; }
+  .chart-stage { transform-origin: top left; }
+  .demo-shell { overflow-x: auto; }
+  .layer-bar > strong { flex-basis: 100%; margin-left: 0; }
+}
+
+/* ================================================================
+   INNER-RAIL ROUTING PATCH
+   Preserve the centre as a protected reading zone while keeping all
+   three palace-to-palace arrows visible around its inner perimeter.
+   ================================================================ */
+.center {
+  z-index: 7;
+  isolation: isolate;
+  overflow: visible;
+  background: transparent;
+  padding: 48px;
+}
+.center::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 36px;
+  border: 1px solid rgba(198, 169, 107, .18);
+  background:
+    radial-gradient(circle, rgba(113, 1, 1, .16), transparent 66%),
+    rgba(21, 21, 23, .975);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .32);
+  pointer-events: none;
+}
+.center > * {
+  position: relative;
+  z-index: 1;
+}
+.arrow-overlay { z-index: 6; }
+.relationship-path {
+  stroke: rgba(226, 199, 140, .54);
+  stroke-width: 1.08;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .45));
+}
+.relationship-path.opposite { stroke: rgba(233, 93, 98, .62); }
+.relationship-arrowhead {
+  fill: rgba(226, 199, 140, .86);
+  stroke-width: .55;
+}
+
+@media (max-width: 760px) {
+  .center { padding: 32px; }
+  .center::before { inset: 23px; }
+  .relationship-path { stroke-width: .9; }
+}
+
+
+/* ================================================================
+   REFERENCE-STYLE SUBTLE DESTINATION ARROWS
+   The highlights communicate the relationship first. Full routes remain
+   technically present, but fade almost completely until the target edge.
+   ================================================================ */
+.palace.is-source {
+  background: rgba(113, 1, 1, .30);
+  box-shadow: inset 0 0 0 1.35px rgba(239, 107, 107, .92);
+}
+.palace.is-trine,
+.palace.is-opposite {
+  background: rgba(198, 169, 107, .085);
+  box-shadow: inset 0 0 0 1px rgba(198, 169, 107, .34);
+}
+.relationship-path {
+  stroke: rgba(216, 208, 196, .10);
+  stroke-width: .72;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: none;
+}
+.relationship-path.opposite { stroke: rgba(216, 208, 196, .10); }
+.relationship-arrowhead {
+  fill: rgba(223, 82, 92, .88);
+  stroke: rgba(15, 15, 16, .52);
+  stroke-width: .35;
+}
+.center::before {
+  border-color: rgba(198, 169, 107, .13);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .27);
+}
+@media (max-width: 760px) {
+  .relationship-path { stroke-width: .62; }
+}

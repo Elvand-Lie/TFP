@@ -1,0 +1,51 @@
+{
+  "path_count": 3,
+  "source_count": 1,
+  "trine_count": 2,
+  "opposite_count": 1,
+  "gradient_count": 3,
+  "marker_width": "5",
+  "marker_units": "userSpaceOnUse",
+  "route_type": "inner-rail-subtle",
+  "path_stroke_width": "0.72px",
+  "arrow_fill": "rgba(223, 82, 92, 0.88)",
+  "page_errors": [],
+  "layer_persistence": [
+    {
+      "layer": "decadal",
+      "paths": 3,
+      "source": 1,
+      "targets": 3
+    },
+    {
+      "layer": "yearly",
+      "paths": 3,
+      "source": 1,
+      "targets": 3
+    },
+    {
+      "layer": "monthly",
+      "paths": 3,
+      "source": 1,
+      "targets": 3
+    },
+    {
+      "layer": "daily",
+      "paths": 3,
+      "source": 1,
+      "targets": 3
+    },
+    {
+      "layer": "hourly",
+      "paths": 3,
+      "source": 1,
+      "targets": 3
+    },
+    {
+      "layer": "natal",
+      "paths": 3,
+      "source": 1,
+      "targets": 3
+    }
+  ]
+}

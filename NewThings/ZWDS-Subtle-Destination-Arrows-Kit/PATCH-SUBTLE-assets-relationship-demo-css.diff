@@ -1,0 +1,42 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/assets/relationship-demo.css	2026-07-23 09:03:14.680346383 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/assets/relationship-demo.css	2026-07-23 09:26:35.520311334 +0000
+@@ -103,3 +103,39 @@
+   .center::before { inset: 23px; }
+   .relationship-path { stroke-width: .9; }
+ }
++
++
++/* ================================================================
++   REFERENCE-STYLE SUBTLE DESTINATION ARROWS
++   The highlights communicate the relationship first. Full routes remain
++   technically present, but fade almost completely until the target edge.
++   ================================================================ */
++.palace.is-source {
++  background: rgba(113, 1, 1, .30);
++  box-shadow: inset 0 0 0 1.35px rgba(239, 107, 107, .92);
++}
++.palace.is-trine,
++.palace.is-opposite {
++  background: rgba(198, 169, 107, .085);
++  box-shadow: inset 0 0 0 1px rgba(198, 169, 107, .34);
++}
++.relationship-path {
++  stroke: rgba(216, 208, 196, .10);
++  stroke-width: .72;
++  stroke-linecap: round;
++  stroke-linejoin: round;
++  filter: none;
++}
++.relationship-path.opposite { stroke: rgba(216, 208, 196, .10); }
++.relationship-arrowhead {
++  fill: rgba(223, 82, 92, .88);
++  stroke: rgba(15, 15, 16, .52);
++  stroke-width: .35;
++}
++.center::before {
++  border-color: rgba(198, 169, 107, .13);
++  box-shadow: 0 12px 32px rgba(0, 0, 0, .27);
++}
++@media (max-width: 760px) {
++  .relationship-path { stroke-width: .62; }
++}

@@ -1,0 +1,93 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/assets/relationship-demo.js	2026-07-23 09:02:54.032346899 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/assets/relationship-demo.js	2026-07-23 09:26:35.520311334 +0000
+@@ -29,16 +29,60 @@
+   }
+ 
+   function renderGrid() {
+-    grid.innerHTML = palaces.map(palaceMarkup).join('') + '<section class="center"><div><span>Current display</span><b>' + LAYERS[activeLayer] + '</b><p>Click any palace<br>Three arrows · fixed relationship</p></div></section>';
++    grid.innerHTML = palaces.map(palaceMarkup).join('') + '<section class="center"><div><span>Current display</span><b>' + LAYERS[activeLayer] + '</b><p>Click any palace<br>Three subtle destination arrows</p></div></section>';
+   }
+ 
+-  function appendMarker() {
+-    overlay.insertAdjacentHTML('beforeend', '<defs><marker id="demo-arrow" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path class="relationship-arrowhead" d="M0 0 L10 5 L0 10z"></path></marker></defs>');
++  function appendDefinitions() {
++    const ns = 'http://www.w3.org/2000/svg';
++    const defs = document.createElementNS(ns, 'defs');
++    const marker = document.createElementNS(ns, 'marker');
++    marker.setAttribute('id', 'demo-arrow');
++    marker.setAttribute('viewBox', '0 0 10 10');
++    marker.setAttribute('refX', '9.1');
++    marker.setAttribute('refY', '5');
++    marker.setAttribute('markerWidth', '5');
++    marker.setAttribute('markerHeight', '5');
++    marker.setAttribute('markerUnits', 'userSpaceOnUse');
++    marker.setAttribute('orient', 'auto');
++    const shape = document.createElementNS(ns, 'path');
++    shape.setAttribute('class', 'relationship-arrowhead');
++    shape.setAttribute('d', 'M0 1.2 L10 5 L0 8.8 Z');
++    marker.append(shape);
++    defs.append(marker);
++    overlay.append(defs);
++    return defs;
++  }
++
++  function appendRouteGradient(defs, id, source, target) {
++    const ns = 'http://www.w3.org/2000/svg';
++    const gradient = document.createElementNS(ns, 'linearGradient');
++    gradient.setAttribute('id', id);
++    gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
++    gradient.setAttribute('x1', String(source.x));
++    gradient.setAttribute('y1', String(source.y));
++    gradient.setAttribute('x2', String(target.x));
++    gradient.setAttribute('y2', String(target.y));
++    [
++      ['0%', '#d8d0c4', '0.015'],
++      ['58%', '#d8d0c4', '0.055'],
++      ['84%', '#d8d0c4', '0.12'],
++      ['100%', '#d8d0c4', '0.23']
++    ].forEach(([offset, color, opacity]) => {
++      const stop = document.createElementNS(ns, 'stop');
++      stop.setAttribute('offset', offset);
++      stop.setAttribute('stop-color', color);
++      stop.setAttribute('stop-opacity', opacity);
++      gradient.append(stop);
++    });
++    defs.append(gradient);
+   }
+ 
+   function draw() {
+     overlay.replaceChildren();
+-    grid.querySelectorAll('.palace').forEach((node) => node.classList.remove('is-source', 'is-trine', 'is-opposite'));
++    grid.querySelectorAll('.palace').forEach((node) => {
++      node.classList.remove('is-source', 'is-trine', 'is-opposite');
++      node.setAttribute('aria-pressed', 'false');
++    });
+     const source = /** @type {HTMLElement} */ (grid.querySelector(`[data-slot="${selectedSlot}"]`));
+     if (!source) return;
+     source.classList.add('is-source');
+@@ -47,7 +91,7 @@
+     const gridRect = grid.getBoundingClientRect();
+     const centerRect = /** @type {HTMLElement} */ (grid.querySelector('.center')).getBoundingClientRect();
+     overlay.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
+-    appendMarker();
++    const defs = appendDefinitions();
+     const sRect = source.getBoundingClientRect();
+     targetSlots.forEach((slot, index) => {
+       const target = /** @type {HTMLElement} */ (grid.querySelector(`[data-slot="${slot}"]`));
+@@ -59,11 +103,14 @@
+         cornerRadius: 10,
+         protectedInset: 24
+       });
++      const gradientId = `demo-route-${index}`;
++      appendRouteGradient(defs, gradientId, route.points[0], route.points[route.points.length - 1]);
+       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+       path.setAttribute('d', route.d);
+-      path.setAttribute('class', `relationship-path ${index === 1 ? 'opposite' : ''}`);
++      path.setAttribute('class', 'relationship-path');
++      path.setAttribute('stroke', `url(#${gradientId})`);
+       path.setAttribute('marker-end', 'url(#demo-arrow)');
+-      path.setAttribute('data-route', 'inner-rail');
++      path.setAttribute('data-route', 'inner-rail-subtle');
+       path.setAttribute('data-source-side', route.sourceSide);
+       path.setAttribute('data-target-side', route.targetSide);
+       overlay.append(path);

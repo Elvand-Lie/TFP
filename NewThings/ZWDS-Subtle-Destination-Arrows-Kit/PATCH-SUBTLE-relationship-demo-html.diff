@@ -1,0 +1,20 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/relationship-demo.html	2026-07-23 09:04:41.192344218 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/relationship-demo.html	2026-07-23 09:26:35.520311334 +0000
+@@ -12,7 +12,7 @@
+       <div>
+         <p class="eyebrow">ISOLATED INTERACTION TEST</p>
+         <h1>三方四正 · Three Directions and Four Palaces</h1>
+-        <p>Click any palace. Three dedicated inner-perimeter lanes preserve the centre reading area while the +4 / +6 / +8 relationship remains fixed.</p>
++        <p>Click any palace. The +4 / +6 / +8 rule remains fixed. Hairline routes fade toward three tiny destination arrowheads, matching the restrained reference treatment.</p>
+       </div>
+       <div class="status-card" id="demo-status" aria-live="polite"></div>
+     </header>
+@@ -25,7 +25,7 @@
+       <button data-layer="monthly" aria-pressed="false">月</button>
+       <button data-layer="daily" aria-pressed="false">日</button>
+       <button data-layer="hourly" aria-pressed="false">時</button>
+-      <strong>Inner-rail routing · 三合</strong>
++      <strong>Subtle destination arrows · 三合</strong>
+     </nav>
+ 
+     <section class="chart-stage" aria-label="Twelve palace relationship demonstration">

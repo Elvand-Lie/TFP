@@ -1,0 +1,130 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/README.md	2026-07-23 09:11:32.468333928 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/README.md	2026-07-23 09:26:35.520311334 +0000
+@@ -1,16 +1,16 @@
+-# ZWDS Inner-Rail Relationship Kit
++# ZWDS Subtle Destination Arrows Kit
+ 
+-This package improves the existing Three-Harmony implementation without changing its domain rule.
++This revision implements the manager's requested 三方四正 interaction with the restrained visual treatment seen in the reference recording.
+ 
+-## Relationship rule
++## Fixed domain rule
+ 
+-For a clicked palace at physical slot `i`, the three targets remain:
++For a clicked palace at physical slot `i`, the three destinations remain:
+ 
+ - first trine: `(i + 4) mod 12`
+ - opposite palace: `(i + 6) mod 12`
+ - second trine: `(i + 8) mod 12`
+ 
+-Therefore clicking 命宮 still produces:
++Therefore clicking 命宮 produces:
+ 
+ ```text
+ 命宮 → 財帛宮 · 遷移宮 · 官祿宮
+@@ -18,35 +18,20 @@
+ 
+ The relationship remains selected while the displayed chart changes through 本／限／年／月／日／時.
+ 
+-## What this revision fixes
++## What changed visually
+ 
+-The earlier implementation sent all three curves through the centre panel. That correctly showed the relationship, but it obstructed chart metadata.
++The previous inner-rail kit was logically correct but the routes were still too prominent. This kit makes the relationship read like the reference:
+ 
+-This kit adds an isolated routing engine:
++- the selected palace carries the strongest crimson treatment;
++- all three destination palaces use the same restrained related-palace treatment;
++- route lines use a source-to-target opacity gradient;
++- the route is almost invisible near the source;
++- it becomes only slightly more visible near the destination;
++- each route ends with a tiny crimson arrowhead on the destination border;
++- no target is visually presented as a different arrow type;
++- the protected centre information card remains above the routes.
+ 
+-```text
+-assets/relationship-routing.js
+-```
+-
+-Each arrow now:
+-
+-1. starts at a separate anchor on the selected palace's centre-facing border;
+-2. enters one of three dedicated inner-perimeter lanes;
+-3. follows the shortest clockwise or counter-clockwise route around the centre;
+-4. uses rounded SVG corners;
+-5. leaves the rail close to the target;
+-6. terminates at the target palace border with a small arrowhead.
+-
+-The centre panel is now a transparent shell with an opaque inset information card. The paths remain visible in the surrounding corridor but pass behind the protected reading area.
+-
+-## Visual hierarchy
+-
+-- selected palace: strong crimson highlight;
+-- two trines: restrained gold highlight;
+-- opposite palace: restrained red highlight;
+-- routes: thin and semi-transparent;
+-- arrowheads: small and semantic;
+-- centre metadata: visually dominant and unobstructed.
++The full lines remain in the DOM and preserve directional meaning, but the user primarily perceives the palace highlights and three small destination indicators.
+ 
+ ## Run the isolated test
+ 
+@@ -70,9 +55,9 @@
+ run-production.bat
+ ```
+ 
+-The production page still requires the pinned iztro CDN for live chart calculation.
++The production page uses the supplied ZWDS modules and the same subtle-arrow renderer.
+ 
+-## Automated tests
++## Tests
+ 
+ Run:
+ 
+@@ -80,41 +65,15 @@
+ run-tests.bat
+ ```
+ 
+-The tests verify:
+-
+-- +4/+6/+8 relationship geometry;
+-- 命宮 → 財帛宮／遷移宮／官祿宮;
+-- exactly three unique targets per palace;
+-- persistence through natal → decade → year → month → day → hour;
+-- separate SVG lanes;
+-- rounded perimeter routing;
+-- protected centre exclusion;
+-- source/trine/opposite highlights;
+-- production and demo pages both load the shared router.
++The tests verify the +4/+6/+8 geometry, three unique targets, time-layer persistence, shared routing, SVG arrowheads, gradient route styling, and source/target highlights.
+ 
+ ## Visual validation
+ 
+-Reference renders are included:
+-
+-```text
+-reference/inner-rail-demo-desktop.png
+-reference/inner-rail-demo-mobile.png
+-```
+-
+-They were generated from the isolated harness after JavaScript execution and confirm that exactly three paths render without crossing the centre information card.
+-
+-## Files added or changed
++Reference renders are included under:
+ 
+ ```text
+-assets/relationship-routing.js     shared rectangle-perimeter router
+-assets/relationship-demo.js        demo uses inner-rail routes
+-assets/relationship-demo.css       protected centre and restrained paths
+-assets/zwds.js                     production uses the shared router
+-assets/zwds-addon.css              production protected-centre styling
+-relationship-demo.html             loads router before demo controller
+-zwds.html                          loads router before production controller
+-tests/test-routing.js              geometric routing tests
+-reference/*.png                    desktop and mobile validation renders
++reference/subtle-arrows-demo-desktop.png
++reference/subtle-arrows-demo-mobile.png
+ ```
+ 
+-The BaZi, Qimen, date mapping, profile store, time state, view model and ZWDS calculation adapter remain unchanged.
++The BaZi, Qimen, date mapping, profile store, time state, view model and calculation adapter remain unchanged.

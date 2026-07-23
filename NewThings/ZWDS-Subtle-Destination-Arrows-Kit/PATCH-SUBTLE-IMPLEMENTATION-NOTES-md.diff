@@ -1,0 +1,41 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/IMPLEMENTATION-NOTES.md	2026-07-23 09:11:32.468333928 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/IMPLEMENTATION-NOTES.md	2026-07-23 09:26:35.520311334 +0000
+@@ -1,28 +1,13 @@
+-# Implementation Notes — Inner-Perimeter Routing
++# Implementation Notes — Subtle Destination Arrows
+ 
+-## Why the centre is no longer obstructed
++The manager's message is implemented as one stable interaction:
+ 
+-The SVG layer is placed below the centre shell. The shell itself is transparent, while `::before` creates an opaque inset information card. This leaves a narrow visible corridor around the card for relationship paths.
++1. select any palace;
++2. compute physical targets at +4, +6 and +8;
++3. preserve that source selection while time layers change;
++4. highlight the source and all three destinations;
++5. render three directional SVG paths;
++6. fade each path from 1.5% opacity at the source to 23% at the target;
++7. terminate with a 5px crimson arrowhead at the destination border.
+ 
+-## Route construction
+-
+-`ZwdsRelationshipRouter.route(...)` receives four rectangles:
+-
+-- selected palace;
+-- target palace;
+-- centre panel;
+-- complete chart grid.
+-
+-It determines which edge of each palace faces the centre, maps that edge to the opposite side of an inset centre rail, and chooses the shorter perimeter direction. Three different rail insets create separate lanes.
+-
+-## Important distinction
+-
+-The router changes only presentation. It does not calculate relationships. Target slots still come from:
+-
+-```javascript
+-engine.getTrineSlots(selectedRelationshipSourceSlotId)
+-```
+-
+-## Responsive behavior
+-
+-At smaller widths the rail inset, lane spacing, fan spacing and stroke width reduce. The chart remains horizontally scrollable where required, and the centre card remains opaque.
++The visual hierarchy intentionally puts palace highlights ahead of route lines. The lines are supporting evidence, not the primary chart content.

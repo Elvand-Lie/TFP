@@ -1,0 +1,80 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/assets/zwds.js	2026-07-23 09:04:06.676345082 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/assets/zwds.js	2026-07-23 09:26:35.520311334 +0000
+@@ -426,18 +426,43 @@
+       const marker = doc.createElementNS('http://www.w3.org/2000/svg', 'marker');
+       marker.setAttribute('id', 'zwds-trine-arrowhead');
+       marker.setAttribute('viewBox', '0 0 10 10');
+-      marker.setAttribute('refX', '8.6');
++      marker.setAttribute('refX', '9.1');
+       marker.setAttribute('refY', '5');
+-      marker.setAttribute('markerWidth', '5.5');
+-      marker.setAttribute('markerHeight', '5.5');
+-      marker.setAttribute('orient', 'auto-start-reverse');
+-      marker.setAttribute('markerUnits', 'strokeWidth');
++      marker.setAttribute('markerWidth', '5');
++      marker.setAttribute('markerHeight', '5');
++      marker.setAttribute('orient', 'auto');
++      marker.setAttribute('markerUnits', 'userSpaceOnUse');
+       const shape = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+-      shape.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z');
++      shape.setAttribute('d', 'M 0 1.2 L 10 5 L 0 8.8 z');
+       shape.setAttribute('class', 'zwds-trine-arrowhead');
+       marker.append(shape);
+       defs.append(marker);
+       targetSvg.append(defs);
++      return defs;
++    }
++
++    /** @param {SVGDefsElement} defs @param {string} id @param {{x:number,y:number}} source @param {{x:number,y:number}} target */
++    function appendRouteGradient(defs, id, source, target) {
++      const gradient = doc.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
++      gradient.setAttribute('id', id);
++      gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
++      gradient.setAttribute('x1', String(source.x));
++      gradient.setAttribute('y1', String(source.y));
++      gradient.setAttribute('x2', String(target.x));
++      gradient.setAttribute('y2', String(target.y));
++      [
++        ['0%', '#d8d0c4', '0.015'],
++        ['58%', '#d8d0c4', '0.055'],
++        ['84%', '#d8d0c4', '0.12'],
++        ['100%', '#d8d0c4', '0.23']
++      ].forEach((entry) => {
++        const stop = doc.createElementNS('http://www.w3.org/2000/svg', 'stop');
++        stop.setAttribute('offset', entry[0]);
++        stop.setAttribute('stop-color', entry[1]);
++        stop.setAttribute('stop-opacity', entry[2]);
++        gradient.append(stop);
++      });
++      defs.append(gradient);
+     }
+ 
+     /**
+@@ -463,7 +488,7 @@
+       const centerRect = centerNode ? centerNode.getBoundingClientRect() : gridRect;
+       svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
+       svg.setAttribute('preserveAspectRatio', 'none');
+-      appendArrowDefinitions(svg);
++      const defs = appendArrowDefinitions(svg);
+ 
+       const sourceRect = source.getBoundingClientRect();
+       relationship.targetSlotIds.forEach((targetSlotId, index) => {
+@@ -484,14 +509,17 @@
+             protectedInset: 22
+           }
+         );
++        const gradientId = `zwds-trine-route-${index}`;
++        appendRouteGradient(defs, gradientId, route.points[0], route.points[route.points.length - 1]);
+         const path = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+         path.setAttribute('d', route.d);
+         path.setAttribute('class', `zwds-trine-path ${index === 1 ? 'zwds-trine-path--opposite' : 'zwds-trine-path--trine'}`);
++        path.setAttribute('stroke', `url(#${gradientId})`);
+         path.setAttribute('marker-end', 'url(#zwds-trine-arrowhead)');
+         path.setAttribute('data-source-slot', relationship.sourceSlotId);
+         path.setAttribute('data-target-slot', targetSlotId);
+         path.setAttribute('data-relation', index === 1 ? 'opposite' : 'trine');
+-        path.setAttribute('data-route', 'inner-rail');
++        path.setAttribute('data-route', 'inner-rail-subtle');
+         path.setAttribute('data-source-side', route.sourceSide);
+         path.setAttribute('data-target-side', route.targetSide);
+         svg.append(path);

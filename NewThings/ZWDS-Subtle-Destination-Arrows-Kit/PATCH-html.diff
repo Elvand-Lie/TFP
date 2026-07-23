@@ -1,0 +1,92 @@
+--- /mnt/data/ZWDS-Three-Harmony-Production-Patch/originals/zwds.html.original	2026-07-23 08:50:32.492365452 +0000
++++ /mnt/data/ZWDS-Three-Harmony-Production-Patch/zwds.html	2026-07-23 08:43:01.448376737 +0000
+@@ -11,9 +11,9 @@
+     content="Zi Wei Dou Shu, 紫微斗數, ZWDS calculator, Purple Star Astrology, Chinese astrology, The Full Picture" />
+   <meta name="author" content="The Full Picture LLP" />
+   <meta name="robots" content="index, follow" />
+-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+-  <link rel="icon" type="image/png" href="/assets/logo.png" />
+-  <link rel="apple-touch-icon" href="/assets/logo.png" />
++  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
++  <link rel="icon" type="image/png" href="assets/logo.png" />
++  <link rel="apple-touch-icon" href="assets/logo.png" />
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <link
+@@ -469,8 +469,8 @@
+       }
+     }
+   </style>
+-  <link rel="stylesheet" href="/assets/zwds.css" />
+-  <link rel="stylesheet" href="/assets/zwds-addon.css" />
++  <link rel="stylesheet" href="assets/zwds.css" />
++  <link rel="stylesheet" href="assets/zwds-addon.css" />
+ </head>
+ 
+ <body>
+@@ -478,7 +478,7 @@
+   <nav id="navbar">
+     <a class="nav-logo" href="/"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
+-      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
++      <img src="assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
+       <div style="font-size: 1rem; line-height: 1;">The <span>Full</span> Picture</div>
+     </a>
+     <ul class="nav-links">
+@@ -633,18 +633,10 @@
+         <div id="zwds-selection-summary" class="zwds-selection-summary" aria-live="polite"></div>
+       </header>
+ 
+-      <div class="zwds-tabs" role="toolbar" aria-label="Chart scope and method">
++      <div class="zwds-tabs" role="toolbar" aria-label="Chart state and method">
+         <span class="zwds-tab-label">Chart</span>
+-        <button type="button" id="zwds-return-natal" class="zwds-natal-button" aria-pressed="true">Default Life ·
+-          本命</button>
+-        <div class="zwds-scope-selector" id="zwds-scope-selector" role="group" aria-label="Relationship scope">
+-          <button type="button" data-scope="natal" class="zwds-scope-btn is-active" title="Natal">本</button>
+-          <button type="button" data-scope="decadal" class="zwds-scope-btn" title="Decade" disabled>限</button>
+-          <button type="button" data-scope="yearly" class="zwds-scope-btn" title="Year" disabled>年</button>
+-          <button type="button" data-scope="monthly" class="zwds-scope-btn" title="Month" disabled>月</button>
+-          <button type="button" data-scope="daily" class="zwds-scope-btn" title="Day" disabled>日</button>
+-          <button type="button" data-scope="hourly" class="zwds-scope-btn" title="Hour" disabled>時</button>
+-        </div>
++        <button type="button" id="zwds-return-natal" class="zwds-natal-button" aria-pressed="true">Return to Natal · 返回本命</button>
++        <span class="zwds-relationship-standard">三方四正 follows the currently displayed decade/year/month/day/hour automatically</span>
+         <span class="zwds-method-label" aria-label="Current chart method">Three Harmony · 三合</span>
+       </div>
+ 
+@@ -694,7 +686,7 @@
+         </div>
+ 
+         <aside class="zwds-flight-info" id="zwds-flight-info" aria-live="polite">
+-          <span>Select a palace to view its 三方四正 (Three Directions and Four Palaces).</span>
++          <span><b>三方四正</b> · Select a palace. Three arrows will point to its two trines and opposite palace.</span>
+         </aside>
+       </div>
+     </section>
+@@ -706,7 +698,7 @@
+       <div class="footer-top">
+         <div>
+           <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+-            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
++            <img src="assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+             <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span
+                 style="text-shadow:none;color:rgba(113,1,1,0.6);font-weight:600;">LLP</span></div>
+           </div>
+@@ -755,11 +747,11 @@
+ 
+   <!-- iztro CDN (UMD, pinned v2.4.7) -->
+   <script src="https://cdn.jsdelivr.net/npm/iztro@2.4.7/dist/iztro.min.js"></script>
+-  <script src="/assets/zwds-engine-adapter.js"></script>
+-  <script src="/assets/zwds-time-state.js"></script>
+-  <script src="/assets/zwds-view-model.js"></script>
+-  <script src="/assets/zwds-profile-store.js"></script>
+-  <script src="/assets/zwds.js"></script>
++  <script src="assets/zwds-engine-adapter.js"></script>
++  <script src="assets/zwds-time-state.js"></script>
++  <script src="assets/zwds-view-model.js"></script>
++  <script src="assets/zwds-profile-store.js"></script>
++  <script src="assets/zwds.js"></script>
+   <script>
+     const navbar = document.getElementById('navbar');
+     window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));

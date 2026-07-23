@@ -1,0 +1,19 @@
+--- /mnt/data/ZWDS-Inner-Rail-Relationship-Kit/tests/test-static.js	2026-07-23 09:05:23.952343148 +0000
++++ /mnt/data/ZWDS-Subtle-Destination-Arrows-Kit/tests/test-static.js	2026-07-23 09:26:35.520311334 +0000
+@@ -14,7 +14,7 @@
+ assert(js.includes('engine.getTrineSlots(selectedRelationshipSourceSlotId)'), 'production UI must use engine trine geometry');
+ assert(js.includes("marker-end', 'url(#zwds-trine-arrowhead)'"), 'arrows must use actual SVG arrowheads');
+ assert(html.includes('assets/relationship-routing.js'), 'production page must load the inner-rail router');
+-assert(js.includes("data-route', 'inner-rail'"), 'production paths must identify inner-rail routing');
++assert(js.includes("data-route', 'inner-rail-subtle'"), 'production paths must identify subtle inner-rail routing');
+ assert(routing.includes('pointsAlongPerimeter'), 'router must follow the centre perimeter');
+ assert(css.includes('.zwds-center::before'), 'centre must include an opaque protected content card');
+ assert(!js.includes('relationshipScope ='), 'no independent relationship scope state should remain');
+@@ -22,3 +22,7 @@
+ assert(css.includes('.zwds-palace.is-trine-target'), 'trine target highlight style must exist');
+ assert(css.includes('.zwds-palace.is-trine-opposite'), 'opposite target highlight style must exist');
+ console.log('static contract tests: PASS');
++
++assert(js.includes('appendRouteGradient'), 'production routes must use source-to-target opacity gradients');
++assert(js.includes("markerUnits', 'userSpaceOnUse'"), 'arrowheads must remain tiny regardless of path stroke width');
++assert(css.includes('REFERENCE-STYLE SUBTLE DESTINATION ARROWS'), 'subtle arrow visual override must exist');

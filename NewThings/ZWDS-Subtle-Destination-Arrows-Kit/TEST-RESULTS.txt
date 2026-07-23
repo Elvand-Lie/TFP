@@ -1,0 +1,15 @@
+relationship tests: PASS
+subtle inner-rail routing tests: PASS
+static contract tests: PASS
+ALL TESTS PASSED
+
+Browser validation:
+- relationship paths: 3
+- source highlights: 1
+- trine highlights: 2
+- opposite highlights: 1
+- SVG opacity gradients: 3
+- arrowhead size: 5px user-space units
+- route stroke width: 0.72px
+- persistence: PASS across natal/decade/year/month/day/hour
+- browser errors: 0
