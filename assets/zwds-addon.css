@@ -229,7 +229,7 @@ button, input, select { font: inherit; }
 /* ── 三方四正 subtle arrow interaction ── */
 
 #zwds-app .zwds-palace.is-trine-source {
-  z-index: 5;
+  z-index: 3;
   box-shadow: inset 0 0 0 2px rgba(239, 107, 107, .90);
 }
 
@@ -240,28 +240,38 @@ button, input, select { font: inherit; }
 }
 
 #zwds-app .zwds-flight-overlay {
+  display: block;
+  overflow: visible;
+  z-index: 4;
+}
+
+#zwds-app .zwds-palace {
+  position: relative;
   z-index: 2;
 }
 
 #zwds-app .zwds-center {
-  z-index: 4;
+  position: relative;
+  z-index: 5;
 }
 
-#zwds-app .zwds-trine-path {
+#zwds-app .zwds-trine-route {
   fill: none;
-  stroke-width: .72;
+  stroke: rgba(198, 169, 107, .55);
+  stroke-width: 1.2;
   stroke-linecap: round;
   stroke-linejoin: round;
   pointer-events: none;
+  vector-effect: non-scaling-stroke;
 }
 
 #zwds-app .zwds-trine-arrowhead {
-  fill: rgba(223, 82, 92, .88);
+  fill: #e35b63;
 }
 
 @media (max-width: 760px) {
-  #zwds-app .zwds-trine-path {
-    stroke-width: .62;
+  #zwds-app .zwds-trine-route {
+    stroke-width: 1;
   }
 }
 

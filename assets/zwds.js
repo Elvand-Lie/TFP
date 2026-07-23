@@ -379,7 +379,11 @@
       var isNatal = model.selection.scope === 'natal';
       natalButton.hidden = isNatal;
       chart.dataset.scope = model.selection.scope;
-      recomputeRelationship();
+      host.requestAnimationFrame(function () {
+        host.requestAnimationFrame(function () {
+          recomputeRelationship();
+        });
+      });
       chart.hidden = false;
       chart.classList.add('is-active');
       if (focusSelector) {
@@ -388,64 +392,61 @@
       }
     }
 
-    /** Create <defs> with arrowhead marker for trine routes. */
-    function appendArrowDefinitions(targetSvg) {
-      var defs = doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      var marker = doc.createElementNS('http://www.w3.org/2000/svg', 'marker');
-      marker.setAttribute('id', 'zwds-trine-arrowhead');
-      marker.setAttribute('markerWidth', '5');
-      marker.setAttribute('markerHeight', '4');
-      marker.setAttribute('refX', '4.5');
-      marker.setAttribute('refY', '2');
-      marker.setAttribute('orient', 'auto');
-      marker.setAttribute('markerUnits', 'strokeWidth');
-      var shape = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
-      shape.setAttribute('d', 'M0,0 L5,2 L0,4 Z');
-      shape.setAttribute('class', 'zwds-trine-arrowhead');
-      marker.appendChild(shape);
-      defs.appendChild(marker);
-      targetSvg.appendChild(defs);
-      return defs;
-    }
-
-    /** Create a linearGradient element for a route. */
-    function appendRouteGradient(defs, id, src, tgt) {
-      var grad = doc.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-      grad.setAttribute('id', id);
-      grad.setAttribute('gradientUnits', 'userSpaceOnUse');
-      grad.setAttribute('x1', String(src.x)); grad.setAttribute('y1', String(src.y));
-      grad.setAttribute('x2', String(tgt.x)); grad.setAttribute('y2', String(tgt.y));
-      var stop1 = doc.createElementNS('http://www.w3.org/2000/svg', 'stop');
-      stop1.setAttribute('offset', '0%'); stop1.setAttribute('stop-color', 'rgba(113,1,1,.06)');
-      var stop2 = doc.createElementNS('http://www.w3.org/2000/svg', 'stop');
-      stop2.setAttribute('offset', '100%'); stop2.setAttribute('stop-color', 'rgba(113,1,1,.38)');
-      grad.appendChild(stop1); grad.appendChild(stop2);
-      defs.appendChild(grad);
-    }
-
     /**
-     * Draw relationship routes on the SVG overlay using the perimeter router.
+     * Draw relationship routes on the SVG overlay.
      * @param {{ sourceSlotId: string, type: string, targetSlotIds: string[] } | null} relationship
      */
     function drawRelationshipLines(relationship) {
       if (!svg || !grid) return;
+
+      /* 1. Clear SVG first */
       while (svg.firstChild) svg.removeChild(svg.firstChild);
-      grid.querySelectorAll('.is-trine-source, .is-trine-target, .is-trine-opposite').forEach(function (node) {
-        node.classList.remove('is-trine-source', 'is-trine-target', 'is-trine-opposite');
-        node.setAttribute('aria-pressed', 'false');
+
+      /* 2. Clear all highlight classes (trine + legacy) */
+      grid.querySelectorAll('.is-trine-source, .is-trine-target, .is-trine-opposite, .is-flight-source, .is-flight-destination').forEach(function (node) {
+        node.classList.remove('is-trine-source', 'is-trine-target', 'is-trine-opposite', 'is-flight-source', 'is-flight-destination');
       });
+
       if (!relationship) return;
-      var source = grid.querySelector('[data-slot="' + relationship.sourceSlotId + '"]');
+
+      /* 3. Find source by physical data-slot */
+      var source = grid.querySelector('.zwds-palace[data-slot="' + relationship.sourceSlotId + '"]');
       if (!source) return;
       source.classList.add('is-trine-source');
-      source.setAttribute('aria-pressed', 'true');
+
+      /* 4. Apply target highlights */
+      relationship.targetSlotIds.forEach(function (slotId, index) {
+        var target = grid.querySelector('.zwds-palace[data-slot="' + slotId + '"]');
+        if (!target) return;
+        target.classList.add(index === 1 ? 'is-trine-opposite' : 'is-trine-target');
+      });
+
+      /* 5. Set SVG dimensions explicitly */
+      var width = grid.offsetWidth;
+      var height = grid.offsetHeight;
+      svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+      svg.setAttribute('width', String(width));
+      svg.setAttribute('height', String(height));
+
+      /* 6. Create defs with arrowhead marker */
+      var defs = doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      var marker = doc.createElementNS('http://www.w3.org/2000/svg', 'marker');
+      marker.setAttribute('id', 'zwds-trine-arrow');
+      marker.setAttribute('markerWidth', '5');
+      marker.setAttribute('markerHeight', '5');
+      marker.setAttribute('refX', '4.5');
+      marker.setAttribute('refY', '2.5');
+      marker.setAttribute('orient', 'auto');
+      marker.setAttribute('markerUnits', 'userSpaceOnUse');
+      var shape = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+      shape.setAttribute('d', 'M0,0 L5,2.5 L0,5 Z');
+      shape.setAttribute('class', 'zwds-trine-arrowhead');
+      marker.appendChild(shape);
+      defs.appendChild(marker);
+      svg.appendChild(defs);
+
+      /* 7. Build local rects */
       var gridRect = grid.getBoundingClientRect();
-      svg.setAttribute('viewBox', '0 0 ' + gridRect.width + ' ' + gridRect.height);
-      var defs = appendArrowDefinitions(svg);
-      var sourceRect = source.getBoundingClientRect();
-      var center = grid.querySelector('.zwds-center');
-      var centerRect = center ? center.getBoundingClientRect() : null;
-      /** Convert DOMRect to local {left,top,right,bottom,width,height} relative to grid. */
       function toLocal(r) {
         return {
           left: r.left - gridRect.left, top: r.top - gridRect.top,
@@ -453,15 +454,16 @@
           width: r.width, height: r.height
         };
       }
-      var localGrid = { left: 0, top: 0, right: gridRect.width, bottom: gridRect.height, width: gridRect.width, height: gridRect.height };
-      var localSource = toLocal(sourceRect);
-      var localCenter = centerRect ? toLocal(centerRect) : localGrid;
+      var localGrid = { left: 0, top: 0, right: width, bottom: height, width: width, height: height };
+      var localSource = toLocal(source.getBoundingClientRect());
+      var center = grid.querySelector('.zwds-center');
+      var localCenter = center ? toLocal(center.getBoundingClientRect()) : localGrid;
+
+      /* 8. Append one path per target */
       relationship.targetSlotIds.forEach(function (targetSlotId, index) {
-        var target = grid.querySelector('[data-slot="' + targetSlotId + '"]');
+        var target = grid.querySelector('.zwds-palace[data-slot="' + targetSlotId + '"]');
         if (!target) return;
-        target.classList.add(index === 1 ? 'is-trine-opposite' : 'is-trine-target');
-        var targetRect = target.getBoundingClientRect();
-        var localTarget = toLocal(targetRect);
+        var localTarget = toLocal(target.getBoundingClientRect());
         var route = relationshipRouter.route(
           localSource,
           localTarget,
@@ -469,14 +471,26 @@
           localGrid,
           index
         );
-        var gradientId = 'zwds-trine-route-' + index;
-        appendRouteGradient(defs, gradientId, route.points[0], route.points[route.points.length - 1]);
         var path = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', relationshipRouter.roundedPath(route.points, 18));
-        path.setAttribute('class', 'zwds-trine-path');
-        path.setAttribute('stroke', 'url(#' + gradientId + ')');
-        path.setAttribute('marker-end', 'url(#zwds-trine-arrowhead)');
+        path.setAttribute('class', 'zwds-trine-route');
+        path.setAttribute('marker-end', 'url(#zwds-trine-arrow)');
         svg.appendChild(path);
+      });
+
+      /* 9. Debug logging */
+      console.log('[三方四正]', {
+        selectedRelationshipSourceSlotId: relationship.sourceSlotId,
+        targetSlotIds: relationship.targetSlotIds,
+        sourceElement: source.getAttribute('data-slot'),
+        overlayRect: svg.getBoundingClientRect(),
+        gridRect: grid.getBoundingClientRect(),
+        svgChildren: svg.childNodes.length,
+        pathCount: svg.querySelectorAll('path.zwds-trine-route').length,
+        markerCount: svg.querySelectorAll('marker').length,
+        trineSourceCount: grid.querySelectorAll('.is-trine-source').length,
+        trineTargetCount: grid.querySelectorAll('.is-trine-target').length,
+        trineOppositeCount: grid.querySelectorAll('.is-trine-opposite').length
       });
     }
 
@@ -597,7 +611,7 @@
       refresh(`[data-time-index="${index}"]`);
     });
 
-    /* Palace click → 三方四正 trine relationship (not Four Transformations flights) */
+    /* Palace click → 三方四正 trine relationship */
     grid.addEventListener('click', (event) => {
       const target = /** @type {any} */ (event.target);
       const button = /** @type {HTMLElement | null} */ (target && typeof target.closest === 'function' ? target.closest('.zwds-palace') : null);
@@ -605,6 +619,31 @@
       selectedRelationshipSourceSlotId = button.getAttribute('data-slot');
       recomputeRelationship();
     });
+
+    /* Redraw arrows on resize/scroll */
+    host.addEventListener('resize', function () {
+      if (selectedRelationshipSourceSlotId) {
+        host.requestAnimationFrame(function () { recomputeRelationship(); });
+      }
+    });
+    var viewport = grid.closest('.zwds-chart-viewport');
+    if (viewport) {
+      viewport.addEventListener('scroll', function () {
+        if (selectedRelationshipSourceSlotId) {
+          host.requestAnimationFrame(function () { recomputeRelationship(); });
+        }
+      });
+    }
+    if (typeof ResizeObserver !== 'undefined') {
+      var gridStage = grid.closest('.zwds-grid-stage');
+      if (gridStage) {
+        new ResizeObserver(function () {
+          if (selectedRelationshipSourceSlotId) {
+            host.requestAnimationFrame(function () { recomputeRelationship(); });
+          }
+        }).observe(gridStage);
+      }
+    }
 
 
 
