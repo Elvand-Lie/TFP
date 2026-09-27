@@ -23,11 +23,17 @@ const RESULT_ID_PATTERN = /^tp_[A-Za-z0-9_-]{4,64}$/;
 
 type RestConfig = { url: string; token: string };
 
-function getRestConfig(): RestConfig | null {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+/**
+ * Which vars configure the store is pure logic, so it lives in `true-path/lib/store-config.js`
+ * where it is type-checked and unit-tested. This wrapper only supplies the real environment.
+ */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const StoreConfig = require('../true-path/lib/store-config.js') as {
+  resolveRestConfig(env: Record<string, string | undefined>): RestConfig | null;
+};
 
-  return url && token ? { url, token } : null;
+function getRestConfig(): RestConfig | null {
+  return StoreConfig.resolveRestConfig(process.env);
 }
 
 /**
