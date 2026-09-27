@@ -408,7 +408,12 @@
     return {
       pageSize: 'A4',
       pageMargins: [34, 20, 34, 28],
-      defaultStyle: { font: FONT, fontSize: 9, color: C.textDark, lineHeight: 1.14 },
+      // lineHeight is 1.05, not the 1.14 a screen would use: page 3's copy grows with the number
+      // of Ikigai picks, and at 1.14 it spills past the page bottom for a large share of valid
+      // journeys, so the document rendered 4 pages while declaring 3 (and cta.json promises
+      // "3-Page"). 1.05 keeps every valid journey — 1..3 picks on each of the 4 screens, all 5
+      // talent levels and all 3 roles, 1215 shapes — at exactly 3 pages without trimming copy.
+      defaultStyle: { font: FONT, fontSize: 9, color: C.textDark, lineHeight: 1.05 },
       info: {
         title: String(model.headline || 'True Path Report'),
         author: 'The Full Picture',

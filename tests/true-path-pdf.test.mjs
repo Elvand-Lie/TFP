@@ -44,20 +44,47 @@ const fontPath = path.join(repoRoot, 'fonts', 'NotoSansSC.ttf');
 
 /** A completed journey: Case F talents, all-Chancellor scenarios, and Ikigai selections. */
 function sampleRecord() {
+  return recordFor({
+    talentValue: 4,
+    role: 'chancellor',
+    picks: [
+      { screenId: 'I-1', key: 'solving_problems', fromSuggestion: true },
+      { screenId: 'I-2', key: 'planning', fromSuggestion: true },
+      { screenId: 'I-3', key: 'operations_management', fromSuggestion: true },
+      { screenId: 'I-4', key: 'build_systems_efficiency', fromSuggestion: false }
+    ]
+  });
+}
+
+/**
+ * Build a record for an arbitrary journey shape. Give either `picks` (an explicit list) or `per`
+ * (a screen id → how many of that screen's options were picked, 1..3). Pick volume is the only
+ * input that moves the page count, so `per` is how the tests reach the page-3 overflow.
+ */
+function recordFor(options) {
+  const opts = options || {};
+  const talentValue = opts.talentValue || 4;
+  const role = opts.role || 'chancellor';
   const answers = {};
   talentJson.displayOrder.forEach((questionId) => {
-    answers[questionId] = 4;
+    answers[questionId] = talentValue;
   });
   const scenarioAnswers = {};
   ironJson.scenarios.forEach((scenario) => {
-    scenarioAnswers[scenario.id] = 'chancellor';
+    scenarioAnswers[scenario.id] = role;
   });
-  const picks = [
-    { screenId: 'I-1', key: 'solving_problems', fromSuggestion: true },
-    { screenId: 'I-2', key: 'planning', fromSuggestion: true },
-    { screenId: 'I-3', key: 'operations_management', fromSuggestion: true },
-    { screenId: 'I-4', key: 'build_systems_efficiency', fromSuggestion: false }
-  ];
+
+  let picks = opts.picks;
+  if (!picks) {
+    const per = opts.per || { 'I-1': 1, 'I-2': 1, 'I-3': 1, 'I-4': 1 };
+    picks = [];
+    Object.keys(per).forEach((screenId) => {
+      const screen = ikigaiJson.screens.find((s) => s.id === screenId);
+      screen.options.slice(0, per[screenId]).forEach((option) => {
+        picks.push({ screenId, key: option.key, fromSuggestion: true });
+      });
+    });
+  }
 
   const talent = Scoring.scoreTalent(answers, talentConfig);
   const scenarioRoles = ironJson.scenarios.map((scenario) => scenarioAnswers[scenario.id]);
@@ -130,6 +157,30 @@ test('pdf: rendering produces a real, complete three-page PDF', async () => {
   assert.match(raw, /\/ToUnicode/, 'the CJK text would not be extractable or searchable');
   // Three pages, one per journey stage.
   assert.match(raw, /\/Count 3/, 'the PDF does not have the expected three pages');
+});
+
+test('pdf: a full-length journey still renders three pages, not four', async () => {
+  // Page 3's copy grows with the number of Ikigai picks, so a realistic journey is the shape that
+  // reaches the overflow: the fixture above picks 1 per screen and never spills, which is exactly
+  // why the defect shipped. Each shape below was verified to render 4 pages before the fix (one
+  // per role), so this test genuinely fails if the page-3 overflow ever comes back.
+  const overflowing = [
+    { talentValue: 5, role: 'commander', per: { 'I-1': 1, 'I-2': 1, 'I-3': 2, 'I-4': 1 } },
+    { talentValue: 5, role: 'general', per: { 'I-1': 1, 'I-2': 1, 'I-3': 3, 'I-4': 1 } },
+    { talentValue: 5, role: 'chancellor', per: { 'I-1': 2, 'I-2': 2, 'I-3': 2, 'I-4': 2 } }
+  ];
+
+  for (const shape of overflowing) {
+    const buffer = await render(modelFor(recordFor(shape)));
+    const raw = buffer.toString('latin1');
+    const count = Number((raw.match(/\/Count\s+(\d+)/) || [])[1]);
+    // cta.json promises a "3-Page True Path Report" in two places, so this is a product contract.
+    assert.equal(
+      count,
+      3,
+      'journey ' + JSON.stringify(shape) + ' rendered ' + count + ' pages, not 3'
+    );
+  }
 });
 
 test('pdf: the report content is the model the on-screen page shows', () => {
