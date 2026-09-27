@@ -35,6 +35,7 @@ $include = @(
   "scripts"
   "tests"
   "NewThings"
+  "true-path"
 )
 
 $include += Get-ChildItem -File -Filter *.html | ForEach-Object { $_.Name }

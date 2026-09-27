@@ -1,0 +1,69 @@
+{
+  "version": "1.0",
+  "landing": {
+    "eyebrow": "True Path Method\u2122 \u00b7 轨道",
+    "headline": "Discover Your True Path",
+    "headlineSub": "in 4 Minutes",
+    "promise": "\u201cHow you think. Where you're headed. How you lead.\u201d",
+    "subcopy": "Three frameworks, one journey. Discover how you naturally think, where your strengths matter most, and the role you'll play to get there.",
+    "ctaLabel": "Start Free Analysis",
+    "ctaHref": "/true-path/talent",
+    "stages": [
+      { "character": "才", "name": "Talent Tree", "line": "Discover how you naturally think." },
+      { "character": "道", "name": "Ikigai", "line": "Discover where your strengths matter most." },
+      { "character": "位", "name": "Iron Triangle", "line": "Discover the role you'll play to get there." }
+    ]
+  },
+  "talentIntro": {
+    "headline": "Your Talent Tree 才",
+    "body": "Twelve short statements. There are no right answers, and your four branches are measured independently, so you can be strong in more than one.",
+    "branches": [
+      { "name": "Organiser", "line": "Planning, structure, systems, execution" },
+      { "name": "Analyst", "line": "Data, logic, research, strategy" },
+      { "name": "Communicator", "line": "Speaking, teaching, persuasion, influence" },
+      { "name": "Creative", "line": "Imagination, innovation, design, visual thinking" }
+    ],
+    "ctaLabel": "Begin \u2014 12 statements",
+    "ctaHref": "/true-path/talent/q"
+  },
+  "progress": {
+    "stages": [
+      { "character": "才", "name": "Talent" },
+      { "character": "道", "name": "Direction" },
+      { "character": "位", "name": "Role" }
+    ]
+  },
+  "result": {
+    "consultHeadline": "Continue Your Exploration",
+    "consultCtaLabel": "Book a 1-Hour Metaphysics Strategic Consultation",
+    "consultSubcopy": "A personalised session combining your True Path results with modern strategy and ancient wisdom, to explore your direction, decisions and timing.",
+    "consultHref": "https://wa.me/6588257687",
+    "ancientWisdomBridge": "Your Talent Tree shows how you think. Your Ikigai shows where it matters. Your Iron Triangle shows the role you'll play to get there.\n\nAncient Wisdom adds the one layer no questionnaire can: timing. It looks at when to lead, when to build and when to consolidate, based on your personal patterns.",
+    "productsLabel": "Products",
+    "productsHref": "/services",
+    "restartLabel": "Start again",
+    "restartHref": "/true-path"
+  },
+  "report": {
+    "headline": "Your 3-Page True Path Report",
+    "pages": [
+      { "n": 1, "title": "Your Talent Tree 才" },
+      { "n": 2, "title": "Your Direction 道" },
+      { "n": 3, "title": "Your Role & True Path 位" }
+    ],
+    "downloadLabel": "Download PDF",
+    "emailHeadline": "Would you like us to send your 3-page True Path report?",
+    "emailFieldName": "First name",
+    "emailFieldEmail": "Email",
+    "emailSendLabel": "Send My Report",
+    "emailSkipLabel": "Skip for now",
+    "marketingConsentLabel": "Send me occasional insights from The Full Picture.",
+    "consentNote": "We store your result and email only to deliver this report. Report delivery and marketing consent are separate, and you can opt out at any time.",
+    "privacyLabel": "Privacy Policy",
+    "privacyHref": "/privacy",
+    "sentMessage": "Your report is on its way. Check your inbox in a few minutes."
+  },
+  "footer": {
+    "brand": "The Full Picture \u00b7 Ancient Wisdom. Modern Strategy. \u00b7 thefullpicture.asia"
+  }
+}

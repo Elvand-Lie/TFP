@@ -1,0 +1,162 @@
+{
+  "version": "1.0",
+  "stageLabel": "Stage 3 of 3",
+  "timeLeftLabel": "About 60 seconds left",
+  "intro": {
+    "headline": "Last step: the role you'll play to get there.",
+    "body": "Every great team runs on three kinds of talent: the Commander 帅才 who sets direction, the General 将才 who delivers results, and the Chancellor 相才 who builds what lasts. Six quick scenarios. Choose what feels most like you.",
+    "storyToggleLabel": "Read the 2,000-year-old story",
+    "story": "Over 2,000 years ago, the founder of the Han dynasty explained his victory simply. He could not out-plan his strategist, out-govern his chancellor or out-fight his general. But he knew how to bring all three together. 吾能用之，此吾所以取天下也。\n\nToday, every company, project and career still runs on the same Iron Triangle 铁三角.",
+    "ctaLabel": "Begin — 6 scenarios",
+    "ctaHref": "/true-path/role/q"
+  },
+  "autoAdvanceMs": 400,
+  "roles": [
+    {
+      "key": "commander",
+      "name": "Commander",
+      "chinese": "帅才",
+      "glyph": "帅",
+      "subtitle": "Visionary Leader",
+      "essence": "帅才 · 定方向 · 谋全局 · 聚人心",
+      "oneLine": "Sets direction, sees the whole board and unites people behind a goal.",
+      "exemplarName": "Liu Bang 刘邦",
+      "exemplarLine": "He admitted he was not the best strategist, administrator or general, but he could lead all three.",
+      "coreLine": "You see where things should go and help others commit to getting there.",
+      "naturalStrengths": ["Long-range thinking", "Decisive calls", "Setting priorities", "Rallying people"],
+      "contribution": "You give a team a \u201cwhy\u201d and a direction worth following.",
+      "watchOut": "You may underestimate the detail and follow-through ideas need, or move on before they are executed.",
+      "allies": "A General to turn direction into results, and a Chancellor to make it sustainable.",
+      "thrive": "1 \u2192 10 growth stages: leading a team, function, venture or strategic initiative.",
+      "growthEdge": "Pair every vision with one concrete first step and one clear owner."
+    },
+    {
+      "key": "general",
+      "name": "General",
+      "chinese": "将才",
+      "glyph": "将",
+      "subtitle": "Breakthrough Achiever",
+      "essence": "将才 · 攻坚破局 · 执行落地",
+      "oneLine": "Breaks through obstacles, executes under pressure and delivers results.",
+      "exemplarName": "Han Xin 韩信",
+      "exemplarLine": "Commanded vast armies and \u201cwon every battle, took every city\u201d.",
+      "coreLine": "You turn goals into wins and move first when it matters.",
+      "naturalStrengths": ["Drive and ownership", "Urgency", "Resilience under pressure", "Closing"],
+      "contribution": "You create momentum and measurable results.",
+      "watchOut": "You may take on too much personally, skip systems, or burn out.",
+      "allies": "A Commander to give you a battle worth winning, and a Chancellor to secure the gains.",
+      "thrive": "0 \u2192 1 stages: frontline, sales, business development, launches, turnarounds.",
+      "growthEdge": "Before charging, confirm the direction. After winning, capture what worked as a repeatable method."
+    },
+    {
+      "key": "chancellor",
+      "name": "Chancellor",
+      "chinese": "相才",
+      "glyph": "相",
+      "subtitle": "Steady Architect",
+      "essence": "相才 · 固本赋能 · 运筹帷幄",
+      "oneLine": "Builds the systems, resources and stability that make success last.",
+      "exemplarName": "Xiao He 萧何",
+      "exemplarLine": "Kept the state stable, the people cared for and supply lines unbroken.",
+      "coreLine": "You make things run well, and you make them last.",
+      "naturalStrengths": ["Process and governance", "Resource stewardship", "Risk awareness", "Reliability"],
+      "contribution": "You create stability, so growth doesn't collapse under its own weight.",
+      "watchOut": "You may over-prepare, resist fast change, or go unnoticed because good systems are invisible.",
+      "allies": "A Commander to set direction, and a General to create momentum.",
+      "thrive": "10 \u2192 100 scale stages: operations, finance, HR, compliance, programme management, advisory.",
+      "growthEdge": "Make your impact visible. Quantify the risk you prevented and the time you saved."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "S1",
+      "prompt": "A new project lands on your team with no clear plan. What do you naturally do first?",
+      "options": {
+        "commander": "Define what success looks like and why it matters, then set the direction.",
+        "general": "Get moving: take on the hardest piece and start producing results.",
+        "chancellor": "Map out roles, resources, timeline and risks so nothing falls through."
+      }
+    },
+    {
+      "id": "S2",
+      "prompt": "Your team is behind on an important deadline. You\u2026",
+      "options": {
+        "commander": "Re-prioritise: decide what truly matters and rally everyone around it.",
+        "general": "Roll up your sleeves and personally push the critical tasks over the line.",
+        "chancellor": "Find the bottleneck in the process and fix it so it doesn't happen again."
+      }
+    },
+    {
+      "id": "S3",
+      "prompt": "Which recognition feels most meaningful to you?",
+      "options": {
+        "commander": "\u201cYou saw where we needed to go before anyone else.\u201d",
+        "general": "\u201cYou delivered when it mattered most.\u201d",
+        "chancellor": "\u201cBecause of you, everything runs smoothly.\u201d"
+      }
+    },
+    {
+      "id": "S4",
+      "prompt": "When facing a major decision, you focus first on\u2026",
+      "options": {
+        "commander": "The long-term picture and where it positions you in 3\u20135 years.",
+        "general": "What will create the fastest measurable progress now.",
+        "chancellor": "The risks, resources and whether it is sustainable."
+      }
+    },
+    {
+      "id": "S5",
+      "prompt": "In a team, people usually rely on you to\u2026",
+      "options": {
+        "commander": "Set the vision and make the big calls.",
+        "general": "Win the difficult battles: close the deal, solve the crisis, hit the target.",
+        "chancellor": "Keep people, money and processes in good order."
+      }
+    },
+    {
+      "id": "S6",
+      "prompt": "What frustrates you most at work?",
+      "options": {
+        "commander": "No clear direction: everyone busy but going nowhere.",
+        "general": "Endless planning and meetings with no action.",
+        "chancellor": "Chaos, shortcuts and avoidable mistakes."
+      }
+    }
+  ],
+  "reveal": {
+    "headline": "Your Iron Triangle Role",
+    "shareTooltip": "Talent Tree scores are independent strengths: you can be strong at everything. The Iron Triangle shows how your natural contribution is distributed across the three roles, so it is displayed as a share of 100%.",
+    "gapHeadline": "Your Triangle Gap",
+    "gapFraming": "The ally you most need",
+    "thriveHeadline": "Where you may thrive"
+  },
+  "gapInsights": {
+    "commander": {
+      "classicImbalance": "有将相，无帅才: busy and orderly, but without direction",
+      "insight": "You may sometimes work hard on things that aren't clearly moving you forward. Seek mentors or leaders with clear vision, and set your own 12-month direction."
+    },
+    "general": {
+      "classicImbalance": "有帅相，无将才: strong plans, slow results",
+      "insight": "Your ideas and systems may be ahead of your results. Work with doers, set short deadlines and celebrate small wins."
+    },
+    "chancellor": {
+      "classicImbalance": "有帅将，无相才: fast growth, fragile foundations",
+      "insight": "You may create momentum faster than structure. Build simple systems, and partner with someone who loves stability and detail."
+    }
+  },
+  "patterns": {
+    "dual": {
+      "commander_general": { "label": "The Pioneer", "line": "You set the direction and lead the charge yourself." },
+      "commander_chancellor": { "label": "The Architect-Leader", "line": "You set the direction and build the structure to carry it." },
+      "general_chancellor": { "label": "The Operator", "line": "You deliver results and make them repeatable." }
+    },
+    "balanced": {
+      "label": "三才兼备 · The Complete Triangle",
+      "line": "You flex across all three roles. Watch-out: you may be pulled in every direction, so choose a primary lane for this season."
+    }
+  },
+  "synthesis": {
+    "lines": ["Aligning your path", "Reading your triangle", "Where talent, purpose and role meet"],
+    "durationMs": 2600
+  }
+}

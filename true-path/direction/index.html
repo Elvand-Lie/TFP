@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>True Path 轨道 — Direction | The Full Picture</title>
+  <meta name="description" content="Discover Your True Path in 4 Minutes - Three frameworks, one journey. Discover how you naturally think, where your strengths matter most, and the role you'll play to get there." />
+  <meta name="author" content="The Full Picture LLP" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.thefullpicture.asia/true-path/direction" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.thefullpicture.asia/true-path" />
+  <meta property="og:title" content="True Path 轨道 — The Full Picture" />
+  <meta property="og:description" content="Discover Your True Path in 4 Minutes - Three frameworks, one journey. Discover how you naturally think, where your strengths matter most, and the role you'll play to get there." />
+  <meta property="og:image" content="https://www.thefullpicture.asia/assets/logo.png" />
+  <meta property="og:site_name" content="The Full Picture LLP" />
+  <meta property="og:locale" content="en_SG" />
+
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Base Colors */
+      --black: #0F0F10;
+      --dark-grey: #1C1C1E;
+      --ivory: #F5F5F2;
+      --beige: #D8CFC4;
+      --pure-white: #FFFFFF;
+      --muted: #888580;
+
+      /* Primary Brand Palette (From Logo) */
+      --crimson: #710101;
+      --maroon: #591f16;
+      --deep-red: #680806;
+
+      /* THE FIX: High-Contrast Red for Dark Backgrounds */
+      --crimson-text: #E53939;
+
+      /* Secondary Luxury Accents */
+      --gold: #C6A96B;
+      --forest: #1F3A2E;
+
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'DM Sans', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: var(--font-sans);
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--black);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--crimson);
+      border-radius: 2px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── SHARED NAV ─────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 48px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .4s, border-bottom .4s;
+    }
+
+    nav.scrolled {
+      background: rgba(15, 15, 16, 0.93);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(113, 1, 1, 0.25);
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      text-decoration: none;
+      transition: opacity .3s;
+    }
+
+    .nav-logo:hover {
+      opacity: .85;
+    }
+
+    /* THE FIX: Thicker, Readable Red with Invisible Shadow */
+    .nav-logo span {
+      color: var(--crimson-text);
+      font-weight: 600 !important;
+      text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.9) !important;
+      background: transparent !important;
+      display: inline;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--beige);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 3px;
+      transition: color .3s;
+      white-space: nowrap;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--crimson-text);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s cubic-bezier(.76, 0, .24, 1);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--ivory);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    /* Primary Nav Action */
+    .nav-cta {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      border: 2px solid var(--crimson);
+      padding: 10px 24px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color .35s, border-color .35s;
+      z-index: 1;
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--crimson);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s cubic-bezier(.76, 0, .24, 1);
+      z-index: -1;
+    }
+
+    .nav-cta:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--ivory);
+      display: block;
+      transition: .3s;
+    }
+
+    .mobile-nav {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 60px 24px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .mobile-nav.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav a {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--ivory);
+      text-decoration: none;
+      letter-spacing: .08em;
+      transition: color .3s, transform .4s ease, opacity .4s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .mobile-nav.open a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-nav a:nth-child(2) { transition-delay: .05s; }
+    .mobile-nav a:nth-child(3) { transition-delay: .1s; }
+    .mobile-nav a:nth-child(4) { transition-delay: .15s; }
+    .mobile-nav a:nth-child(5) { transition-delay: .2s; }
+    .mobile-nav a:nth-child(6) { transition-delay: .25s; }
+    .mobile-nav a:nth-child(7) { transition-delay: .3s; }
+    .mobile-nav a:nth-child(8) { transition-delay: .35s; }
+
+    .mobile-nav a:hover {
+      color: var(--crimson-text);
+    }
+
+    .mobile-nav-close {
+      position: absolute;
+      top: 28px;
+      right: 48px;
+      font-size: 1.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* ─── SHARED FOOTER ────────────────────────── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(113, 1, 1, 0.25);
+      padding: 80px 0 48px;
+    }
+
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 64px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid rgba(113, 1, 1, 0.25);
+      margin-bottom: 36px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      margin-bottom: 20px;
+    }
+
+    /* THE FIX: Thicker, Readable Red with Invisible Shadow */
+    .footer-logo span {
+      color: var(--crimson-text);
+      font-weight: 600 !important;
+      text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.9) !important;
+      background: transparent !important;
+    }
+
+    .footer-tagline {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 300px;
+    }
+
+    .footer-col-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--pure-white);
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 14px;
+    }
+
+    .footer-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0px;
+      transition: color 0.3s, gap 0.3s;
+    }
+
+    .footer-links a::before {
+      content: '→';
+      font-size: 0.8rem;
+      color: var(--crimson);
+      opacity: 0;
+      max-width: 0;
+      overflow: hidden;
+      transition: opacity 0.3s, max-width 0.3s, margin-right 0.3s;
+      margin-right: 0;
+    }
+
+    .footer-links a:hover {
+      color: var(--ivory);
+      gap: 8px;
+    }
+
+    .footer-links a:hover::before {
+      opacity: 1;
+      max-width: 16px;
+      margin-right: 6px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: rgba(245, 245, 242, 0.3);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: rgba(245, 245, 242, 0.4);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--gold);
+    }
+
+    /* ─── ANIMATIONS ────────────────────── */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes lineGrow {
+      from {
+        transform: scaleX(0);
+      }
+
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+  </style>
+  <link rel="stylesheet" href="/true-path/assets/true-path.css" />
+</head>
+
+<body>
+  <nav id="navbar">
+    <a class="nav-logo" href="/"
+      style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
+      <div style="font-size: 1rem; line-height: 1;">The <span>Full</span> Picture</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/founder">Founder</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/zwds">ZWDS (紫微)</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+      <li><a href="/insights">Insights</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Book a Consultation</a>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <a href="/" class="active">Home</a>
+    <a href="/about">About</a>
+    <a href="/founder">Founder</a>
+    <a href="/services">Services</a>
+    <a href="/bazi">BaZi</a>
+    <a href="/zwds">ZWDS (紫微)</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/insights">Insights</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <main id="true-path-app" data-tp-root data-tp-route="/true-path/direction">
+    <noscript>
+      <section class="tp-section">
+        <div class="tp-wrap tp-center">
+          <p class="tp-lead" style="margin:0 auto;">The True Path journey needs JavaScript enabled. Please enable JavaScript, or contact us and we will guide you personally.</p>
+          <div class="tp-btn-row" style="justify-content:center;margin-top:24px;">
+            <a class="tp-btn" href="/contact">Contact Us</a>
+          </div>
+        </div>
+      </section>
+    </noscript>
+
+    <!-- Landing: rendered statically so the page carries real content without JavaScript.
+         Every string here comes from true-path/config/cta.json. -->
+    <noscript>
+      <section class="tp-section">
+        <div class="tp-wrap tp-center">
+          <h1 class="tp-h1">True Path 轨道</h1>
+          <p class="tp-lead" style="margin:12px auto 0;">This step needs JavaScript enabled. You can also contact us and we will guide you personally.</p>
+          <div class="tp-btn-row" style="justify-content:center;margin-top:24px;">
+            <a class="tp-btn" href="/contact">Contact Us</a>
+          </div>
+        </div>
+      </section>
+    </noscript>
+
+
+    <div id="tp-step-root" data-tp-step-root></div>
+
+    <!-- The three-page report is rendered here -->
+    <div id="tp-report-root" data-tp-report-root hidden></div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo"
+              style="height: 120px; width: auto; display: block;" />
+            <div style="font-size: 1.1rem; line-height: 1;">The <span>Full</span> Picture <span
+                style="text-shadow:none !important; color:rgba(113,1,1,0.6) !important; background:transparent !important; font-weight:600;">LLP</span>
+            </div>
+          </div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with
+            modern strategy. For those who seek true clarity.</p>
+          <p style="font-family: var(--font-sans); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-top: 16px; opacity: 0.7;">A Huang He Group Platform</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/founder">Founder</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/zwds">ZWDS (紫微)</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
+            <li><a href="/insights">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="/services#personal">Personal Destiny</a></li>
+            <li><a href="/services#fengshui">Feng Shui Advisory</a></li>
+            <li><a href="/services#courses">Masterclasses</a></li>
+            <li><a href="/services#corporate">Corporate Programs</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="/contact">Book a Consultation</a></li>
+            <li><a href="https://wa.me/6588257687">WhatsApp</a></li>
+            <li><a href="/contact">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/json" id="tp-config">{"talent": {"version": "1.0", "scale": {"min": 1, "max": 5, "labels": {"1": {"key": "strongly_disagree", "label": "Strongly Disagree"}, "2": {"key": "disagree", "label": "Disagree"}, "3": {"key": "neutral", "label": "Neutral"}, "4": {"key": "agree", "label": "Agree"}, "5": {"key": "strongly_agree", "label": "Strongly Agree"}}}, "categories": [{"key": "organiser", "name": "Organiser", "character": "才", "coreStrengths": "Planning, structure, systems, execution, resource allocation"}, {"key": "analyst", "name": "Analyst", "character": "才", "coreStrengths": "Data, logic, research, pattern recognition, strategy"}, {"key": "communicator", "name": "Communicator", "character": "才", "coreStrengths": "Speaking, teaching, persuasion, relationships, influence"}, {"key": "creative", "name": "Creative", "character": "才", "coreStrengths": "Imagination, innovation, ideation, design, visual thinking"}], "fixedOrder": ["organiser", "analyst", "communicator", "creative"], "questions": [{"id": "Q1", "category": "organiser", "text": "I naturally enjoy planning, structuring and organising things."}, {"id": "Q2", "category": "organiser", "text": "I feel comfortable managing timelines, resources and responsibilities."}, {"id": "Q3", "category": "organiser", "text": "I prefer clarity, systems and step-by-step processes."}, {"id": "Q4", "category": "analyst", "text": "I enjoy studying patterns, trends or hidden causes behind situations."}, {"id": "Q5", "category": "analyst", "text": "I often make decisions by analysing facts before acting."}, {"id": "Q6", "category": "analyst", "text": "I like solving complex problems through logic and research."}, {"id": "Q7", "category": "communicator", "text": "I enjoy expressing ideas, teaching, speaking or persuading others."}, {"id": "Q8", "category": "communicator", "text": "People often come to me because I can explain things clearly."}, {"id": "Q9", "category": "communicator", "text": "I feel energised when I can influence, present or connect with people."}, {"id": "Q10", "category": "creative", "text": "I enjoy generating new ideas, concepts or possibilities."}, {"id": "Q11", "category": "creative", "text": "I prefer work that allows imagination, innovation or visual thinking."}, {"id": "Q12", "category": "creative", "text": "I often see alternative ways to approach a problem."}], "displayOrder": ["Q1", "Q4", "Q7", "Q10", "Q2", "Q5", "Q8", "Q11", "Q3", "Q6", "Q9", "Q12"], "archetypes": [{"key": "organiser_analyst", "pair": ["organiser", "analyst"], "name": "Systems Strategist", "essence": "Turns complexity into clear structure"}, {"key": "analyst_communicator", "pair": ["analyst", "communicator"], "name": "Strategic Communicator", "essence": "Makes insight persuasive"}, {"key": "communicator_creative", "pair": ["communicator", "creative"], "name": "Visionary Influencer", "essence": "Inspires people with new possibilities"}, {"key": "creative_analyst", "pair": ["creative", "analyst"], "name": "Innovation Thinker", "essence": "Invents smart solutions to hard problems"}, {"key": "organiser_communicator", "pair": ["organiser", "communicator"], "name": "Leadership Coordinator", "essence": "Mobilises people around a plan"}, {"key": "organiser_creative", "pair": ["organiser", "creative"], "name": "Practical Creator", "essence": "Brings imaginative ideas to life"}], "snapshot": {"headline": "Your Talent Tree", "balancedHeadline": "Balanced / Emerging Tree", "balancedMessage": "Your four branches are closely matched, so no single branch dominates yet. You may flex between them more easily than most people.", "coDominantTemplate": "Your {a} and {b} branches are equally strong.", "ctaLabel": "Refine Your Direction", "ctaSubcopy": "Your strengths show how you naturally operate. Now let's explore where those strengths could have the greatest meaning and value.", "ctaHref": "/true-path/direction"}, "observations": {"organiser": "You instinctively bring order to moving parts, and people can rely on you to keep track of what matters.", "analyst": "You look past the surface of a situation, which means you usually spot the real issue before others do.", "communicator": "You turn understanding into shared understanding, which is what makes a plan actually travel.", "creative": "You generate options where others see constraints, which opens paths nobody had considered yet."}}, "ikigai": {"version": "1.0", "intro": {"headline": "Your Direction 道", "line": "Your strengths show how you naturally operate. Now let's explore where they could have the greatest meaning and value.", "ctaLabel": "Begin", "ctaHref": "/true-path/direction/q"}, "minSelections": 1, "maxSelections": 3, "suggestionBadge": "Suggested for you", "maxSuggestionsPerScreen": 3, "screens": [{"id": "I-1", "field": "energises", "question": "What naturally energises you?", "rowLabel": "Energises", "options": [{"key": "teaching_sharing", "label": "Teaching / sharing knowledge", "role": null}, {"key": "building_creating_projects", "label": "Building / creating projects", "role": "general"}, {"key": "leading_influencing", "label": "Leading / influencing people", "role": "commander"}, {"key": "solving_problems", "label": "Solving problems", "role": "chancellor"}, {"key": "designing_imagining", "label": "Designing / imagining possibilities", "role": "commander"}, {"key": "helping_others_transform", "label": "Helping others transform", "role": null}]}, {"id": "I-2", "field": "goodAt", "question": "What are you naturally good at?", "rowLabel": "Good at", "options": [{"key": "communication", "label": "Communication", "role": "general"}, {"key": "strategy", "label": "Strategy", "role": "commander"}, {"key": "planning", "label": "Planning", "role": "chancellor"}, {"key": "creativity", "label": "Creativity", "role": null}, {"key": "leadership", "label": "Leadership", "role": "commander"}, {"key": "analysis", "label": "Analysis", "role": "chancellor"}, {"key": "empathy", "label": "Empathy", "role": null}, {"key": "execution", "label": "Execution", "role": "general"}]}, {"id": "I-3", "field": "economicValue", "question": "Where could you create economic value?", "rowLabel": "Economic value", "options": [{"key": "business_entrepreneurship", "label": "Business / entrepreneurship", "role": "commander"}, {"key": "sales_influence", "label": "Sales / influence", "role": "general"}, {"key": "consulting_advisory", "label": "Consulting / advisory", "role": "chancellor"}, {"key": "education_training", "label": "Education / training", "role": null}, {"key": "technology_systems", "label": "Technology / systems", "role": null}, {"key": "creative_work", "label": "Creative work", "role": null}, {"key": "personal_growth_coaching", "label": "Personal growth / coaching", "role": null}, {"key": "operations_management", "label": "Operations / management", "role": "chancellor"}]}, {"id": "I-4", "field": "impact", "question": "What kind of impact matters to you?", "rowLabel": "Impact", "options": [{"key": "help_people_find_direction", "label": "Help people find direction", "role": "commander", "rephrase": "helping people find direction"}, {"key": "help_businesses_grow", "label": "Help businesses grow", "role": "general", "rephrase": "helping businesses grow"}, {"key": "inspire_others", "label": "Inspire others", "role": "commander", "rephrase": "inspiring others"}, {"key": "build_systems_efficiency", "label": "Build systems / efficiency", "role": "chancellor", "rephrase": "building systems and efficiency"}, {"key": "create_innovation", "label": "Create innovation", "role": "general", "rephrase": "creating innovation"}, {"key": "teach_wisdom", "label": "Teach wisdom", "role": null, "rephrase": "teaching wisdom"}, {"key": "build_wealth_freedom", "label": "Build wealth and freedom", "role": "general", "rephrase": "building wealth and freedom"}, {"key": "help_people_navigate_change", "label": "Help people navigate change", "role": "chancellor", "rephrase": "helping people navigate change"}]}], "suggestions": {"organiser": {"I-1": ["building_creating_projects"], "I-2": ["planning", "execution"], "I-3": ["operations_management"], "I-4": ["build_systems_efficiency"]}, "analyst": {"I-1": ["solving_problems"], "I-2": ["analysis", "strategy"], "I-3": ["consulting_advisory"], "I-4": ["help_businesses_grow"]}, "communicator": {"I-1": ["teaching_sharing"], "I-2": ["communication", "empathy"], "I-3": ["education_training"], "I-4": ["inspire_others"]}, "creative": {"I-1": ["designing_imagining"], "I-2": ["creativity"], "I-3": ["creative_work"], "I-4": ["create_innovation"]}}, "talentSkills": {"organiser": ["planning", "execution"], "analyst": ["analysis", "strategy"], "communicator": ["communication", "empathy"], "creative": ["creativity"]}, "roleEnvironment": {"commander": ["business_entrepreneurship"], "general": ["sales_influence"], "chancellor": ["consulting_advisory", "operations_management"]}, "snapshot": {"headline": "Your Direction 道", "synthesisTemplate": "You are drawn to {energises} and {impact}, through {economicValue}.", "ctaLabel": "Discover the Role You'll Play", "ctaSubcopy": "You know how you think and where you want to go. One last step: the role you naturally play to get there.", "ctaHref": "/true-path/role"}}, "ironTriangle": {"version": "1.0", "stageLabel": "Stage 3 of 3", "timeLeftLabel": "About 60 seconds left", "intro": {"headline": "Last step: the role you'll play to get there.", "body": "Every great team runs on three kinds of talent: the Commander 帅才 who sets direction, the General 将才 who delivers results, and the Chancellor 相才 who builds what lasts. Six quick scenarios. Choose what feels most like you.", "storyToggleLabel": "Read the 2,000-year-old story", "story": "Over 2,000 years ago, the founder of the Han dynasty explained his victory simply. He could not out-plan his strategist, out-govern his chancellor or out-fight his general. But he knew how to bring all three together. 吾能用之，此吾所以取天下也。\n\nToday, every company, project and career still runs on the same Iron Triangle 铁三角.", "ctaLabel": "Begin — 6 scenarios", "ctaHref": "/true-path/role/q"}, "autoAdvanceMs": 400, "roles": [{"key": "commander", "name": "Commander", "chinese": "帅才", "glyph": "帅", "subtitle": "Visionary Leader", "essence": "帅才 · 定方向 · 谋全局 · 聚人心", "oneLine": "Sets direction, sees the whole board and unites people behind a goal.", "exemplarName": "Liu Bang 刘邦", "exemplarLine": "He admitted he was not the best strategist, administrator or general, but he could lead all three.", "coreLine": "You see where things should go and help others commit to getting there.", "naturalStrengths": ["Long-range thinking", "Decisive calls", "Setting priorities", "Rallying people"], "contribution": "You give a team a “why” and a direction worth following.", "watchOut": "You may underestimate the detail and follow-through ideas need, or move on before they are executed.", "allies": "A General to turn direction into results, and a Chancellor to make it sustainable.", "thrive": "1 → 10 growth stages: leading a team, function, venture or strategic initiative.", "growthEdge": "Pair every vision with one concrete first step and one clear owner."}, {"key": "general", "name": "General", "chinese": "将才", "glyph": "将", "subtitle": "Breakthrough Achiever", "essence": "将才 · 攻坚破局 · 执行落地", "oneLine": "Breaks through obstacles, executes under pressure and delivers results.", "exemplarName": "Han Xin 韩信", "exemplarLine": "Commanded vast armies and “won every battle, took every city”.", "coreLine": "You turn goals into wins and move first when it matters.", "naturalStrengths": ["Drive and ownership", "Urgency", "Resilience under pressure", "Closing"], "contribution": "You create momentum and measurable results.", "watchOut": "You may take on too much personally, skip systems, or burn out.", "allies": "A Commander to give you a battle worth winning, and a Chancellor to secure the gains.", "thrive": "0 → 1 stages: frontline, sales, business development, launches, turnarounds.", "growthEdge": "Before charging, confirm the direction. After winning, capture what worked as a repeatable method."}, {"key": "chancellor", "name": "Chancellor", "chinese": "相才", "glyph": "相", "subtitle": "Steady Architect", "essence": "相才 · 固本赋能 · 运筹帷幄", "oneLine": "Builds the systems, resources and stability that make success last.", "exemplarName": "Xiao He 萧何", "exemplarLine": "Kept the state stable, the people cared for and supply lines unbroken.", "coreLine": "You make things run well, and you make them last.", "naturalStrengths": ["Process and governance", "Resource stewardship", "Risk awareness", "Reliability"], "contribution": "You create stability, so growth doesn't collapse under its own weight.", "watchOut": "You may over-prepare, resist fast change, or go unnoticed because good systems are invisible.", "allies": "A Commander to set direction, and a General to create momentum.", "thrive": "10 → 100 scale stages: operations, finance, HR, compliance, programme management, advisory.", "growthEdge": "Make your impact visible. Quantify the risk you prevented and the time you saved."}], "scenarios": [{"id": "S1", "prompt": "A new project lands on your team with no clear plan. What do you naturally do first?", "options": {"commander": "Define what success looks like and why it matters, then set the direction.", "general": "Get moving: take on the hardest piece and start producing results.", "chancellor": "Map out roles, resources, timeline and risks so nothing falls through."}}, {"id": "S2", "prompt": "Your team is behind on an important deadline. You…", "options": {"commander": "Re-prioritise: decide what truly matters and rally everyone around it.", "general": "Roll up your sleeves and personally push the critical tasks over the line.", "chancellor": "Find the bottleneck in the process and fix it so it doesn't happen again."}}, {"id": "S3", "prompt": "Which recognition feels most meaningful to you?", "options": {"commander": "“You saw where we needed to go before anyone else.”", "general": "“You delivered when it mattered most.”", "chancellor": "“Because of you, everything runs smoothly.”"}}, {"id": "S4", "prompt": "When facing a major decision, you focus first on…", "options": {"commander": "The long-term picture and where it positions you in 3–5 years.", "general": "What will create the fastest measurable progress now.", "chancellor": "The risks, resources and whether it is sustainable."}}, {"id": "S5", "prompt": "In a team, people usually rely on you to…", "options": {"commander": "Set the vision and make the big calls.", "general": "Win the difficult battles: close the deal, solve the crisis, hit the target.", "chancellor": "Keep people, money and processes in good order."}}, {"id": "S6", "prompt": "What frustrates you most at work?", "options": {"commander": "No clear direction: everyone busy but going nowhere.", "general": "Endless planning and meetings with no action.", "chancellor": "Chaos, shortcuts and avoidable mistakes."}}], "reveal": {"headline": "Your Iron Triangle Role", "shareTooltip": "Talent Tree scores are independent strengths: you can be strong at everything. The Iron Triangle shows how your natural contribution is distributed across the three roles, so it is displayed as a share of 100%.", "gapHeadline": "Your Triangle Gap", "gapFraming": "The ally you most need", "thriveHeadline": "Where you may thrive"}, "gapInsights": {"commander": {"classicImbalance": "有将相，无帅才: busy and orderly, but without direction", "insight": "You may sometimes work hard on things that aren't clearly moving you forward. Seek mentors or leaders with clear vision, and set your own 12-month direction."}, "general": {"classicImbalance": "有帅相，无将才: strong plans, slow results", "insight": "Your ideas and systems may be ahead of your results. Work with doers, set short deadlines and celebrate small wins."}, "chancellor": {"classicImbalance": "有帅将，无相才: fast growth, fragile foundations", "insight": "You may create momentum faster than structure. Build simple systems, and partner with someone who loves stability and detail."}}, "patterns": {"dual": {"commander_general": {"label": "The Pioneer", "line": "You set the direction and lead the charge yourself."}, "commander_chancellor": {"label": "The Architect-Leader", "line": "You set the direction and build the structure to carry it."}, "general_chancellor": {"label": "The Operator", "line": "You deliver results and make them repeatable."}}, "balanced": {"label": "三才兼备 · The Complete Triangle", "line": "You flex across all three roles. Watch-out: you may be pulled in every direction, so choose a primary lane for this season."}}, "synthesis": {"lines": ["Aligning your path", "Reading your triangle", "Where talent, purpose and role meet"], "durationMs": 2600}}, "scoring": {"version": "1.0", "affinityMatrixVersion": "1.0", "ikigaiTagVersion": "1.0", "weights": {"scenario": 0.65, "talent": 0.2, "ikigai": 0.15}, "pointsPerScenario": 2, "scenarioCount": 6, "dualThreshold": 5, "balancedThreshold": 6, "talent": {"rawMin": 3, "rawMax": 15, "pctRange": 12, "balancedProfileSpread": 1}, "affinity": {"commander": {"organiser": 0.0, "analyst": 0.3, "communicator": 0.3, "creative": 0.4}, "general": {"organiser": 0.35, "analyst": 0.0, "communicator": 0.45, "creative": 0.2}, "chancellor": {"organiser": 0.4, "analyst": 0.45, "communicator": 0.0, "creative": 0.15}}, "ikigaiRoleTags": {"leading_influencing": "commander", "designing_imagining": "commander", "leadership": "commander", "strategy": "commander", "business_entrepreneurship": "commander", "help_people_find_direction": "commander", "inspire_others": "commander", "building_creating_projects": "general", "execution": "general", "communication": "general", "sales_influence": "general", "build_wealth_freedom": "general", "help_businesses_grow": "general", "create_innovation": "general", "solving_problems": "chancellor", "planning": "chancellor", "analysis": "chancellor", "consulting_advisory": "chancellor", "operations_management": "chancellor", "build_systems_efficiency": "chancellor", "help_people_navigate_change": "chancellor"}}, "trupath": {"version": "1.0", "titles": [{"key": "organiser_analyst__commander", "archetype": "organiser_analyst", "role": "commander", "title": "The Grand Strategist", "essence": "Sets direction through rigorous systems thinking."}, {"key": "organiser_analyst__general", "archetype": "organiser_analyst", "role": "general", "title": "The Precision Operator", "essence": "Executes complex plans with analytical accuracy."}, {"key": "organiser_analyst__chancellor", "archetype": "organiser_analyst", "role": "chancellor", "title": "The Master Architect", "essence": "Builds the systems that let organisations scale."}, {"key": "analyst_communicator__commander", "archetype": "analyst_communicator", "role": "commander", "title": "The Thought Leader", "essence": "Shapes direction by making complex ideas compelling."}, {"key": "analyst_communicator__general", "archetype": "analyst_communicator", "role": "general", "title": "The Persuasive Closer", "essence": "Wins decisive moments with evidence and influence."}, {"key": "analyst_communicator__chancellor", "archetype": "analyst_communicator", "role": "chancellor", "title": "The Trusted Advisor", "essence": "The steady counsel behind sound decisions."}, {"key": "communicator_creative__commander", "archetype": "communicator_creative", "role": "commander", "title": "The Movement Builder", "essence": "Rallies people around a bold, inspiring vision."}, {"key": "communicator_creative__general", "archetype": "communicator_creative", "role": "general", "title": "The Breakthrough Champion", "essence": "Opens new markets and audiences through creative influence."}, {"key": "communicator_creative__chancellor", "archetype": "communicator_creative", "role": "chancellor", "title": "The Culture Custodian", "essence": "Shapes culture, brand and people so the vision endures."}, {"key": "creative_analyst__commander", "archetype": "creative_analyst", "role": "commander", "title": "The Visionary Pioneer", "essence": "Sees future possibilities others miss."}, {"key": "creative_analyst__general", "archetype": "creative_analyst", "role": "general", "title": "The Problem Breaker", "essence": "Cracks hard problems with inventive solutions."}, {"key": "creative_analyst__chancellor", "archetype": "creative_analyst", "role": "chancellor", "title": "The Innovation Architect", "essence": "Turns new ideas into repeatable systems."}, {"key": "organiser_communicator__commander", "archetype": "organiser_communicator", "role": "commander", "title": "The Team Commander", "essence": "Mobilises people and resources toward a shared goal."}, {"key": "organiser_communicator__general", "archetype": "organiser_communicator", "role": "general", "title": "The Field Marshal", "essence": "Leads from the front, turning plans into results through people."}, {"key": "organiser_communicator__chancellor", "archetype": "organiser_communicator", "role": "chancellor", "title": "The People Steward", "essence": "Keeps teams aligned, supported and running well."}, {"key": "organiser_creative__commander", "archetype": "organiser_creative", "role": "commander", "title": "The Venture Builder", "essence": "Turns imaginative ideas into ventures with a clear plan."}, {"key": "organiser_creative__general", "archetype": "organiser_creative", "role": "general", "title": "The Maker", "essence": "Ships creative work that gets real results."}, {"key": "organiser_creative__chancellor", "archetype": "organiser_creative", "role": "chancellor", "title": "The Experience Designer", "essence": "Designs processes and experiences that run beautifully."}], "displayFormat": {"subtitleTemplate": "{archetypeName} · {roleName} {chinese}", "dualTagTemplate": "{dualLabel} pattern", "balancedTag": "三才兼备"}, "talentVerbs": {"organiser": "bringing structure to complexity", "analyst": "finding the insight others miss", "communicator": "helping people understand and act", "creative": "imagining better possibilities"}, "roleVerbs": {"commander": "setting a clear direction", "general": "turning plans into results", "chancellor": "building foundations that last"}, "valueCreationTemplate": "You may create value most naturally by {talentVerb}, {roleVerb}, and {impactPhrase}.", "alignmentMessages": {"talent_capability_aligned": "Aligned: how you see yourself matches your natural talent pattern.", "talent_capability_divergent": "Worth exploring: the strengths you chose differ from your natural talent pattern. You may be relying on learned skills more than natural ones.", "economic_role_aligned": "Aligned: the areas you want to create value in suit the role you naturally play.", "economic_gap_role": "Worth exploring: you're drawn to areas that rely on your least natural role. Consider partnering with someone strong where you are not."}, "reflectionPrompts": ["Does your current environment let you use your strongest talents and your natural role?", "Who in your life plays your “gap” role, and how could you work with them more deliberately?", "Which part of your work gives you the most energy, and how much of your week does it take up?"], "resultBlocks": {"headline": "Your True Path", "badges": [{"character": "才", "label": "Talent"}, {"character": "道", "label": "Direction"}, {"character": "位", "label": "Role"}], "labels": {"talentPattern": "Talent Pattern 才", "purpose": "Purpose · Direction 道", "capability": "Capability", "economicDirection": "Economic Direction", "impactDirection": "Impact Direction", "valueCreation": "Value Creation Style", "alignment": "Alignment Check", "reflection": "Reflection"}, "energisedByPrefix": "You are energised by", "strengthsInPrefix": "You see your strengths in", "possibleAreasPrefix": "Possible areas to explore:", "contributeByPrefix": "You want to contribute by"}, "disclaimer": "This is a reflective self-discovery tool, not a psychological or career assessment."}, "cta": {"version": "1.0", "landing": {"eyebrow": "True Path Method™ · 轨道", "headline": "Discover Your True Path", "headlineSub": "in 4 Minutes", "promise": "“How you think. Where you're headed. How you lead.”", "subcopy": "Three frameworks, one journey. Discover how you naturally think, where your strengths matter most, and the role you'll play to get there.", "ctaLabel": "Start Free Analysis", "ctaHref": "/true-path/talent", "stages": [{"character": "才", "name": "Talent Tree", "line": "Discover how you naturally think."}, {"character": "道", "name": "Ikigai", "line": "Discover where your strengths matter most."}, {"character": "位", "name": "Iron Triangle", "line": "Discover the role you'll play to get there."}]}, "talentIntro": {"headline": "Your Talent Tree 才", "body": "Twelve short statements. There are no right answers, and your four branches are measured independently, so you can be strong in more than one.", "branches": [{"name": "Organiser", "line": "Planning, structure, systems, execution"}, {"name": "Analyst", "line": "Data, logic, research, strategy"}, {"name": "Communicator", "line": "Speaking, teaching, persuasion, influence"}, {"name": "Creative", "line": "Imagination, innovation, design, visual thinking"}], "ctaLabel": "Begin — 12 statements", "ctaHref": "/true-path/talent/q"}, "progress": {"stages": [{"character": "才", "name": "Talent"}, {"character": "道", "name": "Direction"}, {"character": "位", "name": "Role"}]}, "result": {"consultHeadline": "Continue Your Exploration", "consultCtaLabel": "Book a 1-Hour Metaphysics Strategic Consultation", "consultSubcopy": "A personalised session combining your True Path results with modern strategy and ancient wisdom, to explore your direction, decisions and timing.", "consultHref": "https://wa.me/6588257687", "ancientWisdomBridge": "Your Talent Tree shows how you think. Your Ikigai shows where it matters. Your Iron Triangle shows the role you'll play to get there.\n\nAncient Wisdom adds the one layer no questionnaire can: timing. It looks at when to lead, when to build and when to consolidate, based on your personal patterns.", "productsLabel": "Products", "productsHref": "/services", "restartLabel": "Start again", "restartHref": "/true-path"}, "report": {"headline": "Your 3-Page True Path Report", "pages": [{"n": 1, "title": "Your Talent Tree 才"}, {"n": 2, "title": "Your Direction 道"}, {"n": 3, "title": "Your Role & True Path 位"}], "downloadLabel": "Download PDF", "emailHeadline": "Would you like us to send your 3-page True Path report?", "emailFieldName": "First name", "emailFieldEmail": "Email", "emailSendLabel": "Send My Report", "emailSkipLabel": "Skip for now", "marketingConsentLabel": "Send me occasional insights from The Full Picture.", "consentNote": "We store your result and email only to deliver this report. Report delivery and marketing consent are separate, and you can opt out at any time.", "privacyLabel": "Privacy Policy", "privacyHref": "/privacy", "sentMessage": "Your report is on its way. Check your inbox in a few minutes."}, "footer": {"brand": "The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia"}}}</script>
+  <script src="/true-path/assets/true-path-svg.js"></script>
+  <script src="/true-path/lib/scoring.js"></script>
+  <script src="/true-path/lib/trupath.js"></script>
+  <script src="/true-path/lib/journey-state.js"></script>
+  <script src="/true-path/assets/true-path-app.js"></script>
+  <script>
+    // ── SHARED NAV SCROLL & MOBILE MENU ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+    // ── SHARED REVEAL ANIMATION ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+
+</html>

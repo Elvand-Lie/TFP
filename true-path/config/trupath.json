@@ -1,0 +1,79 @@
+{
+  "version": "1.0",
+  "titles": [
+    { "key": "organiser_analyst__commander", "archetype": "organiser_analyst", "role": "commander", "title": "The Grand Strategist", "essence": "Sets direction through rigorous systems thinking." },
+    { "key": "organiser_analyst__general", "archetype": "organiser_analyst", "role": "general", "title": "The Precision Operator", "essence": "Executes complex plans with analytical accuracy." },
+    { "key": "organiser_analyst__chancellor", "archetype": "organiser_analyst", "role": "chancellor", "title": "The Master Architect", "essence": "Builds the systems that let organisations scale." },
+
+    { "key": "analyst_communicator__commander", "archetype": "analyst_communicator", "role": "commander", "title": "The Thought Leader", "essence": "Shapes direction by making complex ideas compelling." },
+    { "key": "analyst_communicator__general", "archetype": "analyst_communicator", "role": "general", "title": "The Persuasive Closer", "essence": "Wins decisive moments with evidence and influence." },
+    { "key": "analyst_communicator__chancellor", "archetype": "analyst_communicator", "role": "chancellor", "title": "The Trusted Advisor", "essence": "The steady counsel behind sound decisions." },
+
+    { "key": "communicator_creative__commander", "archetype": "communicator_creative", "role": "commander", "title": "The Movement Builder", "essence": "Rallies people around a bold, inspiring vision." },
+    { "key": "communicator_creative__general", "archetype": "communicator_creative", "role": "general", "title": "The Breakthrough Champion", "essence": "Opens new markets and audiences through creative influence." },
+    { "key": "communicator_creative__chancellor", "archetype": "communicator_creative", "role": "chancellor", "title": "The Culture Custodian", "essence": "Shapes culture, brand and people so the vision endures." },
+
+    { "key": "creative_analyst__commander", "archetype": "creative_analyst", "role": "commander", "title": "The Visionary Pioneer", "essence": "Sees future possibilities others miss." },
+    { "key": "creative_analyst__general", "archetype": "creative_analyst", "role": "general", "title": "The Problem Breaker", "essence": "Cracks hard problems with inventive solutions." },
+    { "key": "creative_analyst__chancellor", "archetype": "creative_analyst", "role": "chancellor", "title": "The Innovation Architect", "essence": "Turns new ideas into repeatable systems." },
+
+    { "key": "organiser_communicator__commander", "archetype": "organiser_communicator", "role": "commander", "title": "The Team Commander", "essence": "Mobilises people and resources toward a shared goal." },
+    { "key": "organiser_communicator__general", "archetype": "organiser_communicator", "role": "general", "title": "The Field Marshal", "essence": "Leads from the front, turning plans into results through people." },
+    { "key": "organiser_communicator__chancellor", "archetype": "organiser_communicator", "role": "chancellor", "title": "The People Steward", "essence": "Keeps teams aligned, supported and running well." },
+
+    { "key": "organiser_creative__commander", "archetype": "organiser_creative", "role": "commander", "title": "The Venture Builder", "essence": "Turns imaginative ideas into ventures with a clear plan." },
+    { "key": "organiser_creative__general", "archetype": "organiser_creative", "role": "general", "title": "The Maker", "essence": "Ships creative work that gets real results." },
+    { "key": "organiser_creative__chancellor", "archetype": "organiser_creative", "role": "chancellor", "title": "The Experience Designer", "essence": "Designs processes and experiences that run beautifully." }
+  ],
+  "displayFormat": {
+    "subtitleTemplate": "{archetypeName} \u00b7 {roleName} {chinese}",
+    "dualTagTemplate": "{dualLabel} pattern",
+    "balancedTag": "三才兼备"
+  },
+  "talentVerbs": {
+    "organiser": "bringing structure to complexity",
+    "analyst": "finding the insight others miss",
+    "communicator": "helping people understand and act",
+    "creative": "imagining better possibilities"
+  },
+  "roleVerbs": {
+    "commander": "setting a clear direction",
+    "general": "turning plans into results",
+    "chancellor": "building foundations that last"
+  },
+  "valueCreationTemplate": "You may create value most naturally by {talentVerb}, {roleVerb}, and {impactPhrase}.",
+  "alignmentMessages": {
+    "talent_capability_aligned": "Aligned: how you see yourself matches your natural talent pattern.",
+    "talent_capability_divergent": "Worth exploring: the strengths you chose differ from your natural talent pattern. You may be relying on learned skills more than natural ones.",
+    "economic_role_aligned": "Aligned: the areas you want to create value in suit the role you naturally play.",
+    "economic_gap_role": "Worth exploring: you're drawn to areas that rely on your least natural role. Consider partnering with someone strong where you are not."
+  },
+  "reflectionPrompts": [
+    "Does your current environment let you use your strongest talents and your natural role?",
+    "Who in your life plays your \u201cgap\u201d role, and how could you work with them more deliberately?",
+    "Which part of your work gives you the most energy, and how much of your week does it take up?"
+  ],
+  "resultBlocks": {
+    "headline": "Your True Path",
+    "badges": [
+      { "character": "才", "label": "Talent" },
+      { "character": "道", "label": "Direction" },
+      { "character": "位", "label": "Role" }
+    ],
+    "labels": {
+      "talentPattern": "Talent Pattern 才",
+      "purpose": "Purpose \u00b7 Direction 道",
+      "capability": "Capability",
+      "economicDirection": "Economic Direction",
+      "impactDirection": "Impact Direction",
+      "valueCreation": "Value Creation Style",
+      "alignment": "Alignment Check",
+      "reflection": "Reflection"
+    },
+    "energisedByPrefix": "You are energised by",
+    "strengthsInPrefix": "You see your strengths in",
+    "possibleAreasPrefix": "Possible areas to explore:",
+    "contributeByPrefix": "You want to contribute by"
+  },
+  "disclaimer": "This is a reflective self-discovery tool, not a psychological or career assessment."
+}

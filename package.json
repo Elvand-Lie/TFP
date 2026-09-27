@@ -6,7 +6,9 @@
   "scripts": {
     "check": "tsc --noEmit",
     "check:zwds": "node node_modules/typescript/bin/tsc --project tsconfig.zwds.json",
+    "check:true-path": "node node_modules/typescript/bin/tsc --project tsconfig.true-path.json",
     "test:zwds": "node tests/zwds-integration.test.mjs && node --test tests/zwds-characterization.test.mjs tests/zwds-model.test.mjs",
+    "test:true-path": "node --test tests/true-path-scoring.test.mjs tests/true-path-rules.test.mjs tests/true-path-report.test.mjs tests/true-path-pdf.test.mjs",
     "validate:zwds-browser": "node tests/zwds-browser-validation.mjs",
     "deploy": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1",
     "deploy:preview": "powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1 -Preview",
