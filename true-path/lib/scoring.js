@@ -328,7 +328,15 @@
     const supporting = ordered[1];
     const gap = ordered[ordered.length - 1];
 
-    const dualPair = dual ? [primary, supporting].slice().sort().join('_') : null;
+    // Keyed in canonical ROLE_KEYS order, not lexicographically: iron-triangle.json's
+    // patterns.dual uses 'commander_chancellor' / 'general_chancellor', so a plain
+    // sort would emit 'chancellor_commander' and the dual badge would silently not render.
+    const dualPair = dual
+      ? [primary, supporting]
+          .slice()
+          .sort((a, b) => ROLE_KEYS.indexOf(a) - ROLE_KEYS.indexOf(b))
+          .join('_')
+      : null;
 
     return { ordered, spread, pattern, primary, supporting, gap, dualPair, dualLabelKey: dualPair };
   }
