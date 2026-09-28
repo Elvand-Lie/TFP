@@ -1,5 +1,5 @@
-import { BaziCalculator } from './bazi-calculator/bazi-calculator';
-import { STEMS, BRANCHES, ANIMALS } from './bazi-calculator/constants';
+import { BaziCalculator } from '../lib/bazi-calculator/bazi-calculator';
+import { STEMS, BRANCHES, ANIMALS } from '../lib/bazi-calculator/constants';
 import { LunarUtil } from 'lunar-javascript';
 import { createCalendarContext } from '../lib/calendar';
 
@@ -1444,7 +1444,7 @@ export default function handler(req: any, res: any) {
 
     // ─── QMDJ ENGINE (qimen-dunjia via CJS bridge) ───
     try {
-      const { getQimen } = require('./qimen-bridge.js');
+      const { getQimen } = require('../lib/qimen-bridge.js');
       const qimen = getQimen();
       const yearGz = bazi.getYear();
       const monthGz = bazi.getMonth();

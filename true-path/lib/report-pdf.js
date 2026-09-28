@@ -7,7 +7,7 @@
  * testable in Node and guarantees the PDF cannot drift from the on-screen report — the browser
  * view (`assets/true-path-report.js`) and this module both read the SAME model and the SAME SVG.
  *
- * `api/true-path-pdf-generator.ts` supplies the two platform-dependent pieces: the pdfmake
+ * `true-path/lib/server/pdf-generator.ts` supplies the two platform-dependent pieces: the pdfmake
  * instance and the embedded CJK font.
  *
  * Brief 8 / 17: three pages, journey order, Chinese characters render, and the layout matches
@@ -442,7 +442,7 @@
    *
    * pdfmake and the font location are injected rather than imported, so this module keeps no
    * platform dependency (a test or a different host can supply its own) while still owning the
-   * whole render pipeline. `api/true-path-pdf-generator.ts` is the production caller.
+   * whole render pipeline. `true-path/lib/server/pdf-generator.ts` is the production caller.
    *
    * @param {any} model output of ReportModel.buildReportModel
    * @param {any} ctx { Svg }

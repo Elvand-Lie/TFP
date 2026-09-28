@@ -9,9 +9,9 @@
  * and no lead: downloading your own report is not a data capture step (Brief 9).
  */
 
-import { loadResult, isStoreConfigured, isValidResultId } from './true-path-store';
-import { buildModel, decodePayload } from './true-path-model';
-import { renderTruePathPdf } from './true-path-pdf-generator';
+import { loadResult, isStoreConfigured, isValidResultId } from '../true-path/lib/server/store';
+import { buildModel, decodePayload } from '../true-path/lib/server/model';
+import { renderTruePathPdf } from '../true-path/lib/server/pdf-generator';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 

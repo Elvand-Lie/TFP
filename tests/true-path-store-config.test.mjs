@@ -8,7 +8,7 @@
  * direction makes a working deployment claim it has no storage.
  *
  * The rule lives in `true-path/lib/store-config.js` (pure, no I/O), which is what
- * `api/true-path-store.ts` uses at runtime — so these tests cover the code that actually runs.
+ * `true-path/lib/server/store.ts` uses at runtime — so these tests cover the code that actually runs.
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';

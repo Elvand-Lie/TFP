@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 const pdfmake = require('pdfmake');
 import path from 'path';
-import { buildPdfDefinition } from './pdf-generator';
+import { buildPdfDefinition } from '../lib/pdf-generator';
 
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);

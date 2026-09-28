@@ -12,9 +12,9 @@ import * as path from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pdfmake = require('pdfmake');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Svg = require('../true-path/assets/true-path-svg.js');
+const Svg = require('../../assets/true-path-svg.js');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ReportPdf = require('../true-path/lib/report-pdf.js');
+const ReportPdf = require('../report-pdf.js');
 
 /**
  * The font path pdfmake loads. `vercel.json` already globs `fonts/**` into `api/**\/*.ts`, so the

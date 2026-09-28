@@ -7,6 +7,6 @@
     "strict": false,
     "outDir": "./dist"
   },
-  "include": ["api/**/*.ts"],
+  "include": ["api/**/*.ts", "lib/**/*.ts"],
   "exclude": ["node_modules"]
 }

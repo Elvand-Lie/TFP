@@ -10,14 +10,14 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ReportModel = require('../true-path/lib/report-model.js');
+const ReportModel = require('../report-model.js');
 
-const talent = require('../true-path/config/talent.json');
-const ikigai = require('../true-path/config/ikigai.json');
-const ironTriangle = require('../true-path/config/iron-triangle.json');
-const scoring = require('../true-path/config/scoring.json');
-const truthPath = require('../true-path/config/trupath.json');
-const cta = require('../true-path/config/cta.json');
+const talent = require('../../config/talent.json');
+const ikigai = require('../../config/ikigai.json');
+const ironTriangle = require('../../config/iron-triangle.json');
+const scoring = require('../../config/scoring.json');
+const truthPath = require('../../config/trupath.json');
+const cta = require('../../config/cta.json');
 
 /** The config bundle `buildReportModel` expects. */
 export function reportConfigs(): Record<string, unknown> {

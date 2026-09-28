@@ -5,7 +5,7 @@ import {
   BRANCH_ELEMENTS,
   ELEMENTS,
   STEMS,
-} from '../api/bazi-calculator/constants';
+} from './bazi-calculator/constants';
 
 export interface CalendarInput {
   year: number;

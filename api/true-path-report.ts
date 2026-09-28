@@ -24,9 +24,9 @@ import {
   saveResultOnce,
   claimEmailSend,
   releaseEmailSend
-} from './true-path-store';
-import { buildModel, decodePayload, ReportModel } from './true-path-model';
-import { renderTruePathPdf } from './true-path-pdf-generator';
+} from '../true-path/lib/server/store';
+import { buildModel, decodePayload, ReportModel } from '../true-path/lib/server/model';
+import { renderTruePathPdf } from '../true-path/lib/server/pdf-generator';
 
 const MAX_BODY_BYTES = 200 * 1024;
 

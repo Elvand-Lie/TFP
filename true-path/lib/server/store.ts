@@ -28,7 +28,7 @@ type RestConfig = { url: string; token: string };
  * where it is type-checked and unit-tested. This wrapper only supplies the real environment.
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const StoreConfig = require('../true-path/lib/store-config.js') as {
+const StoreConfig = require('../store-config.js') as {
   resolveRestConfig(env: Record<string, string | undefined>): RestConfig | null;
 };
 
