@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Insights — The Full Picture LLP | Thought Leadership in Metaphysics & Strategy</title>
+  <title>Insights | The Full Picture LLP | Thought Leadership in Metaphysics & Strategy</title>
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Thought leadership and perspective from The Full Picture LLP — exploring the intersection of ancient metaphysical wisdom and modern strategic thinking." />
+  <meta name="description" content="Thought leadership and perspective from The Full Picture LLP | exploring the intersection of ancient metaphysical wisdom and modern strategic thinking." />
   <meta name="keywords" content="metaphysics insights, BaZi articles, Feng Shui blog, Chinese metaphysics Singapore, strategic thinking, ancient wisdom modern strategy" />
   <meta name="author" content="The Full Picture LLP" />
   <meta name="robots" content="index, follow" />
@@ -14,7 +14,7 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.thefullpicture.asia/insights" />
-  <meta property="og:title" content="Insights — The Full Picture LLP" />
+  <meta property="og:title" content="Insights | The Full Picture LLP" />
   <meta property="og:description" content="Thought leadership and perspective where ancient metaphysical intelligence meets modern strategic thinking." />
   <meta property="og:image" content="https://www.thefullpicture.asia/assets/logo.png" />
   <meta property="og:site_name" content="The Full Picture LLP" />
@@ -22,7 +22,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Insights — The Full Picture LLP" />
+  <meta name="twitter:title" content="Insights | The Full Picture LLP" />
   <meta name="twitter:description" content="Thought leadership and perspective where ancient metaphysical intelligence meets modern strategic thinking." />
   <meta name="twitter:image" content="https://www.thefullpicture.asia/assets/logo.png" />
 
@@ -653,41 +653,60 @@
       .featured-title { font-size:clamp(1.6rem,4vw,2.4rem); }
       .subscribe-title { font-size:clamp(2rem,5vw,2.8rem); }
     }
+  
+    /* unified nav dropdown + footer (site-wide) */
+    .nav-dropdown { position: relative; }
+    .nav-caret { font-size: 0.62em; opacity: 0.7; }
+    .dropdown-menu { position: absolute; top: calc(100% + 12px); left: 50%; transform: translate(-50%, 8px); min-width: 216px; list-style: none; background: rgba(15,15,16,.97); border: 1px solid rgba(113,1,1,.35); padding: 10px 0; opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s, transform .25s; z-index: 120; backdrop-filter: blur(14px); }
+    .nav-dropdown:hover .dropdown-menu, .nav-dropdown.open .dropdown-menu, .nav-dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    .dropdown-menu a { display: block; padding: 9px 20px; font-size: .74rem; white-space: nowrap; }
+    .dropdown-menu a::after { display: none; }
+    .footer-inner { max-width: 1240px; margin: 0 auto; padding: 0 48px; }
+    .footer-top { grid-template-columns: 2fr 1fr 1fr 1fr 1fr !important; }
+    @media (max-width: 1100px) { .footer-top { grid-template-columns: 1fr 1fr 1fr !important; } }
+    @media (max-width: 640px) { .footer-top { grid-template-columns: 1fr !important; } .dropdown-menu { display: none; } }
   </style>
 </head>
 <body>
 
   <nav id="navbar">
-    <a class="nav-logo" href="/" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
-    <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
-    <div style="font-size: 1rem; line-height: 1;">The <span>Full</span> Picture</div>
-</a>
+    <a class="nav-logo" href="/" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:80px;width:auto;display:block;" />
+      <div style="font-size:1rem;line-height:1;">The <span>Full</span> Picture</div>
+    </a>
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/founder">Founder</a></li>
       <li><a href="/services">Services</a></li>
-      <li><a href="/bazi">BaZi</a></li>
-      <li><a href="/zwds">ZWDS (紫微)</a></li>
-      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+      <li class="nav-dropdown">
+        <a href="#" aria-haspopup="true" aria-expanded="false">Tools <span class="nav-caret">▾</span></a>
+        <ul class="dropdown-menu">
+        <li><a href="/bazi">BaZi (八字)</a></li>
+        <li><a href="/zwds">ZWDS (紫微)</a></li>
+        <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+        <li><a href="/true-path">True Path (轨道)</a></li>
+        <li><a href="/lucky">Lucky Today (运)</a></li>
+        </ul>
+      </li>
       <li><a href="/insights" class="active">Insights</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
     <a href="/contact" class="nav-cta">Book a Consultation</a>
-    <div class="hamburger" id="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </nav>
 
   <div class="mobile-nav" id="mobileNav">
-    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <button class="mobile-nav-close" id="mobileClose">×</button>
     <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/founder">Founder</a>
     <a href="/services">Services</a>
-    <a href="/bazi">BaZi</a>
+    <a href="/bazi">BaZi (八字)</a>
     <a href="/zwds">ZWDS (紫微)</a>
     <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/true-path">True Path (轨道)</a>
+    <a href="/lucky">Lucky Today (运)</a>
     <a href="/insights" class="active">Insights</a>
     <a href="/contact">Contact</a>
   </div>
@@ -701,7 +720,7 @@
     </div>
     
     <div class="header-right">
-      <p class="header-desc">Thought leadership from The Full Picture — where ancient metaphysical intelligence meets modern strategic thinking. Written for discerning professionals and leaders.</p>
+      <p class="header-desc">Thought leadership from The Full Picture, where ancient metaphysical intelligence meets modern strategic thinking. Written for discerning professionals and leaders.</p>
       <p class="header-count"><span id="articleCount">9</span> articles published</p>
     </div>
   </div>
@@ -720,7 +739,7 @@
 
     <div class="no-results" id="noResults">
       <p>No insights in this category yet.</p>
-      <small>Check back soon — we publish regularly.</small>
+      <small>Check back soon. We publish regularly.</small>
     </div>
 
     <a class="featured-card reveal" href="#" data-category="wealth" id="featuredCard">
@@ -728,7 +747,7 @@
         <div>
           <p class="featured-badge">Featured Insight</p>
           <p class="featured-label">Wealth Strategy</p>
-          <h2 class="featured-title">Understanding Your Wealth Phase — Timing, Not Luck</h2>
+          <h2 class="featured-title">Understanding Your Wealth Phase, Timing, Not Luck</h2>
           <p class="featured-excerpt">How BaZi decodes the cyclical nature of wealth patterns and reveals why the timing of your decisions is far more critical than effort alone. A framework for high-performers navigating transition.</p>
         </div>
         <div class="featured-meta">
@@ -745,7 +764,7 @@
         <div class="featured-deco-num">財</div>
         <div class="featured-right-content">
           <p class="featured-right-label">Key Insight</p>
-          <p class="featured-pull">"Wealth is not a destination — it is a <strong>cycle with an optimal entry point</strong>. BaZi reveals when yours opens."</p>
+          <p class="featured-pull">"Wealth is not a destination; it is a <strong>cycle with an optimal entry point</strong>. BaZi reveals when yours opens."</p>
           <div class="featured-tag-list">
             <span class="tag-pill">BaZi</span>
             <span class="tag-pill">Wealth Cycles</span>
@@ -761,7 +780,7 @@
         <a class="article-card wide" href="#" data-category="space">
           <div class="card-deco">空</div>
           <p class="card-category">Space &amp; Environment</p>
-          <h3 class="card-title large">The Office That Builds Momentum — A Feng Shui Advisory Framework</h3>
+          <h3 class="card-title large">The Office That Builds Momentum, A Feng Shui Advisory Framework</h3>
           <p class="card-excerpt">Why the physical environment of your workspace directly influences strategic clarity, leadership effectiveness, and the accumulation of positive momentum over time.</p>
           <div class="card-footer">
             <div class="card-meta">
@@ -778,7 +797,7 @@
           <a class="article-card" href="#" data-category="direction">
             <div class="card-deco">命</div>
             <p class="card-category">Life Direction</p>
-            <h3 class="card-title normal">Clarity Over Certainty — The High Performer's Approach to Uncertainty</h3>
+            <h3 class="card-title normal">Clarity Over Certainty, The High Performer's Approach to Uncertainty</h3>
             <div class="card-footer">
               <div class="card-meta">
                 <span class="card-date">January 2026</span>
@@ -813,7 +832,7 @@
           <div class="card-deco">木</div>
           <p class="card-category">Wealth Strategy</p>
           <h3 class="card-title normal">The Five Elements in Business Decision-Making</h3>
-          <p class="card-excerpt">How the classical Wu Xing framework maps to modern business cycles — and why your dominant element reveals your most natural wealth pathway.</p>
+          <p class="card-excerpt">How the classical Wu Xing framework maps to modern business cycles, and why your dominant element reveals your most natural wealth pathway.</p>
           <div class="card-footer">
             <div class="card-meta">
               <span class="card-date">December 2025</span>
@@ -926,7 +945,7 @@
       <div class="reveal">
         <p class="subscribe-label">Stay Informed</p>
         <h2 class="subscribe-title">Receive <em>Perspectives</em><br>from the Advisory Desk</h2>
-        <p class="subscribe-desc">Occasional dispatches — not newsletters. When we publish a piece worth your time, we will let you know. No frequency, no filler.</p>
+        <p class="subscribe-desc">Occasional dispatches, not newsletters. When we publish a piece worth your time, we will let you know. No frequency, no filler.</p>
       </div>
       <div class="reveal reveal-delay-1">
         <form id="subscribeForm" onsubmit="handleSubscribe(event)">
@@ -944,12 +963,12 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div>
-          <div class="footer-logo" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
-    <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 120px; width: auto; display: block;" />
-    <div style="font-size: 1.1rem; line-height: 1;">The <span>Full</span> Picture <span style="text-shadow:none !important; color:rgba(113,1,1,0.6) !important; background:transparent !important; font-weight:600;">LLP</span></div>
-</div>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+            <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span style="text-shadow:none !important;color:rgba(113,1,1,0.6) !important;background:transparent !important;font-weight:600;">LLP</span></div>
+          </div>
           <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy. For those who seek true clarity.</p>
-          <p style="font-family: var(--font-sans); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-top: 16px; opacity: 0.7;">A Huang He Group Platform</p>
+          <p style="font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:16px;opacity:0.7;">A Huang He Group Platform</p>
         </div>
         <div>
           <p class="footer-col-title">Navigate</p>
@@ -958,10 +977,18 @@
             <li><a href="/about">About</a></li>
             <li><a href="/founder">Founder</a></li>
             <li><a href="/services">Services</a></li>
-            <li><a href="/bazi">BaZi</a></li>
-            <li><a href="/zwds">ZWDS (紫微)</a></li>
-            <li><a href="/daily-almanac">Daily Almanac</a></li>
             <li><a href="/insights">Insights</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Tools</p>
+          <ul class="footer-links">
+            <li><a href="/bazi">BaZi (八字)</a></li>
+            <li><a href="/zwds">ZWDS (紫微)</a></li>
+            <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+            <li><a href="/true-path">True Path (轨道)</a></li>
+            <li><a href="/lucky">Lucky Today (运)</a></li>
           </ul>
         </div>
         <div>
@@ -985,7 +1012,7 @@
       <div class="footer-bottom">
         <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
         <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
+          <a href="/privacy">Privacy Policy</a>
           <a href="#">Terms of Use</a>
         </div>
       </div>
@@ -1072,6 +1099,22 @@
     }
     
     applyFilter('all');
+  </script>
+
+  <script>
+    (function () {
+      var dd = document.querySelector('.nav-dropdown');
+      if (!dd) return;
+      var toggle = dd.querySelector('a');
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var open = dd.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.addEventListener('click', function (e) {
+        if (!dd.contains(e.target)) { dd.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+      });
+    })();
   </script>
 </body>
 </html>

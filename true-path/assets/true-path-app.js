@@ -426,7 +426,7 @@
   }
 
   function ikScreen(i) { return CFG.ikigai.screens[i]; }
-  function jn(a) { return a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : (a[0] || '—'); }
+  function jn(a) { return a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : (a[0] || 'none'); }
   function lbl(k) { return OPT[k] ? OPT[k][1] : ''; }
   function low(s) { return s ? s[0].toLowerCase() + s.slice(1) : ''; }
   function list(a) { return jn(a.map(lbl).map(low)); }

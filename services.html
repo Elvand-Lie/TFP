@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Services — The Full Picture LLP | BaZi, Feng Shui & Strategic Advisory</title>
+  <title>Services | The Full Picture LLP | BaZi, Feng Shui & Strategic Advisory</title>
   <!-- SEO Meta Tags -->
   <meta name="description" content="Explore our premium services: Personal Destiny & Life Path analysis (BaZi, Zi Wei Dou Shu), Feng Shui advisory for home and office, masterclasses, and corporate programs." />
   <meta name="keywords" content="BaZi reading Singapore, Feng Shui audit Singapore, personal destiny analysis, Zi Wei Dou Shu, corporate Feng Shui, metaphysics masterclass, life path consulting" />
@@ -14,7 +14,7 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.thefullpicture.asia/services" />
-  <meta property="og:title" content="Services — The Full Picture LLP" />
+  <meta property="og:title" content="Services | The Full Picture LLP" />
   <meta property="og:description" content="Personal Destiny readings, Feng Shui advisory, masterclasses, and corporate programs. Structured metaphysical frameworks for modern life." />
   <meta property="og:image" content="https://www.thefullpicture.asia/assets/logo.png" />
   <meta property="og:site_name" content="The Full Picture LLP" />
@@ -22,7 +22,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Services — The Full Picture LLP" />
+  <meta name="twitter:title" content="Services | The Full Picture LLP" />
   <meta name="twitter:description" content="Personal Destiny readings, Feng Shui advisory, masterclasses, and corporate programs. Structured metaphysical frameworks for modern life." />
   <meta name="twitter:image" content="https://www.thefullpicture.asia/assets/logo.png" />
 
@@ -423,40 +423,59 @@
       .cta-actions .btn-primary,
       .cta-actions .whatsapp-btn { width:100%; justify-content:center; text-align:center; padding:16px 28px; font-size:0.8rem; box-sizing:border-box; }
     }
+  
+    /* unified nav dropdown + footer (site-wide) */
+    .nav-dropdown { position: relative; }
+    .nav-caret { font-size: 0.62em; opacity: 0.7; }
+    .dropdown-menu { position: absolute; top: calc(100% + 12px); left: 50%; transform: translate(-50%, 8px); min-width: 216px; list-style: none; background: rgba(15,15,16,.97); border: 1px solid rgba(113,1,1,.35); padding: 10px 0; opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s, transform .25s; z-index: 120; backdrop-filter: blur(14px); }
+    .nav-dropdown:hover .dropdown-menu, .nav-dropdown.open .dropdown-menu, .nav-dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    .dropdown-menu a { display: block; padding: 9px 20px; font-size: .74rem; white-space: nowrap; }
+    .dropdown-menu a::after { display: none; }
+    .footer-inner { max-width: 1240px; margin: 0 auto; padding: 0 48px; }
+    .footer-top { grid-template-columns: 2fr 1fr 1fr 1fr 1fr !important; }
+    @media (max-width: 1100px) { .footer-top { grid-template-columns: 1fr 1fr 1fr !important; } }
+    @media (max-width: 640px) { .footer-top { grid-template-columns: 1fr !important; } .dropdown-menu { display: none; } }
   </style>
 </head>
 <body>
   <nav id="navbar">
-    <a class="nav-logo" href="/" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
-    <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 80px; width: auto; display: block;" />
-    <div style="font-size: 1rem; line-height: 1;">The <span>Full</span> Picture</div>
-</a>
+    <a class="nav-logo" href="/" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:80px;width:auto;display:block;" />
+      <div style="font-size:1rem;line-height:1;">The <span>Full</span> Picture</div>
+    </a>
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/founder">Founder</a></li>
       <li><a href="/services" class="active">Services</a></li>
-      <li><a href="/bazi">BaZi</a></li>
-      <li><a href="/zwds">ZWDS (紫微)</a></li>
-      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+      <li class="nav-dropdown">
+        <a href="#" aria-haspopup="true" aria-expanded="false">Tools <span class="nav-caret">▾</span></a>
+        <ul class="dropdown-menu">
+        <li><a href="/bazi">BaZi (八字)</a></li>
+        <li><a href="/zwds">ZWDS (紫微)</a></li>
+        <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+        <li><a href="/true-path">True Path (轨道)</a></li>
+        <li><a href="/lucky">Lucky Today (运)</a></li>
+        </ul>
+      </li>
       <li><a href="/insights">Insights</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
     <a href="/contact" class="nav-cta">Book a Consultation</a>
-    <div class="hamburger" id="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
   </nav>
 
   <div class="mobile-nav" id="mobileNav">
-    <button class="mobile-nav-close" id="mobileClose">✕</button>
+    <button class="mobile-nav-close" id="mobileClose">×</button>
     <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/founder">Founder</a>
     <a href="/services" class="active">Services</a>
-    <a href="/bazi">BaZi</a>
+    <a href="/bazi">BaZi (八字)</a>
     <a href="/zwds">ZWDS (紫微)</a>
     <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/true-path">True Path (轨道)</a>
+    <a href="/lucky">Lucky Today (运)</a>
     <a href="/insights">Insights</a>
     <a href="/contact">Contact</a>
   </div>
@@ -467,7 +486,7 @@
       <p class="page-hero-eyebrow">Our Services</p>
       <h1 class="page-hero-title">Structured Guidance.<br><em>Strategic Clarity.</em></h1>
       <div class="page-hero-body">
-        <p class="page-hero-desc">Every service we offer is designed around one outcome: giving you a precise, actionable understanding of your position — in life, in wealth, and in the spaces you inhabit. We work across three core pillars, each rigorously structured and delivered with the discretion of a private advisory practice.</p>
+        <p class="page-hero-desc">Every service we offer is designed around one outcome: giving you a precise, actionable understanding of your position, in life, in wealth, and in the spaces you inhabit. We work across three core pillars, each rigorously structured and delivered with the discretion of a private advisory practice.</p>
         <div class="pillars-quick">
           <a href="#personal" class="pillar-quick-item">
             <span class="pq-num">01</span>
@@ -496,7 +515,7 @@
           <div class="pillar-big-num">01</div>
           <span class="section-tag">Personal Advisory</span>
           <h2 class="pillar-main-title">Personal Destiny<br>&amp; <em>Life Path</em></h2>
-          <p class="pillar-intro">A comprehensive metaphysical profile of who you are — your strengths, your natural timing cycles, your wealth patterns, and the strategic windows available to you. This is not a personality test. It is a precision instrument.</p>
+          <p class="pillar-intro">A comprehensive metaphysical profile of who you are, your strengths, your natural timing cycles, your wealth patterns, and the strategic windows available to you. This is not a personality test. It is a precision instrument.</p>
           <div class="pillar-systems">
             <span class="sys-tag">BaZi</span>
             <span class="sys-tag">Zi Wei Dou Shu</span>
@@ -511,35 +530,35 @@
                 <span class="service-item-title">BaZi Destiny Analysis</span>
                 <span class="service-item-tag">Personal</span>
               </div>
-              <p class="service-item-desc">A full decode of your Four Pillars of Destiny — revealing your innate character structure, elemental balance, core strengths and weaknesses, and the 10-year luck cycles that govern major life phases.</p>
+              <p class="service-item-desc">A full decode of your Four Pillars of Destiny, revealing your innate character structure, elemental balance, core strengths and weaknesses, and the 10-year luck cycles that govern major life phases.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Zi Wei Dou Shu Reading</span>
                 <span class="service-item-tag">Personal</span>
               </div>
-              <p class="service-item-desc">The Emperor's Astrology — a nuanced system that maps your destiny palace structure across 12 life domains including wealth, relationships, career, and health, with granular annual and monthly timing overlays.</p>
+              <p class="service-item-desc">The Emperor's Astrology: a nuanced system that maps your destiny palace structure across 12 life domains including wealth, relationships, career, and health, with granular annual and monthly timing overlays.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Wealth &amp; Career Timing</span>
                 <span class="service-item-tag">Strategic</span>
               </div>
-              <p class="service-item-desc">Focused advisory on identifying your active wealth periods, optimal timing for financial decisions, career transitions, business launches, and major investments — based on your personal luck cycle.</p>
+              <p class="service-item-desc">Focused advisory on identifying your active wealth periods, optimal timing for financial decisions, career transitions, business launches, and major investments, based on your personal luck cycle.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Annual Strategic Review</span>
                 <span class="service-item-tag">Retainer</span>
               </div>
-              <p class="service-item-desc">A bespoke year-ahead advisory session calibrating your personal energy cycles against the annual and monthly energy landscape — identifying key windows, caution periods, and optimal action dates.</p>
+              <p class="service-item-desc">A bespoke year-ahead advisory session calibrating your personal energy cycles against the annual and monthly energy landscape, identifying key windows, caution periods, and optimal action dates.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Relationship &amp; Partner Compatibility</span>
                 <span class="service-item-tag">Personal</span>
               </div>
-              <p class="service-item-desc">A structured analysis of two individuals' BaZi charts — examining elemental dynamics, communication patterns, and areas of alignment or friction in business or personal partnerships.</p>
+              <p class="service-item-desc">A structured analysis of two individuals' BaZi charts, examining elemental dynamics, communication patterns, and areas of alignment or friction in business or personal partnerships.</p>
             </div>
           </div>
         </div>
@@ -569,35 +588,35 @@
                 <span class="service-item-title">Residential Feng Shui Audit</span>
                 <span class="service-item-tag">On-Site</span>
               </div>
-              <p class="service-item-desc">A full on-site assessment of your home — examining facing direction, floor plan analysis, sector mapping, and Flying Stars overlay — producing a structured report with prioritised recommendations.</p>
+              <p class="service-item-desc">A full on-site assessment of your home, examining facing direction, floor plan analysis, sector mapping, and Flying Stars overlay, producing a structured report with prioritised recommendations.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Office &amp; Commercial Audit</span>
                 <span class="service-item-tag">On-Site</span>
               </div>
-              <p class="service-item-desc">Spatial analysis of your office environment — desk positioning, wealth activation zones, leadership sector optimisation, and energy flow mapping for productivity and strategic clarity.</p>
+              <p class="service-item-desc">Spatial analysis of your office environment, desk positioning, wealth activation zones, leadership sector optimisation, and energy flow mapping for productivity and strategic clarity.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Property Selection Advisory</span>
                 <span class="service-item-tag">Strategic</span>
               </div>
-              <p class="service-item-desc">Pre-purchase or pre-lease analysis of shortlisted properties — assessing structural compatibility with the occupant's BaZi profile and the annual energy landscape before you commit.</p>
+              <p class="service-item-desc">Pre-purchase or pre-lease analysis of shortlisted properties, assessing structural compatibility with the occupant's BaZi profile and the annual energy landscape before you commit.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Renovation &amp; Layout Planning</span>
                 <span class="service-item-tag">Advisory</span>
               </div>
-              <p class="service-item-desc">Guidance on renovation timing, room function positioning, and structural changes — ensuring any modifications are made during optimal periods and aligned with the home's energy map.</p>
+              <p class="service-item-desc">Guidance on renovation timing, room function positioning, and structural changes, ensuring any modifications are made during optimal periods and aligned with the home's energy map.</p>
             </div>
             <div class="service-item">
               <div class="service-item-header">
                 <span class="service-item-title">Wealth Activation Strategy</span>
                 <span class="service-item-tag">Activation</span>
               </div>
-              <p class="service-item-desc">Targeted recommendations for activating wealth and prosperity sectors based on the annual and period Flying Stars — specific, practical, and actionable within your existing layout.</p>
+              <p class="service-item-desc">Targeted recommendations for activating wealth and prosperity sectors based on the annual and period Flying Stars, specific, practical, and actionable within your existing layout.</p>
             </div>
           </div>
         </div>
@@ -612,7 +631,7 @@
           <div class="pillar-big-num">03</div>
           <span class="section-tag">Education</span>
           <h2 class="pillar-main-title">Courses &amp;<br><em>Masterclasses</em></h2>
-          <p class="pillar-intro">For those who wish to acquire the framework — not just the reading. Our structured programs deliver a rigorous, applied understanding of classical metaphysical systems, designed for high-achieving individuals and corporate organisations.</p>
+          <p class="pillar-intro">For those who wish to acquire the framework, not just the reading. Our structured programs deliver a rigorous, applied understanding of classical metaphysical systems, designed for high-achieving individuals and corporate organisations.</p>
           <div class="pillar-systems">
             <span class="sys-tag">Individual</span>
             <span class="sys-tag">Group</span>
@@ -626,7 +645,7 @@
               <div class="course-num">01</div>
               <div class="course-chin">轨道</div>
               <h3 class="course-title">Finding Your True Path</h3>
-              <p class="course-desc">An immersive program decoding your personal BaZi chart — understanding your elemental nature, life purpose, and the cyclical opportunities that define your optimal path forward.</p>
+              <p class="course-desc">An immersive program decoding your personal BaZi chart, understanding your elemental nature, life purpose, and the cyclical opportunities that define your optimal path forward.</p>
             </div>
             <div class="course-card">
               <div class="course-num">02</div>
@@ -638,7 +657,7 @@
               <div class="course-num">03</div>
               <div class="course-chin">领导力</div>
               <h3 class="course-title">Leadership &amp; Mindset</h3>
-              <p class="course-desc">For executives and senior leaders — applying classical frameworks to modern leadership challenges. Strengthen decision-making clarity, team alignment, and strategic timing.</p>
+              <p class="course-desc">For executives and senior leaders, applying classical frameworks to modern leadership challenges. Strengthen decision-making clarity, team alignment, and strategic timing.</p>
             </div>
             <div class="course-card">
               <div class="course-num">04</div>
@@ -665,17 +684,17 @@
         <div class="eng-card reveal">
           <div class="eng-icon">一</div>
           <h3 class="eng-title">Single Session</h3>
-          <p class="eng-desc">A focused, comprehensive advisory session addressing a specific domain — destiny analysis, annual timing, or space audit. Delivered with a structured written summary.</p>
+          <p class="eng-desc">A focused, comprehensive advisory session addressing a specific domain, destiny analysis, annual timing, or space audit. Delivered with a structured written summary.</p>
         </div>
         <div class="eng-card reveal reveal-delay-1">
           <div class="eng-icon">二</div>
           <h3 class="eng-title">Ongoing Retainer</h3>
-          <p class="eng-desc">A structured quarterly or annual retainer — providing continuous advisory support as your timing cycles evolve and new strategic decisions emerge throughout the year.</p>
+          <p class="eng-desc">A structured quarterly or annual retainer, providing continuous advisory support as your timing cycles evolve and new strategic decisions emerge throughout the year.</p>
         </div>
         <div class="eng-card reveal reveal-delay-2">
           <div class="eng-icon">三</div>
           <h3 class="eng-title">Corporate Program</h3>
-          <p class="eng-desc">A fully customised engagement for organisations — from executive profiling and team analysis to company-wide workshops and strategic planning facilitation.</p>
+          <p class="eng-desc">A fully customised engagement for organisations, from executive profiling and team analysis to company-wide workshops and strategic planning facilitation.</p>
         </div>
       </div>
     </div>
@@ -686,7 +705,7 @@
     <div class="section-inner" style="position:relative;z-index:2;">
       <p class="cta-eyebrow reveal">Begin Your Engagement</p>
       <h2 class="cta-title reveal reveal-delay-1">The Right Guidance<br>at the <em>Right Time</em></h2>
-      <p class="cta-sub reveal reveal-delay-2">Every service begins with a confidential conversation. Tell us what you are navigating — we will tell you how we can help.</p>
+      <p class="cta-sub reveal reveal-delay-2">Every service begins with a confidential conversation. Tell us what you are navigating, we will tell you how we can help.</p>
       <div class="cta-actions reveal reveal-delay-3">
         <a href="/contact" class="btn-primary">Book a Private Consultation <span class="btn-arrow">→</span></a>
         <a href="https://wa.me/6588257687" class="whatsapp-btn">
@@ -704,12 +723,12 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div>
-          <div class="footer-logo" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
-    <img src="/assets/logo.png" alt="The Full Picture Logo" style="height: 120px; width: auto; display: block;" />
-    <div style="font-size: 1.1rem; line-height: 1;">The <span>Full</span> Picture <span style="text-shadow:none !important; color:rgba(113,1,1,0.6) !important; background:transparent !important; font-weight:600;">LLP</span></div>
-</div>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+            <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span style="text-shadow:none !important;color:rgba(113,1,1,0.6) !important;background:transparent !important;font-weight:600;">LLP</span></div>
+          </div>
           <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy. For those who seek true clarity.</p>
-          <p style="font-family: var(--font-sans); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-top: 16px; opacity: 0.7;">A Huang He Group Platform</p>
+          <p style="font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:16px;opacity:0.7;">A Huang He Group Platform</p>
         </div>
         <div>
           <p class="footer-col-title">Navigate</p>
@@ -718,10 +737,18 @@
             <li><a href="/about">About</a></li>
             <li><a href="/founder">Founder</a></li>
             <li><a href="/services">Services</a></li>
-            <li><a href="/bazi">BaZi</a></li>
-            <li><a href="/zwds">ZWDS (紫微)</a></li>
-            <li><a href="/daily-almanac">Daily Almanac</a></li>
             <li><a href="/insights">Insights</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Tools</p>
+          <ul class="footer-links">
+            <li><a href="/bazi">BaZi (八字)</a></li>
+            <li><a href="/zwds">ZWDS (紫微)</a></li>
+            <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+            <li><a href="/true-path">True Path (轨道)</a></li>
+            <li><a href="/lucky">Lucky Today (运)</a></li>
           </ul>
         </div>
         <div>
@@ -745,7 +772,7 @@
       <div class="footer-bottom">
         <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
         <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
+          <a href="/privacy">Privacy Policy</a>
           <a href="#">Terms of Use</a>
         </div>
       </div>
@@ -810,6 +837,22 @@
         }
       });
     });
+  </script>
+
+  <script>
+    (function () {
+      var dd = document.querySelector('.nav-dropdown');
+      if (!dd) return;
+      var toggle = dd.querySelector('a');
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var open = dd.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.addEventListener('click', function (e) {
+        if (!dd.contains(e.target)) { dd.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+      });
+    })();
   </script>
 </body>
 </html>

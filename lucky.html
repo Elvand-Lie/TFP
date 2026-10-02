@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Am I Lucky Today? — The Full Picture LLP</title>
-  <meta name="description" content="Free daily luck reading based on your birth chart. Lucky number, direction, time, and activities — calculated using authentic BaZi and Zi Wei Dou Shu methodology. One minute, no signup." />
+  <title>Am I Lucky Today? | The Full Picture LLP</title>
+  <meta name="description" content="Free daily luck reading based on your birth chart. Lucky number, direction, time, and activities, calculated using authentic BaZi and Zi Wei Dou Shu methodology. One minute, no signup." />
   <meta name="author" content="The Full Picture LLP" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.thefullpicture.asia/lucky" />
@@ -134,12 +134,24 @@
     .footer-bottom-links a { color:var(--muted); text-decoration:none; }
     @media(max-width:900px){ .tool-grid,.gate-grid,.whatsapp-inner,.after-grid,.activity-grid{grid-template-columns:1fr;} .method-grid,.reading-grid{grid-template-columns:1fr;} .footer-top{grid-template-columns:1fr 1fr;} }
     @media(max-width:640px){ #tool-head{padding:132px 0 34px;} .shell{width:calc(100% - 32px);} .page-title{font-size:clamp(2.6rem,11vw,3.6rem);} .form-grid{grid-template-columns:1fr;} .footer-top{grid-template-columns:1fr;} .section-head{flex-direction:column; align-items:flex-start;} .footer-bottom{flex-direction:column;} .mobile-nav-close{right:24px;} .nav-links{display:none;} .nav-cta{display:none;} .hamburger{display:flex;} }
+  
+    /* unified nav dropdown + footer (site-wide) */
+    .nav-dropdown { position: relative; }
+    .nav-caret { font-size: 0.62em; opacity: 0.7; }
+    .dropdown-menu { position: absolute; top: calc(100% + 12px); left: 50%; transform: translate(-50%, 8px); min-width: 216px; list-style: none; background: rgba(15,15,16,.97); border: 1px solid rgba(113,1,1,.35); padding: 10px 0; opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s, transform .25s; z-index: 120; backdrop-filter: blur(14px); }
+    .nav-dropdown:hover .dropdown-menu, .nav-dropdown.open .dropdown-menu, .nav-dropdown:focus-within .dropdown-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    .dropdown-menu a { display: block; padding: 9px 20px; font-size: .74rem; white-space: nowrap; }
+    .dropdown-menu a::after { display: none; }
+    .footer-inner { max-width: 1240px; margin: 0 auto; padding: 0 48px; }
+    .footer-top { grid-template-columns: 2fr 1fr 1fr 1fr 1fr !important; }
+    @media (max-width: 1100px) { .footer-top { grid-template-columns: 1fr 1fr 1fr !important; } }
+    @media (max-width: 640px) { .footer-top { grid-template-columns: 1fr !important; } .dropdown-menu { display: none; } }
   </style>
 </head>
 <body>
   <nav id="navbar">
     <a class="nav-logo" href="/" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
-      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:76px;width:auto;display:block;" />
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:80px;width:auto;display:block;" />
       <div style="font-size:1rem;line-height:1;">The <span>Full</span> Picture</div>
     </a>
     <ul class="nav-links">
@@ -147,10 +159,16 @@
       <li><a href="/about">About</a></li>
       <li><a href="/founder">Founder</a></li>
       <li><a href="/services">Services</a></li>
-      <li><a href="/bazi">BaZi</a></li>
-      <li><a href="/zwds">ZWDS (紫微)</a></li>
-      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
-      <li><a href="/lucky" class="active">Lucky Today (运)</a></li>
+      <li class="nav-dropdown">
+        <a href="#" aria-haspopup="true" aria-expanded="false" class="active">Tools <span class="nav-caret">▾</span></a>
+        <ul class="dropdown-menu">
+        <li><a href="/bazi">BaZi (八字)</a></li>
+        <li><a href="/zwds">ZWDS (紫微)</a></li>
+        <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+        <li><a href="/true-path">True Path (轨道)</a></li>
+        <li><a href="/lucky" class="active">Lucky Today (运)</a></li>
+        </ul>
+      </li>
       <li><a href="/insights">Insights</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
@@ -163,9 +181,10 @@
     <a href="/about">About</a>
     <a href="/founder">Founder</a>
     <a href="/services">Services</a>
-    <a href="/bazi">BaZi</a>
+    <a href="/bazi">BaZi (八字)</a>
     <a href="/zwds">ZWDS (紫微)</a>
     <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/true-path">True Path (轨道)</a>
     <a href="/lucky" class="active">Lucky Today (运)</a>
     <a href="/insights">Insights</a>
     <a href="/contact">Contact</a>
@@ -260,7 +279,7 @@
           <small>Face This Direction Today</small>
           <h3 id="luckyDirection">–</h3>
           <p class="sub" id="luckyDirectionCn"></p>
-          <p class="sub" style="margin-top:10px;">Position yourself with this direction in front of you — at your desk, in meetings, or when making major decisions. At night, sleep with your head pointing this way.</p>
+          <p class="sub" style="margin-top:10px;">Position yourself with this direction in front of you: at your desk, in meetings, or when making major decisions. At night, sleep with your head pointing this way.</p>
         </article>
         <article class="info-card">
           <small>Best Time of Day</small>
@@ -292,7 +311,7 @@
       <div class="after-grid">
         <div>
           <h4>Email My Reading</h4>
-          <p>Get early access to your Lite PDF report — launching soon.</p>
+          <p>Get early access to your Lite PDF report (launching soon).</p>
           <button class="text-btn" id="emailBtn" type="button">Email My Reading →</button>
         </div>
         <div style="text-align:right;">
@@ -369,11 +388,15 @@
   </section>
 
   <footer>
-    <div class="shell">
+    <div class="footer-inner">
       <div class="footer-top">
         <div>
-          <div class="footer-logo">The <span>Full</span> Picture <span style="text-shadow:none;color:rgba(113,1,1,.6);">LLP</span></div>
-          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy.</p>
+          <div class="footer-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+            <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:120px;width:auto;display:block;" />
+            <div style="font-size:1.1rem;line-height:1;">The <span>Full</span> Picture <span style="text-shadow:none !important;color:rgba(113,1,1,0.6) !important;background:transparent !important;font-weight:600;">LLP</span></div>
+          </div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy. For those who seek true clarity.</p>
+          <p style="font-family:var(--font-sans);font-size:0.7rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-top:16px;opacity:0.7;">A Huang He Group Platform</p>
         </div>
         <div>
           <p class="footer-col-title">Navigate</p>
@@ -382,11 +405,18 @@
             <li><a href="/about">About</a></li>
             <li><a href="/founder">Founder</a></li>
             <li><a href="/services">Services</a></li>
-            <li><a href="/bazi">BaZi</a></li>
-            <li><a href="/zwds">ZWDS (紫微)</a></li>
-            <li><a href="/daily-almanac">Daily Almanac</a></li>
-            <li><a href="/lucky">Lucky Today</a></li>
             <li><a href="/insights">Insights</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Tools</p>
+          <ul class="footer-links">
+            <li><a href="/bazi">BaZi (八字)</a></li>
+            <li><a href="/zwds">ZWDS (紫微)</a></li>
+            <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+            <li><a href="/true-path">True Path (轨道)</a></li>
+            <li><a href="/lucky">Lucky Today (运)</a></li>
           </ul>
         </div>
         <div>
@@ -395,6 +425,7 @@
             <li><a href="/services#personal">Personal Destiny</a></li>
             <li><a href="/services#fengshui">Feng Shui Advisory</a></li>
             <li><a href="/services#courses">Masterclasses</a></li>
+            <li><a href="/services#corporate">Corporate Programs</a></li>
           </ul>
         </div>
         <div>
@@ -407,8 +438,11 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 The Full Picture LLP. All rights reserved.</span>
-        <div class="footer-bottom-links"><a href="/privacy">Privacy Policy</a><a href="#">Terms of Use</a></div>
+        <span class="footer-copy">© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+        </div>
       </div>
     </div>
   </footer>
@@ -568,7 +602,7 @@
     function shareText() {
       const score = lastReading ? lastReading.luckScore : null;
       return score !== null
-        ? `I scored ${score}/10 on Am I Lucky Today — check yours: ${SHARE_URL}`
+        ? `I scored ${score}/10 on Am I Lucky Today. Check yours: ${SHARE_URL}`
         : `Check your daily luck: ${SHARE_URL}`;
     }
     document.querySelectorAll('.share-btn').forEach((btn) => {
@@ -592,6 +626,22 @@
     $('emailModalClose').addEventListener('click', () => emailModal.classList.remove('open'));
     emailModal.addEventListener('click', (e) => { if (e.target === emailModal) emailModal.classList.remove('open'); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') emailModal.classList.remove('open'); });
+  </script>
+
+  <script>
+    (function () {
+      var dd = document.querySelector('.nav-dropdown');
+      if (!dd) return;
+      var toggle = dd.querySelector('a');
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        var open = dd.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.addEventListener('click', function (e) {
+        if (!dd.contains(e.target)) { dd.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+      });
+    })();
   </script>
 </body>
 </html>
