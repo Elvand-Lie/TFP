@@ -36,188 +36,246 @@
   }
 
   /**
-   * Four-branch tree showing the independent Talent scores.
-   * A branch is drawn as a limb whose length encodes pct (0-100).
+   * Canonical tree geometry (bundle `true-path.html`, `tree()`).
    *
-   * @param {Record<string, number>} pct
-   * @param {Array<any>} categories talent.json categories
-   * @param {any} [options]
+   * Four branches grow from one trunk inside a fixed 260x250 footprint. Branch length encodes the
+   * talent score, so the drawing reads as an organism rather than a chart, and the four labels sit
+   * in fixed seats (two low on the outside, two high inside) so the tree never reflows.
+   */
+  const TREE = {
+    width: 260,
+    height: 250,
+    // The trunk: a tapered silhouette from the soil line up into the crown.
+    trunk: 'M121 242C125 215 127 185 126 150L134 150C133 185 135 215 139 242Z',
+    trunkFill: '#5a4636',
+    // Label seats, in fixed branch order (organiser, analyst, communicator, creative).
+    labelX: [34, 94, 166, 226],
+    labelY: [58, 11, 11, 58],
+    // Fan angles in degrees, measured from straight up.
+    angles: [-62, -24, 24, 62],
+    crownX: 130,
+    limbBase: 52,
+    limbRange: 60,
+    minLeaves: 6,
+    leafSpread: 0.3,
+    limbInk: '#7a5a4a',
+    limbInkLit: '#b04458',
+    leafInk: '#7d7048',
+    leafInkLit: '#9b2c3f',
+    labelInk: '#f3ecdf',
+    labelInkLit: '#e8b4be'
+  };
+
+  /** Deterministic pseudo-random in [0,1), so the foliage is irregular but never re-rolls. */
+  function hashNoise(seed) {
+    const x = Math.sin(seed * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  /**
+   * Four-branch tree showing the independent Talent scores.
+   *
+   * Geometry is the canonical one from the approved bundle, including `hi`: the branches drawn in
+   * the highlighted colour are the ones TIED with the dominant branch — EXCEPT for a balanced
+   * profile, where nothing is highlighted because no single branch leads. A balanced profile must
+   * not render a forced glow.
+   *
+   * `raw` is what "tied" is decided on (10-15 integers), never `pct`, which saturates at 100.
+   *
+   * @param {Record<string, number>} pct 0-100 score per category key
+   * @param {Array<any>} categories talent categories ({ key, name })
+   * @param {any} [options] { raw, balancedProfile, dominant, info, ariaLabel }
    */
   function talentTreeSvg(pct, categories, options) {
     const opts = options || {};
-    const width = 420;
-    const height = 300;
-    const cx = width / 2;
-    const baseY = height - 46;
-    const maxLen = 168;
+    const seats = categories || [];
 
-    // Two branches left, two right, fanned out from the trunk.
-    const layout = [
-      { angle: -152, anchor: 'end' },
-      { angle: -118, anchor: 'end' },
-      { angle: -62, anchor: 'start' },
-      { angle: -28, anchor: 'start' }
-    ];
+    // Canonical highlight rule. Without `raw` we cannot tell ties apart, so nothing glows.
+    const raw = opts.raw || null;
+    const dominant = opts.dominant || null;
+    const highlight = [];
+    if (raw && dominant && !opts.balancedProfile && raw[dominant] !== undefined) {
+      seats.forEach((category) => {
+        if (raw[category.key] === raw[dominant]) highlight.push(category.key);
+      });
+    }
+
+    const values = seats.map((category) =>
+      Math.max(0, Math.min(100, Number(pct && pct[category.key]) || 0))
+    );
 
     const parts = [];
     parts.push(
-      `<svg class="tp-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(
-        opts.ariaLabel || 'Talent Tree scores'
+      `<svg class="tp-svg" viewBox="0 0 ${TREE.width} ${TREE.height}" role="img" aria-label="${escapeXml(
+        opts.ariaLabel ||
+          'Talent Tree: ' +
+            seats.map((category, index) => category.name + ' ' + values[index] + '%').join(', ')
       )}" xmlns="http://www.w3.org/2000/svg">`
     );
+    parts.push(`<path d="${TREE.trunk}" fill="${TREE.trunkFill}" />`);
 
-    // Trunk
-    parts.push(
-      `<line x1="${cx}" y1="${baseY}" x2="${cx}" y2="${baseY - 34}" stroke="#C6A96B" stroke-width="2" stroke-linecap="round" />`
-    );
-    parts.push(
-      `<circle cx="${cx}" cy="${baseY}" r="4" fill="#710101" stroke="#C6A96B" stroke-width="1.5" />`
-    );
+    seats.forEach((category, index) => {
+      const value = values[index];
+      const lit = highlight.indexOf(category.key) !== -1;
+      const length = TREE.limbBase + value * (TREE.limbRange / 100);
+      const radians = ((TREE.angles[index] === undefined ? TREE.angles[0] : TREE.angles[index]) * Math.PI) / 180;
+      const sin = Math.sin(radians);
+      const cos = Math.cos(radians);
+      // Two branches start low (outside), two higher up (inside), as in the canonical drawing.
+      const originY = index % 3 ? 152 : 176;
+      const endX = TREE.crownX + length * sin;
+      const endY = originY - length * cos;
+      const ctrlX = TREE.crownX + length * 0.3 * sin;
+      const ctrlY = originY - length * 0.72 * cos;
 
-    categories.forEach((category, index) => {
-      const seat = layout[index] || layout[layout.length - 1];
-      const value = Math.max(0, Math.min(100, Number(pct[category.key]) || 0));
-      const length = (value / 100) * maxLen;
-      const radians = (seat.angle * Math.PI) / 180;
-      const originX = cx;
-      const originY = baseY - 30;
-      const endX = originX + Math.cos(radians) * length;
-      const endY = originY + Math.sin(radians) * length;
+      // Foliage: leaves placed along the limb's quadratic curve, alternating sides.
+      let leaves = '';
+      const count = TREE.minLeaves + Math.round(value * TREE.leafSpread);
+      for (let j = 0; j < count; j += 1) {
+        const u = 0.3 + (0.7 * j) / count;
+        const inv = 1 - u;
+        const px =
+          inv * inv * TREE.crownX + 2 * inv * u * ctrlX + u * u * endX;
+        const py = inv * inv * originY + 2 * inv * u * ctrlY + u * u * endY;
+        const tx = 2 * inv * (ctrlX - TREE.crownX) + 2 * u * (endX - ctrlX);
+        const ty = 2 * inv * (ctrlY - originY) + 2 * u * (endY - ctrlY);
+        const theta = Math.atan2(ty, tx);
+        const side = j % 2 ? 1 : -1;
+        const offset = 3 + hashNoise(j + index * 50) * 8;
+        const lx = px - side * offset * Math.sin(theta);
+        const ly = py + side * offset * Math.cos(theta);
+        const spin = (theta * 180) / Math.PI + side * (28 + hashNoise(j + 9 + index * 50) * 34);
+        const opacity = (0.55 + hashNoise(j + index * 50 + 3) * 0.35).toFixed(2);
+        leaves +=
+          `<ellipse cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" rx="5.2" ry="2.6"` +
+          ` transform="rotate(${spin.toFixed(0)} ${lx.toFixed(1)} ${ly.toFixed(1)})"` +
+          ` fill="${lit ? TREE.leafInkLit : TREE.leafInk}" opacity="${opacity}" />`;
+      }
 
-      // Curve control point for an organic limb.
-      const midX = originX + Math.cos(radians) * (length * 0.55);
-      const midY = originY + Math.sin(radians) * (length * 0.55) - 14;
-
-      const path = `M ${originX} ${originY} Q ${midX} ${midY} ${endX} ${endY}`;
-      const emphasised = value >= 70;
-
+      // `br` is the canonical reveal hook; the inline style only carries the (harmless in print)
+      // delay and glow, so the PDF loses the animation but keeps the drawing.
       parts.push(
-        `<path d="${path}" fill="none" stroke="${emphasised ? '#E53939' : '#710101'}" stroke-width="${
-          emphasised ? 4 : 3
-        }" stroke-linecap="round" opacity="0.92" />`
+        `<g class="br tp-svg__limb" style="animation-delay:${(index * 0.12).toFixed(2)}s${
+          lit ? ';filter:drop-shadow(0 0 5px rgba(176,68,88,.55))' : ''
+        }">` +
+          `<path d="M${TREE.crownX} ${originY}Q${ctrlX.toFixed(1)} ${ctrlY.toFixed(1)} ${endX.toFixed(
+            1
+          )} ${endY.toFixed(1)}" fill="none" stroke="${lit ? TREE.limbInkLit : TREE.limbInk}"` +
+          ` stroke-width="${(2.2 + value * 0.055).toFixed(1)}" stroke-linecap="round" />${leaves}</g>`
       );
-      parts.push(`<circle cx="${endX}" cy="${endY}" r="3.5" fill="#C6A96B" />`);
 
-      // Label placement depends on which side the limb grew.
-      const labelX = endX + (seat.anchor === 'end' ? -8 : 8);
-      const labelY = endY - 8;
+      // Explicit font-size/fill as well as the class: the on-screen page styles these through CSS,
+      // while the PDF renderer has no CSS and would otherwise print them at the wrong size.
+      const ink = lit ? TREE.labelInkLit : TREE.labelInk;
       parts.push(
-        `<text class="tp-svg__branch" x="${labelX}" y="${labelY}" text-anchor="${seat.anchor}">${escapeXml(
+        `<text class="tp-svg__branch" x="${TREE.labelX[index]}" y="${TREE.labelY[index]}" fill="${ink}" font-size="10.5" text-anchor="middle">${escapeXml(
           category.name
         )}</text>`
       );
       parts.push(
-        `<text class="tp-svg__score" x="${labelX}" y="${labelY + 16}" text-anchor="${seat.anchor}">${value}</text>`
+        `<text class="tp-svg__score" x="${TREE.labelX[index]}" y="${
+          TREE.labelY[index] + 16.5
+        }" fill="${ink}" font-size="13" font-weight="600" text-anchor="middle">${value}%</text>`
       );
     });
 
     parts.push('</svg>');
+    // The explanation travels as the canonical disclosure; print CSS hides `.nop`, and the PDF
+    // renderer strips it entirely so the file never carries a <details> element.
+    if (opts.info) {
+      parts.push(
+        `<details class="info nop"><summary aria-label="About this visual">i</summary><p>${escapeXml(
+          opts.info
+        )}</p></details>`
+      );
+    }
     return parts.join('');
   }
 
   /**
+   * Canonical triangle geometry (bundle `true-path.html`, `tri()`).
+   *
+   * Corner seats in the same 300x262 frame the canonical drawing uses; the visitor's shape is the
+   * same outer triangle with every corner pulled toward the centroid by its role share.
+   */
+  const TRI = {
+    width: 300,
+    height: 262,
+    centroid: { x: 150, y: 159 },
+    // Canonical seats: commander at the apex, general bottom-left, chancellor bottom-right.
+    seats: { commander: [150, 28], general: [36, 226], chancellor: [264, 226] },
+    outline: '150,28 36,226 264,226',
+    order: ['commander', 'general', 'chancellor'],
+    // Label anchors, placed just outside each corner.
+    labelAnchor: { commander: 'middle', general: 'middle', chancellor: 'middle' },
+    outlineInk: '#3d3434',
+    shapeFill: 'rgba(122,31,46,.3)',
+    shapeStroke: '#a8823f',
+    labelInk: '#a8823f'
+  };
+
+  /**
    * Iron Triangle: vertices 帅 (top), 将 (bottom-left), 相 (bottom-right).
-   * The visitor's three shares are plotted as an inner filled shape, plus % labels.
+   *
+   * Each corner of the visitor's shape is pulled along the line to the centroid in proportion to
+   * that role's share, so the shape reads as "where your contribution sits".
    *
    * @param {Record<string, number>} shares percentages summing to 100
-   * @param {Array<any>} roles iron-triangle.json roles (commander, general, chancellor)
-   * @param {{ animate?: boolean, ariaLabel?: string }} [options]
+   * @param {Array<any>} roles iron-triangle roles ({ key, name, glyph })
+   * @param {any} [options] { animate, info, ariaLabel }
    */
   function ironTriangleSvg(shares, roles, options) {
     const opts = options || {};
-    const width = 420;
-    const height = 340;
-    const cx = width / 2;
-    const cy = 168;
-    const radius = 118;
 
-    // Place commander at the apex, general bottom-left, chancellor bottom-right.
-    const seatByRole = {
-      commander: -90,
-      general: 150,
-      chancellor: 30
-    };
+    // Explicit font-size/fill so the PDF renderer (which has no stylesheet) prints the labels at
+    // the same size the page shows, instead of falling back to the document default.
+    const points = TRI.order
+      .map((roleKey) => {
+        const seat = TRI.seats[roleKey];
+        const k = (Number(shares && shares[roleKey]) || 0) / 100;
+        return `${(TRI.centroid.x + (seat[0] - TRI.centroid.x) * k).toFixed(1)},${(
+          TRI.centroid.y +
+          (seat[1] - TRI.centroid.y) * k
+        ).toFixed(1)}`;
+      })
+      .join(' ');
 
-    function pointFor(roleKey, scale) {
-      const angle = (seatByRole[roleKey] * Math.PI) / 180;
-      const r = radius * scale;
-      return {
-        x: cx + Math.cos(angle) * r,
-        y: cy + Math.sin(angle) * r
-      };
-    }
-
-    const total = ['commander', 'general', 'chancellor'].reduce(
-      (acc, role) => acc + (Number(shares[role]) || 0),
-      0
-    );
-    const safeTotal = total > 0 ? total : 1;
-
+    // `grow` is the canonical reveal hook for the inner shape.
     const parts = [];
     parts.push(
-      `<svg class="tp-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(
+      `<svg class="tp-svg" viewBox="0 0 ${TRI.width} ${TRI.height}" role="img" aria-label="${escapeXml(
         opts.ariaLabel || 'Iron Triangle role shares'
       )}" xmlns="http://www.w3.org/2000/svg">`
     );
-
-    const outer = ['commander', 'general', 'chancellor'].map((role) => pointFor(role, 1));
-    const outerPath = `M ${outer[0].x} ${outer[0].y} L ${outer[1].x} ${outer[1].y} L ${outer[2].x} ${outer[2].y} Z`;
-
     parts.push(
-      `<path d="${outerPath}" fill="rgba(198,169,107,0.05)" stroke="#C6A96B" stroke-width="1.5" />`
+      `<polygon points="${TRI.outline}" fill="none" stroke="${TRI.outlineInk}" stroke-width="2" />`
+    );
+    parts.push(
+      `<polygon class="grow" points="${points}" fill="${TRI.shapeFill}" stroke="${TRI.shapeStroke}" stroke-width="2" />`
     );
 
-    // Median guides from each vertex to the opposite midpoint (classic triangle read).
-    const midAB = { x: (outer[0].x + outer[1].x) / 2, y: (outer[0].y + outer[1].y) / 2 };
-    const midBC = { x: (outer[1].x + outer[2].x) / 2, y: (outer[1].y + outer[2].y) / 2 };
-    const midCA = { x: (outer[2].x + outer[0].x) / 2, y: (outer[2].y + outer[0].y) / 2 };
-    parts.push(
-      `<path d="M ${outer[0].x} ${outer[0].y} L ${midBC.x} ${midBC.y}" stroke="rgba(198,169,107,0.16)" stroke-width="1" fill="none" />` +
-        `<path d="M ${outer[1].x} ${outer[1].y} L ${midCA.x} ${midCA.y}" stroke="rgba(198,169,107,0.16)" stroke-width="1" fill="none" />` +
-        `<path d="M ${outer[2].x} ${outer[2].y} L ${midAB.x} ${midAB.y}" stroke="rgba(198,169,107,0.16)" stroke-width="1" fill="none" />`
-    );
-
-    // Inner shape: each vertex pulled toward the centre proportionally to its share.
-    const inner = ['commander', 'general', 'chancellor'].map((role) => {
-      const scale = Math.max(0.12, (Number(shares[role]) || 0) / safeTotal);
-      const angle = (seatByRole[role] * Math.PI) / 180;
-      // Distance from centre grows with the share (min 25% of radius, max full radius).
-      const r = radius * (0.25 + 0.75 * scale);
-      return { x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r };
-    });
-    const innerPath = `M ${inner[0].x} ${inner[0].y} L ${inner[1].x} ${inner[1].y} L ${inner[2].x} ${inner[2].y} Z`;
-
-    const animate = opts.animate !== false && !prefersReducedMotion();
-    parts.push(
-      `<path d="${innerPath}" fill="rgba(113,1,1,0.30)" stroke="#C6A96B" stroke-width="1.5"${
-        animate ? ' transform-origin="center" opacity="0"' : ''
-      } />`
-    );
-
-    // Vertex labels, glyphs and % values.
-    ['commander', 'general', 'chancellor'].forEach((roleKey) => {
-      const role = roles.find((entry) => entry.key === roleKey) || { name: roleKey, glyph: '' };
-      const outward = pointFor(roleKey, 1.34);
-      const anchor = roleKey === 'commander' ? 'middle' : roleKey === 'general' ? 'end' : 'start';
-
+    TRI.order.forEach((roleKey) => {
+      const seat = TRI.seats[roleKey];
+      const role = (roles || []).find((entry) => entry.key === roleKey);
+      const glyph = role && role.glyph ? role.glyph : '';
+      // The canonical label is "<glyph> <share>%"; keep the seat offsets from the canonical frame.
+      const value = Number(shares && shares[roleKey]) || 0;
+      const y = roleKey === 'commander' ? seat[1] - 12 : seat[1] + 22;
       parts.push(
-        `<text class="tp-svg__glyph" x="${outward.x}" y="${outward.y - 12}" text-anchor="${anchor}">${escapeXml(
-          role.glyph
-        )}</text>`
-      );
-      parts.push(
-        `<text class="tp-svg__label" x="${outward.x}" y="${outward.y + 8}" text-anchor="${anchor}">${escapeXml(
-          role.name
-        )}</text>`
-      );
-      parts.push(
-        `<text class="tp-svg__value" x="${outward.x}" y="${outward.y + 28}" text-anchor="${anchor}">${
-          Number(shares[roleKey]) || 0
-        }%</text>`
+        `<text class="tp-svg__value" x="${seat[0]}" y="${y}" fill="${TRI.labelInk}" font-size="14" text-anchor="${
+          TRI.labelAnchor[roleKey]
+        }">${escapeXml(glyph + ' ' + value + '%')}</text>`
       );
     });
 
     parts.push('</svg>');
+    if (opts.info) {
+      parts.push(
+        `<details class="info nop"><summary aria-label="About this visual">i</summary><p>${escapeXml(
+          opts.info
+        )}</p></details>`
+      );
+    }
     return parts.join('');
   }
 

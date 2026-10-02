@@ -15,6 +15,7 @@ import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { readTruePathConfig } from './helpers/true-path-config.mjs';
 
 const require = createRequire(import.meta.url);
 const ReportModel = require('../true-path/lib/report-model.js');
@@ -25,7 +26,8 @@ const Svg = require('../true-path/assets/true-path-svg.js');
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
-const readJson = (relative) => JSON.parse(readFileSync(path.join(repoRoot, relative), 'utf8'));
+// Suite path -> config bundle, via the canonical build() output (tests/helpers/true-path-config.mjs).
+const readJson = (relative) => readTruePathConfig(repoRoot, relative);
 
 const talentJson = readJson('true-path/config/talent.json');
 const ikigaiJson = readJson('true-path/config/ikigai.json');
@@ -291,9 +293,10 @@ test('report: the PDF carries CJK text rather than dropping it', () => {
 });
 
 test('report: PDF score bars stay inside 0-100 even for an out-of-range value', () => {
-  assert.equal(ReportPdf.scoreBar(140, 100).canvas[1].w, 300);
+  // Bars render inside a 60-point column, so a clamped 100% fill is 60 points wide.
+  assert.equal(ReportPdf.scoreBar(140, 100).canvas[1].w, 60);
   assert.equal(ReportPdf.scoreBar(-10, 100).canvas[1].w, 0);
-  assert.equal(ReportPdf.scoreBar(50, 100).canvas[1].w, 150);
+  assert.equal(ReportPdf.scoreBar(50, 100).canvas[1].w, 30);
 });
 
 test('report: the result id shape matches the documented tp_ prefix', () => {

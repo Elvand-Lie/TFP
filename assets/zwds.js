@@ -158,9 +158,9 @@
   /** @param {any} model */
   function renderSelectionSummary(model) {
     const selection = model.selection;
-    if (selection.scope === 'natal') return '<strong>本命</strong><span>Natal chart</span>';
+    if (selection.scope === 'natal') return '<strong>Default Life · 本命</strong><span>Natal chart</span>';
     if (selection.scope === 'decadal') {
-      return `<strong>Decade · 大限 ${escapeHtml(selection.decadeStemBranch)}</strong><span>${selection.decadeStartYear}–${selection.decadeEndYear} · Ages ${selection.decadeStartAge}–${selection.decadeEndAge}</span>`;
+      return `<strong>Current Decade · 大限 ${escapeHtml(selection.decadeStemBranch)}</strong><span>${selection.decadeStartYear}–${selection.decadeEndYear} · Ages ${selection.decadeStartAge}–${selection.decadeEndAge}</span>`;
     }
     if (selection.scope === 'yearly') {
       return `<strong>Annual ${selection.year} · 流年 ${escapeHtml(selection.yearStemBranch)}</strong><span>Decade ${escapeHtml(selection.decadeStemBranch)} · Nominal age ${escapeHtml(String(selection.nominalAge || '—'))}</span>`;
@@ -377,7 +377,8 @@
       timesNode.innerHTML = renderTimesMarkup(model);
       summaryNode.innerHTML = renderSelectionSummary(model);
       var isNatal = model.selection.scope === 'natal';
-      natalButton.hidden = isNatal;
+      natalButton.hidden = false;
+      natalButton.setAttribute('aria-pressed', String(isNatal));
       chart.dataset.scope = model.selection.scope;
       recomputeRelationship();
       chart.hidden = false;
@@ -577,10 +578,20 @@
     if (timeInput) timeInput.addEventListener('input', updateTimePreview);
     if (unknownInput) unknownInput.addEventListener('change', updateTimePreview);
 
+    form.addEventListener('reset', () => {
+      chart.hidden = true;
+      errorNode.textContent = '';
+      editingProfileId = null;
+      session = null;
+      state = null;
+      model = null;
+      host.setTimeout(() => { updateCalendarControls(); updateTimePreview(); }, 0);
+    });
+
     natalButton.addEventListener('click', () => {
       if (!session) return;
       state = timeState.createState(viewModel.buildDecadeOptions(session.raw));
-      refresh(null);
+      refresh('#zwds-return-natal');
     });
 
     decadesNode.addEventListener('click', (event) => {

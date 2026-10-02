@@ -5,7 +5,7 @@
  * Turns the neutral page model from `report-model.js` into a pdfmake document definition. It is
  * deliberately pure: no pdfmake import, no font registration, no file system. That keeps it
  * testable in Node and guarantees the PDF cannot drift from the on-screen report — the browser
- * view (`assets/true-path-report.js`) and this module both read the SAME model and the SAME SVG.
+ * view (`assets/true-path-app.js`) and this module use the same configuration and SVG geometry.
  *
  * `true-path/lib/server/pdf-generator.ts` supplies the two platform-dependent pieces: the pdfmake
  * instance and the embedded CJK font.
@@ -56,12 +56,16 @@
 
   /**
    * A bordered panel, the PDF equivalent of `.tp-panel`.
+   *
+   * The 1pt inter-panel gap the screen can afford is removed here: page 3 stacks seven panels and
+   * the report is capped at three pages, so the gap is exactly the kind of pure spacing that has to
+   * give way before any copy does.
    * @param {Array<any>} content
    * @returns {any}
    */
   function panel(content) {
     return {
-      table: { widths: ['*'], body: [[{ stack: content, margin: [8, 3, 8, 3] }]] },
+      table: { widths: ['*'], body: [[{ stack: content, margin: [8, 2, 8, 2] }]] },
       layout: {
         hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0.8 : 0),
         vLineWidth: (i) => (i === 0 || i === 1 ? 0.8 : 0),
@@ -73,14 +77,14 @@
         paddingLeft: () => 0,
         paddingRight: () => 0
       },
-      margin: [0, 0, 0, 1]
+      margin: [0, 0, 0, 0]
     };
   }
 
   /** A score/share bar, drawn as vector rectangles so it needs no glyphs and cannot tofu. */
   function scoreBar(value, max) {
     const pct = Math.max(0, Math.min(100, ((Number(value) || 0) / (max || 100)) * 100));
-    const width = 300;
+    const width = 60;
     return {
       canvas: [
         { type: 'rect', x: 0, y: 1, w: width, h: 3, r: 1.5, color: C.medGrey },
@@ -176,8 +180,18 @@
   }
 
   /**
+   * Drop the canonical `<details class="info nop">` disclosures from an SVG before it goes into the
+   * PDF. They are an on-screen affordance: print CSS hides them, and a PDF has no disclosure widget,
+   * so what remains would be an "i" marker and a sentence stranded outside any visual context.
+   * The copy itself is carried as report text instead.
+   */
+  function stripSvgDisclosures(markup) {
+    return String(markup || '').replace(/<details[\s\S]*?<\/details>/gi, '');
+  }
+
+  /**
    * Map one neutral model block onto pdfmake content. Mirrors `renderBlock` in
-   * `assets/true-path-report.js`, so both read the same model into the same structure.
+   * the approved on-screen report, using the shared model and SVG geometry.
    *
    * @param {any} block
    * @param {any} ctx { Svg }
@@ -187,34 +201,74 @@
 
     switch (block.kind) {
       case 'talent-tree':
-        return { svg: ctx.Svg.talentTreeSvg(block.pct, block.categories), width: 300, alignment: 'center', margin: [0, 2, 0, 8] };
+        // The canonical highlight rule (and the balanced-profile "no glow" case) is decided from the
+        // raw scores, so they travel with the block; a balanced profile renders with no highlight.
+        return {
+          svg: stripSvgDisclosures(
+            ctx.Svg.talentTreeSvg(block.pct, block.categories, {
+              raw: block.raw,
+              dominant: block.dominant,
+              balancedProfile: block.balancedProfile,
+              ariaLabel: block.ariaLabel || block.label || 'Talent Tree'
+            })
+          ),
+          width: 300,
+          alignment: 'center',
+          margin: [0, 2, 0, 8]
+        };
 
       case 'iron-triangle':
-        return { svg: ctx.Svg.ironTriangleSvg(block.shares, block.roles), width: 150, alignment: 'center', margin: [0, 1, 0, 3] };
+        return {
+          svg: stripSvgDisclosures(
+            ctx.Svg.ironTriangleSvg(block.shares, block.roles, {
+              ariaLabel: block.ariaLabel || block.label || 'Iron Triangle'
+            })
+          ),
+          width: 170,
+          alignment: 'center',
+          margin: [0, 1, 0, 3]
+        };
 
       case 'scores':
         return scoresBlock(block);
 
       case 'pair': {
+        // Canonical page 1: the heading reads the tree, the lead line interprets it, and the
+        // archetype essence is printed only when a single branch actually leads.
+        /** @type {Array<any>} */
+        const content = label(block.label).concat([
+          {
+            text: String(block.archetypeHeading || ''),
+            fontSize: 14,
+            bold: true,
+            color: C.textDark,
+            margin: [0, 0, 0, 3]
+          }
+        ]);
+        if (block.leadLine) {
+          content.push({ text: String(block.leadLine), fontSize: 10, color: C.textDark, margin: [0, 0, 0, 3] });
+        }
         const joined = block.coDominant
           ? block.dominant + ' = ' + block.secondary
           : block.dominant + ' + ' + block.secondary;
-        /** @type {Array<any>} */
-        const content = label(block.label).concat([
-          { text: joined, fontSize: 14, bold: true, color: C.textDark, margin: [0, 0, 0, 4] }
-        ]);
-        if (block.archetype) {
+        content.push({ text: joined, fontSize: 9, color: C.textMed, margin: [0, 0, 0, 2] });
+        if (block.naturalStrengthsLine) {
+          content.push({
+            text: String(block.naturalStrengthsLine),
+            fontSize: 9.5,
+            color: C.textDark,
+            margin: [0, 0, 0, 2]
+          });
+        }
+        if (block.essence) {
           content.push({
             text: [
-              { text: block.archetype.name, bold: true, color: C.crimson },
-              { text: ' \u2014 ' + block.archetype.essence, color: C.textMed }
+              { text: block.archetype ? block.archetype.name : '', bold: true, color: C.crimson },
+              { text: ' \u2014 ' + String(block.essence), color: C.textMed }
             ],
             fontSize: 9.5,
             margin: [0, 0, 0, 2]
           });
-        }
-        if (block.balancedProfile) {
-          content.push({ text: 'Balanced profile', fontSize: 8.5, color: C.textLight });
         }
         return panel(content);
       }
@@ -289,6 +343,15 @@
           color: C.textMed,
           margin: [0, 1, 0, 1]
         });
+        if (block.allies) {
+          // Canonical role box: natural allies are part of the role's read (who covers your edge).
+          content.push({
+            text: 'Natural allies: ' + String(block.allies),
+            fontSize: 9,
+            color: C.textDark,
+            margin: [0, 1, 0, 1]
+          });
+        }
         if (block.watchOut) {
           content.push({
             text: 'Watch-out: ' + String(block.watchOut),
@@ -348,6 +411,35 @@
   }
 
   /**
+   * A STABLE timestamp for the PDF metadata.
+   *
+   * pdfkit stamps `CreationDate: new Date()` into every document it opens, and it derives the PDF
+   * file ID from that timestamp (plus the info dictionary), so two renders of the SAME record —
+   * a Resend retry, a re-download — produced different bytes and therefore different attachment
+   * bytes for the same visitor. Pinning the instant to the record's own `createdAt` makes the
+   * whole document byte-identical across renders and wallclock time.
+   *
+   * @param {any} value ISO string, epoch millis or Date
+   * @returns {Date} a valid Date — never an Invalid Date, which pdfkit would print as "NaN"
+   */
+  function stableDate(value) {
+    let parsed = null;
+    if (value instanceof Date) {
+      parsed = new Date(value.getTime());
+    } else if (typeof value === 'number' && isFinite(value)) {
+      parsed = new Date(value);
+    } else if (typeof value === 'string' && value.trim()) {
+      const candidate = new Date(value);
+      if (!isNaN(candidate.getTime())) parsed = candidate;
+    }
+    // The FALLBACK must be a fixed instant too: falling back to the current time would reintroduce
+    // exactly the per-render drift this function exists to remove. Epoch 0 is the conventional
+    // "unknown timestamp" sentinel.
+    if (!parsed || isNaN(parsed.getTime())) return new Date(0);
+    return parsed;
+  }
+
+  /**
    * Build the pdfmake document definition for a report model.
    *
    * @param {any} model output of ReportModel.buildReportModel
@@ -402,7 +494,11 @@
       italics: true,
       color: C.textLight,
       alignment: 'center',
-      margin: [0, 8, 0, 4]
+      // Pure trailing space, and the last thing on the page: the 8/4 gap this used to carry was the
+      // remaining overflow in the journeys whose alignment block is longest, and anything below the
+      // last line of copy can only ever push the footer onto a fourth page. The gap above is kept
+      // small but non-zero so the disclaimer still reads as separate from the invite.
+      margin: [0, 4, 0, 0]
     });
 
     return {
@@ -418,7 +514,13 @@
         title: String(model.headline || 'True Path Report'),
         author: 'The Full Picture',
         subject: 'True Path \u8f68\u9053 \u2014 3-page report',
-        creator: 'The Full Picture'
+        creator: 'The Full Picture',
+        // Deterministic metadata: pdfkit defaults CreationDate to `new Date()` and derives the PDF
+        // file ID from it, so an unpinned document differs on every render. Both dates are pinned
+        // to the record's own instant (never `Date.now`) so the same record always yields the same
+        // bytes — required for identical-payload retries (Resend) and re-downloads.
+        creationDate: stableDate(model.createdAt),
+        modDate: stableDate(model.createdAt)
       },
       content,
       footer: (currentPage, pageCount) => ({
@@ -472,9 +574,11 @@
   return Object.freeze({
     COLORS: C,
     FONT,
+    stableDate,
     buildReportPdfDefinition,
     renderReportPdf,
     renderBlock,
+    stripSvgDisclosures,
     scoreBar
   });
 });

@@ -17,7 +17,7 @@
 }
 
 * { box-sizing: border-box; }
-html { min-width: 320px; background: var(--black); scroll-behavior: smooth; }
+html { background: var(--black); scroll-behavior: smooth; }
 body { margin: 0; background: var(--black); color: var(--ivory); font-family: var(--font-sans); }
 button, input, select { font: inherit; }
 .primary-line { width: 60px; height: 2px; margin-bottom: 24px; background: var(--crimson); }

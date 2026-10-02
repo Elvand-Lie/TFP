@@ -225,7 +225,7 @@
 }
 
 #zwds-app .zwds-date-field {
-  grid-column: span 2;
+  grid-column: 1 / -1;
 }
 
 #zwds-app .zwds-date-field>div {

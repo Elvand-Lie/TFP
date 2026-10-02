@@ -49,10 +49,10 @@
    * Deterministic and documented:
    *   1. floor every exact share
    *   2. hand the leftover points to the largest fractional remainders
-   *   3. break remainder ties by the role's fixed order (commander, general, chancellor)
+   *   3. break remainder ties by the supplied role ranking (fixed order by default)
    *   4. if there is no signal at all, split evenly with the leftover by fixed order
    */
-  function largestRemainderShares(exactShares, roleKeys) {
+  function largestRemainderShares(exactShares, roleKeys, tieOrder = roleKeys) {
     const total = sum(roleKeys.map((key) => exactShares[key] || 0));
     const out = {};
     const remainders = [];
@@ -82,7 +82,7 @@
 
     remainders.sort((a, b) => {
       if (b.remainder !== a.remainder) return b.remainder - a.remainder;
-      return roleKeys.indexOf(a.key) - roleKeys.indexOf(b.key);
+      return tieOrder.indexOf(a.key) - tieOrder.indexOf(b.key);
     });
 
     for (let i = 0; i < remainders.length && leftover > 0; i += 1) {
@@ -263,14 +263,15 @@
     const blended = {};
     ROLE_KEYS.forEach((role) => {
       blended[role] =
-        weights.scenario * scenarioPct[role] +
+        weights.scenario * scenarioPoints[role] / scenarioTotal * 100 +
         weights.talent * affinity[role] +
         weights.ikigai * ikigai.pct[role];
     });
 
-    const shares = largestRemainderShares(blended, ROLE_KEYS);
+    const ranked = ROLE_KEYS.slice().sort((a,b) => blended[b]-blended[a] || scenarioPoints[b]-scenarioPoints[a] || ROLE_KEYS.indexOf(a)-ROLE_KEYS.indexOf(b));
+    const shares = largestRemainderShares(blended, ROLE_KEYS, ranked);
 
-    // Classification and ordering use the EXACT blended values, so a tie in the
+    // Ordering uses exact blended values; pattern thresholds use rounded shares. A tie in the
     // displayed rounded shares still resolves deterministically (Section 17 case A:
     // displayed "Cm 21 / Ge 21" but gap must be Commander, not General).
     const classification = classifyTriangle(blended, scenarioPoints, shares, scoring);
@@ -313,11 +314,10 @@
       return ROLE_KEYS.indexOf(a) - ROLE_KEYS.indexOf(b);
     });
 
-    const exactValues = ROLE_KEYS.map((role) => blended[role]);
-    const spread = Math.max.apply(null, exactValues) - Math.min.apply(null, exactValues);
+    const spread = shares[ordered[0]] - shares[ordered[2]];
 
     const balanced = spread <= balancedThreshold;
-    const topTwoGap = blended[ordered[0]] - blended[ordered[1]];
+    const topTwoGap = shares[ordered[0]] - shares[ordered[1]];
     const dual = !balanced && topTwoGap <= dualThreshold;
 
     let pattern = 'single';

@@ -15,6 +15,7 @@
   'use strict';
 
   function findTitle(truthPathConfig, archetypeKey, roleKey) {
+    if (archetypeKey === 'creative_analyst') archetypeKey = 'analyst_creative';
     return (
       truthPathConfig.titles.find(
         (entry) => entry.archetype === archetypeKey && entry.role === roleKey
@@ -23,6 +24,7 @@
   }
 
   function findArchetype(talentConfig, archetypeKey) {
+    if (archetypeKey === 'creative_analyst') archetypeKey = 'analyst_creative';
     return talentConfig.archetypes.find((entry) => entry.key === archetypeKey) || null;
   }
 

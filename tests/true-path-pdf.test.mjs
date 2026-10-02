@@ -18,12 +18,14 @@ import { createRequire } from 'node:module';
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { readTruePathConfig } from './helpers/true-path-config.mjs';
 
 const require = createRequire(import.meta.url);
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
-const readJson = (relative) => JSON.parse(readFileSync(path.join(repoRoot, relative), 'utf8'));
+// Suite path -> config bundle, via the canonical build() output (tests/helpers/true-path-config.mjs).
+const readJson = (relative) => readTruePathConfig(repoRoot, relative);
 
 const ReportModel = require('../true-path/lib/report-model.js');
 const ReportPdf = require('../true-path/lib/report-pdf.js');
@@ -41,6 +43,14 @@ const ctaJson = readJson('true-path/config/cta.json');
 
 const talentConfig = Object.assign({}, talentJson, { scoring: scoringJson.talent });
 const fontPath = path.join(repoRoot, 'fonts', 'NotoSansSC.ttf');
+
+test('score bars fit their 60-point report column at every percentage', () => {
+  for (const value of [0, 8, 50, 84, 100]) {
+    const bar = ReportPdf.scoreBar(value, 100);
+    assert.equal(bar.canvas[0].w, 60);
+    assert.equal(bar.canvas[1].w, 60 * value / 100);
+  }
+});
 
 /** A completed journey: Case F talents, all-Chancellor scenarios, and Ikigai selections. */
 function sampleRecord() {

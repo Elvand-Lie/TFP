@@ -8,12 +8,12 @@ const root = resolve(import.meta.dirname, '..');
 const reportDir = join(root, 'zwds-codex-agent-kit', 'reports', 'final-screenshots');
 const serverPort = 4173;
 const debugPort = 9222;
-const server = spawn('python3', ['-m', 'http.server', String(serverPort), '--bind', '127.0.0.1'], {
+const server = spawn(process.env.ZWDS_PYTHON_BINARY || 'python3', ['-m', 'http.server', String(serverPort), '--bind', '127.0.0.1'], {
   cwd: root,
   stdio: 'ignore'
 });
 const profile = mkdtempSync(join(tmpdir(), 'zwds-browser-'));
-const browser = spawn('chromium', [
+const browser = spawn(process.env.ZWDS_BROWSER_BINARY || 'chromium', [
   '--headless',
   '--no-sandbox',
   '--disable-gpu',
@@ -36,7 +36,7 @@ async function waitForJson(url, timeout = 15000) {
   while (Date.now() - started < timeout) {
     try {
       const response = await fetch(url);
-      if (response.ok) return await response.json();
+      if (response.ok) { const value = await response.json(); if (value.some(item => item.type === 'page')) return value; }
     } catch {}
     await delay(150);
   }
@@ -120,7 +120,9 @@ try {
   await cdp.send('Network.enable');
   await cdp.send('Log.enable');
   await cdp.send('Page.navigate', { url: `http://127.0.0.1:${serverPort}/zwds.html` });
-  await waitForChart(cdp);
+  // A fresh profile opens the input form; a chart is created only after submission.
+  await evaluate(cdp, `new Promise(resolve => document.readyState === 'complete' ? resolve() : window.addEventListener('load', resolve, {once:true}))`);
+  assert.equal(await evaluate(cdp, `document.getElementById('zwds-chart').hidden`), true);
 
   await cdp.send('Emulation.setDeviceMetricsOverride', {
     width: 900,
@@ -207,8 +209,8 @@ try {
       annualCount: document.querySelectorAll('.zwds-year-button').length,
       selectedDecade: selectedDecade && selectedDecade.textContent,
       natalPressed: document.getElementById('zwds-return-natal').getAttribute('aria-pressed'),
-      decadalRoleCount: document.querySelectorAll('.zwds-scope-role:not(.zwds-scope-role--year)').length,
-      yearlyRoleCount: document.querySelectorAll('.zwds-scope-role--year').length,
+      decadalRoleCount: document.querySelectorAll('.zwds-scope-role--decadal').length,
+      yearlyRoleCount: document.querySelectorAll('.zwds-scope-role--yearly').length,
       summary: document.getElementById('zwds-selection-summary').textContent
     };
   })()`);
@@ -232,8 +234,8 @@ try {
       selectedYear: selectedYear && selectedYear.dataset.year,
       palaceCount: document.querySelectorAll('.zwds-palace').length,
       centerCount: document.querySelectorAll('.zwds-center').length,
-      decadalRoleCount: document.querySelectorAll('.zwds-scope-role:not(.zwds-scope-role--year)').length,
-      yearlyRoleCount: document.querySelectorAll('.zwds-scope-role--year').length,
+      decadalRoleCount: document.querySelectorAll('.zwds-scope-role--decadal').length,
+      yearlyRoleCount: document.querySelectorAll('.zwds-scope-role--yearly').length,
       hasLucun: document.getElementById('zwds-grid').textContent.includes('祿存'),
       hasTianma: document.getElementById('zwds-grid').textContent.includes('天馬')
     };

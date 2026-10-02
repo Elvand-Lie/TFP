@@ -65,16 +65,20 @@
 
   /**
    * Brief 7.2 alignment message KEYS (not copy) for the §13 record.
+   *
+   * Canonical vocabulary first (`*_explore`), as approved in the integration config. Records written
+   * before the rename carry `*_divergent` / `*_gap_role`; both are still READ (see `alignmentMessage`)
+   * so stored results keep rendering, but nothing new is written with the old names.
    */
   function alignmentKeys(alignment) {
     const keys = [];
     if (alignment && alignment.talent) {
       if (alignment.talent.kind === 'aligned') keys.push('talent_capability_aligned');
-      if (alignment.talent.kind === 'divergent') keys.push('talent_capability_divergent');
+      if (alignment.talent.kind === 'divergent') keys.push('talent_capability_explore');
     }
     if (alignment && alignment.economic) {
       if (alignment.economic.kind === 'aligned') keys.push('economic_role_aligned');
-      if (alignment.economic.kind === 'gap') keys.push('economic_gap_role');
+      if (alignment.economic.kind === 'gap') keys.push('economic_role_explore');
     }
     return keys;
   }
@@ -192,27 +196,29 @@
     const cta = configs.cta;
 
     const labels = truthPath.resultBlocks.labels;
-    const archetype = talentConfig.archetypes.find(
-      (entry) => entry.key === record.talent.archetypeKey
-    );
+    const archetype = findArchetype(talentConfig, record.talent.archetypeKey);
     const primaryRole = iron.roles.find((entry) => entry.key === record.ironTriangle.primary);
     const gapRole = iron.roles.find((entry) => entry.key === record.ironTriangle.gap);
     const title = truthPath.titles.find((entry) => entry.key === record.truePath.titleKey);
     const gapInsight = iron.gapInsights[record.ironTriangle.gap];
 
-    // Natural strengths: the core strengths of the two branches behind the archetype.
-    const naturalStrengths = (archetype ? archetype.pair : record.talent.pct && [])
-      .map((key) => talentConfig.categories.find((entry) => entry.key === key))
+    // Natural strengths: canonical prints the DOMINANT then the SECONDARY branch's strength list
+    // (not the archetype pair, which is ordered by the config's fixed order and can differ).
+    const strengthKeys = [record.talent.dominant, record.talent.secondary]
       .filter(Boolean)
-      .map((category) => ({ key: category.key, name: category.name, line: category.coreStrengths }));
+      .filter((key, index, keys) => keys.indexOf(key) === index);
 
-    // Three observations: the three strongest branches (Brief 8, page 1).
-    const observations = record.talent.dominant && talentConfig.observations
-      ? rankedCategories(record, talentConfig)
-          .slice(0, 3)
-          .map((key) => ({ key, text: talentConfig.observations[key] }))
-          .filter((entry) => entry.text)
-      : [];
+    // Canonical page 1 leads with the read of the tree, then three derived observations. These are
+    // RESPONSES to this visitor's scores — never the static per-category blurbs the old page printed,
+    // which said the same thing to every visitor regardless of what they scored.
+    const strengthSentence = strengthKeys
+      .map((key) => categoryStrengths(talentConfig, key))
+      .filter(Boolean)
+      .join('; ');
+    const observations = observationalLines(record.talent, talentConfig).map((text, index) => ({
+      key: 'observation-' + (index + 1),
+      text
+    }));
 
     const ikigaiRows = ikigaiConfig.screens.map((screen) => ({
       screenId: screen.id,
@@ -236,7 +242,16 @@
       key: 'talent',
       heading: cta.report.pages[0].title,
       blocks: [
-        { kind: 'talent-tree', pct: record.talent.pct, categories: talentConfig.categories },
+        {
+          kind: 'talent-tree',
+          pct: record.talent.pct,
+          categories: talentConfig.categories,
+          // The canonical highlight rule needs `raw` (the 10-15 integers), because `pct` saturates
+          // at 100 and cannot tell a tie from a lone leader.
+          raw: record.talent.raw,
+          dominant: record.talent.dominant,
+          balancedProfile: Boolean(record.talent.balancedProfile)
+        },
         {
           kind: 'scores',
           label: labels.talentPattern,
@@ -253,16 +268,22 @@
           secondary: categoryName(talentConfig, record.talent.secondary),
           coDominant: record.talent.coDominant,
           balancedProfile: record.talent.balancedProfile,
+          // Canonical: the archetype heading becomes "Balanced / Emerging Tree" when no branch leads.
+          archetypeHeading: record.talent.balancedProfile
+            ? (talentConfig.snapshot && talentConfig.snapshot.balancedHeadline) || ''
+            : archetype
+              ? archetype.name
+              : '',
+          leadLine: leadLine(record.talent, talentConfig),
+          // Canonical prints the archetype essence only when a single branch leads; for a balanced
+          // profile the essence would contradict the lead line above it.
+          essence: record.talent.balancedProfile || !archetype ? '' : archetype.essence,
+          naturalStrengthsLine: strengthSentence ? 'Natural strengths: ' + strengthSentence + '.' : '',
           archetype: archetype ? { name: archetype.name, essence: archetype.essence } : null
         },
         {
           kind: 'list-block',
-          label: 'Natural Strengths',
-          items: naturalStrengths.map((entry) => entry.name + ' — ' + entry.line)
-        },
-        {
-          kind: 'list-block',
-          label: 'Observations',
+          label: labels.observations || 'Observations',
           items: observations.map((entry) => entry.text)
         }
       ]
@@ -283,18 +304,13 @@
         },
         {
           kind: 'text',
-          label: labels.economicDirection,
-          text: synthesisLine(ikigaiConfig, record)
+          label: labels.capability,
+          text: capabilityLine(truthPath, ikigaiConfig, record)
         },
         {
           kind: 'text',
           label: labels.valueCreation,
-          text: valueCreationSentence(truthPath, record)
-        },
-        {
-          kind: 'text',
-          label: labels.capability,
-          text: alignmentMessage(truthPath, record, 'talent') || '—'
+          text: valueCreationSentence(truthPath, ikigaiConfig, record, primaryRole)
         }
       ]
     };
@@ -321,12 +337,16 @@
               name: primaryRole.name,
               chinese: primaryRole.chinese,
               glyph: primaryRole.glyph,
-              subtitle: primaryRole.subtitle,
-              essence: primaryRole.essence,
-              oneLine: primaryRole.oneLine,
-              naturalStrengths: primaryRole.naturalStrengths,
-              contribution: primaryRole.contribution,
-              watchOut: primaryRole.watchOut
+              subtitle: asText(primaryRole.subtitle),
+              essence: asText(primaryRole.essence),
+              oneLine: asText(primaryRole.oneLine),
+              naturalStrengths: (primaryRole.naturalStrengths || []).map(asText).filter(Boolean),
+              contribution: asText(primaryRole.contribution),
+              watchOut: asText(primaryRole.watchOut),
+              // Canonical boxes the role copy as "How you contribute / Natural strengths / Watch-out /
+              // Natural allies". Allies are part of the role's read, so they belong here rather than
+              // being dropped from the report.
+              allies: primaryRole.allies
             }
           : null,
         gapRole
@@ -340,11 +360,16 @@
                 ' — ' +
                 iron.reveal.gapFraming +
                 '. ' +
-                (gapInsight ? gapInsight.classicImbalance + '. ' + gapInsight.insight : '')
+                gapInsightText(gapInsight) +
+                gapLeanNote(record, iron)
             }
           : null,
-        primaryRole ? { kind: 'text', label: iron.reveal.thriveHeadline, text: primaryRole.thrive } : null,
-        primaryRole ? { kind: 'text', label: 'Growth Edge', text: primaryRole.growthEdge } : null,
+        primaryRole
+          ? { kind: 'text', label: iron.reveal.thriveHeadline, text: asText(primaryRole.thrive) }
+          : null,
+        primaryRole
+          ? { kind: 'text', label: 'Growth Edge', text: asText(primaryRole.growthEdge) }
+          : null,
         title
           ? {
               kind: 'title',
@@ -412,22 +437,170 @@
   }
 
   /**
-   * Rank branches for the observation list. When the record carries percentiles we use them;
-   * otherwise we fall back to the fixed config order so the report never renders blank.
+   * Resolve an archetype for a stored key.
+   *
+   * Records written before the canonical vocabulary flip carry the pair in the old order
+   * ("creative_analyst"), while the canonical config lists "analyst_creative". Matching on the PAIR,
+   * order-insensitively, keeps every stored record readable without rewriting history, and still
+   * resolves canonical keys exactly.
    */
-  function rankedCategories(record, talentConfig) {
-    const pct = record.talent.pct || {};
-    return talentConfig.categories
-      .map((category) => category.key)
-      .slice()
-      .sort((a, b) => (pct[b] || 0) - (pct[a] || 0));
+  function findArchetype(talentConfig, key) {
+    const list = talentConfig.archetypes || [];
+    const exact = list.find((entry) => entry.key === key);
+    if (exact) return exact;
+    const wanted = String(key || '').split('_').filter(Boolean).sort().join('_');
+    if (!wanted) return null;
+    return list.find((entry) => (entry.pair || []).slice().sort().join('_') === wanted) || null;
   }
+  function categoryStrengths(talentConfig, key) {
+    const category = talentConfig.categories.find((entry) => entry.key === key);
+    return category && category.coreStrengths ? category.coreStrengths : '';
+  }
+
+  /**
+   * Canonical role/copy fields are authored as EITHER a string or a list of sentences, and a few
+   * carry a list of short phrases. A renderer that prints the raw value shows an array (or a bare
+   * `a,b` blob) instead of readable text, so every user-facing field is normalised here.
+   *
+   * List items are joined with a space: the sentences in this config already carry their own
+   * terminal punctuation, and a comma would both read badly and collide with the punctuation the
+   * surrounding copy supplies.
+   *
+   * @param {any} value string | string[] | null
+   * @returns {string}
+   */
+  function asText(value) {
+    if (value === null || value === undefined) return '';
+    if (Array.isArray(value)) {
+      return value
+        .map((item) => asText(item))
+        .filter(Boolean)
+        .join(' ')
+        .trim();
+    }
+    return String(value).trim();
+  }
+
+  /** Canonical `jn()`: "A", "A and B", "A, B and C". */
+  function joinNames(names) {
+    const list = (names || []).filter(Boolean);
+    if (list.length > 1) return list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
+    return list[0] || '—';
+  }
+
+  /**
+   * Canonical `leadLine(t)` — the one sentence that reads the tree back to the visitor.
+   *
+   * Three cases, in canonical precedence order: a balanced profile (no single branch leads), a tie
+   * among the leaders, and a single leader (with the runner-up described as close or trailing).
+   * A balanced profile must NEVER be told that one branch leads it.
+   */
+  function leadLine(talent, talentConfig) {
+    const name = (key) => categoryName(talentConfig, key);
+    const tied = talentConfig.categories
+      .map((category) => category.key)
+      .filter((key) => talent.raw[key] === talent.raw[talent.dominant]);
+    const gap = talent.raw[talent.dominant] - talent.raw[talent.secondary];
+
+    if (talent.balancedProfile) {
+      return (
+        'Your four branches are close in strength, so no single Talent leads. Your title draws on ' +
+        name(talent.dominant) +
+        ' and ' +
+        name(talent.secondary) +
+        '.'
+      );
+    }
+    if (tied.length > 1) {
+      return (
+        'Your ' +
+        joinNames(tied.map(name)) +
+        ' branches are equally strong.' +
+        (tied.length > 2
+          ? ' Your title draws on ' + name(talent.dominant) + ' and ' + name(talent.secondary) + '.'
+          : '')
+      );
+    }
+    return (
+      name(talent.dominant) +
+      ' leads' +
+      (gap <= 2
+        ? ', with ' + name(talent.secondary) + ' close behind'
+        : ', followed by ' + name(talent.secondary)) +
+      '.'
+    );
+  }
+
+  /**
+   * Canonical `obs(t)` — three observations DERIVED from this visitor's scores.
+   *
+   * The third line is fixed by definition (the four branches are independent, so they never total
+   * 100%); the first two restate the strongest and quietest readings of the tree, and switch to the
+   * balanced wording when no branch leads.
+   */
+  function observationalLines(talent, talentConfig) {
+    const name = (key) => categoryName(talentConfig, key);
+    const keys = talentConfig.categories.map((category) => category.key);
+    const lowest = Math.min.apply(
+      null,
+      keys.map((key) => talent.raw[key])
+    );
+    const quiet = keys.filter((key) => talent.raw[key] === lowest);
+
+    return [
+      talent.balancedProfile
+        ? 'Your four branches are within a point of each other, so no single style dominates yet.'
+        : talent.coDominant
+          ? leadLine(talent, talentConfig)
+          : 'Your strongest branch is ' +
+            name(talent.dominant) +
+            ' (' +
+            talent.pct[talent.dominant] +
+            '%).',
+      talent.balancedProfile
+        ? 'No branch is notably quieter than the rest, which gives you range.'
+        : 'Your ' +
+          joinNames(quiet.map(name)) +
+          ' ' +
+          (quiet.length > 1 ? 'branches are' : 'branch is') +
+          ' your quietest, which is a reading, not a flaw.',
+      'Scores are independent: you can be strong on every branch.'
+    ];
+  }
+
+  /** Canonical `list(k(1))` — the capability box restates the chosen strengths in the visitor's words. */
+  function capabilityLine(truthPath, ikigaiConfig, record) {
+    const prefix =
+      (truthPath.resultBlocks && truthPath.resultBlocks.strengthsInPrefix) ||
+      'You see your strengths in';
+    const chosen = optionsFor(ikigaiConfig, 'I-2', record.ikigai.goodAt || []);
+    const message = alignmentMessage(truthPath, record, 'talent');
+    const seen = chosen.length
+      ? prefix + ' ' + joinNames(chosen.map((option) => String(option.label).toLowerCase())) + '.'
+      : prefix + ' —';
+    return message ? seen + ' ' + message : seen;
+  }
+
+  /**
+   * Legacy option keys that resolve to a canonical one, READ-side only.
+   *
+   * Records stored before the vocabulary flip carry `helping_others_transform`, while the canonical
+   * config lists `helping_transform`. Both name the same Ikigai option, so a stored record keeps
+   * rendering its selection instead of a dash. Only pairs that are demonstrably the same option are
+   * listed: nothing here changes scoring, and nothing new is ever written with a legacy key
+   * (`buildResultRecord` stores whatever key the screen produced).
+   */
+  const LEGACY_OPTION_ALIASES = { helping_others_transform: 'helping_transform' };
 
   function optionsFor(ikigaiConfig, screenId, keys) {
     const screen = ikigaiConfig.screens.find((entry) => entry.id === screenId);
     if (!screen) return [];
     return (keys || [])
-      .map((key) => screen.options.find((option) => option.key === key))
+      .map(
+        (key) =>
+          screen.options.find((option) => option.key === key) ||
+          screen.options.find((option) => option.key === LEGACY_OPTION_ALIASES[key])
+      )
       .filter(Boolean);
   }
 
@@ -446,30 +619,74 @@
   }
 
   /** Brief 7.4: value creation sentence, rebuilt from stored keys. */
-  function valueCreationSentence(truthPath, record) {
+  function valueCreationSentence(truthPath, ikigaiConfig, record, primaryRole) {
     const talentVerb = truthPath.talentVerbs[record.talent.dominant] || '';
     const roleVerb = truthPath.roleVerbs[record.ironTriangle.primary] || '';
-    const impactKey = (record.ikigai.impact || [])[0];
-    const impactPhrase = impactKey ? impactKey.replace(/_/g, ' ') : '';
     const template = truthPath.valueCreationTemplate;
-    if (!impactPhrase) {
-      return template
-        .replace('{talentVerb}', talentVerb)
-        .replace('{roleVerb}', roleVerb)
-        .replace(', and {impactPhrase}', '');
-    }
+
+    // Canonical cites the impact option's REPHRASE ("helping businesses grow"), never its label and
+    // never the raw key. The rephrase is optional in config, so fall back to the label and only then
+    // to the key — that keeps an older record readable instead of printing a snake_case key on the
+    // page. The label is the same words without the sentence form, which still reads correctly.
+    const impactKey = (record.ikigai.impact || [])[0];
+    const impactOption = impactKey
+      ? optionsFor(ikigaiConfig, 'I-4', [impactKey])[0]
+      : null;
+    const impactPhrase = impactOption
+      ? impactOption.rephrase || String(impactOption.label).toLowerCase()
+      : impactKey
+        ? String(impactKey).replace(/_/g, ' ')
+        : '';
+
+    if (!impactPhrase) return template.replace(/\{talentVerb\}/g, talentVerb)
+      .replace(/\{roleVerb\}/g, roleVerb)
+      .replace(/,\s*and \{impactPhrase\}|, and \{impactPhrase\}/g, '')
+      .replace(/\{impactPhrase\}/g, '');
+
     return template
-      .replace('{talentVerb}', talentVerb)
-      .replace('{roleVerb}', roleVerb)
-      .replace('{impactPhrase}', impactPhrase);
+      .replace(/\{talentVerb\}/g, talentVerb)
+      .replace(/\{roleVerb\}/g, roleVerb)
+      .replace(/\{impactPhrase\}/g, impactPhrase);
   }
 
+  /**
+   * The gap insight reads as one sentence: the canonical GAP copy, alone.
+   *
+   * The approved report's user-facing gap sentence is GAP[role] and nothing else. The adapter keeps
+   * `classicImbalance` as historical metadata for older records, so it must never be prefixed onto a
+   * canonical report - that would put copy the brief retired back in front of visitors.
+   */
+  function gapInsightText(gapInsight) {
+    if (!gapInsight) return '';
+    // Canonical GAP copy ONLY. `classicImbalance` is legacy metadata (the reveal contract asserts it
+    // still exists) and is reached here solely as a fallback for a record whose config predates GAP,
+    // so the retired classic imbalance framing can never be prefixed onto a canonical report.
+    const canonical = String(gapInsight.insight || '').trim();
+    if (canonical) return canonical;
+    return String(gapInsight.classicImbalance || '').trim();
+  }
+
+  /** Canonical: a balanced triangle says so, so the gap is not read as a fault. */
+  function gapLeanNote(record, iron) {
+    if (record.ironTriangle.pattern !== 'balanced') return '';
+    const line = (iron.balanced && iron.balanced.line) || '';
+    return line ? ' ' + line : '';
+  }
+
+  /**
+   * Resolve an alignment message. Canonical keys come first; the pre-rename keys are accepted so
+   * stored records keep rendering their copy.
+   */
   function alignmentMessage(truthPath, record, which) {
     const keys = record.truePath.alignment || [];
     const wanted =
       which === 'talent'
-        ? ['talent_capability_aligned', 'talent_capability_divergent']
-        : ['economic_role_aligned', 'economic_gap_role'];
+        ? [
+            'talent_capability_aligned',
+            'talent_capability_explore',
+            'talent_capability_divergent'
+          ]
+        : ['economic_role_aligned', 'economic_role_explore', 'economic_gap_role'];
     const found = keys.find((key) => wanted.indexOf(key) !== -1);
     return found ? truthPath.alignmentMessages[found] || null : null;
   }

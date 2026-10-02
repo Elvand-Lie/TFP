@@ -41,7 +41,7 @@ function scopeStars(model, scope) {
 }
 
 function transformationCount(model, scope) {
-  return model.palaces.flatMap((palace) => palace[`${scope}Transformations`]).length;
+  return model.palaces.flatMap(palace => palace.stars).filter(star => star[`${scope}Transformation`]).length;
 }
 
 test('renderer-facing model is plain, serializable, and method-free', () => {
@@ -90,11 +90,11 @@ test('view mapping preserves every natal star exactly once, including 祿存 and
 
 test('active annual mapping includes roles, transformations, and transient stars', () => {
   const { model } = createJoseModel();
-  assert.ok(model.palaces.every((palace) => palace.decadalRoleLabel));
-  assert.ok(model.palaces.every((palace) => palace.yearlyRoleLabel));
-  assert.ok(model.palaces.some((palace) => palace.stars.some((star) => star.scopeTransformation)));
-  assert.equal(model.palaces.flatMap((palace) => palace.decadalTransformations).length, 4);
-  assert.equal(model.palaces.flatMap((palace) => palace.yearlyTransformations).length, 4);
+  assert.ok(model.palaces.every((palace) => palace.scopeRoles.decadal));
+  assert.ok(model.palaces.every((palace) => palace.scopeRoles.yearly));
+  assert.ok(model.palaces.some((palace) => palace.stars.some((star) => star.yearlyTransformation)));
+  assert.equal(transformationCount(model, 'decadal'), 4);
+  assert.equal(transformationCount(model, 'yearly'), 4);
   assert.ok(model.palaces.some((palace) => palace.activeScopeStars.some((star) => star.scope === 'decadal')));
   assert.ok(model.palaces.some((palace) => palace.activeScopeStars.some((star) => star.scope === 'yearly')));
   const transient = model.palaces.flatMap((palace) => palace.activeScopeStars);
@@ -195,8 +195,8 @@ test('Default Life opens as natal data without decade or annual overlays', () =>
   assert.equal(model.selection.scope, 'natal');
   assert.equal(model.annualOptions.length, 0);
   assert.equal(model.decadeOptions.some((item) => item.selected), false);
-  assert.ok(model.palaces.every((palace) => palace.decadalRoleLabel === null));
-  assert.ok(model.palaces.every((palace) => palace.yearlyRoleLabel === null));
+  assert.ok(model.palaces.every((palace) => palace.scopeRoles.decadal === null));
+  assert.ok(model.palaces.every((palace) => palace.scopeRoles.yearly === null));
   assert.equal(transformationCount(model, 'decadal'), 0);
   assert.equal(transformationCount(model, 'yearly'), 0);
   assert.equal(scopeStars(model, 'decadal').length, 0);
@@ -212,8 +212,8 @@ test('selecting a decade applies only the real decade overlay', () => {
   assert.equal(model.selection.scope, 'decadal');
   assert.equal(model.annualOptions.length, 10);
   assert.equal(model.annualOptions.some((item) => item.selected), false);
-  assert.ok(model.palaces.every((palace) => palace.decadalRoleLabel));
-  assert.ok(model.palaces.every((palace) => palace.yearlyRoleLabel === null));
+  assert.ok(model.palaces.every((palace) => palace.scopeRoles.decadal));
+  assert.ok(model.palaces.every((palace) => palace.scopeRoles.yearly === null));
   assert.equal(transformationCount(model, 'decadal'), 4);
   assert.equal(transformationCount(model, 'yearly'), 0);
   assert.ok(scopeStars(model, 'decadal').length > 0);

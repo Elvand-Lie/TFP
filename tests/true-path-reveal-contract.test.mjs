@@ -18,13 +18,15 @@ import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { readTruePathConfig } from './helpers/true-path-config.mjs';
 
 const require = createRequire(import.meta.url);
 const S = require('../true-path/lib/scoring.js');
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
-const readJson = (relative) => JSON.parse(readFileSync(path.join(repoRoot, relative), 'utf8'));
+// Suite path -> config bundle, via the canonical build() output (tests/helpers/true-path-config.mjs).
+const readJson = (relative) => readTruePathConfig(repoRoot, relative);
 
 const iron = readJson('true-path/config/iron-triangle.json');
 const scoringCfg = readJson('true-path/config/scoring.json');
@@ -107,15 +109,116 @@ test('thrive is a string or an array of strings — never any other type', () =>
   });
 });
 
-test('revealRole() normalizes thrive before mapping it', () => {
-  // Guards the fix itself: the renderer must not map thrive directly again. If this
-  // assertion fails, someone removed the normalization and reintroduced the blank page.
-  const appSource = readFileSync(path.join(repoRoot, 'true-path/assets/true-path-app.js'), 'utf8');
-  assert.match(
-    appSource,
-    /Array\.isArray\(primaryRole\.thrive\)/,
-    'revealRole() must normalize primaryRole.thrive with Array.isArray before mapping'
+test('thrive and growthEdge survive the config -> model -> report render path as text', () => {
+  // Guards the original failure, which was a blank page: `iron-triangle.json` authors `thrive`
+  // as a single string while the renderer called `.map()` on it, and the throw landed after the
+  // synthesis overlay had already removed itself.
+  //
+  // The earlier version of this test asserted on the renderer's SOURCE (`Array.isArray(...)`
+  // before mapping). That pinned one implementation, so a renderer that legitimately stopped
+  // needing the guard — because the value is now treated as text everywhere — failed the gate
+  // while the visitor-visible behaviour was still correct. This asserts the behaviour instead:
+  // whatever the renderer does internally, the configured thrive/growthEdge copy must reach the
+  // built report model intact and as display text.
+  const ReportModel = require('../true-path/lib/report-model.js');
+  const Scoring = require('../true-path/lib/scoring.js');
+  const Resolve = require('../true-path/lib/trupath.js');
+
+  const talentConfig = readJson('true-path/config/talent.json');
+  const ikigaiConfig = readJson('true-path/config/ikigai.json');
+  const truthPathConfig = readJson('true-path/config/trupath.json');
+  const ctaConfig = readJson('true-path/config/cta.json');
+
+  // A full, valid journey, built through the same scoring path the page uses.
+  const answers = {};
+  talentConfig.questions.forEach((question) => {
+    answers[question.id] = 5;
+  });
+  const scenarioAnswers = {};
+  iron.scenarios.forEach((scenario) => {
+    scenarioAnswers[scenario.id] = 'commander';
+  });
+  const picks = [
+    { screenId: 'I-1', key: 'teaching_sharing', fromSuggestion: false },
+    { screenId: 'I-2', key: 'communication', fromSuggestion: false },
+    { screenId: 'I-3', key: 'business_entrepreneurship', fromSuggestion: false },
+    { screenId: 'I-4', key: 'help_people_find_direction', fromSuggestion: false }
+  ];
+
+  const talent = Scoring.scoreTalent(answers, talentConfig);
+  const triangle = Scoring.computeRoleResult(
+    iron.scenarios.map((scenario) => scenarioAnswers[scenario.id]),
+    talent.pct,
+    picks,
+    scoringCfg
   );
+  const resolved = Resolve.buildTruePathResult({
+    talent,
+    triangle,
+    picks,
+    configs: {
+      talent: talentConfig,
+      ikigai: ikigaiConfig,
+      ironTriangle: iron,
+      truthPath: truthPathConfig
+    }
+  });
+
+  const record = ReportModel.buildResultRecord({
+    talent,
+    triangle,
+    resolved,
+    picks,
+    suggestedKeys: [],
+    talentAnswers: answers,
+    scenarios: iron.scenarios,
+    scenarioAnswers,
+    configs: { ikigai: ikigaiConfig, scoring: scoringCfg, truthPath: truthPathConfig },
+    meta: {
+      resultId: 'tp_test000001',
+      createdAt: '2026-09-24T10:00:00+08:00',
+      attribution: { utm_source: null, utm_campaign: null, device: 'desktop' }
+    }
+  });
+
+  ROLE_KEYS.forEach((key) => {
+    const role = iron.roles.find((candidate) => candidate.key === key);
+    assert.ok(role, `role "${key}" is missing from the config`);
+
+    // Every role must carry both lines as non-empty text — the shape the report renders.
+    ['thrive', 'growthEdge'].forEach((field) => {
+      assert.ok(
+        isNonEmptyString(role[field]),
+        `roles.${key}.${field} must be a non-empty string (it is rendered as text), got ${typeof role[field]}`
+      );
+    });
+  });
+
+  const model = ReportModel.buildReportModel(record, {
+    talent: talentConfig,
+    ikigai: ikigaiConfig,
+    ironTriangle: iron,
+    truthPath: truthPathConfig,
+    scoring: scoringCfg,
+    cta: ctaConfig
+  });
+
+  assert.ok(model, 'buildReportModel returned null for a well-formed record');
+
+  // The rendered report carries the configured copy through unchanged — not "[object Object]",
+  // not a blank line, and not a comma-joined array.
+  const serialized = JSON.stringify(model);
+  for (const key of ROLE_KEYS) {
+    const role = iron.roles.find((candidate) => candidate.key === key);
+    assert.ok(
+      serialized.includes(role.thrive),
+      `role "${key}" thrive text did not reach the report model (would render blank)`
+    );
+    assert.ok(
+      serialized.includes(role.growthEdge),
+      `role "${key}" growthEdge text did not reach the report model (would render blank)`
+    );
+  }
 });
 
 // ─── Reveal-level copy consumed by revealRole() ────────────────────────────────

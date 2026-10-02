@@ -4,13 +4,19 @@
  * One route serves the whole report lifecycle, because everything the report needs is keyed by
  * the same resultId (Brief 12 / 13):
  *
- *   POST { record }                → persist the Section 13 record, returns { stored, resultId }
- *   POST { resultId, email, ... }  → capture the lead, email the 3-page PDF, notify the team
- *   GET  ?id=<resultId>            → load a persisted record, returns { record }
+ *   POST { record, idempotencyKey }   → validate + recompute, persist, return { stored, resultId, record, reportUrl }
+ *   POST { resultId, email, ... }     → capture the lead, email the 3-page PDF, notify the team
+ *   GET  ?id=<resultId>               → load a persisted record, returns { record } with lead redacted
  *
  * The report itself never depends on this route: the page renders from sessionStorage or from a
  * self-contained `?r=` payload, and this route upgrades that to a short link and an email. With
  * no KV configured the page degrades to the payload link instead of breaking (Brief 21 default).
+ *
+ * Two rules shape the write paths:
+ *   - The client's numbers are NOT trusted. `recomputeRecord` reads only whitelisted raw answers
+ *     and rebuilds every score, share, title and alignment server-side.
+ *   - A failure never returns a success shape. An unconfigured or unreachable store is a 503, and
+ *     an in-flight email send is a 409 — never a 2xx the page would render as "sent".
  */
 
 import { Resend } from 'resend';
@@ -18,17 +24,28 @@ import {
   StoreNotConfiguredError,
   isStoreConfigured,
   isValidResultId,
+  newResultId,
   loadResult,
   saveLead,
-  saveResult,
-  saveResultOnce,
+  claimSaveRequest,
   claimEmailSend,
+  markEmailSent,
+  loadEmailAcceptance,
+  saveEmailAcceptance,
   releaseEmailSend
 } from '../true-path/lib/server/store';
-import { buildModel, decodePayload, ReportModel } from '../true-path/lib/server/model';
+import {
+  buildModel,
+  recomputeRecord,
+  redactRecordForPublic,
+  reportConfigs
+} from '../true-path/lib/server/model';
 import { renderTruePathPdf } from '../true-path/lib/server/pdf-generator';
 
 const MAX_BODY_BYTES = 200 * 1024;
+
+/** An idempotency key is a UUID minted by the browser per save attempt. */
+const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 const C = {
   crimson: '#710101',
@@ -39,54 +56,6 @@ const C = {
   panel: '#F5F5F2'
 };
 
-/**
- * A one-line role summary for the email body, e.g. "Commander 帅才 21% · General 将才 21% · Chancellor 相才 58%".
- *
- * Deliberately plain text: email clients strip inline SVG, so the visual triangle lives in the
- * attached PDF and the email states the same numbers in words.
- */
-function roleSummary(record: any, iron: any): string {
-  const shares = (record && record.ironTriangle && record.ironTriangle.share) || {};
-  const roles = (iron && iron.roles) || [];
-  const total = roles.reduce((sum, role) => sum + (Number(shares[role.key]) || 0), 0) || 1;
-
-  return roles
-    .map((role) => {
-      const share = Math.round(((Number(shares[role.key]) || 0) / total) * 100);
-      return role.name + ' ' + role.chinese + ' ' + share + '%';
-    })
-    .join(' \u00b7 ');
-}
-
-/** Inline SVG for the email body: a compact three-role share bar, no external asset needed. */
-function shareBarSvg(record: any): string {
-  const shares = (record && record.ironTriangle && record.ironTriangle.share) || {};
-  const colors: Record<string, string> = {
-    commander: '#710101',
-    general: '#C6A96B',
-    chancellor: '#6b6b6b'
-  };
-  const order = ['commander', 'general', 'chancellor'];
-  const total = order.reduce((sum, key) => sum + (Number(shares[key]) || 0), 0) || 1;
-  let x = 0;
-
-  const rects = order
-    .map((key) => {
-      const width = Math.round(((Number(shares[key]) || 0) / total) * 300);
-      const rect =
-        '<rect x="' + x + '" y="0" width="' + width + '" height="10" fill="' + colors[key] + '" />';
-      x += width;
-      return rect;
-    })
-    .join('');
-
-  return (
-    '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="10" role="img" ' +
-    'aria-label="Iron Triangle role share">' +
-    rects +
-    '</svg>'
-  );
-}
 function parseJsonBody(req: any): Record<string, any> {
   if (!req.body) return {};
   if (typeof req.body === 'string') {
@@ -122,6 +91,37 @@ function splitRecipients(value: unknown): string[] {
     .split(',')
     .map((email) => email.trim())
     .filter(Boolean);
+}
+
+/** The approved consultation destination, plus the privacy notice, from consolidated config. */
+function consultHref(): string {
+  try {
+    const cta = reportConfigs().cta;
+    return (cta && cta.result && cta.result.consultHref) || 'https://wa.me/6588257687';
+  } catch {
+    return 'https://wa.me/6588257687';
+  }
+}
+
+function privacyHref(): string {
+  try {
+    const cta = reportConfigs().cta;
+    return (cta && cta.report && cta.report.privacyHref) || '/privacy';
+  } catch {
+    return '/privacy';
+  }
+}
+
+/**
+ * The Resend idempotency key: deterministic per (report, recipient), so a retried attempt after a
+ * timeout is deduplicated by the provider, while the same report going to a different address
+ * gets a DIFFERENT key rather than being suppressed as a duplicate.
+ */
+function providerIdempotencyKey(resultId: string, email: string): string {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const crypto = require('crypto') as { createHash(algo: string): any };
+  const recipientHash = crypto.createHash('sha256').update(email.toLowerCase()).digest('hex').slice(0, 16);
+  return `tfp-report/${resultId}/${recipientHash}`;
 }
 
 /** The report email body — same brand frame as the existing site emails. */
@@ -161,11 +161,12 @@ function buildEmailHtml(params: {
       <p>If you would like to go deeper, a one-hour Metaphysics Strategic Consultation combines your True Path results with modern strategy and ancient wisdom.</p>
 
       <div style="margin-top:30px;text-align:center;">
-        <a href="https://thefullpicture.asia/contact" style="display:inline-block;background-color:${C.crimson};color:#FFFFFF;padding:12px 24px;text-decoration:none;border-radius:4px;font-weight:bold;">Book a Consultation</a>
+        <a href="${escapeHtml(consultHref())}" style="display:inline-block;background-color:${C.crimson};color:#FFFFFF;padding:12px 24px;text-decoration:none;border-radius:4px;font-weight:bold;">Book a Consultation</a>
       </div>
 
       <p style="margin-top:36px;font-size:0.78rem;color:${C.textLight};text-align:center;">
         This is a reflective self-discovery tool, not a psychological or career assessment.<br />
+        <a href="${escapeHtml(privacyHref())}" style="color:${C.textLight};">How we handle your data</a><br />
         &copy; ${new Date().getFullYear()} The Full Picture LLP. All rights reserved.
       </p>
     </div>
@@ -205,39 +206,69 @@ async function notifyTeam(params: {
 }
 
 /**
- * Post the record to the configured CRM webhook (Brief 9 / 20.6). Best-effort by design: a CRM
- * outage must never cost the visitor their report.
+ * Post the record to the configured CRM webhook (Brief 9 / 20.6).
+ *
+ * Awaited with a bounded timeout so the real delivery is attempted before the response is sent,
+ * but a slow or dead endpoint still cannot hold the visitor's request open. Failures are
+ * swallowed on purpose: a CRM outage must never cost the visitor their report.
  */
-function postToWebhook(record: Record<string, unknown>, lead: Record<string, unknown>): void {
+async function postToWebhook(record: Record<string, unknown>, lead: Record<string, unknown>): Promise<void> {
   const url = process.env.CRM_WEBHOOK_URL || process.env.TRUE_PATH_WEBHOOK_URL;
   if (!url) return;
 
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ record, lead })
-  }).catch(() => {
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ record, lead }),
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch (error) {
     /* webhook failures are not the visitor's problem */
-  });
+  }
 }
 
-function summarize(record: any) {
-  return {
-    title: record && record.truePath ? record.truePath.title || null : null,
-    role: null
-  };
+/** The one piece of the record the notification email needs, resolved once. */
+function reportTitle(record: any): string | null {
+  return record && record.truePath ? record.truePath.title || null : null;
 }
 
-/** POST with a full record: persist it and return the short-link id. */
+/**
+ * POST with a raw journey record: validate, recompute, persist.
+ *
+ * The body is `{ record, idempotencyKey }`. Only whitelisted raw answers survive validation;
+ * the id, timestamp and every computed value are produced here.
+ */
 async function handleRecord(body: any, res: any) {
   const record = body.record;
+  const idempotencyKey = typeof body.idempotencyKey === 'string' ? body.idempotencyKey.trim() : '';
 
-  if (!ReportModel) {
-    return res.status(500).json({ error: 'Report model unavailable' });
+  if (!record || typeof record !== 'object' || Array.isArray(record)) {
+    return res.status(400).json({ error: 'A record is required', reason: 'record_required' });
+  }
+  if (!UUID_PATTERN.test(idempotencyKey)) {
+    return res.status(400).json({
+      error: 'A UUID idempotencyKey is required',
+      reason: 'idempotency_key_required'
+    });
   }
 
-  if (!record || !isValidResultId(record.resultId)) {
-    return res.status(400).json({ error: 'A record with a valid resultId is required' });
+  // Validate BEFORE touching the store, so a bad payload is a 400 whatever the environment.
+  const resultId = newResultId();
+  const recomputed = recomputeRecord(record, {
+    requireFullJourney: true,
+    resultId,
+    createdAt: new Date().toISOString()
+  });
+
+  // `in` rather than a truthiness check: `ok` widens to `boolean` under this repo's non-strict
+  // tsconfig, which defeats discriminated-union narrowing.
+  if ('issues' in recomputed) {
+    return res.status(400).json({
+      error: 'That journey record is not valid',
+      reason: 'invalid_record',
+      issues: recomputed.issues
+    });
   }
 
   if (!isStoreConfigured()) {
@@ -245,73 +276,177 @@ async function handleRecord(body: any, res: any) {
     // than returning a success-shaped 200. The page still has its self-contained payload link.
     return res.status(503).json({
       stored: false,
-      resultId: record.resultId,
+      resultId: null,
       reason: 'storage_not_configured',
       error: 'Report storage is not configured.'
     });
   }
 
+  let claim;
   try {
-    const stored = await saveResultOnce(record);
-    // Persisting is not a lead: the visitor has not given us an email yet (Brief 9).
-    return res.status(200).json({ stored, resultId: record.resultId });
+    claim = await claimSaveRequest({
+      requestKey: idempotencyKey,
+      fingerprint: recomputed.fingerprint,
+      resultId,
+      record: recomputed.record
+    });
   } catch (error: any) {
+    if (error instanceof StoreNotConfiguredError) {
+      return res.status(503).json({
+        stored: false,
+        resultId: null,
+        reason: 'storage_not_configured',
+        error: 'Report storage is not configured.'
+      });
+    }
     console.error('[true-path] store failure:', error);
     return res.status(503).json({
       stored: false,
-      resultId: record.resultId,
+      resultId: null,
       reason: 'store_unavailable',
       error: 'Report storage is unavailable right now.'
     });
   }
+
+  if (claim.status === 'conflict') {
+    return res.status(409).json({
+      stored: false,
+      resultId: null,
+      reason: 'idempotency_conflict',
+      error: 'That save request was already used for a different journey.'
+    });
+  }
+
+  if (claim.status === 'missing') {
+    // The key maps to a report that is no longer readable. Reporting `stored: true` here would
+    // promise the visitor a report that the very next `?id=` lookup could not return.
+    return res.status(503).json({
+      stored: false,
+      resultId: null,
+      reason: 'store_unavailable',
+      error: 'Report storage is unavailable right now.'
+    });
+  }
+
+  const resultIdOut = claim.resultId || resultId;
+
+  if (claim.status === 'exists') {
+    // A replay must answer with the report that ALREADY exists — not with this request's freshly
+    // generated id and timestamp, which were never written and point at nothing.
+    let original: Record<string, any> | null = null;
+    try {
+      original = (await loadResult(resultIdOut)) as Record<string, any> | null;
+    } catch (error) {
+      console.error('[true-path] replay lookup failure:', error);
+    }
+    if (!original) {
+      return res.status(503).json({
+        stored: false,
+        resultId: null,
+        reason: 'store_unavailable',
+        error: 'Report storage is unavailable right now.'
+      });
+    }
+
+    const publicOriginal = redactRecordForPublic(original) as Record<string, any>;
+    return res.status(200).json({
+      stored: true,
+      duplicate: true,
+      resultId: resultIdOut,
+      record: publicOriginal,
+      reportUrl: '/true-path/report/' + resultIdOut
+    });
+  }
+
+  // Persisting is not a lead: the visitor has not given us an email yet (Brief 9).
+  return res.status(200).json({
+    stored: true,
+    resultId: resultIdOut,
+    record: recomputed.record,
+    reportUrl: '/true-path/report/' + resultIdOut
+  });
+}
+
+/** Retry bookkeeping only; a provider-accepted send must never be released for another send. */
+async function finaliseEmail(resultId: string, email: string): Promise<boolean> {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      if (await markEmailSent({ resultId, email })) return true;
+    } catch (error) {
+      console.error('[true-path] claim finalisation failure:', error);
+    }
+  }
+  return false;
 }
 
 /** POST with lead details: capture consent separately, then email the PDF. */
 async function handleLead(body: any, res: any) {
   const resultId = body.resultId;
   const email = typeof body.email === 'string' ? body.email.trim() : '';
-  const firstName = typeof body.firstName === 'string' && body.firstName.trim() ? body.firstName.trim() : null;
-  const marketingConsent = Boolean(body.marketingConsent);
-  // Report delivery is what the visitor asked for by submitting the form (Brief 9).
-  const reportConsent = body.reportConsent !== false;
+  const firstName = typeof body.firstName === 'string' ? body.firstName.trim() : '';
 
   if (!isValidEmail(email)) {
-    return res.status(400).json({ error: 'A valid email address is required' });
+    return res.status(400).json({ error: 'A valid email address is required', reason: 'invalid_email' });
   }
   if (!isValidResultId(resultId)) {
-    return res.status(400).json({ error: 'A valid resultId is required' });
+    return res.status(400).json({ error: 'A valid resultId is required', reason: 'invalid_result_id' });
   }
+  if (!firstName) {
+    return res.status(400).json({ error: 'A first name is required', reason: 'name_required' });
+  }
+  if (firstName.length > 200) {
+    return res.status(400).json({ error: 'First name is too long', reason: 'invalid_name' });
+  }
+  // Report delivery is an explicit, positive consent — an absent flag is not consent (Brief 9).
+  if (body.reportConsent !== true) {
+    return res.status(400).json({
+      error: 'Report delivery consent is required',
+      reason: 'report_consent_required'
+    });
+  }
+  const marketingConsent = body.marketingConsent === true;
 
-  // Prefer the record the page sent (works with no store); fall back to the persisted one.
-  let record = decodePayload(body.payload);
-  if (!record) record = await loadResult(resultId);
-  if (!record) {
-    return res.status(409).json({
-      error: 'That report is no longer available. Please retake the journey.'
+  if (!isStoreConfigured()) {
+    return res.status(503).json({
+      reason: 'storage_not_configured',
+      error: 'Report delivery is not configured right now.'
     });
   }
 
-  const lead = { firstName, email, reportConsent, marketingConsent, submittedAt: new Date().toISOString() };
-
-  if (isStoreConfigured()) {
-    try {
-      await saveLead(resultId, lead);
-    } catch (error) {
-      console.error('[true-path] lead store failure:', error);
-    }
+  // The STORED record is authoritative: the lead path never renders a client-supplied payload,
+  // so a submission cannot be redirected at a report the visitor does not own.
+  let record: Record<string, any> | null = null;
+  try {
+    record = (await loadResult(resultId)) as Record<string, any> | null;
+  } catch (error) {
+    console.error('[true-path] lead lookup failure:', error);
+    return res.status(503).json({
+      reason: 'store_unavailable',
+      error: 'Report lookup is unavailable right now.'
+    });
   }
-
-  postToWebhook(record, lead);
+  if (!record) {
+    return res.status(409).json({
+      error: 'That report is no longer available. Please retake the journey.',
+      reason: 'report_not_found'
+    });
+  }
 
   if (!process.env.RESEND_API_KEY) {
     return res.status(503).json({ error: 'Email is not configured right now.' });
   }
 
-  // Idempotency (Brief 17): a double-click or retry sends exactly one email. Any failure to
-  // check is a 503 — it must never be read as "send it anyway", and `false` means duplicate.
-  let claimed: boolean;
+  const providerKey = providerIdempotencyKey(resultId, email);
+
+  let claim;
+  let acceptance;
   try {
-    claimed = await claimEmailSend(resultId);
+    acceptance = await loadEmailAcceptance(resultId);
+    if (acceptance && acceptance.email !== email) {
+      return res.status(409).json({ sent: false, reason: 'recipient_conflict',
+        error: 'That report was already accepted for a different address.' });
+    }
+    claim = await claimEmailSend({ resultId, email, providerKey });
   } catch (error) {
     if (error instanceof StoreNotConfiguredError) {
       return res.status(503).json({
@@ -325,54 +460,137 @@ async function handleLead(body: any, res: any) {
       error: 'Email delivery is unavailable right now.'
     });
   }
-  if (!claimed) {
-    return res.status(200).json({ sent: false, duplicate: true });
+
+  if (claim.status === 'sent') {
+    // A genuine prior delivery to this same address: report it truthfully without resending.
+    return res.status(200).json({ sent: true, duplicate: true, resultId });
+  }
+  if (acceptance && (claim.status === 'pending' || claim.status === 'claimed')) {
+    if (await finaliseEmail(resultId, email)) {
+      return res.status(200).json({ sent: true, duplicate: true, resultId });
+    }
+    return res.status(503).json({ sent: false, reason: 'delivery_not_finalised',
+      error: 'Email was accepted, but confirmation is unavailable. Please try again later.' });
+  }
+  if (claim.status === 'pending') {
+    // Another attempt is mid-flight. This is NOT a success — the page must not show it as one.
+    return res.status(409).json({
+      sent: false,
+      pending: true,
+      reason: 'send_in_progress',
+      error: 'That report is already being sent. Please give it a moment.'
+    });
+  }
+  if (claim.status === 'conflict') {
+    return res.status(409).json({
+      sent: false,
+      reason: 'recipient_conflict',
+      error: 'That report is already being sent to a different address.'
+    });
+  }
+
+  // Only NOW, with the send claimed, is the lead recorded. Writing it earlier meant a rejected
+  // send (a different recipient, a refused consent) had already overwritten the original
+  // visitor's stored name, email and consent on the record.
+  const lead = {
+    firstName,
+    email,
+    reportConsent: true,
+    marketingConsent,
+    submittedAt: new Date().toISOString()
+  };
+
+  try {
+    await saveLead(resultId, lead);
+  } catch (error) {
+    // The consent/lead write is part of what the visitor asked for: if it cannot be recorded, no
+    // mail is sent, and the claim is given back so the retry is not left blocked by this attempt.
+    await releaseEmailSend({ resultId, email });
+    console.error('[true-path] lead store failure:', error);
+    return res.status(503).json({
+      sent: false,
+      reason: 'store_unavailable',
+      error: 'Could not record your details right now.'
+    });
   }
 
   const model = buildModel(record);
   if (!model) {
-    await releaseEmailSend(resultId);
+    await releaseEmailSend({ resultId, email });
     return res.status(500).json({ error: 'Could not render that report' });
   }
 
-  const payload = typeof body.payload === 'string' && body.payload ? body.payload : null;
-  const reportUrl = payload
-    ? `https://thefullpicture.asia/true-path/report?r=${encodeURIComponent(payload)}`
-    : `https://thefullpicture.asia/true-path/report?id=${encodeURIComponent(resultId)}`;
+  // The report is reachable by its persistent id; no payload link is needed once it is stored.
+  const reportUrl = `https://thefullpicture.asia/true-path/report/${encodeURIComponent(resultId)}`;
 
   const primaryRole = model.pages[2].blocks.find((block: any) => block && block.kind === 'role-card');
-  const summary = summarize(record);
+  const summary = { title: reportTitle(record) };
   const archetypeBlock = model.pages[0].blocks.find((block: any) => block && block.kind === 'pair');
 
+  let deliveryId: string | null = null;
   try {
     const pdf = await renderTruePathPdf(model);
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const { error } = await resend.emails.send({
-      from: getSender(),
-      to: [email],
-      subject: 'Your 3-Page True Path Report',
-      html: buildEmailHtml({
-        firstName,
-        reportUrl,
-        title: summary.title,
-        archetype: archetypeBlock && archetypeBlock.archetype ? archetypeBlock.archetype.name : null,
-        role: primaryRole ? primaryRole.name + ' ' + primaryRole.chinese : null
-      }),
-      attachments: [
-        { filename: 'True-Path-Report.pdf', content: pdf.toString('base64') }
-      ]
-    });
+    const response = await resend.emails.send(
+      {
+        from: getSender(),
+        to: [email],
+        subject: 'Your 3-Page True Path Report',
+        html: buildEmailHtml({
+          firstName,
+          reportUrl,
+          title: summary.title,
+          archetype: archetypeBlock && archetypeBlock.archetype ? archetypeBlock.archetype.name : null,
+          role: primaryRole ? primaryRole.name + ' ' + primaryRole.chinese : null
+        }),
+        attachments: [
+          { filename: 'True-Path-Report.pdf', content: pdf.toString('base64') }
+        ]
+      },
+      { idempotencyKey: providerKey }
+    );
 
-    if (error) {
-      await releaseEmailSend(resultId);
-      console.error('[true-path] resend error:', error);
-      return res.status(502).json({ error: 'Could not send that email right now.' });
+    // Delivery is only accepted on POSITIVE evidence: a provider id. Checking merely for a falsy
+    // `error` would read a malformed `{}` or a `{ data: null, error: null }` response as success
+    // and finalise the claim as `sent` for a message that was never created.
+    deliveryId = response && response.data && typeof response.data.id === 'string'
+      ? response.data.id.trim() : null;
+    if (response && response.error) {
+      await releaseEmailSend({ resultId, email });
+      console.error('[true-path] resend error:', response.error);
+      return res.status(502).json({ sent: false, error: 'Could not send that email right now.' });
+    }
+    if (!deliveryId) {
+      await releaseEmailSend({ resultId, email });
+      console.error('[true-path] resend returned no delivery id:', response);
+      return res.status(502).json({ sent: false, error: 'Could not send that email right now.' });
     }
   } catch (error: any) {
-    await releaseEmailSend(resultId);
+    await releaseEmailSend({ resultId, email });
     console.error('[true-path] report email failure:', error);
-    return res.status(500).json({ error: 'Could not send that email right now.' });
+    return res.status(500).json({ sent: false, error: 'Could not send that email right now.' });
   }
+
+  // Persist positive acceptance separately, so a visitor retry can repair the claim without
+  // repeating the send (including after the provider's 24-hour idempotency window).
+  try {
+    await saveEmailAcceptance(resultId, { email, deliveryId: deliveryId!,
+      acceptedAt: new Date().toISOString() });
+  } catch (error) {
+    console.error('[true-path] acknowledgement store failure:', error);
+  }
+
+  if (!await finaliseEmail(resultId, email)) {
+    // ponytail: if both acknowledgement and claim writes fail, retain the pending claim;
+    // reconcile with the provider rather than risk resending an already accepted message.
+    return res.status(503).json({
+      sent: false,
+      reason: 'delivery_not_finalised',
+      error: 'Email was accepted, but confirmation is unavailable. Please try again later.'
+    });
+  }
+
+  await postToWebhook(record, lead);
 
   try {
     await notifyTeam({
@@ -392,6 +610,10 @@ async function handleLead(body: any, res: any) {
 
 export default async function handler(req: any, res: any) {
   if (req.method === 'GET') {
+    // A result link is shareable and carries no session, so it must never be cached by a shared
+    // proxy — and never return the captured lead.
+    res.setHeader('Cache-Control', 'no-store');
+
     const id = req.query && req.query.id;
     if (!isValidResultId(id)) {
       return res.status(400).json({ error: 'A valid id is required' });
@@ -403,7 +625,11 @@ export default async function handler(req: any, res: any) {
     try {
       const record = await loadResult(id);
       if (!record) return res.status(404).json({ error: 'Report not found' });
-      return res.status(200).json({ record });
+
+      const publicRecord = redactRecordForPublic(record);
+      if (!publicRecord) return res.status(404).json({ error: 'Report not found' });
+
+      return res.status(200).json({ record: publicRecord });
     } catch (error) {
       console.error('[true-path] lookup failure:', error);
       return res.status(503).json({ error: 'Report lookup is unavailable' });
@@ -423,14 +649,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    if (JSON.stringify(body).length > MAX_BODY_BYTES) {
+    if (Buffer.byteLength(JSON.stringify(body), 'utf8') > MAX_BODY_BYTES) {
       return res.status(413).json({ error: 'Payload too large' });
     }
   } catch (error) {
     return res.status(400).json({ error: 'Malformed JSON body' });
   }
 
-  // Distinguished by shape: a record carries `record`, a lead carries `email`.
+  // Distinguished by shape: a save carries `record`, a lead carries `email`.
   if (body && body.record) return handleRecord(body, res);
   if (body && body.email) return handleLead(body, res);
 

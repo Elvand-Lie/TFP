@@ -1,5 +1,11 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/true-path/report/:id",
+      "destination": "/true-path/report/index.html"
+    }
+  ],
   "functions": {
     "api/**/*.ts": {
       "includeFiles": "fonts/**"

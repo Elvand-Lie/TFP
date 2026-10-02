@@ -11,13 +11,15 @@ import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { readTruePathConfig } from './helpers/true-path-config.mjs';
 
 const require = createRequire(import.meta.url);
 const S = require('../true-path/lib/scoring.js');
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
-const readJson = (relative) => JSON.parse(readFileSync(path.join(repoRoot, relative), 'utf8'));
+// Suite path -> config bundle, via the canonical build() output (tests/helpers/true-path-config.mjs).
+const readJson = (relative) => readTruePathConfig(repoRoot, relative);
 
 const talentJson = readJson('true-path/config/talent.json');
 const scoringCfg = readJson('true-path/config/scoring.json');
