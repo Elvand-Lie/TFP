@@ -13,7 +13,15 @@
 #true-path-app {--bg:#141212;--card:#211c1c;--line:#3d3434;--ink:#f3ecdf;--mut:#b8ad9d;--bur:#7a1f2e;--bur2:#b04458;--gold:#a8823f;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 #true-path-app *, #true-path-app *:before, #true-path-app *:after {box-sizing:inherit}
 #true-path-app {margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}
+#true-path-app {position:relative;isolation:isolate;background-color:#141212;background-image:radial-gradient(ellipse 1100px 560px at 72% -8%, rgba(113,1,1,.28), transparent 62%)}
+/* Ambient watermark glyph, echoing the hero-mark treatment on the tool pages. */
+#true-path-app:before {content:'道';position:fixed;right:-3vw;bottom:-8vw;z-index:-1;font-family:"Songti SC","Noto Serif CJK SC",serif;font-size:clamp(16rem,34vw,32rem);line-height:1;color:rgba(113,1,1,.16);pointer-events:none;user-select:none}
+@media print {#true-path-app:before {display:none}}
 #true-path-app > #tp-step-root, #true-path-app > #tp-report-root {max-width:640px;margin:0 auto;padding:20px 20px 60px}
+/* Centre shorter journey steps in the viewport; long steps degrade to normal top flow. */
+#true-path-app > #tp-step-root {min-height:calc(100svh - 140px);display:flex;flex-direction:column}
+#true-path-app > #tp-step-root:before {content:'';margin-top:auto}
+#true-path-app > #tp-step-root:after {content:'';margin-bottom:auto}
 #true-path-app h1, #true-path-app h2, #true-path-app h3 {font-family:"Cormorant Garamond",Georgia,"Songti SC","Noto Serif CJK SC",serif;font-weight:600;line-height:1.15;margin:.4em 0 .3em}
 #true-path-app h1 {font-size:2.6rem}
 #true-path-app h2 {font-size:1.75rem}
@@ -92,7 +100,7 @@
 #true-path-app {
   display: block;
   padding-top: 120px;
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--ink);
   font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
