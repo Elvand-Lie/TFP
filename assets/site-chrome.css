@@ -196,6 +196,17 @@ nav.scrolled {
   .dropdown-menu { display: none !important; }
 }
 
+/* ---------- Landing heroes fill the viewport ---------- */
+/* Tool landing pages: keep the footer below the first screen, like the home page. */
+#tool-head {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+#tool-head > .shell { width: 100%; }
+#true-path-app { min-height: 100svh; }
+
 /* ---------- Footer ---------- */
 footer {
   background: #0F0F10 !important;
