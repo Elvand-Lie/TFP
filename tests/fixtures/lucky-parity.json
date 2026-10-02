@@ -1,0 +1,4745 @@
+{
+  "frozenSgtHourUTC": 13,
+  "cases": [
+    {
+      "birth": "1990-05-15",
+      "birthTime": "14:15",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-10-02T12:00:00Z",
+      "frozenSgtMs": 1790947800000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Weak",
+        "gua": "8 (Gen)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "戊",
+          "pinyin": "Wù",
+          "number": 5,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Beige",
+          "hex": "#f5f5dc"
+        },
+        "luckySeat": {
+          "en": "West",
+          "zh": "西",
+          "py": "Xī"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 12
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    },
+    {
+      "birth": "1990-05-15",
+      "birthTime": "14:15",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-10-02T12:00:00Z",
+      "frozenSgtMs": 1790947800000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Weak",
+        "gua": "1 (Kan)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "戊",
+          "pinyin": "Wù",
+          "number": 5,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Beige",
+          "hex": "#f5f5dc"
+        },
+        "luckySeat": {
+          "en": "South",
+          "zh": "南",
+          "py": "Nán"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 12
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southeast",
+          "East",
+          "South",
+          "North"
+        ]
+      }
+    },
+    {
+      "birth": "1981-02-11",
+      "birthTime": "15:34",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-05-25T12:00:00Z",
+      "frozenSgtMs": 1779715800000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Strong",
+        "gua": "1 (Kan)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "偏财"
+        },
+        "luckyColor": {
+          "name": "Teal",
+          "hex": "#14b8a6"
+        },
+        "luckySeat": {
+          "en": "East",
+          "zh": "东",
+          "py": "Dōng"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 10
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southeast",
+          "East",
+          "South",
+          "North"
+        ]
+      }
+    },
+    {
+      "birth": "1975-08-30",
+      "birthTime": "06:05",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-03-21T12:00:00Z",
+      "frozenSgtMs": 1774099800000,
+      "expected": {
+        "dayMaster": "戊 (Earth)",
+        "bodyStatus": "Weak",
+        "gua": "8 (Gen)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "丙",
+          "pinyin": "Bǐng",
+          "number": 3,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Orange",
+          "hex": "#f97316"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 0
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 2
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    },
+    {
+      "birth": "1968-01-22",
+      "birthTime": null,
+      "gender": "female",
+      "timeUnknown": true,
+      "now": "2026-07-07T12:00:00Z",
+      "frozenSgtMs": 1783431000000,
+      "expected": {
+        "dayMaster": "辛 (Metal)",
+        "bodyStatus": "Weak",
+        "gua": "9 (Li)",
+        "luckScore": 4,
+        "luckyNumber": {
+          "stem": "戊",
+          "pinyin": "Wù",
+          "number": 5,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Brown",
+          "hex": "#78350f"
+        },
+        "luckySeat": {
+          "en": "South",
+          "zh": "南",
+          "py": "Nán"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 8
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 0
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 2
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "East",
+          "Southeast",
+          "North",
+          "South"
+        ]
+      }
+    },
+    {
+      "birth": "1999-12-31",
+      "birthTime": "23:59",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-01-15T12:00:00Z",
+      "frozenSgtMs": 1768483800000,
+      "expected": {
+        "dayMaster": "丁 (Fire)",
+        "bodyStatus": "Weak",
+        "gua": "1 (Kan)",
+        "luckScore": 4,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Green",
+          "hex": "#22c55e"
+        },
+        "luckySeat": {
+          "en": "North",
+          "zh": "北",
+          "py": "Běi"
+        },
+        "bestTime": {
+          "branch": "寅",
+          "time": "03:00 - 05:00",
+          "py": "Yín",
+          "endMinute": 300,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 8
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 1
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southeast",
+          "East",
+          "South",
+          "North"
+        ]
+      }
+    },
+    {
+      "birth": "1985-07-04",
+      "birthTime": "09:30",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-12-31T12:00:00Z",
+      "frozenSgtMs": 1798723800000,
+      "expected": {
+        "dayMaster": "甲 (Wood)",
+        "bodyStatus": "Weak",
+        "gua": "9 (Li)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "比肩"
+        },
+        "luckyColor": {
+          "name": "Teal",
+          "hex": "#14b8a6"
+        },
+        "luckySeat": {
+          "en": "South",
+          "zh": "南",
+          "py": "Nán"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 10
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 8
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 7
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 6
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "East",
+          "Southeast",
+          "North",
+          "South"
+        ]
+      }
+    },
+    {
+      "birth": "1972-03-18",
+      "birthTime": "18:45",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-04-10T12:00:00Z",
+      "frozenSgtMs": 1775827800000,
+      "expected": {
+        "dayMaster": "戊 (Earth)",
+        "bodyStatus": "Weak",
+        "gua": "1 (Kan)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "丙",
+          "pinyin": "Bǐng",
+          "number": 3,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Pink",
+          "hex": "#ec4899"
+        },
+        "luckySeat": {
+          "en": "South",
+          "zh": "南",
+          "py": "Nán"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 1
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 2
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          }
+        ],
+        "auspiciousDirs": [
+          "Southeast",
+          "East",
+          "South",
+          "North"
+        ]
+      }
+    },
+    {
+      "birth": "1993-11-05",
+      "birthTime": null,
+      "gender": "male",
+      "timeUnknown": true,
+      "now": "2026-08-19T12:00:00Z",
+      "frozenSgtMs": 1787146200000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Strong",
+        "gua": "7 (Dui)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "偏财"
+        },
+        "luckyColor": {
+          "name": "Teal",
+          "hex": "#14b8a6"
+        },
+        "luckySeat": {
+          "en": "West",
+          "zh": "西",
+          "py": "Xī"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 12
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 8
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 1
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 6
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "Northwest",
+          "Southwest",
+          "Northeast",
+          "West"
+        ]
+      }
+    },
+    {
+      "birth": "1960-06-12",
+      "birthTime": "12:00",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-06-06T12:00:00Z",
+      "frozenSgtMs": 1780752600000,
+      "expected": {
+        "dayMaster": "辛 (Metal)",
+        "bodyStatus": "Weak",
+        "gua": "2 (Kun)",
+        "luckScore": 4,
+        "luckyNumber": {
+          "stem": "戊",
+          "pinyin": "Wù",
+          "number": 5,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Yellow",
+          "hex": "#eab308"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 8
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 1
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 5
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 5
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Northeast",
+          "West",
+          "Northwest",
+          "Southwest"
+        ]
+      }
+    },
+    {
+      "birth": "1988-11-03",
+      "birthTime": null,
+      "gender": "female",
+      "timeUnknown": true,
+      "now": "2026-10-02T12:00:00Z",
+      "frozenSgtMs": 1790947800000,
+      "expected": {
+        "dayMaster": "壬 (Water)",
+        "bodyStatus": "Weak",
+        "gua": "3 (Zhen)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "庚",
+          "pinyin": "Gēng",
+          "number": 7,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Silver",
+          "hex": "#9ca3af"
+        },
+        "luckySeat": {
+          "en": "Southeast",
+          "zh": "东南",
+          "py": "Dōngnán"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 11
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 6
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "South",
+          "North",
+          "Southeast",
+          "East"
+        ]
+      }
+    },
+    {
+      "birth": "2005-03-10",
+      "birthTime": "10:20",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-10-02T12:00:00Z",
+      "frozenSgtMs": 1790947800000,
+      "expected": {
+        "dayMaster": "癸 (Water)",
+        "bodyStatus": "Weak",
+        "gua": "4 (Xun)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "庚",
+          "pinyin": "Gēng",
+          "number": 7,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Silver",
+          "hex": "#9ca3af"
+        },
+        "luckySeat": {
+          "en": "East",
+          "zh": "东",
+          "py": "Dōng"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 8
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 2
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 3
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 4
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 4
+          }
+        ],
+        "auspiciousDirs": [
+          "North",
+          "South",
+          "East",
+          "Southeast"
+        ]
+      }
+    },
+    {
+      "birth": "2005-03-10",
+      "birthTime": "10:20",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-05-25T12:00:00Z",
+      "frozenSgtMs": 1779715800000,
+      "expected": {
+        "dayMaster": "癸 (Water)",
+        "bodyStatus": "Weak",
+        "gua": "2 (Kun)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "庚",
+          "pinyin": "Gēng",
+          "number": 7,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Gold",
+          "hex": "#fbbf24"
+        },
+        "luckySeat": {
+          "en": "West",
+          "zh": "西",
+          "py": "Xī"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 13
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 7
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 1
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 5
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 5
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Northeast",
+          "West",
+          "Northwest",
+          "Southwest"
+        ]
+      }
+    },
+    {
+      "birth": "2000-01-15",
+      "birthTime": "08:00",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-02-17T12:00:00Z",
+      "frozenSgtMs": 1771335000000,
+      "expected": {
+        "dayMaster": "壬 (Water)",
+        "bodyStatus": "Weak",
+        "gua": "8 (Gen)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "庚",
+          "pinyin": "Gēng",
+          "number": 7,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Gold",
+          "hex": "#fbbf24"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 8
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 2
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 3
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 4
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 4
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    },
+    {
+      "birth": "2010-09-09",
+      "birthTime": "21:15",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-09-14T12:00:00Z",
+      "frozenSgtMs": 1789392600000,
+      "expected": {
+        "dayMaster": "壬 (Water)",
+        "bodyStatus": "Strong",
+        "gua": "8 (Gen)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "食神"
+        },
+        "luckyColor": {
+          "name": "Olive",
+          "hex": "#65a30d"
+        },
+        "luckySeat": {
+          "en": "West",
+          "zh": "西",
+          "py": "Xī"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 2
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    },
+    {
+      "birth": "2002-07-21",
+      "birthTime": "03:40",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-11-23T12:00:00Z",
+      "frozenSgtMs": 1795440600000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Weak",
+        "gua": "8 (Gen)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "戊",
+          "pinyin": "Wù",
+          "number": 5,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Beige",
+          "hex": "#f5f5dc"
+        },
+        "luckySeat": {
+          "en": "Northeast",
+          "zh": "东北",
+          "py": "Dōngběi"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 12
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    },
+    {
+      "birth": "2015-04-17",
+      "birthTime": null,
+      "gender": "male",
+      "timeUnknown": true,
+      "now": "2026-01-15T12:00:00Z",
+      "frozenSgtMs": 1768483800000,
+      "expected": {
+        "dayMaster": "癸 (Water)",
+        "bodyStatus": "Weak",
+        "gua": "3 (Zhen)",
+        "luckScore": 4,
+        "luckyNumber": {
+          "stem": "庚",
+          "pinyin": "Gēng",
+          "number": 7,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Grey",
+          "hex": "#6b7280"
+        },
+        "luckySeat": {
+          "en": "East",
+          "zh": "东",
+          "py": "Dōng"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 12
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 6
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 6
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 6
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 6
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 4
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 4
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 5
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "South",
+          "North",
+          "Southeast",
+          "East"
+        ]
+      }
+    },
+    {
+      "birth": "2008-02-03",
+      "birthTime": "16:55",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-10-02T12:00:00Z",
+      "frozenSgtMs": 1790947800000,
+      "expected": {
+        "dayMaster": "癸 (Water)",
+        "bodyStatus": "Strong",
+        "gua": "4 (Xun)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "伤官"
+        },
+        "luckyColor": {
+          "name": "Olive",
+          "hex": "#65a30d"
+        },
+        "luckySeat": {
+          "en": "East",
+          "zh": "东",
+          "py": "Dōng"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 11
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 11
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": -1
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 6
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 6
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "North",
+          "South",
+          "East",
+          "Southeast"
+        ]
+      }
+    },
+    {
+      "birth": "2012-12-21",
+      "birthTime": "11:11",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-03-21T12:00:00Z",
+      "frozenSgtMs": 1774099800000,
+      "expected": {
+        "dayMaster": "丙 (Fire)",
+        "bodyStatus": "Weak",
+        "gua": "6 (Qian)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Green",
+          "hex": "#22c55e"
+        },
+        "luckySeat": {
+          "en": "Northeast",
+          "zh": "东北",
+          "py": "Dōngběi"
+        },
+        "bestTime": {
+          "branch": "寅",
+          "time": "03:00 - 05:00",
+          "py": "Yín",
+          "endMinute": 300,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 11
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": -1
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 6
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "West",
+          "Northeast",
+          "Southwest",
+          "Northwest"
+        ]
+      }
+    },
+    {
+      "birth": "2001-06-30",
+      "birthTime": "14:05",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-07-07T12:00:00Z",
+      "frozenSgtMs": 1783431000000,
+      "expected": {
+        "dayMaster": "甲 (Wood)",
+        "bodyStatus": "Weak",
+        "gua": "7 (Dui)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "比肩"
+        },
+        "luckyColor": {
+          "name": "Teal",
+          "hex": "#14b8a6"
+        },
+        "luckySeat": {
+          "en": "West",
+          "zh": "西",
+          "py": "Xī"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 11
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": -1
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 4
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Northwest",
+          "Southwest",
+          "Northeast",
+          "West"
+        ]
+      }
+    },
+    {
+      "birth": "1990-05-15",
+      "birthTime": "00:00",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-12-31T12:00:00Z",
+      "frozenSgtMs": 1798723800000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Weak",
+        "gua": "1 (Kan)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "戊",
+          "pinyin": "Wù",
+          "number": 5,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Brown",
+          "hex": "#78350f"
+        },
+        "luckySeat": {
+          "en": "North",
+          "zh": "北",
+          "py": "Běi"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 8
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 0
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 2
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "Southeast",
+          "East",
+          "South",
+          "North"
+        ]
+      }
+    },
+    {
+      "birth": "1980-02-29",
+      "birthTime": "22:10",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-02-17T12:00:00Z",
+      "frozenSgtMs": 1771335000000,
+      "expected": {
+        "dayMaster": "壬 (Water)",
+        "bodyStatus": "Strong",
+        "gua": "4 (Xun)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "食神"
+        },
+        "luckyColor": {
+          "name": "Olive",
+          "hex": "#65a30d"
+        },
+        "luckySeat": {
+          "en": "South",
+          "zh": "南",
+          "py": "Nán"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 11
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 11
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": -1
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 6
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 6
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "North",
+          "South",
+          "East",
+          "Southeast"
+        ]
+      }
+    },
+    {
+      "birth": "1996-10-05",
+      "birthTime": "05:55",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-06-06T12:00:00Z",
+      "frozenSgtMs": 1780752600000,
+      "expected": {
+        "dayMaster": "乙 (Wood)",
+        "bodyStatus": "Weak",
+        "gua": "4 (Xun)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "劫财"
+        },
+        "luckyColor": {
+          "name": "Green",
+          "hex": "#22c55e"
+        },
+        "luckySeat": {
+          "en": "East",
+          "zh": "东",
+          "py": "Dōng"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 10
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 8
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 7
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 6
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "North",
+          "South",
+          "East",
+          "Southeast"
+        ]
+      }
+    },
+    {
+      "birth": "2003-08-18",
+      "birthTime": "13:25",
+      "gender": "male",
+      "timeUnknown": true,
+      "now": "2026-09-14T12:00:00Z",
+      "frozenSgtMs": 1789392600000,
+      "expected": {
+        "dayMaster": "癸 (Water)",
+        "bodyStatus": "Strong",
+        "gua": "6 (Qian)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "伤官"
+        },
+        "luckyColor": {
+          "name": "Olive",
+          "hex": "#65a30d"
+        },
+        "luckySeat": {
+          "en": "Southwest",
+          "zh": "西南",
+          "py": "Xīnán"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 2
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          }
+        ],
+        "auspiciousDirs": [
+          "West",
+          "Northeast",
+          "Southwest",
+          "Northwest"
+        ]
+      }
+    },
+    {
+      "birth": "1978-04-09",
+      "birthTime": "20:40",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-04-10T12:00:00Z",
+      "frozenSgtMs": 1775827800000,
+      "expected": {
+        "dayMaster": "辛 (Metal)",
+        "bodyStatus": "Strong",
+        "gua": "2 (Kun)",
+        "luckScore": 6,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "正财"
+        },
+        "luckyColor": {
+          "name": "Teal",
+          "hex": "#14b8a6"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 11
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 10
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 9
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 8
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 3
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Northeast",
+          "West",
+          "Northwest",
+          "Southwest"
+        ]
+      }
+    },
+    {
+      "birth": "1995-01-26",
+      "birthTime": "07:10",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-11-23T12:00:00Z",
+      "frozenSgtMs": 1795440600000,
+      "expected": {
+        "dayMaster": "丁 (Fire)",
+        "bodyStatus": "Weak",
+        "gua": "6 (Qian)",
+        "luckScore": 4,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Olive",
+          "hex": "#65a30d"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "寅",
+          "time": "03:00 - 05:00",
+          "py": "Yín",
+          "endMinute": 300,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 11
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 8
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": -1
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 2
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 6
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "West",
+          "Northeast",
+          "Southwest",
+          "Northwest"
+        ]
+      }
+    },
+    {
+      "birth": "2018-05-06",
+      "birthTime": "17:45",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-08-19T12:00:00Z",
+      "frozenSgtMs": 1787146200000,
+      "expected": {
+        "dayMaster": "戊 (Earth)",
+        "bodyStatus": "Strong",
+        "gua": "6 (Qian)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "七杀"
+        },
+        "luckyColor": {
+          "name": "Teal",
+          "hex": "#14b8a6"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 12
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 10
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 9
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 8
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 8
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 6
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 4
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 4
+          },
+          {
+            "en": "Moving Office",
+            "zh": "搬辦公室",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "West",
+          "Northeast",
+          "Southwest",
+          "Northwest"
+        ]
+      }
+    },
+    {
+      "birth": "2007-09-23",
+      "birthTime": "02:30",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-01-15T12:00:00Z",
+      "frozenSgtMs": 1768483800000,
+      "expected": {
+        "dayMaster": "庚 (Metal)",
+        "bodyStatus": "Strong",
+        "gua": "2 (Kun)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "甲",
+          "pinyin": "Jiǎ",
+          "number": 1,
+          "tenGods": "偏财"
+        },
+        "luckyColor": {
+          "name": "Green",
+          "hex": "#22c55e"
+        },
+        "luckySeat": {
+          "en": "Southwest",
+          "zh": "西南",
+          "py": "Xīnán"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 13
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 9
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 8
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 8
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 2
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 2
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 4
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 4
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 6
+          }
+        ],
+        "auspiciousDirs": [
+          "Northeast",
+          "West",
+          "Northwest",
+          "Southwest"
+        ]
+      }
+    },
+    {
+      "birth": "1965-12-14",
+      "birthTime": "11:50",
+      "gender": "male",
+      "timeUnknown": false,
+      "now": "2026-05-25T12:00:00Z",
+      "frozenSgtMs": 1779715800000,
+      "expected": {
+        "dayMaster": "壬 (Water)",
+        "bodyStatus": "Weak",
+        "gua": "8 (Gen)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "庚",
+          "pinyin": "Gēng",
+          "number": 7,
+          "tenGods": "偏印"
+        },
+        "luckyColor": {
+          "name": "Gold",
+          "hex": "#fbbf24"
+        },
+        "luckySeat": {
+          "en": "Northwest",
+          "zh": "西北",
+          "py": "Xīběi"
+        },
+        "bestTime": {
+          "branch": "亥",
+          "time": "21:00 - 23:00",
+          "py": "Hài",
+          "endMinute": 1380,
+          "isTomorrow": false
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 13
+          },
+          {
+            "en": "Investment",
+            "zh": "立券交易",
+            "element": "Water",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 7
+          },
+          {
+            "en": "Haircut",
+            "zh": "理髮",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Buying Vehicle",
+            "zh": "買車",
+            "element": "Metal",
+            "baseScore": 4,
+            "score": 7
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 1
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 3
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 4
+          },
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": 5
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 5
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    },
+    {
+      "birth": "1999-02-16",
+      "birthTime": "19:20",
+      "gender": "female",
+      "timeUnknown": false,
+      "now": "2026-10-02T12:00:00Z",
+      "frozenSgtMs": 1790947800000,
+      "expected": {
+        "dayMaster": "己 (Earth)",
+        "bodyStatus": "Weak",
+        "gua": "8 (Gen)",
+        "luckScore": 5,
+        "luckyNumber": {
+          "stem": "丙",
+          "pinyin": "Bǐng",
+          "number": 3,
+          "tenGods": "正印"
+        },
+        "luckyColor": {
+          "name": "Pink",
+          "hex": "#ec4899"
+        },
+        "luckySeat": {
+          "en": "West",
+          "zh": "西",
+          "py": "Xī"
+        },
+        "bestTime": {
+          "branch": "丑",
+          "time": "01:00 - 03:00",
+          "py": "Chǒu",
+          "endMinute": 180,
+          "isTomorrow": true
+        },
+        "auspiciousActivities": [
+          {
+            "en": "Praying",
+            "zh": "祈福",
+            "element": "Earth",
+            "baseScore": 8,
+            "score": 11
+          },
+          {
+            "en": "Wedding",
+            "zh": "結婚",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 10
+          },
+          {
+            "en": "Engagement",
+            "zh": "訂婚",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 10
+          },
+          {
+            "en": "Opening Business",
+            "zh": "開市",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 9
+          },
+          {
+            "en": "Networking",
+            "zh": "會友",
+            "element": "Wood",
+            "baseScore": 7,
+            "score": 8
+          },
+          {
+            "en": "Job Interview",
+            "zh": "求職",
+            "element": "Fire",
+            "baseScore": 5,
+            "score": 7
+          },
+          {
+            "en": "Hosting Event",
+            "zh": "宴會",
+            "element": "Fire",
+            "baseScore": 6,
+            "score": 7
+          },
+          {
+            "en": "Learning",
+            "zh": "入學",
+            "element": "Water",
+            "baseScore": 8,
+            "score": 7
+          }
+        ],
+        "inauspiciousActivities": [
+          {
+            "en": "Lawsuits",
+            "zh": "興訟",
+            "element": "Metal",
+            "baseScore": 1,
+            "score": -1
+          },
+          {
+            "en": "Funeral",
+            "zh": "安葬",
+            "element": "Water",
+            "baseScore": 2,
+            "score": 1
+          },
+          {
+            "en": "Renovation",
+            "zh": "動土",
+            "element": "Wood",
+            "baseScore": 3,
+            "score": 3
+          },
+          {
+            "en": "Surgery",
+            "zh": "動手術",
+            "element": "Metal",
+            "baseScore": 2,
+            "score": 4
+          },
+          {
+            "en": "Travel",
+            "zh": "出行",
+            "element": "Wood",
+            "baseScore": 6,
+            "score": 4
+          },
+          {
+            "en": "Starting Project",
+            "zh": "動工",
+            "element": "Wood",
+            "baseScore": 5,
+            "score": 5
+          },
+          {
+            "en": "Moving Home",
+            "zh": "入宅",
+            "element": "Earth",
+            "baseScore": 4,
+            "score": 5
+          },
+          {
+            "en": "Signing Contracts",
+            "zh": "立契",
+            "element": "Metal",
+            "baseScore": 5,
+            "score": 5
+          }
+        ],
+        "auspiciousDirs": [
+          "Southwest",
+          "Northwest",
+          "West",
+          "Northeast"
+        ]
+      }
+    }
+  ]
+}
