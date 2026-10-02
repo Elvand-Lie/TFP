@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Am I Lucky Today? — The Full Picture LLP</title>
+  <meta name="description" content="Free daily luck reading based on your birth chart. Lucky number, direction, time, and activities — calculated using authentic BaZi and Zi Wei Dou Shu methodology. One minute, no signup." />
+  <meta name="author" content="The Full Picture LLP" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.thefullpicture.asia/lucky" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#0F0F10; --dark-grey:#1C1C1E; --panel:#151516; --ivory:#F5F5F2; --beige:#D8CFC4; --muted:#888580;
+      --crimson:#710101; --crimson-text:#E53939; --deep-red:#680806; --gold:#C6A96B; --forest:#1F3A2E;
+      --font-serif:'Cormorant Garamond', Georgia, serif; --font-sans:'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; overflow-x:hidden; }
+    body { background: var(--black); color: var(--ivory); font-family: var(--font-sans); line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity:.025; pointer-events:none; z-index:9999; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px clamp(20px, 3vw, 40px); display:flex; align-items:center; justify-content:space-between; gap:16px; transition:background .4s,border-bottom .4s; }
+    nav.scrolled { background:rgba(15,15,16,.93); backdrop-filter:blur(14px); border-bottom:1px solid rgba(113,1,1,.25); }
+    .nav-logo { font-family:var(--font-serif); font-size:1.2rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--ivory); text-decoration:none; transition:opacity .3s; flex:0 0 auto; }
+    .nav-logo span, .footer-logo span, .page-title em, .section-title em { color:var(--crimson-text); font-weight:600; text-shadow:0 2px 10px rgba(0,0,0,.9); }
+    .nav-links { display:flex; gap:clamp(12px, 1.4vw, 22px); list-style:none; flex:0 1 auto; min-width:0; }
+    .nav-links a { font-size:clamp(.7rem, .9vw, .78rem); font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--beige); text-decoration:none; position:relative; padding-bottom:3px; transition:color .3s; white-space:nowrap; }
+    .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--crimson-text); transform:scaleX(0); transform-origin:right; transition:transform .35s cubic-bezier(.76,0,.24,1); }
+    .nav-links a:hover, .nav-links a.active { color:var(--ivory); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform:scaleX(1); transform-origin:left; }
+    .nav-cta { font-size:.78rem; font-weight:600; letter-spacing:.13em; text-transform:uppercase; color:var(--ivory); border:2px solid var(--crimson); padding:10px 20px; text-decoration:none; white-space:nowrap; flex:0 0 auto; }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+    .hamburger span { width:24px; height:2px; background:var(--ivory); display:block; }
+    .mobile-nav { position:fixed; inset:0; background:var(--black); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:60px 24px; opacity:0; visibility:hidden; transition:opacity .4s,visibility .4s; overflow-y:auto; }
+    .mobile-nav.open { opacity:1; visibility:visible; }
+    .mobile-nav a { font-family:var(--font-serif); font-size:1.65rem; color:var(--ivory); text-decoration:none; letter-spacing:.08em; }
+    .mobile-nav-close { position:absolute; top:28px; right:40px; font-size:1.8rem; color:var(--muted); cursor:pointer; background:none; border:none; }
+    .shell { width:min(1240px, calc(100% - 80px)); margin:0 auto; }
+    #tool-head { padding:170px 0 42px; border-bottom:1px solid rgba(113,1,1,.18); position:relative; overflow:hidden; overflow-x:clip; }
+    .hero-mark { position:absolute; right:4vw; top:70px; font-family:var(--font-serif); font-size:clamp(10rem,20vw,22rem); line-height:1; color:rgba(113,1,1,.45); pointer-events:none; max-width:100%; }
+    .tool-grid { display:grid; grid-template-columns:1.15fr minmax(0,.85fr); gap:56px; align-items:end; position:relative; z-index:2; }
+    .tool-grid > *, .gate-grid > *, .date-panel, .gate-panel, .info-card, .activity-card { min-width:0; }
+    .eyebrow { font-size:.78rem; font-weight:600; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+    .page-title { font-family:var(--font-serif); font-size:clamp(3.2rem,5vw,5.6rem); font-weight:400; line-height:1.04; margin-bottom:22px; }
+    .page-copy { color:rgba(245,245,242,.78); max-width:620px; font-size:1rem; }
+    .date-panel { border:1px solid rgba(229,57,57,.22); background:rgba(28,28,30,.72); padding:24px; border-radius:6px; }
+    .date-label { font-size:.72rem; font-weight:600; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+    input, select { width:100%; min-width:0; min-height:44px; color:var(--ivory); background:#1C1C1E; border:1px solid rgba(229,57,57,.24); border-radius:4px; padding:0 12px; font-family:var(--font-sans); }
+    select option { background:#1C1C1E; color:var(--ivory); }
+    .status { margin-top:14px; min-height:22px; color:var(--gold); font-size:.86rem; }
+    .status.error { color:var(--crimson-text); }
+    .band { padding:70px 0; border-bottom:1px solid rgba(113,1,1,.16); }
+    .band.alt { background:var(--dark-grey); }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:32px; }
+    .section-title { font-family:var(--font-serif); font-size:clamp(2.2rem,3.4vw,3.5rem); font-weight:400; line-height:1.15; }
+    .muted { color:var(--muted); }
+    .gate-grid { display:grid; grid-template-columns:.95fr 1.05fr; gap:34px; align-items:start; }
+    .gate-panel { border:1px solid rgba(229,57,57,.22); background:var(--black); border-radius:6px; padding:26px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .form-group.full { grid-column:1/-1; }
+    .check-row { display:flex; align-items:flex-start; gap:10px; color:rgba(245,245,242,.76); font-size:.86rem; line-height:1.5; }
+    .check-row input { width:18px; min-height:18px; height:18px; margin-top:3px; flex:0 0 auto; accent-color:var(--crimson); }
+    label { font-size:.68rem; font-weight:600; letter-spacing:.16em; color:var(--gold); text-transform:uppercase; }
+    .gender-row { display:flex; gap:22px; }
+    .gender-row .check-row { cursor:pointer; }
+    .action-btn { min-height:44px; border-radius:4px; border:1px solid var(--crimson); background:var(--crimson); color:var(--ivory); display:inline-flex; align-items:center; justify-content:center; gap:10px; cursor:pointer; font-family:var(--font-sans); font-size:.78rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; transition:background .2s,border-color .2s; width:100%; margin-top:18px; padding:0 20px; }
+    .action-btn:hover { background:rgba(229,57,57,.16); border-color:var(--crimson-text); }
+    .action-btn:disabled { opacity:.6; cursor:wait; }
+    .method-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(113,1,1,.2); margin-top:30px; }
+    .method-card { background:var(--panel); padding:24px; }
+    .method-card small { display:block; color:var(--gold); font-size:.68rem; font-weight:600; letter-spacing:.17em; text-transform:uppercase; margin-bottom:10px; }
+    .method-card h3 { font-family:var(--font-serif); font-size:1.45rem; font-weight:500; margin-bottom:10px; }
+    .method-card p { color:rgba(245,245,242,.72); font-size:.92rem; }
+    #results-band { display:none; }
+    #results-band.visible { display:block; }
+    .score-hero { display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
+    .score { width:110px; height:110px; border-radius:50%; border:1px solid rgba(198,169,107,.45); display:flex; align-items:baseline; justify-content:center; font-family:var(--font-serif); color:var(--gold); flex-shrink:0; }
+    .score strong { font-size:3rem; font-weight:500; line-height:1; align-self:center; }
+    .score span { font-size:1rem; color:var(--muted); }
+    .score-meta h3 { font-family:var(--font-serif); font-size:2rem; font-weight:500; }
+    .score-meta p { color:rgba(245,245,242,.72); max-width:640px; font-size:.94rem; margin-top:8px; }
+    .reading-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(113,1,1,.2); margin-top:34px; }
+    .info-card { background:var(--black); padding:26px; min-height:170px; }
+    .info-card small { display:block; color:var(--gold); font-size:.68rem; font-weight:600; letter-spacing:.17em; text-transform:uppercase; margin-bottom:10px; }
+    .info-card h3 { font-family:var(--font-serif); font-size:1.5rem; font-weight:500; margin-bottom:8px; }
+    .info-card .sub { color:var(--muted); font-size:.88rem; }
+    .color-swatch { display:inline-block; width:16px; height:16px; border-radius:50%; border:1px solid rgba(245,245,242,.4); margin-right:8px; vertical-align:-2px; }
+    .activity-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(113,1,1,.2); margin-top:1px; }
+    .activity-card { background:var(--panel); padding:24px; }
+    .activity-card.favour { background:var(--black); }
+    .activity-card small { display:block; color:var(--gold); font-size:.68rem; font-weight:600; letter-spacing:.17em; text-transform:uppercase; margin-bottom:14px; }
+    .activity-card.avoid-card small { color:var(--crimson-text); }
+    .activity-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .activity-list li { display:flex; justify-content:space-between; gap:14px; border-bottom:1px solid rgba(113,1,1,.14); padding-bottom:10px; font-size:.94rem; }
+    .activity-list li:last-child { border-bottom:none; padding-bottom:0; }
+    .activity-list .zh { color:var(--muted); font-size:.86rem; white-space:nowrap; }
+    .tomorrow-note { margin-top:10px; color:var(--muted); font-size:.84rem; }
+    .chart-note { margin-top:26px; color:rgba(245,245,242,.72); font-size:.92rem; max-width:860px; }
+    .chart-note a { color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(198,169,107,.4); }
+    .after-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:44px; align-items:start; border-top:1px solid rgba(113,1,1,.18); padding-top:32px; }
+    .after-grid h4 { font-family:var(--font-serif); font-size:1.4rem; font-weight:500; margin-bottom:10px; }
+    .after-grid p { color:rgba(245,245,242,.72); font-size:.9rem; margin-bottom:14px; }
+    .text-btn { display:inline-flex; align-items:center; gap:8px; color:var(--gold); border:1px solid rgba(198,169,107,.4); background:none; padding:10px 18px; border-radius:4px; font-family:var(--font-sans); font-size:.76rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; text-decoration:none; transition:background .2s; }
+    .text-btn:hover { background:rgba(198,169,107,.12); }
+    .share-row { display:flex; gap:10px; }
+    .share-btn { width:42px; height:42px; border-radius:50%; border:1px solid rgba(198,169,107,.4); background:none; color:var(--beige); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:border-color .2s,color .2s; }
+    .share-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .modal-backdrop { position:fixed; inset:0; z-index:1000; display:none; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.66); }
+    .modal-backdrop.open { display:flex; }
+    .modal { position:relative; background:#fff; border-radius:12px; width:min(500px, 100%); overflow:hidden; }
+    .modal-close { position:absolute; top:10px; right:10px; z-index:2; width:34px; height:34px; border-radius:50%; border:none; background:rgba(255,255,255,.92); color:#555; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+    .modal iframe { width:100%; height:600px; border:0; display:block; background:#fff; }
+    .whatsapp-band { padding:64px 0; }
+    .whatsapp-inner { display:grid; grid-template-columns:1fr auto; gap:28px; align-items:center; }
+    .whatsapp-inner h2 { font-family:var(--font-serif); font-size:clamp(1.8rem,3vw,2.6rem); font-weight:400; }
+    .whatsapp-btn { display:inline-flex; align-items:center; gap:10px; border:1px solid rgba(198,169,107,.5); color:var(--gold); padding:14px 26px; border-radius:4px; text-decoration:none; font-size:.8rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; transition:background .2s; }
+    .whatsapp-btn:hover { background:rgba(198,169,107,.12); }
+    footer { padding:64px 0 40px; border-top:1px solid rgba(113,1,1,.18); }
+    .footer-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px; }
+    .footer-logo { font-family:var(--font-serif); font-size:1.15rem; letter-spacing:.2em; text-transform:uppercase; }
+    .footer-tagline { color:var(--muted); font-size:.88rem; margin-top:14px; max-width:340px; }
+    .footer-col-title { font-size:.7rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+    .footer-links { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .footer-links a { color:var(--beige); text-decoration:none; font-size:.88rem; transition:color .2s; }
+    .footer-links a:hover { color:var(--ivory); }
+    .footer-bottom { display:flex; justify-content:space-between; gap:18px; margin-top:44px; padding-top:22px; border-top:1px solid rgba(113,1,1,.14); color:var(--muted); font-size:.8rem; }
+    .footer-bottom-links { display:flex; gap:18px; }
+    .footer-bottom-links a { color:var(--muted); text-decoration:none; }
+    @media(max-width:900px){ .tool-grid,.gate-grid,.whatsapp-inner,.after-grid,.activity-grid{grid-template-columns:1fr;} .method-grid,.reading-grid{grid-template-columns:1fr;} .footer-top{grid-template-columns:1fr 1fr;} }
+    @media(max-width:640px){ #tool-head{padding:132px 0 34px;} .shell{width:calc(100% - 32px);} .page-title{font-size:clamp(2.6rem,11vw,3.6rem);} .form-grid{grid-template-columns:1fr;} .footer-top{grid-template-columns:1fr;} .section-head{flex-direction:column; align-items:flex-start;} .footer-bottom{flex-direction:column;} .mobile-nav-close{right:24px;} .nav-links{display:none;} .nav-cta{display:none;} .hamburger{display:flex;} }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <a class="nav-logo" href="/" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
+      <img src="/assets/logo.png" alt="The Full Picture Logo" style="height:76px;width:auto;display:block;" />
+      <div style="font-size:1rem;line-height:1;">The <span>Full</span> Picture</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/founder">Founder</a></li>
+      <li><a href="/services">Services</a></li>
+      <li><a href="/bazi">BaZi</a></li>
+      <li><a href="/zwds">ZWDS (紫微)</a></li>
+      <li><a href="/daily-almanac">Daily Almanac (通书)</a></li>
+      <li><a href="/lucky" class="active">Lucky Today (运)</a></li>
+      <li><a href="/insights">Insights</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Book a Consultation</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileClose">×</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/founder">Founder</a>
+    <a href="/services">Services</a>
+    <a href="/bazi">BaZi</a>
+    <a href="/zwds">ZWDS (紫微)</a>
+    <a href="/daily-almanac">Daily Almanac (通书)</a>
+    <a href="/lucky" class="active">Lucky Today (运)</a>
+    <a href="/insights">Insights</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <section id="tool-head">
+    <div class="hero-mark">运</div>
+    <div class="shell tool-grid">
+      <div>
+        <p class="eyebrow">Daily Luck · 今日运</p>
+        <h1 class="page-title">Am I <em>Lucky</em> Today?</h1>
+        <p class="page-copy">Discover your daily luck in one minute. Enter your birth details below to calculate your personal energetic alignment for today.</p>
+      </div>
+      <div class="date-panel">
+        <p class="date-label">Input Your Details</p>
+        <form id="luckForm" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="birthYear">Date of Birth</label>
+              <select id="birthYear" aria-label="Year of birth"></select>
+            </div>
+            <div class="form-group">
+              <label for="birthMonth">&nbsp;</label>
+              <select id="birthMonth" aria-label="Month of birth"></select>
+            </div>
+            <div class="form-group">
+              <label for="birthDay">&nbsp;</label>
+              <select id="birthDay" aria-label="Day of birth"></select>
+            </div>
+            <div class="form-group">
+              <label for="birthHour">Time of Birth</label>
+              <select id="birthHour" aria-label="Hour of birth"></select>
+            </div>
+            <div class="form-group">
+              <label for="birthMinute">&nbsp;</label>
+              <select id="birthMinute" aria-label="Minute of birth"></select>
+            </div>
+            <div class="form-group full">
+              <label class="check-row" for="timeUnknown">
+                <input type="checkbox" id="timeUnknown" />
+                <span>I don't know my birth time</span>
+              </label>
+            </div>
+            <div class="form-group full">
+              <label>Gender</label>
+              <div class="gender-row">
+                <label class="check-row">
+                  <input type="radio" name="gender" value="female" checked />
+                  <span>Female</span>
+                </label>
+                <label class="check-row">
+                  <input type="radio" name="gender" value="male" />
+                  <span>Male</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <button class="action-btn" id="submitBtn" type="submit">Check My Luck Today</button>
+          <div class="status" id="statusText" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="results-band" aria-live="polite">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Your Reading</p>
+          <h2 class="section-title">Your Luck Score <em>Today</em></h2>
+        </div>
+        <p class="muted" id="readingDate"></p>
+      </div>
+      <div class="score-hero">
+        <div class="score" id="scoreCircle"><strong id="scoreValue">–</strong><span>/10</span></div>
+        <div class="score-meta">
+          <h3 id="scoreLabel"></h3>
+          <p>Your alignment with today's elemental energy, based on your BaZi chart. Higher scores mean today's qi naturally supports your Day Master. Lower scores call for caution and restraint.</p>
+        </div>
+      </div>
+      <div class="reading-grid">
+        <article class="info-card">
+          <small>Lucky Number</small>
+          <h3><span id="luckyNumber">–</span> <span class="sub" id="luckyStem"></span></h3>
+          <p class="sub" id="luckyTenGods"></p>
+        </article>
+        <article class="info-card">
+          <small>Lucky Color</small>
+          <h3><span class="color-swatch" id="colorSwatch"></span><span id="luckyColor">–</span></h3>
+        </article>
+        <article class="info-card">
+          <small>Face This Direction Today</small>
+          <h3 id="luckyDirection">–</h3>
+          <p class="sub" id="luckyDirectionCn"></p>
+          <p class="sub" style="margin-top:10px;">Position yourself with this direction in front of you — at your desk, in meetings, or when making major decisions. At night, sleep with your head pointing this way.</p>
+        </article>
+        <article class="info-card">
+          <small>Best Time of Day</small>
+          <h3 id="bestTime">–</h3>
+          <p class="sub" id="bestTimeBranch"></p>
+          <p class="tomorrow-note" id="bestTimeNote"></p>
+        </article>
+        <article class="info-card">
+          <small>Day Master</small>
+          <h3 id="dayMaster">–</h3>
+        </article>
+        <article class="info-card">
+          <small>Body Status · Gua</small>
+          <h3 id="bodyStatus">–</h3>
+          <p class="sub" id="guaNumber"></p>
+        </article>
+      </div>
+      <div class="activity-grid">
+        <article class="activity-card favour">
+          <small>Auspicious Activities</small>
+          <ul class="activity-list" id="auspiciousList"></ul>
+        </article>
+        <article class="activity-card avoid-card">
+          <small>Activities to Avoid</small>
+          <ul class="activity-list" id="avoidList"></ul>
+        </article>
+      </div>
+      <p class="chart-note">This is a simplified daily reading using condensed BaZi and Eight Mansions algorithms. For your complete chart with full 4-pillar analysis and monthly forecasts, <a href="https://amiluckytoday.app/deep-dive" target="_blank" rel="noopener noreferrer">see the 30-Day Deep Dive Report →</a></p>
+      <div class="after-grid">
+        <div>
+          <h4>Email My Reading</h4>
+          <p>Get early access to your Lite PDF report — launching soon.</p>
+          <button class="text-btn" id="emailBtn" type="button">Email My Reading →</button>
+        </div>
+        <div style="text-align:right;">
+          <h4>Share your luck</h4>
+          <div class="share-row" style="justify-content:flex-end;">
+            <button class="share-btn" data-share="whatsapp" type="button" aria-label="Share on WhatsApp"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.967-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.7 0-3.29-.45-4.667-1.236l-.334-.198-3.461.99.937-3.568-.215-.351A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg></button>
+            <button class="share-btn" data-share="telegram" type="button" aria-label="Share on Telegram"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M21.945 3.684l-3.12 14.712c-.235 1.038-.85 1.296-1.723.807l-4.76-3.507-2.297 2.21c-.254.254-.467.467-.957.467l.341-4.844 8.823-7.973c.384-.341-.083-.531-.595-.19L6.816 12.2l-4.69-1.466c-1.02-.318-1.038-1.02.212-1.509l18.3-7.054c.849-.318 1.592.19 1.607 1.512z"/></svg></button>
+            <button class="share-btn" data-share="facebook" type="button" aria-label="Share on Facebook"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></button>
+            <button class="share-btn" data-share="copy" type="button" aria-label="Copy link"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">How It Works</p>
+          <h2 class="section-title">Three Steps to Your <em>Reading</em></h2>
+        </div>
+      </div>
+      <div class="method-grid">
+        <article class="method-card">
+          <small>Step 1</small>
+          <h3>Input Your Details</h3>
+          <p>Provide your birth date, time, and gender to generate your unique natal chart.</p>
+        </article>
+        <article class="method-card">
+          <small>Step 2</small>
+          <h3>Algorithm Analysis</h3>
+          <p>The system compares your natal chart against today's specific elemental energies.</p>
+        </article>
+        <article class="method-card">
+          <small>Step 3</small>
+          <h3>Get Your Reading</h3>
+          <p>Receive instant, actionable advice on how to navigate your day effectively.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">What Your Reading Includes</p>
+          <h2 class="section-title">Your Daily Energetic <em>Profile</em></h2>
+        </div>
+      </div>
+      <div class="method-grid">
+        <article class="method-card"><small>Luck Score /10</small><h3>Overall Momentum</h3><p>A quick metric to gauge your overall momentum for the day.</p></article>
+        <article class="method-card"><small>Lucky Number</small><h3>Aligned Digit</h3><p>Your mathematically aligned digit based on daily Qi.</p></article>
+        <article class="method-card"><small>Lucky Facing Direction</small><h3>Where to Face</h3><p>The direction to face for important meetings, work, and rest.</p></article>
+        <article class="method-card"><small>Best Time of Day</small><h3>Peak Window</h3><p>The specific two-hour window where your energy peaks.</p></article>
+        <article class="method-card"><small>Auspicious Activities</small><h3>Supported Actions</h3><p>Actions highly supported by today's elemental flow.</p></article>
+        <article class="method-card"><small>Activities to Avoid</small><h3>Where Friction Lives</h3><p>Endeavors likely to face friction or unnecessary obstacles.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="whatsapp-band">
+    <div class="shell whatsapp-inner">
+      <div>
+        <p class="eyebrow" style="color:rgba(245,245,242,.75);">Want More Than a Day?</p>
+        <h2>Discuss your chart with an advisor.</h2>
+      </div>
+      <a class="whatsapp-btn" href="https://wa.me/6588257687" target="_blank" rel="noopener noreferrer">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.967-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18c-1.7 0-3.29-.45-4.667-1.236l-.334-.198-3.461.99.937-3.568-.215-.351A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="shell">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">The <span>Full</span> Picture <span style="text-shadow:none;color:rgba(113,1,1,.6);">LLP</span></div>
+          <p class="footer-tagline">A premium metaphysics and life strategy consultancy combining ancient wisdom with modern strategy.</p>
+        </div>
+        <div>
+          <p class="footer-col-title">Navigate</p>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/founder">Founder</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/bazi">BaZi</a></li>
+            <li><a href="/zwds">ZWDS (紫微)</a></li>
+            <li><a href="/daily-almanac">Daily Almanac</a></li>
+            <li><a href="/lucky">Lucky Today</a></li>
+            <li><a href="/insights">Insights</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Services</p>
+          <ul class="footer-links">
+            <li><a href="/services#personal">Personal Destiny</a></li>
+            <li><a href="/services#fengshui">Feng Shui Advisory</a></li>
+            <li><a href="/services#courses">Masterclasses</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-links">
+            <li><a href="/contact">Book a Consultation</a></li>
+            <li><a href="https://wa.me/6588257687">WhatsApp</a></li>
+            <li><a href="/contact">General Enquiry</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 The Full Picture LLP. All rights reserved.</span>
+        <div class="footer-bottom-links"><a href="/privacy">Privacy Policy</a><a href="#">Terms of Use</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="emailModal" role="dialog" aria-modal="true" aria-label="Email my reading">
+    <div class="modal" id="emailModalPanel">
+      <button class="modal-close" id="emailModalClose" type="button" aria-label="Close">×</button>
+      <iframe src="https://preview.mailerlite.io/forms/2384342/188696753944397605/share" title="MailerLite Subscription Form"></iframe>
+    </div>
+  </div>
+
+  <script src="/assets/lunar.js"></script>
+  <script src="/assets/luck-engine.js"></script>
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40));
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+    const $ = (id) => document.getElementById(id);
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const pad = (n) => String(n).padStart(2, '0');
+    const now = new Date();
+    const THIS_YEAR = now.getFullYear();
+
+    function fillSelect(sel, values, labelFirst) {
+      sel.innerHTML = '';
+      if (labelFirst) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = labelFirst;
+        sel.appendChild(opt);
+      }
+      values.forEach((v) => {
+        const opt = document.createElement('option');
+        opt.value = Array.isArray(v) ? v[0] : v;
+        opt.textContent = Array.isArray(v) ? v[1] : v;
+        sel.appendChild(opt);
+      });
+    }
+
+    const years = [];
+    for (let y = THIS_YEAR; y >= 1900; y--) years.push(String(y));
+    fillSelect($('birthYear'), years, 'Year');
+    fillSelect($('birthMonth'), MONTHS.map((m, i) => [pad(i + 1), m]), 'Month');
+    fillSelect($('birthHour'), Array.from({ length: 24 }, (_, i) => pad(i)), 'Hour');
+    fillSelect($('birthMinute'), Array.from({ length: 60 }, (_, i) => pad(i)), 'Minute');
+    fillSelect($('birthDay'), [], 'Day');
+
+    function fillDays() {
+      const y = parseInt($('birthYear').value, 10);
+      const m = parseInt($('birthMonth').value, 10);
+      const daySel = $('birthDay');
+      const previous = daySel.value;
+      const count = y && m ? new Date(y, m, 0).getDate() : 31;
+      fillSelect(daySel, Array.from({ length: count }, (_, i) => pad(i + 1)), 'Day');
+      if (previous && parseInt(previous, 10) <= count) daySel.value = previous;
+    }
+    $('birthYear').addEventListener('change', fillDays);
+    $('birthMonth').addEventListener('change', fillDays);
+
+    $('timeUnknown').addEventListener('change', (e) => {
+      $('birthHour').disabled = e.target.checked;
+      $('birthMinute').disabled = e.target.checked;
+    });
+
+    let lastReading = null;
+
+    $('luckForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const status = $('statusText');
+      status.classList.remove('error');
+      const y = $('birthYear').value;
+      const m = $('birthMonth').value;
+      const d = $('birthDay').value;
+      if (!y || !m || !d) {
+        status.classList.add('error');
+        status.textContent = 'Please select your date of birth.';
+        return;
+      }
+      const unknown = $('timeUnknown').checked;
+      const h = $('birthHour').value;
+      const mi = $('birthMinute').value;
+      if (!unknown && (!h || !mi)) {
+        status.classList.add('error');
+        status.textContent = 'Please select your time of birth, or tick "I don\'t know my birth time".';
+        return;
+      }
+      const gender = document.querySelector('input[name="gender"]:checked').value;
+      const btn = $('submitBtn');
+      btn.disabled = true;
+      status.textContent = 'Consulting today\'s qi...';
+      setTimeout(() => {
+        try {
+          const reading = LuckEngine.computeDailyLuck(
+            `${y}-${parseInt(m, 10)}-${parseInt(d, 10)}`,
+            unknown ? null : `${h}:${mi}`,
+            gender,
+            unknown
+          );
+          lastReading = reading;
+          renderReading(reading);
+          status.textContent = '';
+          setTimeout(() => document.getElementById('results-band').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        } catch (err) {
+          status.classList.add('error');
+          status.textContent = 'Something went wrong calculating your reading. Please try again.';
+        } finally {
+          btn.disabled = false;
+        }
+      }, 600);
+    });
+
+    function renderReading(r) {
+      const label = LuckEngine.scoreLabel(r.luckScore);
+      $('scoreValue').textContent = r.luckScore;
+      $('scoreLabel').textContent = `${label.en} · ${label.zh}`;
+      $('readingDate').textContent = new Date().toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      $('luckyNumber').textContent = r.luckyNumber.number;
+      $('luckyStem').textContent = `${r.luckyNumber.stem} (${r.luckyNumber.pinyin})`;
+      $('luckyTenGods').textContent = r.luckyNumber.tenGods ? `Ten Gods: ${r.luckyNumber.tenGods}` : '';
+      $('luckyColor').textContent = r.luckyColor.name;
+      $('colorSwatch').style.background = r.luckyColor.hex;
+      $('luckyDirection').textContent = r.luckySeat.en;
+      $('luckyDirectionCn').textContent = `${r.luckySeat.zh} (${r.luckySeat.py})`;
+      $('bestTime').textContent = r.bestTime.time;
+      $('bestTimeBranch').textContent = `${r.bestTime.branch} (${r.bestTime.py})`;
+      $('bestTimeNote').textContent = r.bestTime.isTomorrow
+        ? "Today's beneficial hours have passed. Use this window tomorrow."
+        : '';
+      $('dayMaster').textContent = r.dayMaster;
+      $('bodyStatus').textContent = r.bodyStatus;
+      $('guaNumber').textContent = `Gua Number: ${r.gua}`;
+      const fillList = (el, items) => {
+        el.innerHTML = '';
+        items.forEach((a) => {
+          const li = document.createElement('li');
+          const span = document.createElement('span');
+          span.textContent = a.en;
+          const zh = document.createElement('span');
+          zh.className = 'zh';
+          zh.textContent = a.zh;
+          li.append(span, zh);
+          el.appendChild(li);
+        });
+      };
+      fillList($('auspiciousList'), r.auspiciousActivities);
+      fillList($('avoidList'), r.inauspiciousActivities);
+      document.getElementById('results-band').classList.add('visible');
+    }
+
+    const SHARE_URL = location.origin + '/lucky';
+    function shareText() {
+      const score = lastReading ? lastReading.luckScore : null;
+      return score !== null
+        ? `I scored ${score}/10 on Am I Lucky Today — check yours: ${SHARE_URL}`
+        : `Check your daily luck: ${SHARE_URL}`;
+    }
+    document.querySelectorAll('.share-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const kind = btn.dataset.share;
+        const text = encodeURIComponent(shareText());
+        if (kind === 'copy') {
+          navigator.clipboard.writeText(shareText()).catch(() => {});
+          return;
+        }
+        let url = '';
+        if (kind === 'whatsapp') url = `https://wa.me/?text=${text}`;
+        if (kind === 'telegram') url = `https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${text}`;
+        if (kind === 'facebook') url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}`;
+        if (url) window.open(url, '_blank', 'noopener');
+      });
+    });
+
+    const emailModal = $('emailModal');
+    $('emailBtn').addEventListener('click', () => emailModal.classList.add('open'));
+    $('emailModalClose').addEventListener('click', () => emailModal.classList.remove('open'));
+    emailModal.addEventListener('click', (e) => { if (e.target === emailModal) emailModal.classList.remove('open'); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') emailModal.classList.remove('open'); });
+  </script>
+</body>
+</html>
