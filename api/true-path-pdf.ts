@@ -119,6 +119,9 @@ export default async function handler(req: any, res: any) {
   } catch (error: any) {
     // The usual cause is a missing font file, which would otherwise emit tofu boxes.
     console.error('[true-path] pdf render failure:', error);
-    return res.status(500).json({ error: 'Could not generate that PDF right now' });
+    return res.status(500).json({
+      error: 'Could not generate that PDF right now',
+      detail: String(error && error.message || error).slice(0, 300)
+    });
   }
 }
