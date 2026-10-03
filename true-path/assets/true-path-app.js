@@ -69,22 +69,36 @@
 
   // ─── config ───────────────────────────────────────────────────────────────
 
+  var CONFIG_CACHE_KEY = 'tfp.truepath.config.v2';
+
   function loadConfig() {
     var override = (root.TP_CONFIG || {}).canonical;
     if (override) return Promise.resolve(override);
     // A hung fetch would otherwise leave the static shell on screen with no bound controls —
-    // a page that looks fine but ignores every click. Time it out and try once more.
+    // a page that looks fine but ignores every click. Time it out, retry once, and if the
+    // network is simply dead fall back to the last copy that loaded.
     function attempt() {
       var controller = new AbortController();
-      var timer = setTimeout(function () { controller.abort(); }, 8000);
+      var timer = setTimeout(function () { controller.abort(); }, 5000);
       return fetch(CONFIG_URL, { credentials: 'same-origin', signal: controller.signal })
         .then(function (response) {
           if (!response.ok) throw new Error('True Path config unavailable (' + response.status + ')');
           return response.json();
         })
+        .then(function (canonical) {
+          try { localStorage.setItem(CONFIG_CACHE_KEY, JSON.stringify(canonical)); } catch (error) { /* quota */ }
+          return canonical;
+        })
         .finally(function () { clearTimeout(timer); });
     }
-    return attempt().catch(function () { return attempt(); });
+    return attempt().catch(function () {
+      return attempt().catch(function () {
+        var cached = null;
+        try { cached = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || 'null'); } catch (error) { cached = null; }
+        if (cached) return cached;
+        throw new Error('True Path config unreachable and no cached copy');
+      });
+    });
   }
 
   function prepare(canonical) {
