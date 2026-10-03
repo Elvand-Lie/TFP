@@ -20,6 +20,9 @@
 
   function esc(value) {
     return String(value === null || value === undefined ? '' : value)
+      .replace(/[‘’‛]/g, "'")
+      .replace(/[“”‟]/g, '"')
+      .replace(/…/g, '...')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -326,7 +329,7 @@
   .reflection li { font-size:8.5pt; line-height:1.45; margin-bottom:1mm; }
 
   .cta {
-    margin-top:4mm;
+    margin-top:3mm;
     padding:4mm;
     background:#FAF7F2;
     border:1px solid #A8823F;
@@ -446,7 +449,7 @@
       <div class="role-sub">${esc(role && role.subtitle)}</div>
       <div class="role-copy">${esc(role && role.oneLine)}</div>
       <div class="role-list">${chipList(role && role.naturalStrengths)}</div>
-      <div class="role-copy"><b>${esc(role && role.contribution)}</b></div>
+      <div class="role-copy">${esc(role && role.contribution)}</div>
     </div>
   </div>
 
