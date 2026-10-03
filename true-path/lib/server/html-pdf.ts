@@ -103,14 +103,31 @@ export async function renderTruePathHtmlPdf(model: any, deps?: { executablePath?
 
     const page = await browser.newPage();
     await page.setContent(buildReportDocumentHtml(model), { waitUntil: 'networkidle0', timeout: 30000 });
-    const pdf: Buffer = await page.pdf({
+    const raw: Buffer = await page.pdf({
       format: 'A4',
       printBackground: true,
       preferCSSPageSize: true,
       margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' }
     });
     await page.close();
-    return Buffer.from(pdf);
+    // Chromium emits /Title from the <title> but never /Author; C14 requires a personalised
+    // title and "The Full Picture" as author, with the record's own creation instant.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { PDFDocument } = require('pdf-lib');
+    const doc = await PDFDocument.load(raw);
+    const firstName = model.profile && typeof model.profile.firstName === 'string' ? model.profile.firstName : '';
+    doc.setTitle('True Path Report' + (firstName ? ' — ' + firstName : ''));
+    doc.setAuthor('The Full Picture');
+    doc.setCreator('The Full Picture');
+    doc.setSubject('True Path 轨道 — 3-page report');
+    if (model.createdAt) {
+      const created = new Date(String(model.createdAt));
+      if (!isNaN(created.getTime())) {
+        doc.setCreationDate(created);
+        doc.setModificationDate(created);
+      }
+    }
+    return Buffer.from(await doc.save());
   } finally {
     await browser.close().catch(() => undefined);
   }

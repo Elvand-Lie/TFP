@@ -34,6 +34,7 @@
     "bazi-calculator-by-alvamind": "^1.0.2",
     "docx": "^9.6.1",
     "lunar-javascript": "^1.7.7",
+    "pdf-lib": "^1.17.1",
     "pdfmake": "^0.3.8",
     "puppeteer-core": "^25.12.0",
     "qimen-dunjia": "^2.1.0",
