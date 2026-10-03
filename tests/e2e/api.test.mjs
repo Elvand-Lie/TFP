@@ -88,7 +88,7 @@ test('save: a valid journey is persisted and returns the full canonical envelope
     // The response carries the recomputed record, so the page renders exactly what was stored.
     assert.ok(saved.body.record, 'the response must carry the stored record');
     assert.equal(saved.body.record.resultId, saved.body.resultId);
-    assert.equal(saved.body.record.schemaVersion, '2.1');
+    assert.equal(saved.body.record.schemaVersion, '2.2');
 
     // And a link that can be emailed or revisited.
     assert.equal(saved.body.reportUrl, `/true-path/report/${saved.body.resultId}`);

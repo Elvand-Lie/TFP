@@ -90,6 +90,7 @@ export type JourneyInputs = {
   suggestedKeys: string[];
   attribution: { utm_source: string | null; utm_campaign: string | null; device: string };
   locale: string;
+  firstName: string | null;
 };
 
 const DEVICE_CLASSES = ['mobile', 'tablet', 'desktop'];
@@ -243,6 +244,25 @@ export function validateJourneyInputs(
 
   const locale = shortString(source.locale) || 'en';
 
+  // v2.2 C1: the visitor's first name travels with the journey and is re-validated here with the
+  // brief's rule; anything that does not pass is treated as no name rather than an error, so an
+  // old client that never sends a name keeps working.
+  const profileSource = isPlainObject(source.profile) ? source.profile : {};
+  const leadSource = isPlainObject(source.lead) ? source.lead : {};
+  const rawName =
+    typeof profileSource.firstName === 'string'
+      ? profileSource.firstName
+      : typeof leadSource.firstName === 'string'
+        ? leadSource.firstName
+        : '';
+  const trimmedName = rawName.trim().replace(/\s+/g, ' ').slice(0, 30);
+  const firstName =
+    trimmedName && /^[\p{L}\p{M}][\p{L}\p{M} '.’-]{0,29}$/u.test(trimmedName)
+      ? trimmedName === trimmedName.toLowerCase()
+        ? trimmedName.charAt(0).toUpperCase() + trimmedName.slice(1)
+        : trimmedName
+      : null;
+
   if (issues.length) return { ok: false, issues };
 
   return {
@@ -254,6 +274,7 @@ export function validateJourneyInputs(
       suggestedKeys,
       attribution,
       locale,
+      firstName,
     },
   };
 }
@@ -271,6 +292,7 @@ export function fingerprintInputs(inputs: JourneyInputs): string {
     picks: inputs.picks.map((pick) => [pick.screenId, pick.key]),
     suggested: inputs.suggestedKeys,
     locale: inputs.locale,
+    name: inputs.firstName,
   });
 
   return crypto.createHash('sha256').update(canonicalShape).digest('hex');
@@ -329,6 +351,7 @@ export function buildRecordFromInputs(
       createdAt: meta.createdAt,
       locale: inputs.locale,
       attribution: inputs.attribution,
+      profile: { firstName: inputs.firstName },
     },
   });
 }

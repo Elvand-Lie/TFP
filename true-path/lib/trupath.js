@@ -61,7 +61,7 @@
       talent,
       triangle,
       direction: buildDirectionSection(picks, ikigaiConfig, truthPath),
-      valueCreation: buildValueCreation(talent, triangle, picks, truthPath),
+      valueCreation: buildValueCreation(talent, triangle, picks, ikigaiConfig, truthPath),
       alignment: buildAlignmentChecks(talent, triangle, picks, ikigaiConfig, truthPath),
       reflectionPrompts: truthPath.reflectionPrompts,
       disclaimer: truthPath.disclaimer
@@ -122,21 +122,44 @@
   }
 
   /**
-   * Brief 7.4: value creation style = talent verb + role verb + impact phrase.
+   * Brief 7.4 / v2.2 C8: value creation style = talent verb + role verb + impact phrase.
+   *
+   * C8 duplicate rule: if the impact phrase shares a MAIN word with the role phrase, use the
+   * visitor's NEXT I-4 pick instead; only when no other pick exists is the phrase used anyway.
    */
-  function buildValueCreation(talent, triangle, picks, truthPath) {
+  function mainWords(phrase) {
+    const stop = new Set(['a', 'an', 'the', 'and', 'or', 'of', 'to', 'for', 'by', 'their', 'your', 'through']);
+    return String(phrase || '')
+      .toLowerCase()
+      .split(/[^a-z]+/)
+      .filter((word) => word.length > 2 && !stop.has(word));
+  }
+
+  function phrasesClash(impactPhrase, roleVerb) {
+    const roleWords = new Set(mainWords(roleVerb));
+    return mainWords(impactPhrase).some((word) => roleWords.has(word));
+  }
+
+  function buildValueCreation(talent, triangle, picks, ikigaiConfig, truthPath) {
     const talentVerb = truthPath.talentVerbs[talent.primary] || '';
     const roleVerb = truthPath.roleVerbs[triangle.primary] || '';
 
-    let impactPhrase = '';
     const impactPicks = (picks || []).filter((pick) => pick.screenId === 'I-4');
+    const impactOption = (key) => {
+      const screen = ikigaiConfig.screens.find((entry) => entry.id === 'I-4');
+      return screen ? screen.options.find((entry) => entry.key === key) || null : null;
+    };
+    const phraseFor = (pick) => {
+      const option = pick ? impactOption(pick.key) : null;
+      if (!option) return '';
+      return option.rephrase || String(option.label || '').toLowerCase();
+    };
+
+    let impactPhrase = '';
     if (impactPicks.length) {
-      const source = impactPicks[0];
-      impactPhrase = source.rephrase || '';
-      if (!impactPhrase) {
-        // Derive a phrase from the option label when the config supplies no rephrase.
-        impactPhrase = String(source.label || '').toLowerCase();
-      }
+      const first = phraseFor(impactPicks[0]);
+      const clashFree = impactPicks.find((pick) => !phrasesClash(phraseFor(pick), roleVerb));
+      impactPhrase = clashFree ? phraseFor(clashFree) : first;
     }
 
     const template = truthPath.valueCreationTemplate;
@@ -154,9 +177,13 @@
   }
 
   /**
-   * Brief 7.2 alignment check:
+   * Brief 7.2 alignment check, rules restated by v2.2 C5:
    *   (a) chosen strengths/abilities match the natural talent pattern
-   *   (b) the areas chosen for economic value suit the primary role, or sit on the gap role
+   *   (b) role alignment reads only the visitor's TAGGED I-3 picks:
+   *       - gap warning ONLY when at least 2 tagged picks exist and ALL of them
+   *         point at the gap role;
+   *       - positive line when at least 1 tagged pick matches the primary role;
+   *       - otherwise no role line at all.
    */
   function buildAlignmentChecks(talent, triangle, picks, ikigaiConfig, truthPath) {
     const messages = truthPath.alignmentMessages;
@@ -172,25 +199,27 @@
     const abilityMatches = abilityPicks.filter((pick) => expectedSkills.indexOf(pick.key) !== -1);
     const talentAligned = abilityPicks.length === 0 ? null : abilityMatches.length > 0;
 
-    // (b) economic value vs role: check the I-3 picks against the primary and gap roles.
-    const economicPicks = (picks || []).filter((pick) => pick.screenId === 'I-3');
-    const primaryEnvironments =
-      (ikigaiConfig.roleEnvironment && ikigaiConfig.roleEnvironment[triangle.primary]) || [];
-    const gapEnvironments =
-      (ikigaiConfig.roleEnvironment && ikigaiConfig.roleEnvironment[triangle.gap]) || [];
-
-    const hitsPrimary = economicPicks.filter((pick) => primaryEnvironments.indexOf(pick.key) !== -1);
-    const hitsGapOnly = economicPicks.filter(
-      (pick) => gapEnvironments.indexOf(pick.key) !== -1 && primaryEnvironments.indexOf(pick.key) === -1
-    );
+    // (b) tagged I-3 picks vs primary/gap role (v2.2 C5).
+    const roleFor = (key) => {
+      const screen = ikigaiConfig.screens.find((entry) => entry.id === 'I-3');
+      const option = screen && screen.options.find((entry) => entry.key === key);
+      return option ? option.role || null : null;
+    };
+    const taggedRoles = (picks || [])
+      .filter((pick) => pick.screenId === 'I-3')
+      .map((pick) => roleFor(pick.key))
+      .filter(Boolean);
 
     let economicKind = 'neutral';
     let economicMessage = null;
-    if (economicPicks.length) {
-      if (hitsPrimary.length > 0) {
+    if (taggedRoles.length) {
+      if (taggedRoles.indexOf(triangle.primary) !== -1) {
         economicKind = 'aligned';
         economicMessage = messages.economic_role_aligned;
-      } else if (hitsGapOnly.length > 0) {
+      } else if (
+        taggedRoles.length >= 2 &&
+        taggedRoles.every((role) => role === triangle.gap)
+      ) {
         economicKind = 'gap';
         economicMessage = messages.economic_gap_role;
       }

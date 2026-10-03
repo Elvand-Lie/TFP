@@ -79,12 +79,12 @@
     .method-card p { color:rgba(245,245,242,.72); font-size:.92rem; }
     #results-band { display:none; }
     #results-band.visible { display:block; }
-    .score-hero { display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
-    .score { width:110px; height:110px; border-radius:50%; border:1px solid rgba(198,169,107,.45); display:flex; align-items:baseline; justify-content:center; font-family:var(--font-serif); color:var(--gold); flex-shrink:0; }
-    .score strong { font-size:3rem; font-weight:500; line-height:1; align-self:center; }
-    .score span { font-size:1rem; color:var(--muted); }
-    .score-meta h3 { font-family:var(--font-serif); font-size:2rem; font-weight:500; }
-    .score-meta p { color:rgba(245,245,242,.72); max-width:640px; font-size:.94rem; margin-top:8px; }
+    .score-hero { display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; }
+    .score { width:190px; height:190px; border-radius:50%; border:2px solid var(--gold); background:radial-gradient(circle at 50% 32%, rgba(198,169,107,.16), rgba(113,1,1,.14)); display:flex; align-items:baseline; justify-content:center; font-family:var(--font-serif); color:var(--gold); flex-shrink:0; box-shadow:0 0 60px rgba(198,169,107,.15), inset 0 0 40px rgba(0,0,0,.35); }
+    .score strong { font-size:4.6rem; font-weight:600; line-height:1; align-self:center; }
+    .score span { font-size:1.3rem; color:var(--beige); }
+    .score-meta h3 { font-family:var(--font-serif); font-size:1.9rem; font-weight:500; margin:0 auto; display:inline-block; border:1px solid rgba(198,169,107,.4); border-radius:999px; padding:6px 26px; }
+    .score-meta p { color:rgba(245,245,242,.72); max-width:640px; font-size:.94rem; margin:8px auto 0; }
     .reading-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(113,1,1,.2); margin-top:34px; }
     .info-card { background:var(--black); padding:26px; min-height:170px; }
     .info-card small { display:block; color:var(--gold); font-size:.68rem; font-weight:600; letter-spacing:.17em; text-transform:uppercase; margin-bottom:10px; }
@@ -261,7 +261,7 @@
       </div>
       <div class="score-hero">
         <div class="score" id="scoreCircle"><strong id="scoreValue">–</strong><span>/10</span></div>
-        <div class="score-meta">
+        <div class="score-meta" style="display:flex;flex-direction:column;align-items:center;">
           <h3 id="scoreLabel"></h3>
           <p>Your alignment with today's elemental energy, based on your BaZi chart. Higher scores mean today's qi naturally supports your Day Master. Lower scores call for caution and restraint.</p>
         </div>

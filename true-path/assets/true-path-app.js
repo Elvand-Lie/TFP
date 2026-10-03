@@ -88,6 +88,7 @@
     // Step -> real path. Every step keeps a shell of its own so refresh lands correctly.
     ROUTES = {
       landing: '/true-path',
+      start: '/true-path/start',
       tintro: '/true-path/talent',
       tq: '/true-path/talent/q',
       tsnap: '/true-path/talent/result',
@@ -123,9 +124,19 @@
 
   // ─── state (Brief 17: survives refresh and Back) ───────────────────────────
 
+  /** v2.2 C1: the visitor's first name, validated with the brief's rule. */
+  var NAME_PATTERN = /^[\p{L}\p{M}][\p{L}\p{M} '.’-]{0,29}$/u;
+
+  function cleanName(value) {
+    var raw = String(value === undefined || value === null ? '' : value).trim().replace(/\s+/g, ' ');
+    if (!raw || raw.length > 30 || !NAME_PATTERN.test(raw)) return '';
+    if (raw === raw.toLowerCase()) raw = raw.charAt(0).toUpperCase() + raw.slice(1);
+    return raw;
+  }
+
   function freshState() {
     return {
-      step: 'landing', ta: Array(12).fill(0), qi: 0, ik: {}, ii: 0,
+      step: 'landing', name: '', ta: Array(12).fill(0), qi: 0, ik: {}, ii: 0,
       sc: [], si: 0, ord: [], tal: null, res: null, fs: {},
       id: null, saved: 0, sent: 0, skip: 0, rv: 0, saveKey: null,
       attr: { utm_source: null, utm_campaign: null }
@@ -223,6 +234,8 @@
     if (typeof next.qi !== 'number' || next.qi < 0) next.qi = 0;
     if (typeof next.ii !== 'number' || next.ii < 0 || next.ii > 3) next.ii = 0;
     if (typeof next.si !== 'number' || next.si < 0) next.si = 0;
+    if (typeof next.name !== 'string') next.name = '';
+    next.name = cleanName(next.name);
     if (next.id !== null && !RESULT_ID_PATTERN.test(String(next.id))) next.id = null;
     // An id only means anything when this session's answers were actually saved.
     if (!next.saved) next.id = null;
@@ -501,29 +514,55 @@
   }
 
   function obs(t) {
-    var min = Math.min.apply(null, T.map(function (k) { return t.raw[k]; }));
-    var lo = T.filter(function (k) { return t.raw[k] === min; });
-    return [
+    // v2.2 C11: the lowest-branch line depends on the score itself.
+    var lowest = T.reduce(function (lo, k) { return t.pct[k] < t.pct[lo] ? k : lo; }, T[0]);
+    var lp = t.pct[lowest];
+    var lowestLine;
+    if (t.balancedProfile) {
+      lowestLine = 'No branch is notably quieter than the rest, which gives you range.';
+    } else if (lp >= 70) {
+      lowestLine = 'Even your least dominant branch, ' + TN[lowest] + ', is a genuine strength at ' + lp + '%.';
+    } else if (lp >= 40) {
+      lowestLine = TN[lowest] + ' is your least dominant branch at ' + lp +
+        '%. This may be an area where you lean on others.';
+    } else {
+      lowestLine = TN[lowest] + ' is your quietest branch (' + lp +
+        '%). That is a reading, not a flaw. It often shows where a partner can complement you.';
+    }
+    var lines = [
       t.balancedProfile
         ? 'Your four branches are within a point of each other, so no single style dominates yet.'
         : t.coDominant ? leadLine(t)
           : 'Your strongest branch is ' + TN[t.dominant] + ' (' + t.pct[t.dominant] + '%).',
-      t.balancedProfile
-        ? 'No branch is notably quieter than the rest, which gives you range.'
-        : 'Your ' + jn(lo.map(function (k) { return TN[k]; })) + ' ' +
-          (lo.length > 1 ? 'branches are' : 'branch is') + ' your quietest, which is a reading, not a flaw.',
+      lowestLine,
       'Scores are independent: you can be strong on every branch.'
     ];
+    if (T.every(function (k) { return t.pct[k] >= 75; })) {
+      lines.push('You show strong scores across all four branches, which suggests a versatile profile.');
+    }
+    return lines;
+  }
+
+  /** v2.2 C10: one natural-strengths sentence instead of raw lists. */
+  function strengthsSentence(t) {
+    var P = (CFG.truthPath && CFG.truthPath.strengthPhrases) || {};
+    var a = arch(t);
+    if (!P[t.dominant] || !P[t.secondary] || !a) return '';
+    return 'As a ' + a[0] + ', you combine ' + P[t.dominant] + ' with ' + P[t.secondary] + '.';
   }
 
   function align(t, r, ik) {
     var cap = [].concat(C.CAP[t.dominant], C.CAP[t.secondary]);
-    var tags = (ik[2] || []).map(function (x) { return C.TAGS[x]; });
+    // v2.2 C5: only TAGGED I-3 picks count, and the gap warning fires only when at least two
+    // tagged picks exist AND every one of them points at the gap role.
+    var tags = (ik[2] || []).map(function (x) { return C.TAGS[x] || null; }).filter(Boolean);
     var out = [];
     out.push((ik[1] || []).some(function (x) { return cap.indexOf(x) !== -1; })
       ? 'talent_capability_aligned' : 'talent_capability_explore');
     if (tags.indexOf(r.primary) !== -1) out.push('economic_role_aligned');
-    else if (tags.indexOf(r.gap) !== -1) out.push('economic_role_explore');
+    else if (tags.length >= 2 && tags.every(function (role) { return role === r.gap; })) {
+      out.push('economic_role_explore');
+    }
     return out;
   }
 
@@ -682,10 +721,11 @@
     var suggested = Array.from(new Set([0, 1, 2, 3].flatMap(function (i) { return sugg(i); })));
     var dl = dualOf(r);
     return {
-      schemaVersion: '2.1',
+      schemaVersion: '2.2',
       resultId: S.saved ? S.id : null,
       createdAt: new Date().toISOString(),
       locale: 'en',
+      profile: { firstName: S.name || null },
       talent: {
         answers: aq, raw: t.raw, pct: t.pct, dominant: t.dominant, secondary: t.secondary,
         coDominant: t.coDominant, balancedProfile: t.balancedProfile,
@@ -808,6 +848,8 @@
     var mk = /** @type {any} */ ($('#mk')), msg = $('#fm');
     if (!fn || !em || !msg) return;
     var email = em.value.trim();
+    // v2.2 C1: the name field is pre-filled from the journey; an edited name is honoured.
+    if (!fn.value.trim() && S.name) fn.value = S.name;
     if (!fn.value.trim()) { msg.textContent = 'Please add your first name.'; return; }
     if (!/^\S+@\S+\.\S+$/.test(email)) { msg.textContent = 'Enter a valid email address.'; return; }
     if (!API.sendReport) {
@@ -859,7 +901,7 @@
       (S.sent ? '<p class="mut">Sent. Check your inbox.</p>' : S.skip ? '' :
         '<p class="mut">Or send it to me:</p>' +
         '<input class="inp" id="fn" type="text" placeholder="' + esc(RPT.emailFieldName) +
-        '" aria-label="' + esc(RPT.emailFieldName) + '" autocomplete="given-name">' +
+        '" aria-label="' + esc(RPT.emailFieldName) + '" autocomplete="given-name" value="' + esc(S.name || '') + '">' +
         '<input class="inp" id="em" type="email" placeholder="' + esc(RPT.emailFieldEmail) +
         '" aria-label="' + esc(RPT.emailFieldEmail) + '" required autocomplete="email">' +
         '<label class="mut"><input type="checkbox" id="mk"> ' + esc(RPT.marketingConsentLabel) + '</label>' +
@@ -901,6 +943,19 @@
         '<p class="mut">A reflective self-discovery tool, not a psychological or career assessment.</p>';
     },
 
+    // v2.2 C1: the name screen, right after Start and before the Talent Tree.
+    start: function () {
+      var N = CFG.cta.start || {};
+      return '<p class="mut cn">True Path Method™ · 轨道</p>' +
+        '<h2>' + esc(N.headline || 'Before we begin, what should we call you?') + '</h2>' +
+        '<label class="mut" for="tp-name">' + esc(N.fieldLabel || 'First name') + '</label>' +
+        '<input class="inp" id="tp-name" type="text" maxlength="30" autocomplete="given-name" value="' +
+        esc(S.name) + '" placeholder="' + esc(N.placeholder || 'e.g. Jose') + '">' +
+        '<p class="mut">' + esc(N.helper || '') + '</p>' +
+        '<p id="nm-err" class="mut" role="status" aria-live="polite" style="color:#e53939"></p>' +
+        '<button class="btn" data-act="begin-name">' + esc(N.ctaLabel || 'Begin My True Path') + '</button>';
+    },
+
     tintro: function () {
       return prog(0) + '<h2>Four branches, one Talent Tree 才</h2>' +
         '<p>Twelve short statements. Rate each from 1 to 5 by how naturally it fits you. Your answers grow four branches:</p><ul>' +
@@ -928,7 +983,10 @@
             v + '</button>';
         }).join('') + '</div>' +
         '<div class="lkl"><span>Strongly disagree</span><span>Strongly agree</span></div>' +
-        (S.qi > 0 ? '<button class="ghost" data-act="talent-back">← Back</button>' : '');
+        // v2.2 C1: Back on Q1 returns to the name screen, name still filled in.
+        (S.qi > 0
+          ? '<button class="ghost" data-act="talent-back">← Back</button>'
+          : '<button class="ghost" data-act="name-back">← Back</button>');
     },
 
     tsnap: function () {
@@ -946,7 +1004,9 @@
     iq: function () {
       var i = S.ii, sel = S.ik[i] || [], sg = sugg(i), screen = ikScreen(i);
       return prog(1) + '<p class="mut">Question ' + (i + 1) + ' of 4 · choose 1–3</p><h2>' +
-        esc(screen.question) + '</h2><div class="grid">' +
+        esc(screen.question) + '</h2>' +
+        (screen.helper ? '<p class="mut">' + esc(screen.helper) + '</p>' : '') +
+        '<div class="grid">' +
         screen.options.map(function (o) {
           var selected = sel.indexOf(o.key) !== -1;
           return '<button class="opt' + (selected ? ' on' : '') + '" aria-pressed="' + selected +
@@ -1004,13 +1064,32 @@
       var dl = dualOf(r);
       var cap = [].concat(C.CAP[t.dominant], C.CAP[t.secondary]);
       var capOk = k(1).some(function (x) { return cap.indexOf(x) !== -1; });
-      var tg = k(2).map(function (x) { return C.TAGS[x]; });
+      // v2.2 C5: only tagged picks count; gap needs 2+ tagged picks, all pointing at the gap.
+      var tg = (k(2) || []).map(function (x) { return C.TAGS[x] || null; }).filter(Boolean);
       var ecoOk = tg.indexOf(p) !== -1;
-      var ecoGap = tg.indexOf(g) !== -1 && !ecoOk;
+      var ecoGap = tg.length >= 2 && tg.every(function (role) { return role === g; });
       var url = cUrl(ti[0], p, a[0]);
       var RC = CFG.cta.result;
+      // v2.2 C1/C3: personalised hero.
+      var heroIntro = S.name ? esc(S.name) + ', your True Path is' : 'Your True Path is';
+      // v2.2 C8: skip an impact phrase that repeats the role phrase's main word.
+      var impactPick = (function () {
+        var picksList = k(3);
+        var roleWords = String(C.RV[p]).toLowerCase().split(/[^a-z]+/).filter(function (w) { return w.length > 2; });
+        var clashes = function (key) {
+          var phrase = OPT[key] ? OPT[key][2] : '';
+          return String(phrase).toLowerCase().split(/[^a-z]+/).some(function (w) {
+            return w.length > 2 && roleWords.indexOf(w) !== -1;
+          });
+        };
+        for (var i = 0; i < picksList.length; i += 1) {
+          if (!clashes(picksList[i])) return picksList[i];
+        }
+        return picksList[0] || null;
+      })();
 
-      return '<h2>Your Iron Triangle Role</h2>' +
+      return (S.name ? '<p class="mut">Prepared for ' + esc(S.name) + '</p>' : '') +
+        '<h2>Your Iron Triangle Role</h2>' +
         '<h1 class="cn" style="font-size:2.2rem">' + esc(n[0]) + ' <span style="white-space:nowrap">' +
         esc(n[1]) + '</span> · The ' + esc(n[2]) + '</h1>' + tri(r.share) +
         '<p class="mut">Shares of your natural contribution across the three roles, always totalling 100%. Unlike Talent Tree scores, they show balance, not strength.</p>' +
@@ -1032,8 +1111,10 @@
           : '') + '</div>' +
         '<p><b>Where you may thrive:</b> ' + esc(c.thrive) + '</p>' +
         '<p><b>Growth edge:</b> ' + esc(c.edge) + '</p>' +
-        '<div class="blk"><p class="mut cn">你的轨道 · Your True Path</p><h1>' + esc(ti[0]) + '</h1>' +
-        '<p class="mut">' + esc(a[0]) + ' · ' + esc(n[0]) + ' ' + esc(n[1]) + '</p><p>' + esc(ti[1]) + '</p>' +
+        '<div class="blk"><p class="mut cn">你的轨道 · Your True Path</p>' +
+        '<p class="mut">' + heroIntro + '</p><h1>' + esc(ti[0]) + '</h1>' +
+        '<p>' + esc(ti[1]) + '</p>' +
+        '<p class="mut">' + esc(a[0]) + ' · ' + esc(n[0]) + ' ' + esc(n[1]) + '</p>' +
         '<span class="tag">才 ' + esc(a[0]) + '</span>' +
         '<span class="tag">道 ' + esc(lbl(k(0)[0] || 'solving_problems')) + '</span>' +
         '<span class="tag">位 ' + esc(n[0]) + '</span>' +
@@ -1041,15 +1122,18 @@
         blk('才 Talent pattern', '<div style="max-width:300px">' + tree(t) + '</div><p>' + leadLine(t) + ' ' +
           (t.balancedProfile ? '' : esc(a[1])) + '</p>' +
           chips(T.map(function (x) { return TN[x] + ' ' + t.pct[x] + '%'; }))) +
-        blk('道 Purpose direction', '<p>You are energised by ' + list(k(0)) + '.</p>') +
-        blk('Capability', '<p>You see your strengths in ' + list(k(1)) + '.</p><p class="mut">' +
-          esc(capOk ? C.AMSG.talent_capability_aligned : C.AMSG.talent_capability_explore) + '</p>') +
-        blk('Economic direction', '<p>Possible areas to explore: ' + list(k(2)) + '.</p>' +
+        blk('道 Purpose direction',
+          '<p>' + (S.name ? esc(S.name) + ', y' : 'Y') + 'ou come alive when you are ' + list(k(0)) + '.</p>' +
+          '<p>You see your strengths in ' + list(k(1)) + '.</p>' +
+          '<p>You could earn a living through ' + list(k(2)) + '.</p>' +
+          '<p>The difference you want to make: ' + imp(k(3)) + '.</p>') +
+        blk('Possible areas to explore',
+          '<p>' + list(k(2)) + '.</p>' +
+          '<p class="mut">' + esc(capOk ? C.AMSG.talent_capability_aligned : C.AMSG.talent_capability_explore) + '</p>' +
           (ecoOk ? '<p class="mut">' + esc(C.AMSG.economic_role_aligned) + '</p>'
             : ecoGap ? '<p class="mut">' + esc(C.AMSG.economic_role_explore) + '</p>' : '')) +
-        blk('Impact direction', '<p>You want to contribute by ' + imp(k(3)) + '.</p>') +
         blk('Value creation style', '<p>You may create value most naturally by ' + esc(C.TV[t.dominant]) +
-          ', ' + esc(C.RV[p]) + ', and ' + esc(OPT[k(3)[0] || 'help_businesses_grow'][2]) + '.</p>') +
+          ', ' + esc(C.RV[p]) + (impactPick ? ', and ' + esc(OPT[impactPick][2]) : '') + '.</p>') +
         blk('Reflection', '<ul>' + C.REFL.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>') +
         emailBlk() +
         '<div class="blk"><p>' + esc(RC.ancientWisdomBridge) + '</p>' +
@@ -1070,28 +1154,47 @@
     var c = C.RC[p], n = RN[p], k = function (i) { return S.ik[i] || []; };
     var al = align(t, r, S.ik), url = cUrl(ti[0], p, a[0]);
     var PF = 'The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia';
+    var heroIntro = S.name ? esc(S.name) + ', your True Path is' : 'Your True Path is';
+    var dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    var roleWords = String(C.RV[p]).toLowerCase().split(/[^a-z]+/).filter(function (w) { return w.length > 2; });
+    var clashes = function (key) {
+      var phrase = OPT[key] ? OPT[key][2] : '';
+      return String(phrase).toLowerCase().split(/[^a-z]+/).some(function (w) {
+        return w.length > 2 && roleWords.indexOf(w) !== -1;
+      });
+    };
+    var impactPick = k(3).filter(function (key) { return !clashes(key); })[0] || k(3)[0] || null;
+    var ecoLine = al.indexOf('economic_role_aligned') !== -1
+      ? esc(C.AMSG.economic_role_aligned)
+      : al.indexOf('economic_role_explore') !== -1 ? esc(C.AMSG.economic_role_explore) : '';
 
     return '<div class="nop"><button class="ghost" data-act="report-back">← Back to result</button> ' +
       '<button class="btn" data-act="pdf">Save as PDF</button></div>' +
-      '<p class="mut">' + (S.saved && S.id ? 'Report ' + esc(S.id) : 'Local preview (not saved)') +
-      ' · The Full Picture</p>' +
-      '<div class="pg"><h2>Your Talent Tree 才</h2>' + tree(t) +
+      '<p class="mut">' + (S.saved && S.id ? 'Report ' : 'Local preview (not saved) · ') +
+      (S.saved && S.id ? '· The Full Picture' : 'The Full Picture') + '</p>' +
+      '<div class="pg"><div class="box" style="text-align:center">' +
+      (S.name ? '<p class="mut">Prepared for ' + esc(S.name) + ' · ' + esc(dateStr) + '</p>' : '') +
+      '<p>' + heroIntro + '</p><h1 style="font-size:1.9rem">' + esc(ti[0]) + '</h1>' +
+      '<p>' + esc(ti[1]) + '</p>' +
+      '<p class="mut">' + esc(a[0]) + ' · ' + esc(n[0]) + ' ' + esc(n[1]) + '</p></div>' +
+      '<h2>Your Talent Tree 才</h2>' + tree(t) +
       chips(T.map(function (x) { return TN[x] + ' ' + t.pct[x] + '%'; })) +
       '<h3>' + esc(t.balancedProfile ? 'Balanced / Emerging Tree' : a[0]) + '</h3>' +
-      '<p>' + leadLine(t) + ' ' + (t.balancedProfile ? '' : esc(a[1])) + '</p>' +
-      '<p>Natural strengths: ' + esc(C.TS[t.dominant]) + '; ' + esc(C.TS[t.secondary]) + '.</p>' +
+      '<p>' + leadLine(t) + '</p>' +
+      '<p>' + strengthsSentence(t) + '</p>' +
       '<ul>' + obs(t).map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' +
       '<p class="mut pf">' + esc(PF) + '</p></div>' +
       '<div class="pg"><h2>Your Direction 道</h2>' +
-      ['Energises', 'Good at', 'Economic value', 'Impact'].map(function (x, i) {
-        return '<p class="mut">' + x + '</p>' + chips(k(i).map(lbl));
-      }).join('') +
-      '<p>You are energised by ' + list(k(0)) + '. Possible areas to explore: ' + list(k(2)) +
-      '. You want to contribute by ' + imp(k(3)) + '.</p>' +
+      '<p>' + (S.name ? esc(S.name) + ', y' : 'Y') + 'ou come alive when you are ' + list(k(0)) + '.</p>' +
+      '<p>You see your strengths in ' + list(k(1)) + '.</p>' +
+      '<p>You could earn a living through ' + list(k(2)) + '.</p>' +
+      '<p>The difference you want to make: ' + imp(k(3)) + '.</p>' +
+      '<p><b>Possible areas to explore:</b> ' + list(k(2)) + '.</p>' +
       '<p>You may create value most naturally by ' + esc(C.TV[t.dominant]) + ', ' + esc(C.RV[p]) +
-      ', and ' + esc(OPT[k(3)[0] || 'help_businesses_grow'][2]) + '.</p>' +
-      '<div class="box"><b>Capability: </b>you see your strengths in ' + list(k(1)) + '.<br>' +
-      esc(C.AMSG[al[0]] || '') + '</div><p class="mut pf">' + esc(PF) + '</p></div>' +
+      (impactPick ? ', and ' + esc(OPT[impactPick][2]) : '') + '.</p>' +
+      '<div class="box"><b>Alignment Check</b><br>' +
+      esc(C.AMSG[al[0]] || '') + (ecoLine ? '<br>' + ecoLine : '') + '</div>' +
+      '<p class="mut pf">' + esc(PF) + '</p></div>' +
       '<div class="pg"><h2>Your Role & True Path 位 轨道</h2>' + tri(r.share) +
       chips(R.map(function (x) { return RN[x][0] + ' ' + r.share[x] + '%'; })) +
       '<h3>' + esc(n[0]) + ' ' + esc(n[1]) + '</h3><p>' + esc(c.core) + '</p>' +
@@ -1101,6 +1204,8 @@
       (r.pattern === 'balanced' ? ' Your roles are closely balanced, so treat this as a light lean.' : '') +
       '</p><p><b>Where you may thrive:</b> ' + esc(c.thrive) + '</p>' +
       '<p><b>Growth edge:</b> ' + esc(c.edge) + '</p>' +
+      '<div class="box"><b>Your True Path</b><p>' + heroIntro + ' <b>' + esc(ti[0]) + '</b> — ' +
+      esc(ti[1]) + '</p><p class="mut">' + esc(a[0]) + ' · ' + esc(n[0]) + ' ' + esc(n[1]) + '</p></div>' +
       (url ? '<p><a class="btn" href="' + esc(url) + '" rel="noopener" data-consult="1">' +
         esc(CFG.cta.result.consultCtaLabel) + '</a></p>' : '') +
       '<p class="mut pf">' + esc(PF) + '</p></div>' +
@@ -1110,7 +1215,7 @@
 
   // ─── render (guards mirror the approved reference) ────────────────────────
 
-  var GATED = ['tsnap', 'iintro', 'iq', 'dsnap', 'rintro', 'rq', 'syn', 'result', 'report'];
+  var GATED = ['tintro', 'tsnap', 'iintro', 'iq', 'dsnap', 'rintro', 'rq', 'syn', 'result', 'report'];
 
   function guarded(step) {
     if (!VW[step]) return 'landing';
@@ -1118,7 +1223,10 @@
     // visitor might hold nothing but a link, so the canonical 12 steps are not the way back to it.
     if (step === 'report' && reportMissing) return 'landing';
     if (step === 'report' && reportUnavailable) return 'landing';
-    if (GATED.indexOf(step) !== -1 && !S.tal) {
+    // v2.2 C1: no name, no journey. Landing on any later step without one sends the visitor to
+    // the name screen while every answer already saved stays exactly where it is.
+    if (GATED.indexOf(step) !== -1 && !S.name) return 'start';
+    if (step !== 'tintro' && GATED.indexOf(step) !== -1 && !S.tal) {
       return S.ta.some(function (v) { return !!v; }) ? 'tq' : 'landing';
     }
     // The scenario stage needs its randomised order to exist before it can be shown.
@@ -1248,6 +1356,8 @@
     };
     if (!S.res.share || !S.res.primary) return false;
     S.ik = { 0: ik.energises || [], 1: ik.goodAt || [], 2: ik.economicValue || [], 3: ik.impact || [] };
+    // v2.2 C1: a stored record restores the name it was saved with.
+    if (record.profile && typeof record.profile.firstName === 'string') S.name = cleanName(record.profile.firstName);
     S.id = typeof record.resultId === 'string' ? record.resultId : S.id;
     S.saved = S.id ? 1 : 0;
     save();
@@ -1335,8 +1445,28 @@
       // not sent back to the same dead link on refresh.
       reportMissing = 0;
       reportUnavailable = 0;
+      // v2.2 C1: Start leads to the name screen, not straight into the Talent Tree.
+      go('start');
+    } else if (act === 'begin-name') {
+      // v2.2 C1: required, validated; the name never travels to analytics.
+      var nameInput = /** @type {any} */ ($('#tp-name'));
+      var errEl = $('#nm-err');
+      var value = nameInput ? nameInput.value : '';
+      var cleaned = cleanName(value);
+      if (!value.trim()) {
+        if (errEl) errEl.textContent = 'Please enter your first name to personalise your report.';
+        return;
+      }
+      if (!cleaned) {
+        if (errEl) errEl.textContent = 'Please use letters only (up to 30 characters).';
+        return;
+      }
+      S.name = cleaned;
+      save();
+      track('tp_name_submitted');
       go('tintro');
-    } else if (act === 'begin-talent') { go('tq'); }
+    } else if (act === 'name-back') { go('start'); }
+    else if (act === 'begin-talent') { go('tq'); }
     else if (act === 'talent-back') { backWithin('qi'); }
     else if (act === 'to-iintro') { go('iintro'); }
     else if (act === 'begin-ikigai') { S.ii = 0; track('tp_ikigai_start'); save(); go('iq'); }

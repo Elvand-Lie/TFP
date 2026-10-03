@@ -467,30 +467,26 @@ test('canonical: an array-authored role field reaches the page as readable text'
 
 test('canonical: a legacy Ikigai option key still reaches the page as its canonical label', () => {
   // Records stored before the vocabulary flip carry "helping_others_transform" where the canonical
-  // config lists "helping_transform". Same option, so a stored record shows the label instead of a
-  // dash — and the READ side never leaks the legacy snake_case key to the page.
+  // config lists "helping_transform". Same option, so a stored record shows the sentence form
+  // instead of a dash — and the READ side never leaks the legacy snake_case key to the page.
   const legacyKey = 'helping_others_transform';
-  const canonicalOption = ikigaiJson.screens
-    .find((screen) => screen.id === 'I-1')
-    .options.find((option) => option.key === 'helping_transform');
-  assert.ok(canonicalOption, 'the canonical I-1 options must include helping_transform');
 
   const record = recordFor({ talentValue: 5, role: 'commander' });
   record.ikigai.energises = [legacyKey];
 
   const model = modelFor(record);
-  const block = model.pages[1].blocks.find((entry) => entry.kind === 'selections');
-  assert.ok(block, 'page 2 lost its selections block');
-
-  const rowLabel = ikigaiJson.screens.find((s) => s.id === 'I-1').rowLabel;
-  const row = block.rows.find((entry) => entry.label === rowLabel);
-  assert.ok(row, 'the energises row is missing');
-  assert.equal(
-    row.value,
-    canonicalOption.label,
-    'a legacy option key must resolve to its canonical label rather than a dash'
+  // v2.2 C4: page 2 carries the four Direction sentences; the energises sentence must resolve
+  // the legacy key to its canonical sentence form.
+  const block = model.pages[1].blocks.find(
+    (entry) => entry.kind === 'text' && entry.text && entry.text.includes('come alive')
   );
-  assert.ok(!row.value.includes(legacyKey), 'the raw legacy key must never reach the page');
+  assert.ok(block, 'page 2 lost its Direction sentences');
+  assert.equal(
+    block.text,
+    'You come alive when you are helping others transform.',
+    'a legacy option key must resolve to its canonical sentence form rather than a dash'
+  );
+  assert.ok(!block.text.includes(legacyKey), 'the raw legacy key must never reach the page');
 });
 
 test('canonical: two fresh renders of one fixed record produce identical PDF bytes', async () => {

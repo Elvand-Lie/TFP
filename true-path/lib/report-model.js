@@ -21,7 +21,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  const SCHEMA_VERSION = '2.1';
+  const SCHEMA_VERSION = '2.2';
 
   /** Brief 13: resultId looks like "tp_8f3k2...". */
   function makeResultId() {
@@ -127,11 +127,18 @@
 
     const pattern = resolved.pattern || { kind: 'single', label: null };
 
+    // v2.2 C1: the visitor's first name travels in the record (`profile.firstName`) and pre-fills
+    // the lead. The name is NEVER written to analytics; it only lives in the saved record.
+    const firstName = asName(
+      (meta.profile && meta.profile.firstName) || (meta.lead && meta.lead.firstName) || ''
+    );
+
     return {
       schemaVersion: SCHEMA_VERSION,
       resultId: meta.resultId || makeResultId(),
       createdAt: meta.createdAt || new Date().toISOString(),
       locale: meta.locale || 'en',
+      profile: { firstName: firstName || null },
       talent: {
         answers: Object.assign({}, input.talentAnswers || {}),
         raw: Object.assign({}, talent.raw),
@@ -168,7 +175,7 @@
         alignment: alignmentKeys(resolved.alignment)
       },
       lead: Object.assign(
-        { firstName: null, email: null, reportConsent: false, marketingConsent: false },
+        { firstName: firstName || null, email: null, reportConsent: false, marketingConsent: false },
         meta.lead || {}
       ),
       attribution: Object.assign(
@@ -196,36 +203,28 @@
     const cta = configs.cta;
 
     const labels = truthPath.resultBlocks.labels;
+    const name = asName((record.profile && record.profile.firstName) || '');
     const archetype = findArchetype(talentConfig, record.talent.archetypeKey);
     const primaryRole = iron.roles.find((entry) => entry.key === record.ironTriangle.primary);
     const gapRole = iron.roles.find((entry) => entry.key === record.ironTriangle.gap);
     const title = truthPath.titles.find((entry) => entry.key === record.truePath.titleKey);
     const gapInsight = iron.gapInsights[record.ironTriangle.gap];
 
-    // Natural strengths: canonical prints the DOMINANT then the SECONDARY branch's strength list
-    // (not the archetype pair, which is ordered by the config's fixed order and can differ).
-    const strengthKeys = [record.talent.dominant, record.talent.secondary]
-      .filter(Boolean)
-      .filter((key, index, keys) => keys.indexOf(key) === index);
+    // v2.2 C10: one strengths sentence replaces the raw lists.
+    const strengthsSentence = naturalStrengthsSentence(truthPath, record, archetype);
 
-    // Canonical page 1 leads with the read of the tree, then three derived observations. These are
-    // RESPONSES to this visitor's scores — never the static per-category blurbs the old page printed,
-    // which said the same thing to every visitor regardless of what they scored.
-    const strengthSentence = strengthKeys
-      .map((key) => categoryStrengths(talentConfig, key))
-      .filter(Boolean)
-      .join('; ');
+    // v2.2 C11: the lowest-branch observation now depends on the score itself.
     const observations = observationalLines(record.talent, talentConfig).map((text, index) => ({
       key: 'observation-' + (index + 1),
       text
     }));
 
-    const ikigaiRows = ikigaiConfig.screens.map((screen) => ({
-      screenId: screen.id,
-      field: screen.field,
-      label: screen.rowLabel,
-      items: optionsFor(ikigaiConfig, screen.id, record.ikigai[screen.field] || [])
-    }));
+    // v2.2 C4: four full Direction sentences replace the bare selections table.
+    const directionSentences = directionSentenceBlocks(truthPath, ikigaiConfig, record, name);
+
+    // v2.2 C4: "Possible areas to explore" — the I-3 sentence forms plus two environments
+    // for the primary role.
+    const possibleAreas = possibleAreasList(truthPath, ikigaiConfig, record, primaryRole);
 
     const shareRows = iron.roles.map((role) => ({
       key: role.key,
@@ -237,11 +236,27 @@
 
     const patternLabel = patternLabelFor(record, iron, truthPath);
 
+    const subtitle = truthPath.displayFormat.subtitleTemplate
+      .replace('{archetypeName}', archetype ? archetype.name : '')
+      .replace('{roleName}', primaryRole ? primaryRole.name : '')
+      .replace('{chinese}', primaryRole ? primaryRole.chinese : '');
+
+    // v2.2 C3: the headline result opens page 1.
+    const hero = {
+      kind: 'hero',
+      preparedFor: name ? 'Prepared for ' + name + ' · ' + reportDate(record.createdAt) : '',
+      intro: name ? name + ', your True Path is' : 'Your True Path is',
+      title: title ? title.title : '',
+      tagline: title ? title.essence : '',
+      subtitle
+    };
+
     const page1 = {
       n: 1,
       key: 'talent',
       heading: cta.report.pages[0].title,
       blocks: [
+        hero,
         {
           kind: 'talent-tree',
           pct: record.talent.pct,
@@ -275,10 +290,7 @@
               ? archetype.name
               : '',
           leadLine: leadLine(record.talent, talentConfig),
-          // Canonical prints the archetype essence only when a single branch leads; for a balanced
-          // profile the essence would contradict the lead line above it.
-          essence: record.talent.balancedProfile || !archetype ? '' : archetype.essence,
-          naturalStrengthsLine: strengthSentence ? 'Natural strengths: ' + strengthSentence + '.' : '',
+          strengthsSentence,
           archetype: archetype ? { name: archetype.name, essence: archetype.essence } : null
         },
         {
@@ -294,13 +306,11 @@
       key: 'direction',
       heading: cta.report.pages[1].title,
       blocks: [
+        ...directionSentences,
         {
-          kind: 'selections',
-          label: labels.purpose,
-          rows: ikigaiRows.map((row) => ({
-            label: row.label,
-            value: row.items.map((item) => item.label).join(', ') || '—'
-          }))
+          kind: 'list-block',
+          label: 'Possible areas to explore',
+          items: possibleAreas
         },
         {
           kind: 'text',
@@ -311,6 +321,14 @@
           kind: 'text',
           label: labels.valueCreation,
           text: valueCreationSentence(truthPath, ikigaiConfig, record, primaryRole)
+        },
+        {
+          kind: 'list-block',
+          label: labels.alignment,
+          items: [
+            alignmentMessage(truthPath, record, 'talent'),
+            alignmentMessage(truthPath, record, 'economic')
+          ].filter(Boolean)
         }
       ]
     };
@@ -376,20 +394,9 @@
               label: truthPath.resultBlocks.headline,
               title: title.title,
               essence: title.essence,
-              subtitle: truthPath.displayFormat.subtitleTemplate
-                .replace('{archetypeName}', archetype ? archetype.name : '')
-                .replace('{roleName}', primaryRole ? primaryRole.name : '')
-                .replace('{chinese}', primaryRole ? primaryRole.chinese : '')
+              subtitle
             }
           : null,
-        {
-          kind: 'list-block',
-          label: labels.alignment,
-          items: [
-            alignmentMessage(truthPath, record, 'talent'),
-            alignmentMessage(truthPath, record, 'economic')
-          ].filter(Boolean)
-        },
         {
           kind: 'list-block',
           label: labels.reflection,
@@ -402,7 +409,10 @@
           headline: cta.result.consultHeadline,
           text: cta.result.consultSubcopy,
           ctaLabel: cta.result.consultCtaLabel,
-          ctaHref: cta.result.consultHref
+          ctaHref: cta.result.consultHref,
+          // v2.2 C13: booking QR machinery. The QR is only emitted when a booking URL is
+          // configured; the destination is an open product decision, so none is invented here.
+          qr: bookingQr(configs, record)
         }
       ].filter(Boolean)
     };
@@ -411,6 +421,7 @@
       schemaVersion: record.schemaVersion,
       resultId: record.resultId,
       createdAt: record.createdAt,
+      profile: record.profile || { firstName: null },
       headline: cta.report.headline,
       pages: [page1, page2, page3],
       disclaimer: truthPath.disclaimer,
@@ -428,6 +439,104 @@
         privacyHref: cta.report.privacyHref,
         sentMessage: cta.report.sentMessage
       }
+    };
+  }
+
+  // ─── v2.2 helpers ────────────────────────────────────────────────────────────
+
+  /**
+   * C1: validate + clean the visitor's first name exactly as the brief specifies. Anything that
+   * does not pass the brief's regex is treated as no name at all (the journey blocks invalid
+   * names before this, so this is the last line of defence for stored values).
+   */
+  function asName(value) {
+    const raw = String(value === undefined || value === null ? '' : value).trim().replace(/\s+/g, ' ');
+    if (!raw || raw.length > 30) return '';
+    if (!/^[\p{L}\p{M}][\p{L}\p{M} '.’-]{0,29}$/u.test(raw)) return '';
+    // "jose" -> "Jose"; "Mei ling" keeps its typed form apart from the first letter rule, which
+    // only fires when the WHOLE name is lowercase.
+    if (raw === raw.toLowerCase()) return raw.charAt(0).toUpperCase() + raw.slice(1);
+    return raw;
+  }
+
+  /** "Prepared for Jose · 3 October 2026" — the date half, in the report's long form. */
+  function reportDate(iso) {
+    const date = new Date(iso);
+    if (isNaN(date.getTime())) return '';
+    return date.getDate() + ' ' +
+      ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][date.getMonth()] +
+      ' ' + date.getFullYear();
+  }
+
+  /** C10: "As a {Archetype}, you combine {dominant phrase} with {secondary phrase}." */
+  function naturalStrengthsSentence(truthPath, record, archetype) {
+    const phrases = (truthPath && truthPath.strengthPhrases) || {};
+    const dominant = phrases[record.talent.dominant];
+    const secondary = phrases[record.talent.secondary];
+    if (!dominant || !secondary || !archetype) return '';
+    return 'As a ' + archetype.name + ', you combine ' + dominant + ' with ' + secondary + '.';
+  }
+
+  /**
+   * C4: the four full Direction sentences. The Ikigai sentence forms come from the config's
+   * per-option rephrase (lowercase, e.g. "leading people"); lists join naturally.
+   * `{name}` is substituted with the visitor's first name; without one the sentence keeps its
+   * generic form with a capital first letter.
+   */
+  function directionSentenceBlocks(truthPath, ikigaiConfig, record, name) {
+    const templates = (truthPath && truthPath.directionSentences) || {};
+    const labels = truthPath.resultBlocks.labels;
+    const sentence = (templateKey, label, screenId, field) => {
+      const template = templates[templateKey];
+      if (!template) return null;
+      const list = joinNames(
+        optionsFor(ikigaiConfig, screenId, record.ikigai[field] || []).map((option) =>
+          option.rephrase || String(option.label).toLowerCase()
+        )
+      );
+      let text = template.replace('{list}', list);
+      text = name ? text.replace('{name}', name) : text.replace('{name}, ', '');
+      if (!name) text = text.charAt(0).toUpperCase() + text.slice(1);
+      return { kind: 'text', label, text: list ? text : text.replace('{list}', '—') };
+    };
+    return [
+      sentence('energises', labels.purpose, 'I-1', 'energises'),
+      sentence('goodAt', labels.capability, 'I-2', 'goodAt'),
+      sentence('paidFor', labels.economicDirection, 'I-3', 'economicValue'),
+      sentence('impact', labels.impactDirection, 'I-4', 'impact')
+    ].filter(Boolean);
+  }
+
+  /**
+   * C4: "Possible areas to explore" — the visitor's I-3 sentence forms (short phrases) plus the
+   * two environments of their primary role. Never phrased as "you should".
+   */
+  function possibleAreasList(truthPath, ikigaiConfig, record, primaryRole) {
+    const areas = optionsFor(ikigaiConfig, 'I-3', record.ikigai.economicValue || [])
+      .map((option) => option.rephrase || String(option.label).toLowerCase());
+    const env = (truthPath && truthPath.possibleAreas && primaryRole && truthPath.possibleAreas[primaryRole.key]) || [];
+    return areas.concat(env).slice(0, 5);
+  }
+
+  /**
+   * C13: booking QR payload. Built only when a booking URL is configured AND the record carries
+   * its title and role, so no destination is ever invented. The UTM parameters are fixed by the
+   * brief; `tp` and `role` carry the result.
+   */
+  function bookingQr(configs, record) {
+    const url = configs.cta && configs.cta.bookingUrl;
+    if (!url) return null;
+    const titleKey = record.truePath && record.truePath.titleKey;
+    const role = record.ironTriangle && record.ironTriangle.primary;
+    if (!titleKey || !role) return null;
+    const join = url.indexOf('?') === -1 ? '?' : '&';
+    return {
+      url:
+        url + join +
+        'utm_source=truepath&utm_medium=pdf&utm_campaign=report' +
+        '&tp=' + encodeURIComponent(titleKey) +
+        '&role=' + encodeURIComponent(role),
+      caption: 'Scan to book your consultation'
     };
   }
 
@@ -534,20 +643,40 @@
   /**
    * Canonical `obs(t)` — three observations DERIVED from this visitor's scores.
    *
+   * v2.2 C11: the second line now depends on the LOWEST branch score, so a strong branch is never
+   * called "quiet": >= 70% is a genuine strength, 40-69% a least-dominant branch, below 40% the
+   * quietest branch. When all four branches reach 75%, the versatile-profile line is added.
    * The third line is fixed by definition (the four branches are independent, so they never total
-   * 100%); the first two restate the strongest and quietest readings of the tree, and switch to the
-   * balanced wording when no branch leads.
+   * 100%).
    */
   function observationalLines(talent, talentConfig) {
     const name = (key) => categoryName(talentConfig, key);
     const keys = talentConfig.categories.map((category) => category.key);
-    const lowest = Math.min.apply(
+    const lowestPct = Math.min.apply(
       null,
-      keys.map((key) => talent.raw[key])
+      keys.map((key) => talent.pct[key])
     );
-    const quiet = keys.filter((key) => talent.raw[key] === lowest);
+    const lowestKey = keys.reduce((low, key) => (talent.pct[key] < talent.pct[low] ? key : low), keys[0]);
 
-    return [
+    let lowestLine;
+    if (lowestPct >= 70) {
+      lowestLine =
+        'Even your least dominant branch, ' + name(lowestKey) + ', is a genuine strength at ' +
+        talent.pct[lowestKey] + '%.';
+    } else if (lowestPct >= 40) {
+      lowestLine =
+        name(lowestKey) + ' is your least dominant branch at ' + talent.pct[lowestKey] +
+        '%. This may be an area where you lean on others.';
+    } else {
+      lowestLine =
+        name(lowestKey) + ' is your quietest branch (' + talent.pct[lowestKey] +
+        '%). That is a reading, not a flaw. It often shows where a partner can complement you.';
+    }
+    if (talent.balancedProfile) {
+      lowestLine = 'No branch is notably quieter than the rest, which gives you range.';
+    }
+
+    const lines = [
       talent.balancedProfile
         ? 'Your four branches are within a point of each other, so no single style dominates yet.'
         : talent.coDominant
@@ -557,15 +686,13 @@
             ' (' +
             talent.pct[talent.dominant] +
             '%).',
-      talent.balancedProfile
-        ? 'No branch is notably quieter than the rest, which gives you range.'
-        : 'Your ' +
-          joinNames(quiet.map(name)) +
-          ' ' +
-          (quiet.length > 1 ? 'branches are' : 'branch is') +
-          ' your quietest, which is a reading, not a flaw.',
+      lowestLine,
       'Scores are independent: you can be strong on every branch.'
     ];
+    if (keys.every((key) => talent.pct[key] >= 75)) {
+      lines.push('You show strong scores across all four branches, which suggests a versatile profile.');
+    }
+    return lines;
   }
 
   /** Canonical `list(k(1))` — the capability box restates the chosen strengths in the visitor's words. */
@@ -574,11 +701,11 @@
       (truthPath.resultBlocks && truthPath.resultBlocks.strengthsInPrefix) ||
       'You see your strengths in';
     const chosen = optionsFor(ikigaiConfig, 'I-2', record.ikigai.goodAt || []);
-    const message = alignmentMessage(truthPath, record, 'talent');
-    const seen = chosen.length
+    // v2.2 C4: the Alignment Check block carries the alignment messages on page 2, so the
+    // capability sentence no longer repeats the talent line here.
+    return chosen.length
       ? prefix + ' ' + joinNames(chosen.map((option) => String(option.label).toLowerCase())) + '.'
       : prefix + ' —';
-    return message ? seen + ' ' + message : seen;
   }
 
   /**
@@ -618,7 +745,7 @@
       .replace('{economicValue}', join('I-3', 'economicValue'));
   }
 
-  /** Brief 7.4: value creation sentence, rebuilt from stored keys. */
+  /** Brief 7.4 / v2.2 C8: value creation sentence, rebuilt from stored keys. */
   function valueCreationSentence(truthPath, ikigaiConfig, record, primaryRole) {
     const talentVerb = truthPath.talentVerbs[record.talent.dominant] || '';
     const roleVerb = truthPath.roleVerbs[record.ironTriangle.primary] || '';
@@ -628,15 +755,30 @@
     // never the raw key. The rephrase is optional in config, so fall back to the label and only then
     // to the key — that keeps an older record readable instead of printing a snake_case key on the
     // page. The label is the same words without the sentence form, which still reads correctly.
-    const impactKey = (record.ikigai.impact || [])[0];
-    const impactOption = impactKey
-      ? optionsFor(ikigaiConfig, 'I-4', [impactKey])[0]
-      : null;
-    const impactPhrase = impactOption
-      ? impactOption.rephrase || String(impactOption.label).toLowerCase()
-      : impactKey
-        ? String(impactKey).replace(/_/g, ' ')
-        : '';
+    //
+    // v2.2 C8: if the phrase shares a MAIN word with the role phrase, the visitor's NEXT I-4 pick
+    // is used instead; the first pick's phrase is only kept when no other pick exists.
+    const phraseOf = (option) =>
+      option.rephrase || String(option.label).toLowerCase();
+    const picks = (record.ikigai.impact || []).map(
+      (key) => optionsFor(ikigaiConfig, 'I-4', [key])[0] || null
+    ).filter(Boolean);
+    const roleWords = new Set(
+      String(roleVerb || '').toLowerCase().split(/[^a-z]+/).filter((w) => w.length > 2)
+    );
+    const clashes = (phrase) =>
+      String(phrase || '').toLowerCase().split(/[^a-z]+/)
+        .some((w) => w.length > 2 && roleWords.has(w));
+
+    let impactPhrase = '';
+    if (picks.length) {
+      const clashFree = picks.find((option) => !clashes(phraseOf(option)));
+      impactPhrase = phraseOf(clashFree || picks[0]);
+    }
+    if (!impactPhrase && picks.length === 0) {
+      const impactKey = (record.ikigai.impact || [])[0];
+      impactPhrase = impactKey ? String(impactKey).replace(/_/g, ' ') : '';
+    }
 
     if (!impactPhrase) return template.replace(/\{talentVerb\}/g, talentVerb)
       .replace(/\{roleVerb\}/g, roleVerb)

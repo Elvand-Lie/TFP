@@ -76,8 +76,8 @@ test('Section 17 Case A — Systems Strategist, Chancellor, gap Commander, The M
   assert.equal(talent.archetype.name, 'Systems Strategist');
   assert.equal(talent.archetypeKey, 'organiser_analyst');
 
-  // Displayed shares: Cm 21 / Ge 21 / Ch 58
-  assert.deepEqual(triangle.shares, { commander: 21, general: 21, chancellor: 58 });
+  // Displayed shares: Cm 22 / Ge 22 / Ch 58 -> v2.2 C5 (consulting untagged, technology tagged chancellor)
+  assert.deepEqual(triangle.shares, { commander: 22, general: 22, chancellor: 56 });
   assert.equal(triangle.primary, 'chancellor');
 
   // gap Commander -> The Master Architect
@@ -86,7 +86,7 @@ test('Section 17 Case A — Systems Strategist, Chancellor, gap Commander, The M
 });
 
 // ─── Case B ──────────────────────────────────────────────────────────────────
-test('Section 17 Case B — co-dominant Communicator=Creative, Visionary Influencer, The Movement Builder', () => {
+test('Section 17 Case B — co-dominant Communicator=Creative, Creative Influencer, The Movement Builder', () => {
   const { talent, triangle } = runCase(
     [2, 2, 2, 3, 3, 3, 5, 4, 5, 5, 5, 4],
     [
@@ -101,7 +101,7 @@ test('Section 17 Case B — co-dominant Communicator=Creative, Visionary Influen
 
   assert.equal(talent.coDominant, true);
   assert.equal(talent.raw.communicator, talent.raw.creative);
-  assert.equal(talent.archetype.name, 'Visionary Influencer');
+  assert.equal(talent.archetype.name, 'Creative Influencer'); // v2.2 C6 rename
   assert.equal(talent.archetypeKey, 'communicator_creative');
 
   // Cm 67 / Ge 25 / Ch 8

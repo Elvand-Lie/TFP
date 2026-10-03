@@ -21,22 +21,49 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  /** Brand palette (Brief 11), shared with the on-screen report. */
+  /** Print palette (v2.2 C2): dark text on white, gold for lines and bars only. */
   const C = {
     crimson: '#710101',
+    burgundy: '#7A1F2B',
     gold: '#C6A96B',
     ivory: '#F5F2ED',
     medGrey: '#E8E5E0',
-    textDark: '#1C1C1E',
-    textMed: '#555555',
-    textLight: '#888580',
-    panel: '#FDFCFB'
+    textDark: '#1F1F1F',
+    textMed: '#4A4A4A',
+    textLight: '#4A4A4A',
+    panel: '#FAF7F2'
   };
 
   const FONT = 'NotoSansSC';
 
   /**
+   * v2.2 C9: the embedded CJK font draws typographic quotes and apostrophes with full-width
+   * spacing ("you’ re"). ASCII punctuation is proportional in the same font, so the print layer
+   * normalises the typographic variants; the site keeps the typographic forms.
+   */
+  function latinizePunctuation(value) {
+    return String(value)
+      .replace(/[‘’‛]/g, "'")
+      .replace(/[“”‟]/g, '"')
+      .replace(/…/g, '...')
+      .replace(/[​  ]/g, ' ');
+  }
+
+  /** Deeply normalise every string in the pdfmake content tree (C9). */
+  function sanitizeContent(node) {
+    if (typeof node === 'string') return latinizePunctuation(node);
+    if (Array.isArray(node)) return node.map(sanitizeContent);
+    if (node && typeof node === 'object') {
+      const out = {};
+      for (const key of Object.keys(node)) out[key] = sanitizeContent(node[key]);
+      return out;
+    }
+    return node;
+  }
+
+  /**
    * Small-caps style label, matching `.tp-label` on the page.
+   * v2.2 C2: section labels print burgundy bold — never pale gold.
    * @param {string} [text]
    * @returns {Array<any>}
    */
@@ -47,7 +74,7 @@
         text: String(text).toUpperCase(),
         fontSize: 7.5,
         bold: true,
-        color: C.gold,
+        color: C.burgundy,
         characterSpacing: 0.6,
         margin: [0, 0, 0, 0]
       }
@@ -108,13 +135,13 @@
       (row) => typeof row.value === 'number' && row.value <= 100
     );
     const body = (block.rows || []).map((row) => [
-      { text: String(row.name), fontSize: 9, color: C.textDark, margin: [0, 3, 8, 3] },
+      { text: String(row.name), fontSize: 9, bold: true, color: C.textDark, margin: [0, 3, 8, 3] },
       {
         text: isShare ? String(row.value) + '%' : String(row.value),
         fontSize: 9,
         bold: true,
         alignment: 'right',
-        color: C.crimson,
+        color: C.textDark,
         width: 34,
         margin: [0, 3, 0, 3]
       },
@@ -232,9 +259,70 @@
       case 'scores':
         return scoresBlock(block);
 
+      case 'hero':
+        // v2.2 C3: the headline result opens page 1.
+        /** @type {Array<any>} */
+        {
+          const heroContent = [];
+          if (block.preparedFor) {
+            heroContent.push({
+              text: String(block.preparedFor),
+              fontSize: 9,
+              color: C.textMed,
+              alignment: 'center',
+              margin: [0, 0, 0, 2]
+            });
+          }
+          heroContent.push({
+            text: String(block.intro || ''),
+            fontSize: 11,
+            color: C.textDark,
+            alignment: 'center',
+            margin: [0, 0, 0, 2]
+          });
+          heroContent.push({
+            text: String(block.title || '').toUpperCase(),
+            fontSize: 22,
+            bold: true,
+            color: C.burgundy,
+            alignment: 'center',
+            margin: [0, 0, 0, 2]
+          });
+          if (block.tagline) {
+            heroContent.push({
+              text: String(block.tagline),
+              fontSize: 10,
+              color: C.textDark,
+              alignment: 'center',
+              margin: [0, 0, 0, 2]
+            });
+          }
+          heroContent.push({
+            text: String(block.subtitle || ''),
+            fontSize: 8.5,
+            color: C.textMed,
+            alignment: 'center'
+          });
+          return {
+            table: { widths: ['*'], body: [[{ stack: heroContent, margin: [8, 4, 8, 5] }]] },
+            layout: {
+              hLineWidth: () => 1.2,
+              vLineWidth: () => 1.2,
+              hLineColor: () => C.gold,
+              vLineColor: () => C.gold,
+              fillColor: () => C.ivory,
+              paddingTop: () => 0,
+              paddingBottom: () => 0,
+              paddingLeft: () => 0,
+              paddingRight: () => 0
+            },
+            margin: [0, 0, 0, 6]
+          };
+        }
+
       case 'pair': {
-        // Canonical page 1: the heading reads the tree, the lead line interprets it, and the
-        // archetype essence is printed only when a single branch actually leads.
+        // Canonical page 1: the heading reads the tree, the lead line interprets it, and v2.2 C10
+        // carries one natural-strengths sentence instead of raw lists.
         /** @type {Array<any>} */
         const content = label(block.label).concat([
           {
@@ -252,21 +340,11 @@
           ? block.dominant + ' = ' + block.secondary
           : block.dominant + ' + ' + block.secondary;
         content.push({ text: joined, fontSize: 9, color: C.textMed, margin: [0, 0, 0, 2] });
-        if (block.naturalStrengthsLine) {
+        if (block.strengthsSentence) {
           content.push({
-            text: String(block.naturalStrengthsLine),
+            text: String(block.strengthsSentence),
             fontSize: 9.5,
             color: C.textDark,
-            margin: [0, 0, 0, 2]
-          });
-        }
-        if (block.essence) {
-          content.push({
-            text: [
-              { text: block.archetype ? block.archetype.name : '', bold: true, color: C.crimson },
-              { text: ' \u2014 ' + String(block.essence), color: C.textMed }
-            ],
-            fontSize: 9.5,
             margin: [0, 0, 0, 2]
           });
         }
@@ -318,8 +396,9 @@
         /** @type {Array<any>} */
         const content = label(block.label).concat([
           {
+            // v2.2 C12: the heading reads "Commander 帅才"; the single glyph is a separate badge.
             text: [
-              { text: String(block.glyph || '') + '  ', fontSize: 15, color: C.gold },
+              { text: String(block.glyph || '') + '  ', fontSize: 15, color: C.burgundy },
               { text: block.name + ' ' + block.chinese, fontSize: 13, bold: true, color: C.textDark }
             ],
             margin: [0, 0, 0, 1]
@@ -366,24 +445,56 @@
       case 'title':
         return titleBlock(block);
 
-      case 'invite':
+      case 'invite': {
         // Brief 8/11: the soft consultation invite closes page 3. The PDF keeps it as a link.
-        return {
-          stack: [
-            { text: String(block.headline || ''), fontSize: 13, bold: true, color: C.crimson, alignment: 'center', margin: [0, 1, 0, 3] },
-            { text: String(block.text || ''), fontSize: 9.5, color: C.textMed, alignment: 'center', margin: [0, 0, 0, 4] },
-            {
-              text: String(block.ctaLabel || ''),
-              fontSize: 10,
-              bold: true,
-              color: C.crimson,
-              alignment: 'center',
-              link: block.ctaHref || '/contact',
-              decoration: 'underline'
-            },
-            { text: '', margin: [0, 0, 0, 1] }
-          ]
-        };
+        // v2.2 C13: when a booking URL is configured, the QR sits beside the text link.
+        /** @type {Array<any>} */
+        const stack = [
+          { text: String(block.headline || ''), fontSize: 13, bold: true, color: C.crimson, alignment: 'center', margin: [0, 1, 0, 3] },
+          { text: String(block.text || ''), fontSize: 9.5, color: C.textMed, alignment: 'center', margin: [0, 0, 0, 4] }
+        ];
+        if (block.qr && block.qr.dataUrl) {
+          stack.push({
+            columns: [
+              {
+                width: '*',
+                stack: [
+                  {
+                    text: String(block.ctaLabel || ''),
+                    fontSize: 10,
+                    bold: true,
+                    color: C.crimson,
+                    alignment: 'center',
+                    link: block.ctaHref || '/contact',
+                    decoration: 'underline',
+                    margin: [0, 14, 0, 0]
+                  }
+                ]
+              },
+              {
+                width: 96,
+                stack: [
+                  { image: String(block.qr.dataUrl), width: 71, alignment: 'center' },
+                  { text: String(block.qr.caption || ''), fontSize: 7.5, color: C.textMed, alignment: 'center', margin: [0, 2, 0, 0] }
+                ]
+              }
+            ],
+            margin: [0, 0, 0, 1]
+          });
+        } else {
+          stack.push({
+            text: String(block.ctaLabel || ''),
+            fontSize: 10,
+            bold: true,
+            color: C.crimson,
+            alignment: 'center',
+            link: block.ctaHref || '/contact',
+            decoration: 'underline'
+          });
+        }
+        stack.push({ text: '', margin: [0, 0, 0, 1] });
+        return { stack };
+      }
 
       default:
         return null;
@@ -401,7 +512,7 @@
         {
           width: '*',
           stack: [
-            { text: 'PAGE ' + String(page.n), fontSize: 7.5, bold: true, color: C.gold, characterSpacing: 0.6 },
+            { text: 'PAGE ' + String(page.n), fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.6 },
             { text: String(page.heading), fontSize: 15, bold: true, color: C.crimson }
           ]
         }
@@ -453,7 +564,7 @@
       text: 'TRUE PATH \u00b7 \u8f68\u9053',
       fontSize: 8,
       bold: true,
-      color: C.gold,
+      color: C.burgundy,
       characterSpacing: 1.2,
       alignment: 'center',
       margin: [0, 0, 0, 3]
@@ -463,15 +574,6 @@
       fontSize: 15,
       bold: true,
       color: C.crimson,
-      alignment: 'center',
-      margin: [0, 0, 0, 4]
-    });
-    content.push({
-      text:
-        String(model.resultId || '') +
-        (model.createdAt ? '  \u00b7  ' + String(model.createdAt).slice(0, 10) : ''),
-      fontSize: 8,
-      color: C.textLight,
       alignment: 'center',
       margin: [0, 0, 0, 6]
     });
@@ -511,7 +613,9 @@
       // talent levels and all 3 roles, 1215 shapes — at exactly 3 pages without trimming copy.
       defaultStyle: { font: FONT, fontSize: 9, color: C.textDark, lineHeight: 1.05 },
       info: {
-        title: String(model.headline || 'True Path Report'),
+        title: asPdfName(model)
+          ? 'True Path Report — ' + asPdfName(model)
+          : String(model.headline || 'True Path Report'),
         author: 'The Full Picture',
         subject: 'True Path \u8f68\u9053 \u2014 3-page report',
         creator: 'The Full Picture',
@@ -522,10 +626,18 @@
         creationDate: stableDate(model.createdAt),
         modDate: stableDate(model.createdAt)
       },
-      content,
+      content: sanitizeContent(content),
       footer: (currentPage, pageCount) => ({
         columns: [
-          { text: String(model.brand || ''), fontSize: 7.5, color: C.textLight, margin: [38, 0, 0, 0] },
+          {
+            // v2.2 C14: the result id lives in small footer print (support), not in the header.
+            text:
+              String(model.brand || '') +
+              (model.resultId ? ' · ' + String(model.resultId) : ''),
+            fontSize: 7.5,
+            color: C.textLight,
+            margin: [38, 0, 0, 0]
+          },
           {
             text: currentPage + ' / ' + pageCount,
             fontSize: 7.5,
@@ -537,6 +649,13 @@
         margin: [0, 14, 0, 0]
       })
     };
+  }
+
+  /** C14: the sanitised first name for the document title. */
+  function asPdfName(model) {
+    const name = model && model.profile && model.profile.firstName;
+    if (!name) return '';
+    return String(name).replace(/[\\/:*?"<>|]/g, '').trim().slice(0, 40);
   }
 
   /**

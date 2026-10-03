@@ -25,10 +25,10 @@
       displayOrder:c.ORDER.map(i=>'Q'+(i+1)), archetypes, scoring:scoring.talent
     };
     const fields = ['energises','goodAt','economicValue','impact'];
-    const rows = ['Energises','Good at','Economic value','Impact'];
+    const rows = ['Energises','Good at','Work you could be paid for','Impact'];
     const ikigai = {
       ...view.ikigai, version:'2.1',
-      screens:c.IK.map((item,i) => ({id:'I-'+(i+1),field:fields[i],rowLabel:rows[i],question:item[0],
+      screens:c.IK.map((item,i) => ({id:'I-'+(i+1),field:fields[i],rowLabel:rows[i],question:item[0],helper:item[2]&&typeof item[2]==='string'?item[2]:null,
         options:item[1].map(option=>({key:option[0],label:option[1],role:c.TAGS[option[0]]||null,rephrase:option[2]}))})),
       suggestions:Object.fromEntries(talents.map(key=>[key,Object.fromEntries(c.SG[key].map((values,i)=>['I-'+(i+1),values]))])),
       talentSkills:c.CAP,
@@ -52,7 +52,8 @@
     };
     const cta = {...view.cta,
       result:{...view.cta.result,consultHref:c.integration.consultUrl,products:c.integration.products},
-      report:{...view.cta.report,privacyHref:c.integration.privacyUrl}};
+      report:{...view.cta.report,privacyHref:c.integration.privacyUrl},
+      bookingUrl:c.integration.bookingUrl||''};
     return {talent,ikigai,ironTriangle,scoring,truthPath,trupath:truthPath,cta,canonical:c};
   }
   return Object.freeze({build});

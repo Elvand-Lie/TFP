@@ -115,7 +115,7 @@ test('report: record carries its schema version and the weights that produced it
   const record = buildRecord(caseFInput());
 
   assert.equal(record.schemaVersion, ReportModel.SCHEMA_VERSION);
-  assert.equal(record.schemaVersion, '2.1');
+  assert.equal(record.schemaVersion, '2.2'); // v2.2 C1
   assert.equal(record.resultId, 'tp_test000001');
   assert.equal(record.locale, 'en');
 
@@ -178,7 +178,7 @@ test('report: every model block resolves its keys to real copy', () => {
   const model = ReportModel.buildReportModel(record, modelConfigs);
 
   // Blocks that are pure visuals or self-labelling by design, not missing a label.
-  const selfLabelled = ['invite', 'title', 'pair', 'talent-tree', 'iron-triangle'];
+  const selfLabelled = ['invite', 'title', 'pair', 'talent-tree', 'iron-triangle', 'hero']; // v2.2 C3
 
   model.pages.forEach((page) => {
     assert.ok(page.blocks.length > 0, 'page ' + page.n + ' has no blocks');

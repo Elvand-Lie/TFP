@@ -1,905 +1,956 @@
 {
-  "Q": [
-    [
-      "I naturally enjoy planning, structuring and organising things."
-    ],
-    [
-      "I feel comfortable managing timelines, resources and responsibilities."
-    ],
-    [
-      "I prefer clarity, systems and step-by-step processes."
-    ],
-    [
-      "I enjoy studying patterns, trends or hidden causes behind situations."
-    ],
-    [
-      "I often make decisions by analysing facts before acting."
-    ],
-    [
-      "I like solving complex problems through logic and research."
-    ],
-    [
-      "I enjoy expressing ideas, teaching, speaking or persuading others."
-    ],
-    [
-      "People often come to me because I can explain things clearly."
-    ],
-    [
-      "I feel energised when I can influence, present or connect with people."
-    ],
-    [
-      "I enjoy generating new ideas, concepts or possibilities."
-    ],
-    [
-      "I prefer work that allows imagination, innovation or visual thinking."
-    ],
-    [
-      "I often see alternative ways to approach a problem."
-    ]
+ "Q": [
+  [
+   "I naturally enjoy planning, structuring and organising things."
   ],
-  "ORDER": [
-    0,
-    3,
-    6,
-    9,
-    1,
-    4,
-    7,
-    10,
-    2,
-    5,
-    8,
-    11
+  [
+   "I feel comfortable managing timelines, resources and responsibilities."
   ],
-  "ARCH": {
-    "organiser+analyst": [
-      "Systems Strategist",
-      "Turns complexity into clear structure."
-    ],
-    "analyst+communicator": [
-      "Strategic Communicator",
-      "Makes insight persuasive."
-    ],
-    "communicator+creative": [
-      "Visionary Influencer",
-      "Inspires people with new possibilities."
-    ],
-    "analyst+creative": [
-      "Innovation Thinker",
-      "Invents smart solutions to hard problems."
-    ],
-    "organiser+communicator": [
-      "Leadership Coordinator",
-      "Mobilises people around a plan."
-    ],
-    "organiser+creative": [
-      "Practical Creator",
-      "Brings imaginative ideas to life."
-    ]
-  },
-  "TI": {
-    "Systems Strategist": [
-      [
-        "The Grand Strategist",
-        "Sets direction through rigorous systems thinking."
-      ],
-      [
-        "The Precision Operator",
-        "Executes complex plans with analytical accuracy."
-      ],
-      [
-        "The Master Architect",
-        "Builds the systems that let organisations scale."
-      ]
-    ],
-    "Strategic Communicator": [
-      [
-        "The Thought Leader",
-        "Shapes direction by making complex ideas compelling."
-      ],
-      [
-        "The Persuasive Closer",
-        "Wins decisive moments with evidence and influence."
-      ],
-      [
-        "The Trusted Advisor",
-        "The steady counsel behind sound decisions."
-      ]
-    ],
-    "Visionary Influencer": [
-      [
-        "The Movement Builder",
-        "Rallies people around a bold, inspiring vision."
-      ],
-      [
-        "The Breakthrough Champion",
-        "Opens new markets and audiences through creative influence."
-      ],
-      [
-        "The Culture Custodian",
-        "Shapes culture, brand and people so the vision endures."
-      ]
-    ],
-    "Innovation Thinker": [
-      [
-        "The Visionary Pioneer",
-        "Sees future possibilities others miss."
-      ],
-      [
-        "The Problem Breaker",
-        "Cracks hard problems with inventive solutions."
-      ],
-      [
-        "The Innovation Architect",
-        "Turns new ideas into repeatable systems."
-      ]
-    ],
-    "Leadership Coordinator": [
-      [
-        "The Team Commander",
-        "Mobilises people and resources toward a shared goal."
-      ],
-      [
-        "The Field Marshal",
-        "Leads from the front, turning plans into results through people."
-      ],
-      [
-        "The People Steward",
-        "Keeps teams aligned, supported and running well."
-      ]
-    ],
-    "Practical Creator": [
-      [
-        "The Venture Builder",
-        "Turns imaginative ideas into ventures with a clear plan."
-      ],
-      [
-        "The Maker",
-        "Ships creative work that gets real results."
-      ],
-      [
-        "The Experience Designer",
-        "Designs processes and experiences that run beautifully."
-      ]
-    ]
-  },
-  "IK": [
-    [
-      "What naturally energises you?",
-      [
-        [
-          "teaching_sharing",
-          "Teaching / sharing knowledge"
-        ],
-        [
-          "building_creating_projects",
-          "Building / creating projects"
-        ],
-        [
-          "leading_influencing",
-          "Leading / influencing people"
-        ],
-        [
-          "solving_problems",
-          "Solving problems"
-        ],
-        [
-          "designing_imagining",
-          "Designing / imagining possibilities"
-        ],
-        [
-          "helping_transform",
-          "Helping others transform"
-        ]
-      ]
-    ],
-    [
-      "What are you naturally good at?",
-      [
-        [
-          "communication",
-          "Communication"
-        ],
-        [
-          "strategy",
-          "Strategy"
-        ],
-        [
-          "planning",
-          "Planning"
-        ],
-        [
-          "creativity",
-          "Creativity"
-        ],
-        [
-          "leadership",
-          "Leadership"
-        ],
-        [
-          "analysis",
-          "Analysis"
-        ],
-        [
-          "empathy",
-          "Empathy"
-        ],
-        [
-          "execution",
-          "Execution"
-        ]
-      ]
-    ],
-    [
-      "Where could you create economic value?",
-      [
-        [
-          "business_entrepreneurship",
-          "Business / entrepreneurship"
-        ],
-        [
-          "sales_influence",
-          "Sales / influence"
-        ],
-        [
-          "consulting_advisory",
-          "Consulting / advisory"
-        ],
-        [
-          "education_training",
-          "Education / training"
-        ],
-        [
-          "technology_systems",
-          "Technology / systems"
-        ],
-        [
-          "creative_work",
-          "Creative work"
-        ],
-        [
-          "personal_growth_coaching",
-          "Personal growth / coaching"
-        ],
-        [
-          "operations_management",
-          "Operations / management"
-        ]
-      ]
-    ],
-    [
-      "What kind of impact matters to you?",
-      [
-        [
-          "help_people_find_direction",
-          "Help people find direction",
-          "helping people find direction"
-        ],
-        [
-          "help_businesses_grow",
-          "Help businesses grow",
-          "helping businesses grow"
-        ],
-        [
-          "inspire_others",
-          "Inspire others",
-          "inspiring others"
-        ],
-        [
-          "build_systems_efficiency",
-          "Build systems / efficiency",
-          "building systems and efficiency"
-        ],
-        [
-          "create_innovation",
-          "Create innovation",
-          "creating innovation"
-        ],
-        [
-          "teach_wisdom",
-          "Teach wisdom",
-          "teaching wisdom"
-        ],
-        [
-          "build_wealth_freedom",
-          "Build wealth and freedom",
-          "building wealth and freedom"
-        ],
-        [
-          "help_people_navigate_change",
-          "Help people navigate change",
-          "helping people navigate change"
-        ]
-      ]
-    ]
+  [
+   "I prefer clarity, systems and step-by-step processes."
   ],
-  "SG": {
-    "organiser": [
-      [
-        "building_creating_projects"
-      ],
-      [
-        "planning",
-        "execution"
-      ],
-      [
-        "operations_management"
-      ],
-      [
-        "build_systems_efficiency"
-      ]
+  [
+   "I enjoy studying patterns, trends or hidden causes behind situations."
+  ],
+  [
+   "I often make decisions by analysing facts before acting."
+  ],
+  [
+   "I like solving complex problems through logic and research."
+  ],
+  [
+   "I enjoy expressing ideas, teaching, speaking or persuading others."
+  ],
+  [
+   "People often come to me because I can explain things clearly."
+  ],
+  [
+   "I feel energised when I can influence, present or connect with people."
+  ],
+  [
+   "I enjoy generating new ideas, concepts or possibilities."
+  ],
+  [
+   "I prefer work that allows imagination, innovation or visual thinking."
+  ],
+  [
+   "I often see alternative ways to approach a problem."
+  ]
+ ],
+ "ORDER": [
+  0,
+  3,
+  6,
+  9,
+  1,
+  4,
+  7,
+  10,
+  2,
+  5,
+  8,
+  11
+ ],
+ "ARCH": {
+  "organiser+analyst": [
+   "Systems Strategist",
+   "Turns complexity into clear structure."
+  ],
+  "analyst+communicator": [
+   "Strategic Communicator",
+   "Makes insight persuasive."
+  ],
+  "communicator+creative": [
+   "Creative Influencer",
+   "Inspires people with new possibilities."
+  ],
+  "analyst+creative": [
+   "Innovation Thinker",
+   "Invents smart solutions to hard problems."
+  ],
+  "organiser+communicator": [
+   "Leadership Coordinator",
+   "Mobilises people around a plan."
+  ],
+  "organiser+creative": [
+   "Practical Creator",
+   "Brings imaginative ideas to life."
+  ]
+ },
+ "TI": {
+  "Systems Strategist": [
+   [
+    "The Grand Strategist",
+    "Sets direction through rigorous systems thinking."
+   ],
+   [
+    "The Precision Operator",
+    "Executes complex plans with analytical accuracy."
+   ],
+   [
+    "The Master Architect",
+    "Builds the systems that let organisations scale."
+   ]
+  ],
+  "Strategic Communicator": [
+   [
+    "The Thought Leader",
+    "Shapes direction by making complex ideas compelling."
+   ],
+   [
+    "The Persuasive Closer",
+    "Wins decisive moments with evidence and influence."
+   ],
+   [
+    "The Trusted Advisor",
+    "The steady counsel behind sound decisions."
+   ]
+  ],
+  "Creative Influencer": [
+   [
+    "The Movement Builder",
+    "Rallies people around a bold, inspiring vision."
+   ],
+   [
+    "The Breakthrough Champion",
+    "Opens new markets and audiences through creative influence."
+   ],
+   [
+    "The Culture Custodian",
+    "Shapes culture, brand and people so the vision endures."
+   ]
+  ],
+  "Innovation Thinker": [
+   [
+    "The Visionary Pioneer",
+    "Sees future possibilities others miss."
+   ],
+   [
+    "The Problem Breaker",
+    "Cracks hard problems with inventive solutions."
+   ],
+   [
+    "The Innovation Architect",
+    "Turns new ideas into repeatable systems."
+   ]
+  ],
+  "Leadership Coordinator": [
+   [
+    "The Team Commander",
+    "Mobilises people and resources toward a shared goal."
+   ],
+   [
+    "The Field Marshal",
+    "Leads from the front, turning plans into results through people."
+   ],
+   [
+    "The People Steward",
+    "Keeps teams aligned, supported and running well."
+   ]
+  ],
+  "Practical Creator": [
+   [
+    "The Venture Builder",
+    "Turns imaginative ideas into ventures with a clear plan."
+   ],
+   [
+    "The Maker",
+    "Ships creative work that gets real results."
+   ],
+   [
+    "The Experience Designer",
+    "Designs processes and experiences that run beautifully."
+   ]
+  ]
+ },
+ "IK": [
+  [
+   "What naturally energises you?",
+   [
+    [
+     "teaching_sharing",
+     "Teaching / sharing knowledge",
+     "teaching"
     ],
-    "analyst": [
-      [
-        "solving_problems"
-      ],
-      [
-        "analysis",
-        "strategy"
-      ],
-      [
-        "consulting_advisory"
-      ],
-      [
-        "help_businesses_grow"
-      ]
+    [
+     "building_creating_projects",
+     "Building / creating projects",
+     "building and creating projects"
     ],
-    "communicator": [
-      [
-        "teaching_sharing"
-      ],
-      [
-        "communication",
-        "empathy"
-      ],
-      [
-        "education_training"
-      ],
-      [
-        "inspire_others"
-      ]
+    [
+     "leading_influencing",
+     "Leading / influencing people",
+     "leading people"
     ],
-    "creative": [
-      [
-        "designing_imagining"
-      ],
-      [
-        "creativity"
-      ],
-      [
-        "creative_work"
-      ],
-      [
-        "create_innovation"
-      ]
+    [
+     "solving_problems",
+     "Solving problems",
+     "solving problems"
+    ],
+    [
+     "designing_imagining",
+     "Designing / imagining possibilities",
+     "designing and imagining possibilities"
+    ],
+    [
+     "helping_transform",
+     "Helping others transform",
+     "helping others transform"
     ]
-  },
-  "CAP": {
-    "organiser": [
-      "planning",
-      "execution"
+   ]
+  ],
+  [
+   "What are you naturally good at?",
+   [
+    [
+     "communication",
+     "Communication"
     ],
-    "analyst": [
-      "analysis",
-      "strategy"
+    [
+     "strategy",
+     "Strategy"
     ],
-    "communicator": [
-      "communication",
-      "empathy"
+    [
+     "planning",
+     "Planning"
     ],
-    "creative": [
-      "creativity"
+    [
+     "creativity",
+     "Creativity"
+    ],
+    [
+     "leadership",
+     "Leadership"
+    ],
+    [
+     "analysis",
+     "Analysis"
+    ],
+    [
+     "empathy",
+     "Empathy"
+    ],
+    [
+     "execution",
+     "Execution"
     ]
+   ]
+  ],
+  [
+   "What kind of work could people pay you for?",
+   [
+    [
+     "business_entrepreneurship",
+     "Business / entrepreneurship",
+     "business and entrepreneurship"
+    ],
+    [
+     "sales_influence",
+     "Sales / influence",
+     "sales and influence"
+    ],
+    [
+     "consulting_advisory",
+     "Consulting / advisory",
+     "consulting"
+    ],
+    [
+     "education_training",
+     "Education / training",
+     "education and training"
+    ],
+    [
+     "technology_systems",
+     "Technology / systems",
+     "technology and systems"
+    ],
+    [
+     "creative_work",
+     "Creative work",
+     "creative work"
+    ],
+    [
+     "personal_growth_coaching",
+     "Personal growth / coaching",
+     "personal-growth coaching"
+    ],
+    [
+     "operations_management",
+     "Operations / management",
+     "operations and management"
+    ]
+   ],
+   "Pick the areas where you could earn a living, now or in the future."
+  ],
+  [
+   "What kind of impact matters to you?",
+   [
+    [
+     "help_people_find_direction",
+     "Help people find direction",
+     "helping people find their way"
+    ],
+    [
+     "help_businesses_grow",
+     "Help businesses grow",
+     "helping businesses grow"
+    ],
+    [
+     "inspire_others",
+     "Inspire others",
+     "inspiring others"
+    ],
+    [
+     "build_systems_efficiency",
+     "Build systems / efficiency",
+     "making things run better"
+    ],
+    [
+     "create_innovation",
+     "Create innovation",
+     "bringing new ideas to life"
+    ],
+    [
+     "teach_wisdom",
+     "Teach wisdom",
+     "sharing wisdom that lasts"
+    ],
+    [
+     "build_wealth_freedom",
+     "Build wealth and freedom",
+     "building wealth and freedom"
+    ],
+    [
+     "help_people_navigate_change",
+     "Help people navigate change",
+     "guiding people through change"
+    ]
+   ]
+  ]
+ ],
+ "SG": {
+  "organiser": [
+   [
+    "building_creating_projects"
+   ],
+   [
+    "planning",
+    "execution"
+   ],
+   [
+    "operations_management"
+   ],
+   [
+    "build_systems_efficiency"
+   ]
+  ],
+  "analyst": [
+   [
+    "solving_problems"
+   ],
+   [
+    "analysis",
+    "strategy"
+   ],
+   [
+    "consulting_advisory"
+   ],
+   [
+    "help_businesses_grow"
+   ]
+  ],
+  "communicator": [
+   [
+    "teaching_sharing"
+   ],
+   [
+    "communication",
+    "empathy"
+   ],
+   [
+    "education_training"
+   ],
+   [
+    "inspire_others"
+   ]
+  ],
+  "creative": [
+   [
+    "designing_imagining"
+   ],
+   [
+    "creativity"
+   ],
+   [
+    "creative_work"
+   ],
+   [
+    "create_innovation"
+   ]
+  ]
+ },
+ "CAP": {
+  "organiser": [
+   "planning",
+   "execution"
+  ],
+  "analyst": [
+   "analysis",
+   "strategy"
+  ],
+  "communicator": [
+   "communication",
+   "empathy"
+  ],
+  "creative": [
+   "creativity"
+  ]
+ },
+ "AFFINITY": {
+  "commander": {
+   "organiser": 0,
+   "analyst": 0.3,
+   "communicator": 0.3,
+   "creative": 0.4
   },
-  "AFFINITY": {
+  "general": {
+   "organiser": 0.35,
+   "analyst": 0,
+   "communicator": 0.45,
+   "creative": 0.2
+  },
+  "chancellor": {
+   "organiser": 0.4,
+   "analyst": 0.45,
+   "communicator": 0,
+   "creative": 0.15
+  }
+ },
+ "TAGS": {
+  "leading_influencing": "commander",
+  "designing_imagining": "commander",
+  "leadership": "commander",
+  "strategy": "commander",
+  "business_entrepreneurship": "commander",
+  "help_people_find_direction": "commander",
+  "inspire_others": "commander",
+  "building_creating_projects": "general",
+  "execution": "general",
+  "communication": "general",
+  "sales_influence": "general",
+  "build_wealth_freedom": "general",
+  "help_businesses_grow": "general",
+  "create_innovation": "general",
+  "solving_problems": "chancellor",
+  "planning": "chancellor",
+  "analysis": "chancellor",
+  "operations_management": "chancellor",
+  "build_systems_efficiency": "chancellor",
+  "help_people_navigate_change": "chancellor",
+  "technology_systems": "chancellor"
+ },
+ "W": {
+  "scenario": 0.65,
+  "talent": 0.2,
+  "ikigai": 0.15
+ },
+ "TH": {
+  "dual": 5,
+  "balanced": 6
+ },
+ "SC": [
+  [
+   "A new project lands on your team with no clear plan. What do you naturally do first?",
+   "Define what success looks like and why it matters, then set the direction.",
+   "Get moving: take on the hardest piece and start producing results.",
+   "Map out roles, resources, timeline and risks so nothing falls through."
+  ],
+  [
+   "Your team is behind on an important deadline. You…",
+   "Re-prioritise: decide what truly matters and rally everyone around it.",
+   "Roll up your sleeves and personally push the critical tasks over the line.",
+   "Find the bottleneck in the process and fix it so it doesn’t happen again."
+  ],
+  [
+   "Which recognition feels most meaningful to you?",
+   "“You saw where we needed to go before anyone else.”",
+   "“You delivered when it mattered most.”",
+   "“Because of you, everything runs smoothly.”"
+  ],
+  [
+   "When facing a major decision, you focus first on…",
+   "The long-term picture and where it positions you in 3–5 years.",
+   "What will create the fastest measurable progress now.",
+   "The risks, resources and whether it is sustainable."
+  ],
+  [
+   "In a team, people usually rely on you to…",
+   "Set the vision and make the big calls.",
+   "Win the difficult battles: close the deal, solve the crisis, hit the target.",
+   "Keep people, money and processes in good order."
+  ],
+  [
+   "What frustrates you most at work?",
+   "No clear direction: everyone busy but going nowhere.",
+   "Endless planning and meetings with no action.",
+   "Chaos, shortcuts and avoidable mistakes."
+  ]
+ ],
+ "RC": {
+  "commander": {
+   "core": "You see where things should go and help others commit to getting there.",
+   "str": "Long-range thinking · decisive calls · setting priorities · rallying people",
+   "contrib": "You give a team a “why” and a direction worth following.",
+   "edge": "Pair every vision with one concrete first step and one clear owner.",
+   "watch": "You may underestimate the detail and follow-through ideas need, or move on before they are executed.",
+   "ally": "A General to turn direction into results, and a Chancellor to make it sustainable.",
+   "thrive": "1 → 10 growth stages: leading a team, function, venture or strategic initiative."
+  },
+  "general": {
+   "core": "You turn goals into wins and move first when it matters.",
+   "str": "Drive and ownership · urgency · resilience under pressure · closing",
+   "contrib": "You create momentum and measurable results.",
+   "edge": "Before charging, confirm the direction. After winning, capture what worked as a repeatable method.",
+   "watch": "You may take on too much personally, skip systems, or burn out.",
+   "ally": "A Commander to give you a battle worth winning, and a Chancellor to secure the gains.",
+   "thrive": "0 → 1 stages: frontline, sales, business development, launches, turnarounds."
+  },
+  "chancellor": {
+   "core": "You make things run well, and you make them last.",
+   "str": "Process and governance · resource stewardship · risk awareness · reliability",
+   "contrib": "You create stability, so growth doesn’t collapse under its own weight.",
+   "edge": "Make your impact visible. Quantify the risk you prevented and the time you saved.",
+   "watch": "You may over-prepare, resist fast change, or go unnoticed because good systems are invisible.",
+   "ally": "A Commander to set direction, and a General to create momentum.",
+   "thrive": "10 → 100 scale stages: operations, finance, HR, compliance, programme management, advisory."
+  }
+ },
+ "GAP": {
+  "commander": "You may sometimes work hard on things that aren’t clearly moving you forward. Seek mentors or leaders with clear vision, and set your own 12-month direction.",
+  "general": "Your ideas and systems may be ahead of your results. Work with doers, set short deadlines and celebrate small wins.",
+  "chancellor": "You may create momentum faster than structure. Build simple systems, and partner with someone who loves stability and detail."
+ },
+ "DL": {
+  "commander+general": [
+   "The Pioneer",
+   "You set the direction and lead the charge yourself."
+  ],
+  "commander+chancellor": [
+   "The Architect-Leader",
+   "You set the direction and build the structure to carry it."
+  ],
+  "general+chancellor": [
+   "The Operator",
+   "You deliver results and make them repeatable."
+  ]
+ },
+ "TV": {
+  "organiser": "bringing structure to complexity",
+  "analyst": "finding the insight others miss",
+  "communicator": "helping people understand and act",
+  "creative": "imagining better possibilities"
+ },
+ "RV": {
+  "commander": "setting a clear direction",
+  "general": "turning plans into results",
+  "chancellor": "building foundations that last"
+ },
+ "REFL": [
+  "Does your current environment let you use your strongest talents and your natural role?",
+  "Who in your life plays your “gap” role, and how could you work with them more deliberately?",
+  "Which part of your work gives you the most energy, and how much of your week does it take up?"
+ ],
+ "TN": {
+  "organiser": "Organiser",
+  "analyst": "Analyst",
+  "communicator": "Communicator",
+  "creative": "Creative"
+ },
+ "RN": {
+  "commander": [
+   "Commander",
+   "帅才",
+   "Visionary Leader",
+   "帅"
+  ],
+  "general": [
+   "General",
+   "将才",
+   "Breakthrough Achiever",
+   "将"
+  ],
+  "chancellor": [
+   "Chancellor",
+   "相才",
+   "Steady Architect",
+   "相"
+  ]
+ },
+ "T": [
+  "organiser",
+  "analyst",
+  "communicator",
+  "creative"
+ ],
+ "R": [
+  "commander",
+  "general",
+  "chancellor"
+ ],
+ "TS": {
+  "organiser": "planning, structure, systems, execution, resource allocation",
+  "analyst": "data, logic, research, pattern recognition, strategy",
+  "communicator": "speaking, teaching, persuasion, relationships, influence",
+  "creative": "imagination, innovation, ideation, design, visual thinking"
+ },
+ "AMSG": {
+  "talent_capability_aligned": "Aligned: how you see yourself matches your natural talent pattern.",
+  "talent_capability_explore": "Worth exploring: the strengths you chose differ from your natural talent pattern. You may be relying on learned skills more than natural ones.",
+  "economic_role_aligned": "Aligned: the areas you want to work in suit the role you naturally play.",
+  "economic_role_explore": "Worth exploring: you’re drawn to areas that rely on your least natural role. Consider partnering with someone strong where you are not."
+ },
+ "talentScoring": {
+  "rawMin": 3,
+  "rawMax": 15,
+  "pctRange": 12,
+  "balancedProfileSpread": 1
+ },
+ "pointsPerScenario": 2,
+ "affinityMatrixVersion": "1.0",
+ "ikigaiTagVersion": "1.0",
+ "presentation": {
+  "talent": {
+   "scale": {
+    "min": 1,
+    "max": 5,
+    "labels": {
+     "1": {
+      "key": "strongly_disagree",
+      "label": "Strongly Disagree"
+     },
+     "2": {
+      "key": "disagree",
+      "label": "Disagree"
+     },
+     "3": {
+      "key": "neutral",
+      "label": "Neutral"
+     },
+     "4": {
+      "key": "agree",
+      "label": "Agree"
+     },
+     "5": {
+      "key": "strongly_agree",
+      "label": "Strongly Agree"
+     }
+    }
+   },
+   "snapshot": {
+    "headline": "Your Talent Tree",
+    "balancedHeadline": "Balanced / Emerging Tree",
+    "balancedMessage": "Your four branches are closely matched, so no single branch dominates yet. You may flex between them more easily than most people.",
+    "coDominantTemplate": "Your {a} and {b} branches are equally strong.",
+    "ctaLabel": "Refine Your Direction",
+    "ctaSubcopy": "Your strengths show how you naturally operate. Now let's explore where those strengths could have the greatest meaning and value.",
+    "ctaHref": "/true-path/direction"
+   },
+   "observations": {
+    "organiser": "You instinctively bring order to moving parts, and people can rely on you to keep track of what matters.",
+    "analyst": "You look past the surface of a situation, which means you usually spot the real issue before others do.",
+    "communicator": "You turn understanding into shared understanding, which is what makes a plan actually travel.",
+    "creative": "You generate options where others see constraints, which opens paths nobody had considered yet."
+   }
+  },
+  "ikigai": {
+   "intro": {
+    "headline": "Your Direction 道",
+    "line": "Your strengths show how you naturally operate. Now let's explore where they could have the greatest meaning and value.",
+    "ctaLabel": "Begin",
+    "ctaHref": "/true-path/direction/q"
+   },
+   "snapshot": {
+    "headline": "Your Direction 道",
+    "synthesisTemplate": "You are drawn to {energises} and {impact}, through {economicValue}.",
+    "ctaLabel": "Discover the Role You'll Play",
+    "ctaSubcopy": "You know how you think and where you want to go. One last step: the role you naturally play to get there.",
+    "ctaHref": "/true-path/role"
+   },
+   "minSelections": 1,
+   "maxSelections": 3,
+   "maxSuggestionsPerScreen": 3,
+   "suggestionBadge": "Suggested for you"
+  },
+  "ironTriangle": {
+   "intro": {
+    "headline": "Last step: the role you'll play to get there.",
+    "body": "Every great team runs on three kinds of talent: the Commander 帅才 who sets direction, the General 将才 who delivers results, and the Chancellor 相才 who builds what lasts. Six quick scenarios. Choose what feels most like you.",
+    "storyToggleLabel": "Read the 2,000-year-old story",
+    "story": "Over 2,000 years ago, the founder of the Han dynasty explained his victory simply. He could not out-plan his strategist, out-govern his chancellor or out-fight his general. But he knew how to bring all three together. 吾能用之，此吾所以取天下也。\n\nToday, every company, project and career still runs on the same Iron Triangle 铁三角.",
+    "ctaLabel": "Begin — 6 scenarios",
+    "ctaHref": "/true-path/role/q"
+   },
+   "stageLabel": "Stage 3 of 3",
+   "timeLeftLabel": "About 60 seconds left",
+   "autoAdvanceMs": 400,
+   "reveal": {
+    "headline": "Your Iron Triangle Role",
+    "shareTooltip": "Talent Tree scores are independent strengths: you can be strong at everything. The Iron Triangle shows how your natural contribution is distributed across the three roles, so it is displayed as a share of 100%.",
+    "gapHeadline": "Your Triangle Gap",
+    "gapFraming": "The ally you most need",
+    "thriveHeadline": "Where you may thrive"
+   },
+   "synthesis": {
+    "lines": [
+     "Aligning your path",
+     "Reading your triangle",
+     "Where talent, purpose and role meet"
+    ],
+    "durationMs": 2600
+   },
+   "balanced": {
+    "label": "三才兼备 · The Complete Triangle",
+    "line": "You flex across all three roles. Watch-out: you may be pulled in every direction, so choose a primary lane for this season."
+   },
+   "roleContext": {
     "commander": {
-      "organiser": 0,
-      "analyst": 0.3,
-      "communicator": 0.3,
-      "creative": 0.4
+     "essence": "帅才 · 定方向 · 谋全局 · 聚人心",
+     "oneLine": "Sets direction, sees the whole board and unites people behind a goal.",
+     "exemplarName": "Liu Bang 刘邦",
+     "exemplarLine": "He admitted he was not the best strategist, administrator or general, but he could lead all three."
     },
     "general": {
-      "organiser": 0.35,
-      "analyst": 0,
-      "communicator": 0.45,
-      "creative": 0.2
+     "essence": "将才 · 攻坚破局 · 执行落地",
+     "oneLine": "Breaks through obstacles, executes under pressure and delivers results.",
+     "exemplarName": "Han Xin 韩信",
+     "exemplarLine": "Commanded vast armies and “won every battle, took every city”."
     },
     "chancellor": {
-      "organiser": 0.4,
-      "analyst": 0.45,
-      "communicator": 0,
-      "creative": 0.15
+     "essence": "相才 · 固本赋能 · 运筹帷幄",
+     "oneLine": "Builds the systems, resources and stability that make success last.",
+     "exemplarName": "Xiao He 萧何",
+     "exemplarLine": "Kept the state stable, the people cared for and supply lines unbroken."
     }
+   },
+   "gapContext": {
+    "commander": "有将相，无帅才: busy and orderly, but without direction",
+    "general": "有帅相，无将才: strong plans, slow results",
+    "chancellor": "有帅将，无相才: fast growth, fragile foundations"
+   }
   },
-  "TAGS": {
-    "leading_influencing": "commander",
-    "designing_imagining": "commander",
-    "leadership": "commander",
-    "strategy": "commander",
-    "business_entrepreneurship": "commander",
-    "help_people_find_direction": "commander",
-    "inspire_others": "commander",
-    "building_creating_projects": "general",
-    "execution": "general",
-    "communication": "general",
-    "sales_influence": "general",
-    "build_wealth_freedom": "general",
-    "help_businesses_grow": "general",
-    "create_innovation": "general",
-    "solving_problems": "chancellor",
-    "planning": "chancellor",
-    "analysis": "chancellor",
-    "consulting_advisory": "chancellor",
-    "operations_management": "chancellor",
-    "build_systems_efficiency": "chancellor",
-    "help_people_navigate_change": "chancellor"
-  },
-  "W": {
-    "scenario": 0.65,
-    "talent": 0.2,
-    "ikigai": 0.15
-  },
-  "TH": {
-    "dual": 5,
-    "balanced": 6
-  },
-  "SC": [
-    [
-      "A new project lands on your team with no clear plan. What do you naturally do first?",
-      "Define what success looks like and why it matters, then set the direction.",
-      "Get moving: take on the hardest piece and start producing results.",
-      "Map out roles, resources, timeline and risks so nothing falls through."
+  "truthPath": {
+   "displayFormat": {
+    "subtitleTemplate": "{archetypeName} · {roleName} {chinese}",
+    "dualTagTemplate": "{dualLabel} pattern",
+    "balancedTag": "三才兼备"
+   },
+   "valueCreationTemplate": "You may create value most naturally by {talentVerb}, {roleVerb}, and {impactPhrase}.",
+   "resultBlocks": {
+    "headline": "Your True Path",
+    "badges": [
+     {
+      "character": "才",
+      "label": "Talent"
+     },
+     {
+      "character": "道",
+      "label": "Direction"
+     },
+     {
+      "character": "位",
+      "label": "Role"
+     }
     ],
-    [
-      "Your team is behind on an important deadline. You…",
-      "Re-prioritise: decide what truly matters and rally everyone around it.",
-      "Roll up your sleeves and personally push the critical tasks over the line.",
-      "Find the bottleneck in the process and fix it so it doesn’t happen again."
-    ],
-    [
-      "Which recognition feels most meaningful to you?",
-      "“You saw where we needed to go before anyone else.”",
-      "“You delivered when it mattered most.”",
-      "“Because of you, everything runs smoothly.”"
-    ],
-    [
-      "When facing a major decision, you focus first on…",
-      "The long-term picture and where it positions you in 3–5 years.",
-      "What will create the fastest measurable progress now.",
-      "The risks, resources and whether it is sustainable."
-    ],
-    [
-      "In a team, people usually rely on you to…",
-      "Set the vision and make the big calls.",
-      "Win the difficult battles: close the deal, solve the crisis, hit the target.",
-      "Keep people, money and processes in good order."
-    ],
-    [
-      "What frustrates you most at work?",
-      "No clear direction: everyone busy but going nowhere.",
-      "Endless planning and meetings with no action.",
-      "Chaos, shortcuts and avoidable mistakes."
-    ]
-  ],
-  "RC": {
-    "commander": {
-      "core": "You see where things should go and help others commit to getting there.",
-      "str": "Long-range thinking · decisive calls · setting priorities · rallying people",
-      "contrib": "You give a team a “why” and a direction worth following.",
-      "edge": "Pair every vision with one concrete first step and one clear owner.",
-      "watch": "You may underestimate the detail and follow-through ideas need, or move on before they are executed.",
-      "ally": "A General to turn direction into results, and a Chancellor to make it sustainable.",
-      "thrive": "1 → 10 growth stages: leading a team, function, venture or strategic initiative."
+    "labels": {
+     "talentPattern": "Talent Pattern 才",
+     "purpose": "Purpose · Direction 道",
+     "capability": "Capability",
+     "economicDirection": "Economic Direction",
+     "impactDirection": "Impact Direction",
+     "valueCreation": "Value Creation Style",
+     "alignment": "Alignment Check",
+     "reflection": "Reflection"
     },
-    "general": {
-      "core": "You turn goals into wins and move first when it matters.",
-      "str": "Drive and ownership · urgency · resilience under pressure · closing",
-      "contrib": "You create momentum and measurable results.",
-      "edge": "Before charging, confirm the direction. After winning, capture what worked as a repeatable method.",
-      "watch": "You may take on too much personally, skip systems, or burn out.",
-      "ally": "A Commander to give you a battle worth winning, and a Chancellor to secure the gains.",
-      "thrive": "0 → 1 stages: frontline, sales, business development, launches, turnarounds."
-    },
-    "chancellor": {
-      "core": "You make things run well, and you make them last.",
-      "str": "Process and governance · resource stewardship · risk awareness · reliability",
-      "contrib": "You create stability, so growth doesn’t collapse under its own weight.",
-      "edge": "Make your impact visible. Quantify the risk you prevented and the time you saved.",
-      "watch": "You may over-prepare, resist fast change, or go unnoticed because good systems are invisible.",
-      "ally": "A Commander to set direction, and a General to create momentum.",
-      "thrive": "10 → 100 scale stages: operations, finance, HR, compliance, programme management, advisory."
-    }
-  },
-  "GAP": {
-    "commander": "You may sometimes work hard on things that aren’t clearly moving you forward. Seek mentors or leaders with clear vision, and set your own 12-month direction.",
-    "general": "Your ideas and systems may be ahead of your results. Work with doers, set short deadlines and celebrate small wins.",
-    "chancellor": "You may create momentum faster than structure. Build simple systems, and partner with someone who loves stability and detail."
-  },
-  "DL": {
-    "commander+general": [
-      "The Pioneer",
-      "You set the direction and lead the charge yourself."
-    ],
-    "commander+chancellor": [
-      "The Architect-Leader",
-      "You set the direction and build the structure to carry it."
-    ],
-    "general+chancellor": [
-      "The Operator",
-      "You deliver results and make them repeatable."
-    ]
-  },
-  "TV": {
-    "organiser": "bringing structure to complexity",
-    "analyst": "finding the insight others miss",
-    "communicator": "helping people understand and act",
-    "creative": "imagining better possibilities"
-  },
-  "RV": {
-    "commander": "setting a clear direction",
-    "general": "turning plans into results",
-    "chancellor": "building foundations that last"
-  },
-  "REFL": [
-    "Does your current environment let you use your strongest talents and your natural role?",
-    "Who in your life plays your “gap” role, and how could you work with them more deliberately?",
-    "Which part of your work gives you the most energy, and how much of your week does it take up?"
-  ],
-  "TN": {
-    "organiser": "Organiser",
-    "analyst": "Analyst",
-    "communicator": "Communicator",
-    "creative": "Creative"
-  },
-  "RN": {
+    "energisedByPrefix": "You are energised by",
+    "strengthsInPrefix": "You see your strengths in",
+    "possibleAreasPrefix": "Possible areas to explore:",
+    "contributeByPrefix": "You want to contribute by"
+   },
+   "disclaimer": "This is a reflective self-discovery tool, not a psychological or career assessment.",
+   "strengthPhrases": {
+    "organiser": "a gift for planning and structure",
+    "analyst": "sharp logic and insight",
+    "communicator": "the ability to explain, teach and persuade",
+    "creative": "imagination and fresh ideas"
+   },
+   "directionSentences": {
+    "energises": "{name}, you come alive when you are {list}.",
+    "goodAt": "You see your strengths in {list}.",
+    "paidFor": "You could earn a living through {list}.",
+    "impact": "The difference you want to make: {list}."
+   },
+   "possibleAreas": {
     "commander": [
-      "Commander",
-      "帅才",
-      "Visionary Leader",
-      "帅"
+     "Leading a team or function",
+     "Building or growing a venture"
     ],
     "general": [
-      "General",
-      "将才",
-      "Breakthrough Achiever",
-      "将"
+     "Frontline roles: sales, business development, launches",
+     "Turnarounds and high-pressure projects"
     ],
     "chancellor": [
-      "Chancellor",
-      "相才",
-      "Steady Architect",
-      "相"
+     "Operations, finance or programme management",
+     "Advisory or governance roles"
     ]
+   }
   },
-  "T": [
-    "organiser",
-    "analyst",
-    "communicator",
-    "creative"
-  ],
-  "R": [
-    "commander",
-    "general",
-    "chancellor"
-  ],
-  "TS": {
-    "organiser": "planning, structure, systems, execution, resource allocation",
-    "analyst": "data, logic, research, pattern recognition, strategy",
-    "communicator": "speaking, teaching, persuasion, relationships, influence",
-    "creative": "imagination, innovation, ideation, design, visual thinking"
-  },
-  "AMSG": {
-    "talent_capability_aligned": "Aligned: how you see yourself matches your natural talent pattern.",
-    "talent_capability_explore": "Worth exploring: the strengths you chose differ from your natural talent pattern. You may be relying on learned skills more than natural ones.",
-    "economic_role_aligned": "Aligned: the areas you want to create value in suit the role you naturally play.",
-    "economic_role_explore": "Worth exploring: you’re drawn to areas that rely on your least natural role. Consider partnering with someone strong where you are not."
-  },
-  "talentScoring": {
-    "rawMin": 3,
-    "rawMax": 15,
-    "pctRange": 12,
-    "balancedProfileSpread": 1
-  },
-  "pointsPerScenario": 2,
-  "affinityMatrixVersion": "1.0",
-  "ikigaiTagVersion": "1.0",
-  "presentation": {
-    "talent": {
-      "scale": {
-        "min": 1,
-        "max": 5,
-        "labels": {
-          "1": {
-            "key": "strongly_disagree",
-            "label": "Strongly Disagree"
-          },
-          "2": {
-            "key": "disagree",
-            "label": "Disagree"
-          },
-          "3": {
-            "key": "neutral",
-            "label": "Neutral"
-          },
-          "4": {
-            "key": "agree",
-            "label": "Agree"
-          },
-          "5": {
-            "key": "strongly_agree",
-            "label": "Strongly Agree"
-          }
-        }
-      },
-      "snapshot": {
-        "headline": "Your Talent Tree",
-        "balancedHeadline": "Balanced / Emerging Tree",
-        "balancedMessage": "Your four branches are closely matched, so no single branch dominates yet. You may flex between them more easily than most people.",
-        "coDominantTemplate": "Your {a} and {b} branches are equally strong.",
-        "ctaLabel": "Refine Your Direction",
-        "ctaSubcopy": "Your strengths show how you naturally operate. Now let's explore where those strengths could have the greatest meaning and value.",
-        "ctaHref": "/true-path/direction"
-      },
-      "observations": {
-        "organiser": "You instinctively bring order to moving parts, and people can rely on you to keep track of what matters.",
-        "analyst": "You look past the surface of a situation, which means you usually spot the real issue before others do.",
-        "communicator": "You turn understanding into shared understanding, which is what makes a plan actually travel.",
-        "creative": "You generate options where others see constraints, which opens paths nobody had considered yet."
-      }
-    },
-    "ikigai": {
-      "intro": {
-        "headline": "Your Direction 道",
-        "line": "Your strengths show how you naturally operate. Now let's explore where they could have the greatest meaning and value.",
-        "ctaLabel": "Begin",
-        "ctaHref": "/true-path/direction/q"
-      },
-      "snapshot": {
-        "headline": "Your Direction 道",
-        "synthesisTemplate": "You are drawn to {energises} and {impact}, through {economicValue}.",
-        "ctaLabel": "Discover the Role You'll Play",
-        "ctaSubcopy": "You know how you think and where you want to go. One last step: the role you naturally play to get there.",
-        "ctaHref": "/true-path/role"
-      },
-      "minSelections": 1,
-      "maxSelections": 3,
-      "maxSuggestionsPerScreen": 3,
-      "suggestionBadge": "Suggested for you"
-    },
-    "ironTriangle": {
-      "intro": {
-        "headline": "Last step: the role you'll play to get there.",
-        "body": "Every great team runs on three kinds of talent: the Commander 帅才 who sets direction, the General 将才 who delivers results, and the Chancellor 相才 who builds what lasts. Six quick scenarios. Choose what feels most like you.",
-        "storyToggleLabel": "Read the 2,000-year-old story",
-        "story": "Over 2,000 years ago, the founder of the Han dynasty explained his victory simply. He could not out-plan his strategist, out-govern his chancellor or out-fight his general. But he knew how to bring all three together. 吾能用之，此吾所以取天下也。\n\nToday, every company, project and career still runs on the same Iron Triangle 铁三角.",
-        "ctaLabel": "Begin — 6 scenarios",
-        "ctaHref": "/true-path/role/q"
-      },
-      "stageLabel": "Stage 3 of 3",
-      "timeLeftLabel": "About 60 seconds left",
-      "autoAdvanceMs": 400,
-      "reveal": {
-        "headline": "Your Iron Triangle Role",
-        "shareTooltip": "Talent Tree scores are independent strengths: you can be strong at everything. The Iron Triangle shows how your natural contribution is distributed across the three roles, so it is displayed as a share of 100%.",
-        "gapHeadline": "Your Triangle Gap",
-        "gapFraming": "The ally you most need",
-        "thriveHeadline": "Where you may thrive"
-      },
-      "synthesis": {
-        "lines": [
-          "Aligning your path",
-          "Reading your triangle",
-          "Where talent, purpose and role meet"
-        ],
-        "durationMs": 2600
-      },
-      "balanced": {
-        "label": "三才兼备 · The Complete Triangle",
-        "line": "You flex across all three roles. Watch-out: you may be pulled in every direction, so choose a primary lane for this season."
-      },
-      "roleContext": {
-        "commander": {
-          "essence": "帅才 · 定方向 · 谋全局 · 聚人心",
-          "oneLine": "Sets direction, sees the whole board and unites people behind a goal.",
-          "exemplarName": "Liu Bang 刘邦",
-          "exemplarLine": "He admitted he was not the best strategist, administrator or general, but he could lead all three."
-        },
-        "general": {
-          "essence": "将才 · 攻坚破局 · 执行落地",
-          "oneLine": "Breaks through obstacles, executes under pressure and delivers results.",
-          "exemplarName": "Han Xin 韩信",
-          "exemplarLine": "Commanded vast armies and “won every battle, took every city”."
-        },
-        "chancellor": {
-          "essence": "相才 · 固本赋能 · 运筹帷幄",
-          "oneLine": "Builds the systems, resources and stability that make success last.",
-          "exemplarName": "Xiao He 萧何",
-          "exemplarLine": "Kept the state stable, the people cared for and supply lines unbroken."
-        }
-      },
-      "gapContext": {
-        "commander": "有将相，无帅才: busy and orderly, but without direction",
-        "general": "有帅相，无将才: strong plans, slow results",
-        "chancellor": "有帅将，无相才: fast growth, fragile foundations"
-      }
-    },
-    "truthPath": {
-      "displayFormat": {
-        "subtitleTemplate": "{archetypeName} · {roleName} {chinese}",
-        "dualTagTemplate": "{dualLabel} pattern",
-        "balancedTag": "三才兼备"
-      },
-      "valueCreationTemplate": "You may create value most naturally by {talentVerb}, {roleVerb}, and {impactPhrase}.",
-      "resultBlocks": {
-        "headline": "Your True Path",
-        "badges": [
-          {
-            "character": "才",
-            "label": "Talent"
-          },
-          {
-            "character": "道",
-            "label": "Direction"
-          },
-          {
-            "character": "位",
-            "label": "Role"
-          }
-        ],
-        "labels": {
-          "talentPattern": "Talent Pattern 才",
-          "purpose": "Purpose · Direction 道",
-          "capability": "Capability",
-          "economicDirection": "Economic Direction",
-          "impactDirection": "Impact Direction",
-          "valueCreation": "Value Creation Style",
-          "alignment": "Alignment Check",
-          "reflection": "Reflection"
-        },
-        "energisedByPrefix": "You are energised by",
-        "strengthsInPrefix": "You see your strengths in",
-        "possibleAreasPrefix": "Possible areas to explore:",
-        "contributeByPrefix": "You want to contribute by"
-      },
-      "disclaimer": "This is a reflective self-discovery tool, not a psychological or career assessment."
-    },
-    "cta": {
-      "version": "1.0",
-      "landing": {
-        "eyebrow": "True Path Method™ · 轨道",
-        "headline": "Discover Your True Path",
-        "headlineSub": "in 4 Minutes",
-        "promise": "“How you think. Where you're headed. How you lead.”",
-        "subcopy": "Three frameworks, one journey. Discover how you naturally think, where your strengths matter most, and the role you'll play to get there.",
-        "ctaLabel": "Start Free Analysis",
-        "ctaHref": "/true-path/talent",
-        "stages": [
-          {
-            "character": "才",
-            "name": "Talent Tree",
-            "line": "Discover how you naturally think."
-          },
-          {
-            "character": "道",
-            "name": "Ikigai",
-            "line": "Discover where your strengths matter most."
-          },
-          {
-            "character": "位",
-            "name": "Iron Triangle",
-            "line": "Discover the role you'll play to get there."
-          }
-        ]
-      },
-      "talentIntro": {
-        "headline": "Your Talent Tree 才",
-        "body": "Twelve short statements. There are no right answers, and your four branches are measured independently, so you can be strong in more than one.",
-        "branches": [
-          {
-            "name": "Organiser",
-            "line": "Planning, structure, systems, execution"
-          },
-          {
-            "name": "Analyst",
-            "line": "Data, logic, research, strategy"
-          },
-          {
-            "name": "Communicator",
-            "line": "Speaking, teaching, persuasion, influence"
-          },
-          {
-            "name": "Creative",
-            "line": "Imagination, innovation, design, visual thinking"
-          }
-        ],
-        "ctaLabel": "Begin — 12 statements",
-        "ctaHref": "/true-path/talent/q"
-      },
-      "progress": {
-        "stages": [
-          {
-            "character": "才",
-            "name": "Talent"
-          },
-          {
-            "character": "道",
-            "name": "Direction"
-          },
-          {
-            "character": "位",
-            "name": "Role"
-          }
-        ]
-      },
-      "result": {
-        "consultHeadline": "Continue Your Exploration",
-        "consultCtaLabel": "Book a 1-Hour Metaphysics Strategic Consultation",
-        "consultSubcopy": "A personalised session combining your True Path results with modern strategy and ancient wisdom, to explore your direction, decisions and timing.",
-        "ancientWisdomBridge": "Your Talent Tree shows how you think. Your Ikigai shows where it matters. Your Iron Triangle shows the role you'll play to get there.\n\nAncient Wisdom adds the one layer no questionnaire can: timing. It looks at when to lead, when to build and when to consolidate, based on your personal patterns.",
-        "productsLabel": "Products",
-        "productsHref": "/services",
-        "restartLabel": "Start again",
-        "restartHref": "/true-path"
-      },
-      "report": {
-        "headline": "Your 3-Page True Path Report",
-        "pages": [
-          {
-            "n": 1,
-            "title": "Your Talent Tree 才"
-          },
-          {
-            "n": 2,
-            "title": "Your Direction 道"
-          },
-          {
-            "n": 3,
-            "title": "Your Role & True Path 位 轨道"
-          }
-        ],
-        "downloadLabel": "Download PDF",
-        "emailHeadline": "Would you like us to send your 3-page True Path report?",
-        "emailFieldName": "First name",
-        "emailFieldEmail": "Email",
-        "emailSendLabel": "Send My Report",
-        "emailSkipLabel": "Skip for now",
-        "marketingConsentLabel": "Send me occasional insights from The Full Picture.",
-        "consentNote": "We store your result and email only to deliver this report. Report delivery and marketing consent are separate, and you can opt out at any time.",
-        "privacyLabel": "Privacy Policy",
-        "sentMessage": "Your report is on its way. Check your inbox in a few minutes."
-      },
-      "footer": {
-        "brand": "The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia"
-      }
-    }
-  },
-  "integration": {
-    "consultUrl": "https://wa.me/6588257687",
-    "privacyUrl": "/privacy",
-    "api": {
-      "saveResult": "/api/true-path-report",
-      "sendReport": "/api/true-path-report",
-      "pdf": "/api/true-path-pdf?id={id}"
-    },
-    "products": [
-      {
-        "id": "tier1",
-        "name": "",
-        "price": "$9.34",
-        "url": ""
-      },
-      {
-        "id": "tier2",
-        "name": "",
-        "price": "$19.34",
-        "url": ""
-      },
-      {
-        "id": "tier3",
-        "name": "",
-        "price": "$49.34",
-        "url": ""
-      }
+  "cta": {
+   "version": "1.0",
+   "landing": {
+    "eyebrow": "True Path Method™ · 轨道",
+    "headline": "Discover Your True Path",
+    "headlineSub": "in 4 Minutes",
+    "promise": "“How you think. Where you're headed. How you lead.”",
+    "subcopy": "Three frameworks, one journey. Discover how you naturally think, where your strengths matter most, and the role you'll play to get there.",
+    "ctaLabel": "Start Free Analysis",
+    "ctaHref": "/true-path/talent",
+    "stages": [
+     {
+      "character": "才",
+      "name": "Talent Tree",
+      "line": "Discover how you naturally think."
+     },
+     {
+      "character": "道",
+      "name": "Ikigai",
+      "line": "Discover where your strengths matter most."
+     },
+     {
+      "character": "位",
+      "name": "Iron Triangle",
+      "line": "Discover the role you'll play to get there."
+     }
     ]
+   },
+   "talentIntro": {
+    "headline": "Your Talent Tree 才",
+    "body": "Twelve short statements. There are no right answers, and your four branches are measured independently, so you can be strong in more than one.",
+    "branches": [
+     {
+      "name": "Organiser",
+      "line": "Planning, structure, systems, execution"
+     },
+     {
+      "name": "Analyst",
+      "line": "Data, logic, research, strategy"
+     },
+     {
+      "name": "Communicator",
+      "line": "Speaking, teaching, persuasion, influence"
+     },
+     {
+      "name": "Creative",
+      "line": "Imagination, innovation, design, visual thinking"
+     }
+    ],
+    "ctaLabel": "Begin — 12 statements",
+    "ctaHref": "/true-path/talent/q"
+   },
+   "progress": {
+    "stages": [
+     {
+      "character": "才",
+      "name": "Talent"
+     },
+     {
+      "character": "道",
+      "name": "Direction"
+     },
+     {
+      "character": "位",
+      "name": "Role"
+     }
+    ]
+   },
+   "result": {
+    "consultHeadline": "Continue Your Exploration",
+    "consultCtaLabel": "Book a 1-Hour Metaphysics Strategic Consultation",
+    "consultSubcopy": "A personalised session combining your True Path results with modern strategy and ancient wisdom, to explore your direction, decisions and timing.",
+    "ancientWisdomBridge": "Your Talent Tree shows how you think. Your Ikigai shows where it matters. Your Iron Triangle shows the role you'll play to get there.\n\nAncient Wisdom adds the one layer no questionnaire can: timing. It looks at when to lead, when to build and when to consolidate, based on your personal patterns.",
+    "productsLabel": "Products",
+    "productsHref": "/services",
+    "restartLabel": "Start again",
+    "restartHref": "/true-path"
+   },
+   "report": {
+    "headline": "Your 3-Page True Path Report",
+    "pages": [
+     {
+      "n": 1,
+      "title": "Your Talent Tree 才"
+     },
+     {
+      "n": 2,
+      "title": "Your Direction 道"
+     },
+     {
+      "n": 3,
+      "title": "Your Role & True Path 位 轨道"
+     }
+    ],
+    "downloadLabel": "Download PDF",
+    "emailHeadline": "Would you like us to send your 3-page True Path report?",
+    "emailFieldName": "First name",
+    "emailFieldEmail": "Email",
+    "emailSendLabel": "Send My Report",
+    "emailSkipLabel": "Skip for now",
+    "marketingConsentLabel": "Send me occasional insights from The Full Picture.",
+    "consentNote": "We store your result and email only to deliver this report. Report delivery and marketing consent are separate, and you can opt out at any time. We use your first name only to personalise your report.",
+    "privacyLabel": "Privacy Policy",
+    "sentMessage": "Your report is on its way. Check your inbox in a few minutes."
+   },
+   "footer": {
+    "brand": "The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia"
+   },
+   "start": {
+    "headline": "Before we begin, what should we call you?",
+    "fieldLabel": "First name",
+    "placeholder": "e.g. Jose",
+    "helper": "Your name appears on your personal True Path report.",
+    "ctaLabel": "Begin My True Path",
+    "errorEmpty": "Please enter your first name to personalise your report.",
+    "errorInvalid": "Please use letters only (up to 30 characters)."
+   }
   }
+ },
+ "integration": {
+  "consultUrl": "https://wa.me/6588257687",
+  "privacyUrl": "/privacy",
+  "api": {
+   "saveResult": "/api/true-path-report",
+   "sendReport": "/api/true-path-report",
+   "pdf": "/api/true-path-pdf?id={id}"
+  },
+  "products": [
+   {
+    "id": "tier1",
+    "name": "",
+    "price": "$9.34",
+    "url": ""
+   },
+   {
+    "id": "tier2",
+    "name": "",
+    "price": "$19.34",
+    "url": ""
+   },
+   {
+    "id": "tier3",
+    "name": "",
+    "price": "$49.34",
+    "url": ""
+   }
+  ],
+  "bookingUrl": ""
+ }
 }
