@@ -355,6 +355,11 @@
     .footer-bottom-links a { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; color: rgba(245,245,242,0.4); text-decoration: none; transition: color 0.3s; }
     .footer-bottom-links a:hover { color: var(--gold); }
 
+    /* Policy body links: match the site palette instead of browser-default blue. */
+    .story-body-block a { color: var(--beige); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--gold); transition: color .3s, text-decoration-color .3s; }
+    .story-body-block a:hover { color: var(--ivory); text-decoration-color: var(--ivory); }
+    .story-body-block h2 { font-family: var(--font-serif); }
+
     /* REVEAL ANIMATIONS */
     @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
     @keyframes lineGrow { from { transform:scaleX(0); } to { transform:scaleX(1); } }
