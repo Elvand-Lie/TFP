@@ -44,9 +44,9 @@ export function buildReportDocumentHtml(model: any): string {
  * (local development); in production the bundled @sparticuz/chromium is used.
  */
 export async function renderTruePathHtmlPdf(model: any, deps?: { executablePath?: string }): Promise<Buffer> {
-  // @sparticuz/chromium is ESM-only; it must be loaded with a dynamic import from CJS.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const puppeteer = require('puppeteer-core');
+  // Both browser packages are ESM-only; load them with dynamic imports from CJS.
+  const puppeteerModule: any = await import('puppeteer-core');
+  const puppeteer: any = puppeteerModule.default || puppeteerModule;
   const chromiumModule: any = await import('@sparticuz/chromium');
   const chromium: any = chromiumModule.default || chromiumModule;
 
