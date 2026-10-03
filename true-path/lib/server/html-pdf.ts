@@ -12,6 +12,24 @@ import * as path from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ReportHtml = require('../report-html.js');
 
+// The browser packages are ESM-only and are loaded with a runtime import the bundler cannot
+// trace. resolve them statically (never executed) so the deploy's file tracer ships their
+// full trees, including transitive dependencies.
+try {
+  /* eslint-disable @typescript-eslint/no-var-requires */
+  require.resolve('puppeteer-core');
+  require.resolve('@sparticuz/chromium');
+  require.resolve('tar-fs');
+  require.resolve('mitt');
+  require.resolve('ws');
+  require.resolve('devtools-protocol');
+  require.resolve('chromium-bidi');
+  require.resolve('typed-query-selector');
+  /* eslint-enable @typescript-eslint/no-var-requires */
+} catch (error) {
+  console.error('[true-path] browser package tracing failure:', error);
+}
+
 export const FONTS_DIR = path.join(process.cwd(), 'fonts');
 export const SANS_FONT = path.join(FONTS_DIR, 'NotoSansSC.ttf');
 export const SERIF_FONT = path.join(FONTS_DIR, 'NotoSerifCJKsc-Regular.otf');
