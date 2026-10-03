@@ -18,6 +18,19 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
+  // The site's original Talent Tree artwork. When the canonical SVG module is available (Node
+  // and the browser bundle both ship it), it is rendered with print inks; the simplified
+  // reference-geometry tree below is only a fallback for hosts without it.
+  let canonicalSvg = null;
+  try {
+    if (typeof module === 'object' && module.exports) {
+      canonicalSvg = require('../assets/true-path-svg.js');
+    } else if (root && root.TruePathSvg) {
+      canonicalSvg = root.TruePathSvg;
+    }
+  } catch (error) { /* fall back to the reference-geometry tree */
+  }
+
   function esc(value) {
     return String(value === null || value === undefined ? '' : value)
       .replace(/[‘’‛]/g, "'")
@@ -104,6 +117,24 @@
     });
 
     return `<svg class="tree-svg" viewBox="0 0 600 360" aria-label="Talent Tree">${parts}</svg>`;
+  }
+
+  /** Render the Talent Tree: the site's canonical artwork when the SVG module is present
+   *  (print inks, dark labels), otherwise the simplified reference-geometry fallback. */
+  function renderTree(tree) {
+    if (canonicalSvg && typeof canonicalSvg.talentTreeSvg === 'function') {
+      try {
+        return canonicalSvg.talentTreeSvg(tree.pct, tree.categories, {
+          raw: tree.raw,
+          dominant: tree.dominant,
+          balancedProfile: tree.balancedProfile,
+          print: true,
+          ariaLabel: 'Talent Tree'
+        });
+      } catch (error) { /* fall through to the fallback */
+      }
+    }
+    return talentTreeSvg(tree);
   }
 
   /** The reference's Iron Triangle: fixed outer triangle, inner shape reweighted from the three
@@ -286,7 +317,7 @@
   .card ul { margin:1mm 0 0 4.5mm; padding:0; }
 
   .tree-wrap { height:92mm; display:flex; align-items:center; justify-content:center; margin:1mm 0 3mm; }
-  .tree-svg { width:145mm; height:88mm; }
+  .tree-wrap svg { width:auto; max-width:145mm; height:88mm; }
   .score-pill { display:flex; align-items:center; gap:3mm; margin:1.5mm 0; }
   .score-name { width:30mm; font-size:8.8pt; color:#1f1f1f; }
   .score-val { width:13mm; text-align:right; font-size:8.8pt; font-weight:700; }
@@ -366,7 +397,7 @@
     <h2 class="serif">How you naturally think</h2>
   </div>
 
-  <div class="tree-wrap">${talentTreeSvg(tree)}</div>
+  <div class="tree-wrap">${renderTree(tree)}</div>
 
   <div class="grid2">
     <div class="card">
