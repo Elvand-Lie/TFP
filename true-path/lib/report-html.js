@@ -234,7 +234,7 @@
     ).join('');
 
     const qrBlock = opts.qrDataUrl
-      ? `<div style="margin-top:2.5mm"><img src="${opts.qrDataUrl}" alt="Booking QR" style="width:22mm;height:22mm"/></div>`
+      ? `<div style="margin-top:2.5mm"><img src="${opts.qrDataUrl}" alt="Booking QR" style="width:25mm;height:25mm"/></div>`
       : '';
 
     const pageFooter = (n) => `<div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia${n === 3 ? ' · Result ID kept for support' : ''}</span><span>${n} / 3</span></div>`;
