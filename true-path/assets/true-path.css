@@ -112,6 +112,19 @@
   #true-path-app { padding-top: 84px; }
 }
 
+/* Boot window: the shell's static journey markup ships for SEO, but its controls only come
+   alive once the config fetch finishes and the app binds. Until then say so, and keep the
+   dead controls from swallowing clicks that were never going to do anything. */
+#true-path-app[data-tp-booting] #tp-step-root { pointer-events: none; opacity: .55; transition: opacity .2s; cursor: progress; }
+#true-path-app[data-tp-booting] #tp-step-root:after {
+  content: 'Loading your journey…';
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  font-size: .9rem;
+  color: var(--mut);
+}
+
 /* The synthesis pulse covers the whole viewport -- including the site navbar --
    for its 2600ms. Approved behaviour: nothing is half-updated, and the only
    thing clickable underneath is nothing at all. */

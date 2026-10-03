@@ -24,6 +24,16 @@
 
   var root = /** @type {any} */ (window);
 
+  // The shell ships real journey markup for SEO, but its controls are dead until the config
+  // fetch finishes and bind() runs. Mark the host synchronously so CSS can keep those controls
+  // honestly inert (and say "loading") instead of silently swallowing clicks.
+  (function () {
+    try {
+      var host = document.getElementById('true-path-app');
+      if (host) host.setAttribute('data-tp-booting', '');
+    } catch (error) { /* ignore */ }
+  })();
+
   var CONFIG_URL = '/true-path/config/true-path.config.json';
   var RESULT_ID_PATTERN = /^tp_[A-Za-z0-9_-]{4,64}$/;
   var STATE_KEY = 'tfp.truepath.journey.v2';
@@ -62,10 +72,19 @@
   function loadConfig() {
     var override = (root.TP_CONFIG || {}).canonical;
     if (override) return Promise.resolve(override);
-    return fetch(CONFIG_URL, { credentials: 'same-origin' }).then(function (response) {
-      if (!response.ok) throw new Error('True Path config unavailable (' + response.status + ')');
-      return response.json();
-    });
+    // A hung fetch would otherwise leave the static shell on screen with no bound controls —
+    // a page that looks fine but ignores every click. Time it out and try once more.
+    function attempt() {
+      var controller = new AbortController();
+      var timer = setTimeout(function () { controller.abort(); }, 8000);
+      return fetch(CONFIG_URL, { credentials: 'same-origin', signal: controller.signal })
+        .then(function (response) {
+          if (!response.ok) throw new Error('True Path config unavailable (' + response.status + ')');
+          return response.json();
+        })
+        .finally(function () { clearTimeout(timer); });
+    }
+    return attempt().catch(function () { return attempt(); });
   }
 
   function prepare(canonical) {
@@ -1491,6 +1510,9 @@
   function bind() {
     if (bound) return;
     bound = 1;
+    // Controls become live only now; lift the booting state the moment the listener exists.
+    var host0 = $('#true-path-app');
+    if (host0) host0.removeAttribute('data-tp-booting');
     stepRoot.addEventListener('click', onClick);
     // `toggle` does not bubble, so the story disclosure is caught during capture.
     document.addEventListener('toggle', function (event) {
@@ -1506,6 +1528,7 @@
   function showFailure() {
     var host = $('#true-path-app');
     if (!host) return;
+    host.removeAttribute('data-tp-booting');
     host.innerHTML = '<section class="tp-section"><div class="tp-wrap tp-center">' +
       '<h1 class="tp-h1">True Path could not load</h1>' +
       '<p class="tp-lead">Please refresh the page. If it keeps happening, contact us and we will help.</p>' +
