@@ -480,7 +480,7 @@
     </div>
   </div>
 
-  <div class="hero" style="margin-top:4mm; margin-bottom:4mm; padding:4mm 6mm;">
+  <div class="hero" style="margin-top:3mm; margin-bottom:3mm; padding:3.5mm 6mm;">
     <div class="lead serif">${esc(title && title.label)}</div>
     <div class="title serif" style="font-size:19pt; text-transform:none">${esc(title && title.title)}</div>
     <div class="tagline">${esc(title && title.essence)}</div>
