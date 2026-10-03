@@ -30,10 +30,12 @@
   },
   "homepage": "https://github.com/Elvand-Lie/TFP#readme",
   "dependencies": {
+    "@sparticuz/chromium": "^153.0.0",
     "bazi-calculator-by-alvamind": "^1.0.2",
     "docx": "^9.6.1",
     "lunar-javascript": "^1.7.7",
     "pdfmake": "^0.3.8",
+    "puppeteer-core": "^25.12.0",
     "qimen-dunjia": "^2.1.0",
     "qrcode": "^1.5.4",
     "resend": "^6.12.4"

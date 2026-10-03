@@ -12,6 +12,7 @@
 import { loadResult, isStoreConfigured, isValidResultId } from '../true-path/lib/server/store';
 import { buildModel, decodePayload, reportConfigs } from '../true-path/lib/server/model';
 import { renderTruePathPdf } from '../true-path/lib/server/pdf-generator';
+import { renderTruePathHtmlPdf } from '../true-path/lib/server/html-pdf';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const QRCode = require('qrcode');
@@ -99,7 +100,15 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const pdf = await renderTruePathPdf(model);
+    // Primary: the reference HTML printed by headless Chromium — the PDF is the HTML.
+    // Fallback: the pdfmake renderer, should the browser be unavailable in the runtime.
+    let pdf: Buffer;
+    try {
+      pdf = await renderTruePathHtmlPdf(model);
+    } catch (browserError: any) {
+      console.error('[true-path] html pdf render failure, falling back to pdfmake:', browserError);
+      pdf = await renderTruePathPdf(model);
+    }
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="' + pdfFileName(model) + '"');
     res.setHeader('Cache-Control', 'private, max-age=0, no-store');

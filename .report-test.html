@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>True Path Report - Test</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#fff; color:#1f1f1f; }
+  body {
+    font-family: "Noto Sans CJK SC", "Noto Sans", Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 16mm 15mm 14mm 15mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+  }
+  .page:last-child { page-break-after: auto; }
+  .serif { font-family: "Noto Serif CJK SC", Georgia, serif; }
+  .eyebrow {
+    color:#7A1F2B;
+    letter-spacing:.17em;
+    font-size:8.3pt;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .topline {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:4mm;
+    font-size:7.8pt;
+    color:#6c6c6c;
+  }
+  .rule { height:1px; background:#A8823F; width:100%; margin:2.3mm 0 4.5mm; }
+  h1,h2,h3,p { margin:0; }
+  h1 { font-size:23pt; line-height:1.08; color:#7A1F2B; font-weight:600; }
+  h2 { font-size:18pt; line-height:1.12; color:#7A1F2B; font-weight:600; }
+  h3 { font-size:11pt; line-height:1.25; color:#1f1f1f; font-weight:700; }
+  .muted { color:#4A4A4A; }
+  .hero {
+    border:1px solid #A8823F;
+    background:#FAF7F2;
+    padding:6mm 7mm;
+    text-align:center;
+    margin-bottom:5mm;
+  }
+  .hero .prepared { font-size:8.7pt; color:#4A4A4A; margin-bottom:2mm; }
+  .hero .lead { font-size:11pt; color:#4A4A4A; margin-bottom:1mm; }
+  .hero .title { font-size:24pt; text-transform:uppercase; letter-spacing:.02em; color:#7A1F2B; margin-bottom:1.7mm; }
+  .hero .tagline { font-size:10pt; color:#1f1f1f; margin-bottom:1.5mm; }
+  .hero .sub { font-size:8.7pt; color:#4A4A4A; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .card {
+    border:1px solid #DDD6CD;
+    background:#FAF7F2;
+    padding:4mm;
+    border-radius:1.2mm;
+  }
+  .card .label {
+    color:#7A1F2B;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:7.5pt;
+    font-weight:700;
+    margin-bottom:1.6mm;
+  }
+  .card p, .card li { font-size:8.9pt; line-height:1.42; color:#1f1f1f; }
+  .card ul { margin:1mm 0 0 4.5mm; padding:0; }
+
+  .tree-wrap { height:92mm; display:flex; align-items:center; justify-content:center; margin:1mm 0 3mm; }
+  .tree-svg { width:145mm; height:88mm; }
+  .score-pill { display:flex; align-items:center; gap:3mm; margin:1.5mm 0; }
+  .score-name { width:30mm; font-size:8.8pt; color:#1f1f1f; }
+  .score-val { width:13mm; text-align:right; font-size:8.8pt; font-weight:700; }
+  .bar { flex:1; height:2.2mm; background:#E7E1DA; border-radius:9px; overflow:hidden; }
+  .bar > span { display:block; height:100%; background:#7A1F2B; }
+
+  .insight {
+    margin-top:4mm;
+    border-left:3px solid #7A1F2B;
+    padding:3mm 4mm;
+    background:#FAF7F2;
+  }
+  .insight .big { font-size:13pt; color:#7A1F2B; margin-bottom:1.2mm; }
+  .insight p { font-size:8.8pt; line-height:1.42; }
+
+  .sentence-block {
+    padding:3.3mm 4mm;
+    border-bottom:1px solid #E1DBD4;
+  }
+  .sentence-block:last-child { border-bottom:0; }
+  .sentence-block .label {
+    color:#7A1F2B; font-weight:700; font-size:7.5pt;
+    text-transform:uppercase; letter-spacing:.12em; margin-bottom:1mm;
+  }
+  .sentence-block p { font-size:9.5pt; line-height:1.48; }
+
+  .section-title { display:flex; align-items:end; gap:3mm; margin-bottom:3mm; }
+  .section-title .n { color:#A8823F; font-size:8pt; text-transform:uppercase; letter-spacing:.12em; }
+  .section-title h2 { color:#7A1F2B; }
+
+  .triangle-wrap { display:grid; grid-template-columns:72mm 1fr; gap:5mm; align-items:center; margin:2mm 0 4mm; }
+  .triangle-svg { width:68mm; height:62mm; }
+  .role-title { font-size:17pt; color:#7A1F2B; margin-bottom:1mm; }
+  .role-sub { font-size:9pt; color:#4A4A4A; margin-bottom:2mm; }
+  .role-copy { font-size:8.8pt; line-height:1.42; }
+  .role-list { display:flex; flex-wrap:wrap; gap:1.7mm 3mm; margin:2mm 0; font-size:8.2pt; color:#4A4A4A; }
+  .chip { border:1px solid #CFC7BE; padding:1mm 2mm; border-radius:10px; background:#fff; }
+
+  .reflection { margin-top:3mm; }
+  .reflection li { font-size:8.5pt; line-height:1.45; margin-bottom:1mm; }
+
+  .cta {
+    margin-top:4mm;
+    padding:4mm;
+    background:#FAF7F2;
+    border:1px solid #A8823F;
+    text-align:center;
+  }
+  .cta .title { color:#7A1F2B; font-size:13pt; margin-bottom:1mm; }
+  .cta p { font-size:8.2pt; line-height:1.4; }
+  .cta .link { color:#7A1F2B; text-decoration:underline; margin-top:2mm; font-weight:700; }
+
+  .footer {
+    position:absolute;
+    left:15mm; right:15mm; bottom:8mm;
+    display:flex; justify-content:space-between;
+    color:#777; font-size:7.1pt;
+    border-top:1px solid #E3DDD6;
+    padding-top:2mm;
+  }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 1 of 3</span></div>
+  <div class="hero">
+    <div class="prepared">Prepared for Test · 3 October 2026</div>
+    <div class="lead serif">Test, your True Path is</div>
+    <div class="title serif">The Master Architect</div>
+    <div class="tagline">Builds the systems that let organisations scale.</div>
+    <div class="sub">Systems Strategist · Chancellor 相才</div>
+  </div>
+
+  <div class="section-title">
+    <div class="n">Talent Tree 才</div>
+    <h2 class="serif">How you naturally think</h2>
+  </div>
+
+  <div class="tree-wrap"><svg class="tree-svg" viewBox="0 0 600 360" aria-label="Talent Tree"><defs><linearGradient id="trunk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E3B30"/><stop offset="1" stop-color="#765646"/></linearGradient></defs><path d="M286 335 C298 290 300 235 298 188 L313 188 C311 235 314 292 326 335Z" fill="url(#trunk)"/><path d="M300 205 Q238 162 162 154" stroke="#8A4046" stroke-width="12.9" fill="none" stroke-linecap="round"/><g fill="#A0455A" opacity=".88"><ellipse cx="243" cy="188" rx="11" ry="4.5" transform="rotate(-185 243 188)"/><ellipse cx="241" cy="159" rx="11" ry="4.5" transform="rotate(-132 241 159)"/><ellipse cx="220" cy="180" rx="11" ry="4.5" transform="rotate(-190 220 180)"/><ellipse cx="216" cy="151" rx="11" ry="4.5" transform="rotate(-137 216 151)"/><ellipse cx="197" cy="173" rx="11" ry="4.5" transform="rotate(-195 197 173)"/><ellipse cx="190" cy="145" rx="11" ry="4.5" transform="rotate(-142 190 145)"/><ellipse cx="173" cy="169" rx="11" ry="4.5" transform="rotate(-200 173 169)"/><ellipse cx="163" cy="142" rx="11" ry="4.5" transform="rotate(-146 163 142)"/></g><g font-family="'Noto Sans CJK SC', Arial" font-size="16" fill="#1F1F1F" font-weight="700"><text x="105" y="105">Organiser</text><text x="120" y="126">83%</text></g><path d="M300 198 Q278 107 251 90" stroke="#6E4B3E" stroke-width="12.0" fill="none" stroke-linecap="round"/><g fill="#7F774F" opacity=".88"><ellipse cx="269" cy="144" rx="11" ry="4.5" transform="rotate(-138 269 144)"/><ellipse cx="290" cy="124" rx="11" ry="4.5" transform="rotate(-84 290 124)"/><ellipse cx="262" cy="125" rx="11" ry="4.5" transform="rotate(-144 262 125)"/><ellipse cx="280" cy="105" rx="11" ry="4.5" transform="rotate(-91 280 105)"/><ellipse cx="254" cy="111" rx="11" ry="4.5" transform="rotate(-152 254 111)"/><ellipse cx="270" cy="90" rx="11" ry="4.5" transform="rotate(-102 270 90)"/><ellipse cx="247" cy="103" rx="11" ry="4.5" transform="rotate(-166 247 103)"/><ellipse cx="258" cy="79" rx="11" ry="4.5" transform="rotate(-119 258 79)"/></g><g font-family="'Noto Sans CJK SC', Arial" font-size="16" fill="#1F1F1F" font-weight="700"><text x="190" y="34">Analyst</text><text x="208" y="55">58%</text></g><path d="M300 198 Q320 118 345 102" stroke="#6E4B3E" stroke-width="11.2" fill="none" stroke-linecap="round"/><g fill="#7F774F" opacity=".88"><ellipse cx="305" cy="142" rx="11" ry="4.5" transform="rotate(-97 305 142)"/><ellipse cx="333" cy="141" rx="11" ry="4.5" transform="rotate(-38 333 141)"/><ellipse cx="315" cy="120" rx="11" ry="4.5" transform="rotate(-90 315 120)"/><ellipse cx="342" cy="125" rx="11" ry="4.5" transform="rotate(-29 342 125)"/><ellipse cx="326" cy="103" rx="11" ry="4.5" transform="rotate(-79 326 103)"/><ellipse cx="349" cy="115" rx="11" ry="4.5" transform="rotate(-15 349 115)"/><ellipse cx="339" cy="91" rx="11" ry="4.5" transform="rotate(-60 339 91)"/></g><g font-family="'Noto Sans CJK SC', Arial" font-size="16" fill="#1F1F1F" font-weight="700"><text x="345" y="34">Communicator</text><text x="391" y="55">33%</text></g><path d="M300 205 Q356 171 425 165" stroke="#6E4B3E" stroke-width="11.2" fill="none" stroke-linecap="round"/><g fill="#7F774F" opacity=".88"><ellipse cx="343" cy="170" rx="11" ry="4.5" transform="rotate(-49 343 170)"/><ellipse cx="363" cy="190" rx="11" ry="4.5" transform="rotate(10 363 190)"/><ellipse cx="369" cy="162" rx="11" ry="4.5" transform="rotate(-43 369 162)"/><ellipse cx="388" cy="184" rx="11" ry="4.5" transform="rotate(15 388 184)"/><ellipse cx="396" cy="155" rx="11" ry="4.5" transform="rotate(-38 396 155)"/><ellipse cx="413" cy="179" rx="11" ry="4.5" transform="rotate(21 413 179)"/><ellipse cx="424" cy="152" rx="11" ry="4.5" transform="rotate(-33 424 152)"/></g><g font-family="'Noto Sans CJK SC', Arial" font-size="16" fill="#1F1F1F" font-weight="700"><text x="468" y="105">Creative</text><text x="485" y="126">33%</text></g></svg></div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="label">Talent Pattern 才</div>
+      <div class="score-pill"><div class="score-name">Organiser</div><div class="score-val">83%</div><div class="bar"><span style="width:83%"></span></div></div><div class="score-pill"><div class="score-name">Analyst</div><div class="score-val">58%</div><div class="bar"><span style="width:58%"></span></div></div><div class="score-pill"><div class="score-name">Communicator</div><div class="score-val">33%</div><div class="bar"><span style="width:33%"></span></div></div><div class="score-pill"><div class="score-name">Creative</div><div class="score-val">33%</div><div class="bar"><span style="width:33%"></span></div></div>
+    </div>
+    <div class="card">
+      <div class="label">Systems Strategist</div>
+      <p>Organiser leads, followed by Analyst.</p>
+      <p style="margin-top:2mm"><b>As a Systems Strategist, you combine a gift for planning and structure with sharp logic and insight.</b></p>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="big serif">What this suggests</div>
+    <p>Communicator is your quietest branch (33%). That is a reading, not a flaw. It often shows where a partner can complement you.</p>
+  </div>
+
+  <div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia</span><span>1 / 3</span></div>
+</section>
+
+<section class="page">
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 2 of 3</span></div>
+  <div class="section-title">
+    <div class="n">Direction 道</div>
+    <h2 class="serif">Where your strengths could matter</h2>
+  </div>
+  <div class="rule"></div>
+
+  <div class="card" style="padding:0; overflow:hidden">
+    <div class="sentence-block"><div class="label">Energises</div><p><b>Test, you come alive when you are building and creating projects and solving problems.</b></p></div>
+    <div class="sentence-block"><div class="label">Good at</div><p>You see your strengths in planning and analysis.</p></div>
+    <div class="sentence-block"><div class="label">Work you could be paid for</div><p>You could earn a living through operations and management.</p></div>
+    <div class="sentence-block"><div class="label">Impact</div><p>The difference you want to make: making things run better.</p></div>
+  </div>
+
+  <div style="height:5mm"></div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="label">Possible areas to explore</div>
+      <ul>
+        <li>operations and management</li>
+        <li>Operations, finance or programme management</li>
+        <li>Advisory or governance roles</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="label">Value Creation Style</div>
+      <p>You may create value most naturally by bringing structure to complexity, building foundations that last, and making things run better.</p>
+    </div>
+  </div>
+
+  <div style="height:5mm"></div>
+
+  <div class="card">
+    <div class="label">Alignment Check</div>
+    <p><b>Aligned:</b> how you see yourself matches your natural talent pattern.</p><p style="margin-top:2mm"><b>Aligned:</b> the areas you want to work in suit the role you naturally play.</p>
+  </div>
+
+  <div style="height:6mm"></div>
+
+  <div class="insight">
+    <div class="big serif">Direction is a field to explore, not a prediction</div>
+    <p>These are environments and forms of work that may fit the combination of your selected interests, Talent pattern and primary role. Use them as prompts for experimentation rather than fixed career prescriptions.</p>
+  </div>
+
+  <div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia</span><span>2 / 3</span></div>
+</section>
+
+<section class="page">
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 3 of 3</span></div>
+  <div class="section-title">
+    <div class="n">Role 位</div>
+    <h2 class="serif">Your Iron Triangle and True Path</h2>
+  </div>
+  <div class="rule"></div>
+
+  <div class="triangle-wrap">
+    <svg class="triangle-svg" viewBox="0 0 300 250" aria-label="Iron Triangle"><polygon points="150,20 32,220 268,220" fill="none" stroke="#1F1F1F" stroke-width="2"/><polygon points="192,150 157,210 228,210" fill="#E7D6D9" stroke="#A8823F" stroke-width="2"/><g font-family="'Noto Sans CJK SC', Arial" font-size="15" fill="#1F1F1F" font-weight="700"><text x="150" y="14" text-anchor="middle">帅 7%</text><text x="26" y="240">将 21%</text><text x="235" y="240">相 72%</text></g></svg>
+
+    <div>
+      <div class="eyebrow">Your Primary Role</div>
+      <div class="role-title serif">Chancellor 相才</div>
+      <div class="role-sub">Steady Architect</div>
+      <div class="role-copy">Builds the systems, resources and stability that make success last.</div>
+      <div class="role-list"><span class="chip">Process and governance</span><span class="chip">Resource stewardship</span><span class="chip">Risk awareness</span><span class="chip">Reliability</span></div>
+      <div class="role-copy"><b>You create stability, so growth doesn’t collapse under its own weight.</b></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="label">Your Iron Triangle Role</div>
+      <div class="score-pill"><div class="score-name">Commander 帅才</div><div class="score-val">7%</div><div class="bar"><span style="width:7%;background:#A8823F"></span></div></div><div class="score-pill"><div class="score-name">General 将才</div><div class="score-val">21%</div><div class="bar"><span style="width:21%;background:#A8823F"></span></div></div><div class="score-pill"><div class="score-name">Chancellor 相才</div><div class="score-val">72%</div><div class="bar"><span style="width:72%;background:#7A1F2B"></span></div></div>
+    </div>
+    <div class="card">
+      <div class="label">Watch-out and allies</div>
+      <p><b>Watch-out:</b> You may over-prepare, resist fast change, or go unnoticed because good systems are invisible.</p>
+      <p style="margin-top:2mm"><b>Natural allies:</b> A Commander to set direction, and a General to create momentum.</p>
+    </div>
+  </div>
+
+  <div style="height:4mm"></div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="label">Your Triangle Gap</div>
+      <p>Commander 帅才 — The ally you most need. You may sometimes work hard on things that aren’t clearly moving you forward. Seek mentors or leaders with clear vision, and set your own 12-month direction.</p>
+    </div>
+    <div class="card">
+      <div class="label">Where you may thrive</div>
+      <p>10 → 100 scale stages: operations, finance, HR, compliance, programme management, advisory.</p>
+      <div class="label" style="margin-top:3mm">Growth Edge</div>
+      <p>Make your impact visible. Quantify the risk you prevented and the time you saved.</p>
+    </div>
+  </div>
+
+  <div class="hero" style="margin-top:4mm; margin-bottom:4mm; padding:4mm 6mm;">
+    <div class="lead serif">Your True Path</div>
+    <div class="title serif" style="font-size:19pt">The Master Architect</div>
+    <div class="tagline">Builds the systems that let organisations scale.</div>
+    <div class="sub">Systems Strategist · Chancellor 相才</div>
+  </div>
+
+  <div class="card reflection">
+    <div class="label">Reflection</div>
+    <ul>
+      <li>Does your current environment let you use your strongest talents and your natural role?</li>
+      <li>Who in your life plays your “gap” role, and how could you work with them more deliberately?</li>
+      <li>Which part of your work gives you the most energy, and how much of your week does it take up?</li>
+    </ul>
+  </div>
+
+  <div class="cta">
+    <div class="title serif">Continue Your Exploration</div>
+    <p>A personalised session combining your True Path results with modern strategy and ancient wisdom, to explore your direction, decisions and timing.</p>
+    
+    <div class="link"><a href="https://wa.me/6588257687" style="color:#7A1F2B">Book a 1-Hour Metaphysics Strategic Consultation</a></div>
+  </div>
+
+  <div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia · Result ID kept for support</span><span>3 / 3</span></div>
+</section>
+
+</body>
+</html>
