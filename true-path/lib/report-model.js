@@ -297,6 +297,16 @@
           kind: 'list-block',
           label: labels.observations || 'Observations',
           items: observations.map((entry) => entry.text)
+        },
+        {
+          // v2.2 visual pass: the "What this suggests" box — the lowest-branch reading plus, when
+          // every branch is strong, the versatile-profile note.
+          kind: 'insight',
+          title: (truthPath.pdf && truthPath.pdf.talentInsight && truthPath.pdf.talentInsight.title) || 'What this suggests',
+          body: observations
+            .filter((entry) => /least dominant|quietest|versatile profile|range/.test(entry.text))
+            .map((entry) => entry.text)
+            .join(' ')
         }
       ]
     };
@@ -314,11 +324,6 @@
         },
         {
           kind: 'text',
-          label: labels.capability,
-          text: capabilityLine(truthPath, ikigaiConfig, record)
-        },
-        {
-          kind: 'text',
           label: labels.valueCreation,
           text: valueCreationSentence(truthPath, ikigaiConfig, record, primaryRole)
         },
@@ -329,6 +334,14 @@
             alignmentMessage(truthPath, record, 'talent'),
             alignmentMessage(truthPath, record, 'economic')
           ].filter(Boolean)
+        },
+        {
+          // v2.2 visual pass: closing framing line for the Direction page.
+          kind: 'insight',
+          title:
+            (truthPath.pdf && truthPath.pdf.directionInsight && truthPath.pdf.directionInsight.title) ||
+            'Direction is a field to explore, not a prediction',
+          body: (truthPath.pdf && truthPath.pdf.directionInsight && truthPath.pdf.directionInsight.body) || ''
         }
       ]
     };

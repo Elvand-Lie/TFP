@@ -178,7 +178,7 @@ test('report: every model block resolves its keys to real copy', () => {
   const model = ReportModel.buildReportModel(record, modelConfigs);
 
   // Blocks that are pure visuals or self-labelling by design, not missing a label.
-  const selfLabelled = ['invite', 'title', 'pair', 'talent-tree', 'iron-triangle', 'hero']; // v2.2 C3
+  const selfLabelled = ['invite', 'title', 'pair', 'talent-tree', 'iron-triangle', 'hero', 'insight'];
 
   model.pages.forEach((page) => {
     assert.ok(page.blocks.length > 0, 'page ' + page.n + ' has no blocks');

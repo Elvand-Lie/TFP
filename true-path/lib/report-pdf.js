@@ -553,53 +553,256 @@
   /**
    * Build the pdfmake document definition for a report model.
    *
+   * v2.2 visual pass: the layout mirrors the approved reference composition — topline, hero,
+   * section titles with gold rules, two-column cards, sentence blocks, insight boxes — while every
+   * dynamic value still comes from the one shared model. The approved Talent Tree / Iron Triangle
+   * geometry is untouched.
+   *
    * @param {any} model output of ReportModel.buildReportModel
    * @param {any} ctx { Svg } — the same SVG module the browser renders with
+   * @param {any} [configs] the adapted config bundle (section titles and insight copy)
    */
-  function buildReportPdfDefinition(model, ctx) {
+  /** A hairline gold rule between sections (the reference's .rule). */
+  function goldRule() {
+    return {
+      canvas: [{ type: 'line', x1: 0, y1: 0, x2: 527, y2: 0, lineWidth: 1, lineColor: C.gold }],
+      margin: [0, 2, 0, 6]
+    };
+  }
+
+  /** The topline: eyebrow left, page marker right (the reference's .topline). */
+  function topline(pageIndex) {
+    return {
+      columns: [
+        {
+          text: 'TRUE PATH \u00b7 \u8f68\u9053',
+          fontSize: 8.3,
+          bold: true,
+          color: C.burgundy,
+          characterSpacing: 1.2
+        },
+        {
+          text: 'Page ' + pageIndex + ' of 3',
+          fontSize: 7.8,
+          color: C.textMed,
+          alignment: 'right'
+        }
+      ],
+      margin: [0, 0, 0, 2]
+    };
+  }
+
+  /** Section opener: gold kicker + burgundy title (the reference's .section-title). */
+  function sectionTitle(section) {
+    return {
+      columns: [
+        {
+          width: 'auto',
+          text: String(section.kicker || ''),
+          fontSize: 8,
+          color: C.gold,
+          characterSpacing: 0.8,
+          margin: [0, 4, 12, 0]
+        },
+        {
+          text: String(section.title || ''),
+          fontSize: 18,
+          bold: true,
+          color: C.burgundy
+        }
+      ],
+      margin: [0, 0, 0, 4]
+    };
+  }
+
+  /** A two-column row of cards. */
+  function cardRow(left, right, widths) {
+    return {
+      columns: [
+        { width: (widths && widths[0]) || '*', stack: left },
+        { width: (widths && widths[1]) || '*', stack: right }
+      ],
+      columnGap: 12,
+      margin: [0, 0, 0, 6]
+    };
+  }
+
+  /** The insight box: burgundy left border, heading, body (the reference's .insight). */
+  function insightBlock(block) {
+    return {
+      table: { widths: ['*'], body: [[{ stack: [
+        { text: String(block.title || ''), fontSize: 12.5, bold: true, color: C.burgundy, margin: [0, 0, 0, 2] },
+        { text: String(block.body || ''), fontSize: 8.8, color: C.textDark, lineHeight: 1.35 }
+      ] }]] },
+      layout: {
+        hLineWidth: () => 0,
+        vLineWidth: (i) => (i === 0 ? 3 : 0),
+        hLineColor: () => 'transparent',
+        vLineColor: () => C.burgundy,
+        fillColor: () => C.panel,
+        paddingTop: () => 6,
+        paddingBottom: () => 6,
+        paddingLeft: () => 8,
+        paddingRight: () => 6
+      },
+      margin: [0, 0, 0, 4]
+    };
+  }
+
+  /** A sentence card: labelled sentences separated by hairlines (the reference's .sentence-block). */
+  function sentenceCard(sentences) {
+    const stack = [];
+    sentences.forEach((entry, index) => {
+      stack.push({ text: String(entry.label || '').toUpperCase(), fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.8, margin: [0, index === 0 ? 0 : 5, 0, 1] });
+      stack.push({ text: String(entry.text || ''), fontSize: 9.5, color: C.textDark, lineHeight: 1.4, margin: [0, 0, 0, index === sentences.length - 1 ? 0 : 2] });
+      if (index < sentences.length - 1) {
+        stack.push({
+          canvas: [{ type: 'line', x1: 0, y1: 0, x2: 500, y2: 0, lineWidth: 0.6, lineColor: '#E1DBD4' }],
+          margin: [0, 0, 0, 0]
+        });
+      }
+    });
+    return panel(stack);
+  }
+
+  /** Small labelled card (list or sentence), the reference's .card. */
+  function smallCard(labelText, body) {
+    return panel(label(labelText).concat(body));
+  }
+
+  function buildReportPdfDefinition(model, ctx, configs) {
     /** @type {Array<any>} */
     const content = [];
+    const pdfCfg = (configs && configs.truthPath && configs.truthPath.pdf) || {};
+    const sections = pdfCfg.sections || {};
+    const page1 = model.pages[0];
+    const page2 = model.pages[1];
+    const page3 = model.pages[2];
+    const byKind = (page, kind) => page.blocks.filter((block) => block.kind === kind);
 
-    content.push({
-      text: 'TRUE PATH \u00b7 \u8f68\u9053',
-      fontSize: 8,
-      bold: true,
-      color: C.burgundy,
-      characterSpacing: 1.2,
-      alignment: 'center',
-      margin: [0, 0, 0, 3]
-    });
-    content.push({
-      text: String(model.headline || 'Your 3-Page True Path Report'),
-      fontSize: 15,
-      bold: true,
-      color: C.crimson,
-      alignment: 'center',
-      margin: [0, 0, 0, 6]
-    });
+    // ─── Page 1 ──────────────────────────────────────────────────────────────
+    content.push(topline(1));
+    const heroBlock = byKind(page1, 'hero')[0];
+    if (heroBlock) content.push(renderBlock(heroBlock, ctx));
 
-    model.pages.forEach((page, index) => {
-      const heading = pageHeading(page);
-      // One page per journey stage (Brief 8), so page 2 and 3 start fresh.
-      if (index > 0) heading.pageBreak = 'before';
-      content.push(heading);
+    content.push(sectionTitle(sections.talent || { kicker: 'Talent Tree 才', title: 'How you naturally think' }));
+    content.push(goldRule());
 
-      page.blocks.forEach((block) => {
-        const rendered = renderBlock(block, ctx);
-        if (rendered) content.push(rendered);
+    const tree = byKind(page1, 'talent-tree')[0];
+    if (tree) {
+      const renderedTree = renderBlock(tree, ctx);
+      renderedTree.width = 330;
+      content.push(renderedTree);
+    }
+
+    const p1Scores = byKind(page1, 'scores')[0];
+    const p1Pair = byKind(page1, 'pair')[0];
+    if (p1Scores && p1Pair) {
+      const pairInner = label(p1Pair.label).concat([
+        { text: String(p1Pair.archetypeHeading || ''), fontSize: 12, bold: true, color: C.textDark, margin: [0, 0, 0, 2] },
+        { text: String(p1Pair.leadLine || ''), fontSize: 8.9, color: C.textDark, lineHeight: 1.35 }
+      ]);
+      if (p1Pair.strengthsSentence) {
+        pairInner.push({ text: String(p1Pair.strengthsSentence), fontSize: 8.9, color: C.textDark, lineHeight: 1.35, margin: [0, 3, 0, 0] });
+      }
+      content.push(cardRow([renderBlock(p1Scores, ctx)], pairInner, ['55%', '*']));
+    }
+
+    byKind(page1, 'insight').forEach((block) => content.push(insightBlock(block)));
+
+    // ─── Page 2 ──────────────────────────────────────────────────────────────
+    content.push(Object.assign({}, topline(2), { pageBreak: 'before' }));
+    content.push(sectionTitle(sections.direction || { kicker: 'Direction 道', title: 'Where your strengths could matter' }));
+    content.push(goldRule());
+
+    const p2Texts = byKind(page2, 'text');
+    const sentences = p2Texts.slice(0, 4).map((block) => ({ label: block.label, text: block.text }));
+    if (sentences.length) content.push(sentenceCard(sentences));
+    content.push({ text: '', margin: [0, 0, 0, 3] });
+
+    const p2Lists = byKind(page2, 'list-block');
+    const possibleAreas = p2Lists.find((block) => /possible areas/i.test(String(block.label || '')));
+    const valueCreation = p2Texts.length > 4 ? p2Texts[4] : null;
+    if (possibleAreas && valueCreation) {
+      content.push(cardRow(
+        [renderBlock(possibleAreas, ctx)],
+        [smallCard(valueCreation.label, [{ text: String(valueCreation.text || ''), fontSize: 8.9, color: C.textDark, lineHeight: 1.4 }])],
+        ['*', '*']
+      ));
+    }
+
+    const alignment = p2Lists.find((block) => /alignment/i.test(String(block.label || '')));
+    if (alignment) content.push(renderBlock(alignment, ctx));
+    byKind(page2, 'insight').forEach((block) => content.push(insightBlock(block)));
+
+    // ─── Page 3 ──────────────────────────────────────────────────────────────
+    content.push(Object.assign({}, topline(3), { pageBreak: 'before' }));
+    content.push(sectionTitle(sections.role || { kicker: 'Role 位', title: 'Your Iron Triangle and True Path' }));
+    content.push(goldRule());
+
+    const p3Triangle = byKind(page3, 'iron-triangle')[0];
+    const p3Role = byKind(page3, 'role-card')[0];
+    const p3Scores = byKind(page3, 'scores')[0];
+    const p3Texts = byKind(page3, 'text');
+    const gap = p3Texts.find((block) => /gap/i.test(String(block.label || '')));
+    const thrive = p3Texts.find((block) => /thrive/i.test(String(block.label || '')));
+    const growth = p3Texts.find((block) => /growth/i.test(String(block.label || '')));
+    const p3Title = byKind(page3, 'title')[0];
+    const p3Reflection = byKind(page3, 'list-block').find((block) => /reflection/i.test(String(block.label || '')));
+    const invite = byKind(page3, 'invite')[0];
+
+    if (p3Triangle && p3Role) {
+      const triangleRendered = renderBlock(p3Triangle, ctx);
+      triangleRendered.width = 150;
+      const roleStack = [
+        { text: String(p3Role.label || '').toUpperCase(), fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.8, margin: [0, 0, 0, 2] },
+        { text: p3Role.name + ' ' + p3Role.chinese, fontSize: 16, bold: true, color: C.burgundy, margin: [0, 0, 0, 1] },
+        { text: String(p3Role.subtitle || ''), fontSize: 9, color: C.textMed, margin: [0, 0, 0, 2] },
+        { text: String(p3Role.essence || ''), fontSize: 9.5, color: C.textDark, lineHeight: 1.35, margin: [0, 0, 0, 2] },
+        { text: String(p3Role.oneLine || ''), fontSize: 8.8, color: C.textMed, lineHeight: 1.35 }
+      ];
+      if (p3Role.contribution) {
+        roleStack.push({ text: String(p3Role.contribution), fontSize: 8.8, color: C.textDark, lineHeight: 1.35, margin: [0, 3, 0, 0] });
+      }
+      content.push({
+        columns: [
+          { width: 160, stack: [triangleRendered] },
+          { width: '*', stack: roleStack }
+        ],
+        columnGap: 12,
+        margin: [0, 0, 0, 6]
       });
-    });
+    }
+
+    if (p3Scores && p3Role) {
+      const watchAllies = [];
+      if (p3Role.watchOut) watchAllies.push({ text: [{ text: 'Watch-out: ', bold: true }, { text: String(p3Role.watchOut) }], fontSize: 8.8, color: C.textDark, lineHeight: 1.35, margin: [0, 0, 0, 3] });
+      if (p3Role.allies) watchAllies.push({ text: [{ text: 'Natural allies: ', bold: true }, { text: String(p3Role.allies) }], fontSize: 8.8, color: C.textDark, lineHeight: 1.35 });
+      content.push(cardRow(
+        [renderBlock(p3Scores, ctx)],
+        [smallCard('Watch-out and allies', watchAllies)],
+        ['*', '*']
+      ));
+    }
+
+    if (gap || thrive || growth) {
+      const left = gap ? [renderBlock(gap, ctx)] : [{ text: '' }];
+      const right = [];
+      if (thrive) right.push(renderBlock(thrive, ctx));
+      if (growth) right.push(renderBlock(growth, ctx));
+      content.push(cardRow(left, right, ['*', '*']));
+    }
+
+    if (p3Title) content.push(renderBlock(p3Title, ctx));
+    if (p3Reflection) content.push(renderBlock(p3Reflection, ctx));
+    if (invite) content.push(renderBlock(invite, ctx));
 
     content.push({
       text: String(model.disclaimer || ''),
       fontSize: 8,
       italics: true,
-      color: C.textLight,
+      color: C.textMed,
       alignment: 'center',
-      // Pure trailing space, and the last thing on the page: the 8/4 gap this used to carry was the
-      // remaining overflow in the journeys whose alignment block is longest, and anything below the
-      // last line of copy can only ever push the footer onto a fourth page. The gap above is kept
-      // small but non-zero so the disclaimer still reads as separate from the invite.
       margin: [0, 4, 0, 0]
     });
 
@@ -686,7 +889,7 @@
       bolditalics: deps.fontPath
     };
 
-    const definition = buildReportPdfDefinition(model, ctx);
+    const definition = buildReportPdfDefinition(model, ctx, deps.configs);
     return pdfmake.createPdf(definition).getBuffer();
   }
 

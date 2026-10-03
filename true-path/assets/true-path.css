@@ -147,3 +147,14 @@
   #true-path-app { padding-top: 0 !important; background: #fff !important; }
   #true-path-app .pulse { display: none !important; }
 }
+
+/* v2.2 visual pass: use more of a desktop screen. The approved single column stays, but on large
+   monitors it widens and scales instead of leaving a narrow strip down the middle. */
+@media (min-width: 1100px) {
+  #true-path-app > #tp-step-root, #true-path-app > #tp-report-root { max-width: 780px; padding: 28px 40px 72px; }
+  #true-path-app { font-size: 17px; }
+  #true-path-app h1 { font-size: 3rem; }
+  #true-path-app h2 { font-size: 2rem; }
+  #true-path-app .btn { font-size: 17px; padding: 15px 26px; }
+  #true-path-app .opt { font-size: 16.5px; }
+}

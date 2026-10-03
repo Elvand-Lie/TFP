@@ -1168,8 +1168,8 @@
       ? esc(C.AMSG.economic_role_aligned)
       : al.indexOf('economic_role_explore') !== -1 ? esc(C.AMSG.economic_role_explore) : '';
 
-    return '<div class="nop"><button class="ghost" data-act="report-back">← Back to result</button> ' +
-      '<button class="btn" data-act="pdf">Save as PDF</button></div>' +
+    return '<div class="nop" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center"><button class="ghost" style="margin:0" data-act="report-back">← Back to result</button> ' +
+      '<button class="btn" style="margin:0" data-act="pdf">Save as PDF</button></div>' +
       '<p class="mut">' + (S.saved && S.id ? 'Report ' : 'Local preview (not saved) · ') +
       (S.saved && S.id ? '· The Full Picture' : 'The Full Picture') + '</p>' +
       '<div class="pg"><div class="box" style="text-align:center">' +

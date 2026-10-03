@@ -802,6 +802,30 @@
      "Operations, finance or programme management",
      "Advisory or governance roles"
     ]
+   },
+   "pdf": {
+    "sections": {
+     "talent": {
+      "kicker": "Talent Tree 才",
+      "title": "How you naturally think"
+     },
+     "direction": {
+      "kicker": "Direction 道",
+      "title": "Where your strengths could matter"
+     },
+     "role": {
+      "kicker": "Role 位",
+      "title": "Your Iron Triangle and True Path"
+     }
+    },
+    "talentInsight": {
+     "title": "What this suggests"
+    },
+    "directionInsight": {
+     "title": "Direction is a field to explore, not a prediction",
+     "body": "These are environments and forms of work that may fit the combination of your selected interests, Talent pattern and primary role. Use them as prompts for experimentation rather than fixed career prescriptions."
+    },
+    "qrCaption": "Scan to book your consultation"
    }
   },
   "cta": {

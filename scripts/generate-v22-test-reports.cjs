@@ -99,7 +99,8 @@ function buildRecord(firstName, profile, resultId, createdAt) {
     const model = ReportModel.buildReportModel(record, configs);
     const pdf = await ReportPdf.renderReportPdf(model, { Svg }, {
       pdfmake,
-      fontPath: path.join(__dirname, '..', 'fonts', 'NotoSansSC.ttf')
+      fontPath: path.join(__dirname, '..', 'fonts', 'NotoSansSC.ttf'),
+      configs
     });
     const file = path.join(outDir, 'True-Path-Report-' + firstName + '-2026-10-03.pdf');
     fs.writeFileSync(file, pdf);

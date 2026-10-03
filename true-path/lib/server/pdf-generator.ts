@@ -15,6 +15,7 @@ const pdfmake = require('pdfmake');
 const Svg = require('../../assets/true-path-svg.js');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ReportPdf = require('../report-pdf.js');
+import { reportConfigs } from './model';
 
 /**
  * The font path pdfmake loads. `vercel.json` already globs `fonts/**` into `api/**\/*.ts`, so the
@@ -25,5 +26,9 @@ export const FONT_PATH = path.join(process.cwd(), 'fonts', 'NotoSansSC.ttf');
 
 /** Render a report model to a PDF buffer. */
 export function renderTruePathPdf(model: any): Promise<Buffer> {
-  return ReportPdf.renderReportPdf(model, { Svg }, { pdfmake, fontPath: FONT_PATH });
+  return ReportPdf.renderReportPdf(model, { Svg }, {
+    pdfmake,
+    fontPath: FONT_PATH,
+    configs: reportConfigs(),
+  });
 }
