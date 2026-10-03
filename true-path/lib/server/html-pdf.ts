@@ -44,24 +44,25 @@ export function buildReportDocumentHtml(model: any): string {
  * (local development); in production the bundled @sparticuz/chromium is used.
  */
 export async function renderTruePathHtmlPdf(model: any, deps?: { executablePath?: string }): Promise<Buffer> {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const chromium = require('@sparticuz/chromium');
+  // @sparticuz/chromium is ESM-only; it must be loaded with a dynamic import from CJS.
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const puppeteer = require('puppeteer-core');
+  const chromiumModule: any = await import('@sparticuz/chromium');
+  const chromium: any = chromiumModule.default || chromiumModule;
 
   const executablePath = deps && deps.executablePath
     ? deps.executablePath
-    : (await (chromium as any).default ? await (chromium as any).default.executablePath() : await (chromium as any).executablePath());
+    : await chromium.executablePath();
 
   if (!deps || !deps.executablePath) {
-    (chromium as any).args.push('--font-render-hinting=none');
+    chromium.args.push('--font-render-hinting=none');
   }
 
   const browser = await puppeteer.launch({
     args: (deps && deps.executablePath)
       ? ['--no-sandbox', '--disable-setuid-sandbox']
-      : (chromium as any).args,
-    defaultViewport: (chromium as any).defaultViewport,
+      : chromium.args,
+    defaultViewport: chromium.defaultViewport,
     executablePath,
     headless: 'shell' as any,
     ignoreHTTPSErrors: true
@@ -72,8 +73,8 @@ export async function renderTruePathHtmlPdf(model: any, deps?: { executablePath?
     // own typography, regardless of what the host has installed.
     if (!deps || !deps.executablePath) {
       try {
-        (chromium as any).font(SANS_FONT);
-        (chromium as any).font(SERIF_FONT);
+        chromium.font(SANS_FONT);
+        chromium.font(SERIF_FONT);
       } catch (error) {
         console.error('[true-path] font registration failure:', error);
       }
