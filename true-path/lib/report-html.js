@@ -233,10 +233,6 @@
       `<p${i ? ' style="margin-top:2mm"' : ''}>${esc(line).replace(/^([A-Za-z ]+):/, '<b>$1:</b>')}</p>`
     ).join('');
 
-    const qrBlock = opts.qrDataUrl
-      ? `<div style="margin-top:2.5mm"><img src="${opts.qrDataUrl}" alt="Booking QR" style="width:25mm;height:25mm"/></div>`
-      : '';
-
     const pageFooter = (n) => `<div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia${n === 3 ? ' · Result ID kept for support' : ''}</span><span>${n} / 3</span></div>`;
 
     return `<!doctype html>
@@ -369,6 +365,15 @@
   .cta .title { color:#7A1F2B; font-size:13pt; margin-bottom:1mm; }
   .cta p { font-size:8.2pt; line-height:1.4; }
   .cta .link { color:#7A1F2B; text-decoration:underline; margin-top:2mm; font-weight:700; }
+
+  /* Page 3 carries the most content; when the QR row is present these trims keep everything,
+     footer included, inside the fixed A4 page. */
+  .page:last-child .triangle-svg { height:54mm; }
+  .page:last-child .triangle-wrap { margin:1mm 0 3mm; }
+  .page:last-child .grid2 { gap:3mm; }
+  .page:last-child .card { padding:3.2mm; }
+  .page:last-child .cta { padding:3mm; }
+  .page:last-child .cta .title { font-size:12pt; }
 
   .footer {
     position:absolute;
@@ -528,8 +533,13 @@
   <div class="cta">
     <div class="title serif">${esc(invite && invite.headline)}</div>
     <p>${esc(invite && invite.text)}</p>
-    ${qrBlock}
-    <div class="link"><a href="${esc(invite && invite.ctaHref)}" style="color:#7A1F2B">${esc(invite && invite.ctaLabel)}</a></div>
+    ${opts.qrDataUrl
+      ? `<div style="display:flex;align-items:center;justify-content:center;gap:5mm;margin-top:2mm">
+           <img src="${opts.qrDataUrl}" alt="Booking QR" style="width:25mm;height:25mm"/>
+           <div style="text-align:left"><div class="link" style="margin-top:0"><a href="${esc(invite && invite.ctaHref)}" style="color:#7A1F2B">${esc(invite && invite.ctaLabel)}</a></div>
+           <p style="margin-top:1.5mm;color:#4A4A4A">Scan the code or tap the link to book.</p></div>
+         </div>`
+      : `<div class="link"><a href="${esc(invite && invite.ctaHref)}" style="color:#7A1F2B">${esc(invite && invite.ctaLabel)}</a></div>`}
   </div>
 
   ${pageFooter(3)}
