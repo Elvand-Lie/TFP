@@ -847,17 +847,42 @@
     return savePromise;
   }
 
+  /** Open the server PDF as a real tab: an <a target="_blank"> is far less popup-blocked than
+   *  window.open with a features string, and blockers that do stop it are reported, not silent. */
+  function openPdf(id) {
+    var url = API.pdf.replace('{id}', encodeURIComponent(id));
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function pdfNote(message) {
+    var el = $('#tp-pdf-note');
+    if (el) el.textContent = message || '';
+  }
+
   function pdf() {
     track('tp_report_download', { resultId: S.id });
+    pdfNote('');
     if (API.pdf && S.saved && S.id) {
-      window.open(API.pdf.replace('{id}', encodeURIComponent(S.id)), '_blank', 'noopener');
+      openPdf(S.id);
       return;
     }
-    // No server id yet: save first, then fetch the PDF; otherwise fall back to the browser's own
-    // print so the visitor can still keep a copy.
+    // No server id yet: save first, then fetch the PDF. If the save cannot be completed the
+    // visitor is told so — a silent fallback into the browser's print dialog looks exactly like
+    // the button doing something random.
+    pdfNote('Preparing your PDF…');
     persist().then(function (id) {
-      if (id && API.pdf) window.open(API.pdf.replace('{id}', encodeURIComponent(id)), '_blank', 'noopener');
-      else try { window.print(); } catch (error) { /* nothing else available */ }
+      if (id && API.pdf) {
+        pdfNote('');
+        openPdf(id);
+      } else {
+        pdfNote('We couldn’t prepare your PDF just now — check your connection and try again.');
+      }
     });
   }
 
@@ -1188,7 +1213,8 @@
       : al.indexOf('economic_role_explore') !== -1 ? esc(C.AMSG.economic_role_explore) : '';
 
     return '<div class="nop" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center"><button class="ghost" style="margin:0" data-act="report-back">← Back to result</button> ' +
-      '<button class="btn" style="margin:0" data-act="pdf">Save as PDF</button></div>' +
+      '<button class="btn" style="margin:0" data-act="pdf">Save as PDF</button>' +
+      '<span id="tp-pdf-note" class="mut" style="margin:0"></span></div>' +
       '<p class="mut">' + (S.saved && S.id ? 'Report ' : 'Local preview (not saved) · ') +
       (S.saved && S.id ? '· The Full Picture' : 'The Full Picture') + '</p>' +
       '<div class="pg"><div class="box" style="text-align:center">' +
