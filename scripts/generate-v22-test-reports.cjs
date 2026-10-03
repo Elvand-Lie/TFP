@@ -100,6 +100,7 @@ function buildRecord(firstName, profile, resultId, createdAt) {
     const pdf = await ReportPdf.renderReportPdf(model, { Svg }, {
       pdfmake,
       fontPath: path.join(__dirname, '..', 'fonts', 'NotoSansSC.ttf'),
+      serifPath: path.join(__dirname, '..', 'fonts', 'CormorantGaramond-SemiBold.ttf'),
       configs
     });
     const file = path.join(outDir, 'True-Path-Report-' + firstName + '-2026-10-03.pdf');

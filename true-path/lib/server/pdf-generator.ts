@@ -23,12 +23,14 @@ import { reportConfigs } from './model';
  * 才 / 道 / 位 / 帅 / 将 / 相.
  */
 export const FONT_PATH = path.join(process.cwd(), 'fonts', 'NotoSansSC.ttf');
+export const SERIF_FONT_PATH = path.join(process.cwd(), 'fonts', 'CormorantGaramond-SemiBold.ttf');
 
 /** Render a report model to a PDF buffer. */
 export function renderTruePathPdf(model: any): Promise<Buffer> {
   return ReportPdf.renderReportPdf(model, { Svg }, {
     pdfmake,
     fontPath: FONT_PATH,
+    serifPath: SERIF_FONT_PATH,
     configs: reportConfigs(),
   });
 }

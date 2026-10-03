@@ -166,16 +166,19 @@
 
       // Explicit font-size/fill as well as the class: the on-screen page styles these through CSS,
       // while the PDF renderer has no CSS and would otherwise print them at the wrong size.
-      const ink = lit ? TREE.labelInkLit : TREE.labelInk;
+      // `opts.print` swaps to dark paper inks: the light beige labels are correct on the dark
+      // screen but all but invisible once printed, and percentages have to read at a glance.
+      const print = !!(opts && opts.print);
+      const ink = print ? (lit ? '#7A1F2B' : '#1F1F1F') : lit ? TREE.labelInkLit : TREE.labelInk;
       parts.push(
-        `<text class="tp-svg__branch" x="${TREE.labelX[index]}" y="${TREE.labelY[index]}" fill="${ink}" font-size="10.5" text-anchor="middle">${escapeXml(
+        `<text class="tp-svg__branch" x="${TREE.labelX[index]}" y="${TREE.labelY[index]}" fill="${ink}" font-size="${print ? 13 : 10.5}" font-weight="${print ? 700 : 400}" text-anchor="middle">${escapeXml(
           category.name
         )}</text>`
       );
       parts.push(
         `<text class="tp-svg__score" x="${TREE.labelX[index]}" y="${
-          TREE.labelY[index] + 16.5
-        }" fill="${ink}" font-size="13" font-weight="600" text-anchor="middle">${value}%</text>`
+          TREE.labelY[index] + (print ? 17.5 : 16.5)
+        }" fill="${ink}" font-size="${print ? 14.5 : 13}" font-weight="700" text-anchor="middle">${value}%</text>`
       );
     });
 

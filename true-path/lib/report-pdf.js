@@ -35,6 +35,17 @@
   };
 
   const FONT = 'NotoSansSC';
+  // Display serif for the Latin-only headings (hero title, section titles, True Path title),
+  // matching the on-screen Cormorant Garamond. Registered only when the caller supplies a font
+  // file; otherwise every heading falls back to the CJK face so the report still renders.
+  const SERIF = 'Cormorant';
+  let serifActive = false;
+  /** The display face actually registered for this render. */
+  function display() { return serifActive ? SERIF : FONT; }
+  /** The serif face carries no CJK glyphs — any string with Han characters stays in the CJK face. */
+  function displaySafe(text) {
+    return /[一-鿿　-〿＀-￯]/.test(String(text)) ? FONT : display();
+  }
 
   /**
    * v2.2 C9: the embedded CJK font draws typographic quotes and apostrophes with full-width
@@ -163,7 +174,8 @@
     const content = label(block.label).concat([
       {
         text: String(block.title || ''),
-        fontSize: 17,
+        font: displaySafe(block.title),
+        fontSize: 22,
         bold: true,
         color: C.crimson,
         alignment: 'center',
@@ -236,6 +248,7 @@
               raw: block.raw,
               dominant: block.dominant,
               balancedProfile: block.balancedProfile,
+              print: true,
               ariaLabel: block.ariaLabel || block.label || 'Talent Tree'
             })
           ),
@@ -282,8 +295,10 @@
           });
           heroContent.push({
             text: String(block.title || '').toUpperCase(),
-            fontSize: 22,
+            font: displaySafe(block.title),
+            fontSize: 27,
             bold: true,
+            characterSpacing: 1,
             color: C.burgundy,
             alignment: 'center',
             margin: [0, 0, 0, 2]
@@ -408,13 +423,8 @@
           { text: String(block.oneLine || ''), fontSize: 9, color: C.textMed, margin: [0, 0, 0, 2] }
         ]);
         if ((block.naturalStrengths || []).length) {
-          // Inline rather than a bulleted list: same content, a fraction of the vertical cost.
-          content.push({
-            text: (block.naturalStrengths || []).map(String).join('   \u00b7   '),
-            fontSize: 9,
-            color: C.textDark,
-            margin: [0, 0, 0, 2]
-          });
+          // The reference's role chips: strengths as outlined tags instead of a sentence.
+          content.push(chipTable((block.naturalStrengths || []).map(String)));
         }
         content.push({
           text: String(block.contribution || ''),
@@ -592,7 +602,7 @@
     };
   }
 
-  /** Section opener: gold kicker + burgundy title (the reference's .section-title). */
+  /** Section opener: gold kicker + burgundy serif title (the reference's .section-title). */
   function sectionTitle(section) {
     return {
       columns: [
@@ -600,13 +610,15 @@
           width: 'auto',
           text: String(section.kicker || ''),
           fontSize: 8,
+          bold: true,
           color: C.gold,
-          characterSpacing: 0.8,
-          margin: [0, 4, 12, 0]
+          characterSpacing: 1.4,
+          margin: [0, 6, 12, 0]
         },
         {
           text: String(section.title || ''),
-          fontSize: 18,
+          font: displaySafe(section.title),
+          fontSize: 21,
           bold: true,
           color: C.burgundy
         }
@@ -668,6 +680,35 @@
   /** Small labelled card (list or sentence), the reference's .card. */
   function smallCard(labelText, body) {
     return panel(label(labelText).concat(body));
+  }
+
+  /**
+   * The reference's .tag chips (page 3, role strengths): a two-column grid of hairline-outlined
+   * cells. pdfmake has no rounded rects, so the outline is the chip.
+   */
+  function chipTable(items) {
+    const chipLayout = {
+      hLineWidth: () => 0.75,
+      vLineWidth: () => 0.75,
+      hLineColor: () => '#D9CEC2',
+      vLineColor: () => '#D9CEC2',
+      fillColor: () => C.panel,
+      paddingTop: () => 3,
+      paddingBottom: () => 3,
+      paddingLeft: () => 6,
+      paddingRight: () => 6
+    };
+    const cell = (text) => ({
+      text: String(text).replace(/^./, (ch) => ch.toUpperCase()),
+      fontSize: 8.5,
+      color: C.textDark,
+      alignment: 'center'
+    });
+    const rows = [];
+    for (let i = 0; i < items.length; i += 2) {
+      rows.push([cell(items[i]), items[i + 1] !== undefined ? cell(items[i + 1]) : { text: '' }]);
+    }
+    return { table: { widths: ['*', '*'], body: rows }, layout: chipLayout, margin: [0, 1, 0, 3] };
   }
 
   function buildReportPdfDefinition(model, ctx, configs) {
@@ -756,11 +797,19 @@
       triangleRendered.width = 150;
       const roleStack = [
         { text: String(p3Role.label || '').toUpperCase(), fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.8, margin: [0, 0, 0, 2] },
-        { text: p3Role.name + ' ' + p3Role.chinese, fontSize: 16, bold: true, color: C.burgundy, margin: [0, 0, 0, 1] },
+        // Mixed Latin + CJK: the serif face has no CJK glyphs, so this heading stays in the
+        // CJK face — only pure-Latin strings may use display().
+        { text: [
+          { text: p3Role.name + ' ', font: displaySafe(p3Role.name), fontSize: 19, bold: true, color: C.burgundy },
+          { text: String(p3Role.chinese || ''), fontSize: 16, bold: true, color: C.burgundy }
+        ], margin: [0, 0, 0, 1] },
         { text: String(p3Role.subtitle || ''), fontSize: 9, color: C.textMed, margin: [0, 0, 0, 2] },
         { text: String(p3Role.essence || ''), fontSize: 9.5, color: C.textDark, lineHeight: 1.35, margin: [0, 0, 0, 2] },
         { text: String(p3Role.oneLine || ''), fontSize: 8.8, color: C.textMed, lineHeight: 1.35 }
       ];
+      if ((p3Role.naturalStrengths || []).length) {
+        roleStack.push(chipTable((p3Role.naturalStrengths || []).map(String)));
+      }
       if (p3Role.contribution) {
         roleStack.push({ text: String(p3Role.contribution), fontSize: 8.8, color: C.textDark, lineHeight: 1.35, margin: [0, 3, 0, 0] });
       }
@@ -888,6 +937,15 @@
       italics: deps.fontPath,
       bolditalics: deps.fontPath
     };
+    serifActive = !!(deps.serifPath && typeof deps.serifPath === 'string');
+    if (serifActive) {
+      pdfmake.fonts[SERIF] = {
+        normal: deps.serifPath,
+        bold: deps.serifPath,
+        italics: deps.serifPath,
+        bolditalics: deps.serifPath
+      };
+    }
 
     const definition = buildReportPdfDefinition(model, ctx, deps.configs);
     return pdfmake.createPdf(definition).getBuffer();
