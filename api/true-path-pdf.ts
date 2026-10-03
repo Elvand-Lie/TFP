@@ -108,7 +108,7 @@ export default async function handler(req: any, res: any) {
       pdf = await renderTruePathHtmlPdf(model);
     } catch (browserError: any) {
       console.error('[true-path] html pdf render failure, falling back to pdfmake:', browserError);
-      renderer = 'pdfmake-fallback';
+      renderer = 'pdfmake-fallback (' + String(browserError && browserError.message || browserError).slice(0, 160) + ')';
       pdf = await renderTruePathPdf(model);
     }
     res.setHeader('Content-Type', 'application/pdf');
