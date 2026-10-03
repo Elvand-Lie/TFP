@@ -112,7 +112,7 @@ export default async function handler(req: any, res: any) {
       pdf = await renderTruePathPdf(model);
     }
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('X-Report-Renderer', renderer);
+    res.setHeader('X-Report-Renderer', renderer.replace(/[^\x20-\x7E]/g, '?'));
     res.setHeader('Content-Disposition', 'attachment; filename="' + pdfFileName(model) + '"');
     res.setHeader('Cache-Control', 'private, max-age=0, no-store');
     return res.status(200).send(pdf);
