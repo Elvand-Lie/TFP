@@ -113,7 +113,14 @@ export default async function handler(req: any, res: any) {
     }
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('X-Report-Renderer', renderer.replace(/[^\x20-\x7E]/g, '?'));
-    res.setHeader('Content-Disposition', 'attachment; filename="' + pdfFileName(model) + '"');
+    // RFC 5987: non-ASCII names (e.g. 陈伟) are invalid in a raw header value, so an ASCII
+    // fallback rides along with the UTF-8 encoded form.
+    const fileName = pdfFileName(model);
+    const asciiName = fileName.replace(/[^\x20-\x7E]/g, '_');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="' + asciiName + '"; filename*=UTF-8\'\'' + encodeURIComponent(fileName)
+    );
     res.setHeader('Cache-Control', 'private, max-age=0, no-store');
     return res.status(200).send(pdf);
   } catch (error: any) {
