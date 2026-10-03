@@ -34,6 +34,31 @@
     } catch (error) { /* ignore */ }
   })();
 
+  // A silent failure is undiagnosable — a visitor sees a normal-looking page that ignores every
+  // click. Surface any boot-time script error on the page itself so a screenshot is a report.
+  (function () {
+    function banner(text) {
+      try {
+        var host = document.getElementById('true-path-app');
+        if (!host) return;
+        var note = document.createElement('div');
+        note.setAttribute('data-tp-error', '');
+        note.style.cssText = 'margin:12px auto;max-width:640px;padding:10px 14px;border:1px solid #b04458;' +
+          'background:#2c1113;color:#f3ecdf;font:14px/1.5 Inter,system-ui,sans-serif;border-radius:8px';
+        note.textContent = text;
+        host.insertBefore(note, host.firstChild);
+      } catch (error) { /* nothing more we can do */
+      }
+    }
+    window.addEventListener('error', function (event) {
+      if (event && event.message) banner('True Path hit an error and could not finish loading: ' + event.message);
+    });
+    window.addEventListener('unhandledrejection', function (event) {
+      var reason = event && event.reason && (event.reason.message || String(event.reason));
+      if (reason) banner('True Path could not load a resource it needs: ' + reason);
+    });
+  })();
+
   var CONFIG_URL = '/true-path/config/true-path.config.json';
   var RESULT_ID_PATTERN = /^tp_[A-Za-z0-9_-]{4,64}$/;
   var STATE_KEY = 'tfp.truepath.journey.v2';
@@ -56,6 +81,27 @@
   var mail = 0;
   var synTimer = null;
   var bound = 0;
+
+  // If a visitor manages to click a journey control before bind() ran (or if boot never
+  // completes), say so on the page instead of letting the click vanish without a trace.
+  document.addEventListener('click', function (event) {
+    if (bound) return;
+    var target = event.target;
+    if (!target || !target.closest || !target.closest('[data-act]')) return;
+    try {
+      var host = document.getElementById('true-path-app');
+      if (!host) return;
+      var note = document.createElement('div');
+      note.setAttribute('data-tp-stalled', '');
+      note.style.cssText = 'margin:12px auto;max-width:640px;padding:10px 14px;border:1px solid #b04458;' +
+        'background:#2c1113;color:#f3ecdf;font:14px/1.5 Inter,system-ui,sans-serif;border-radius:8px';
+      note.textContent = 'The journey is still starting and is not accepting clicks yet. ' +
+        'If this message stays, refresh the page — if it reappears after a refresh, your connection ' +
+        'or an extension is blocking part of this site.';
+      host.insertBefore(note, host.firstChild);
+    } catch (error) { /* nothing more we can do */
+    }
+  }, true);
 
   var savedKey = '';
   var savePromise = null;
