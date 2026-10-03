@@ -44,10 +44,13 @@ export function buildReportDocumentHtml(model: any): string {
  * (local development); in production the bundled @sparticuz/chromium is used.
  */
 export async function renderTruePathHtmlPdf(model: any, deps?: { executablePath?: string }): Promise<Buffer> {
-  // Both browser packages are ESM-only; load them with dynamic imports from CJS.
-  const puppeteerModule: any = await import('puppeteer-core');
+  // Both browser packages are ESM-only. Vercel's CJS transpile rewrites `await import()` into
+  // `require()`, which cannot load them — so route the import through runtime evaluation that
+  // the bundler cannot see or rewrite.
+  const dynamicImport = new Function('m', 'return import(m)');
+  const puppeteerModule: any = await dynamicImport('puppeteer-core');
   const puppeteer: any = puppeteerModule.default || puppeteerModule;
-  const chromiumModule: any = await import('@sparticuz/chromium');
+  const chromiumModule: any = await dynamicImport('@sparticuz/chromium');
   const chromium: any = chromiumModule.default || chromiumModule;
 
   const executablePath = deps && deps.executablePath
