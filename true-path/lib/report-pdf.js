@@ -119,44 +119,52 @@
     };
   }
 
-  /** A score/share bar, drawn as vector rectangles so it needs no glyphs and cannot tofu. */
-  function scoreBar(value, max) {
+  /** A score/share bar, drawn as vector rectangles so it needs no glyphs and cannot tofu.
+   *  Colours follow the reference: talent bars burgundy; role shares gold with a burgundy primary. */
+  function scoreBar(value, max, fillColor) {
     const pct = Math.max(0, Math.min(100, ((Number(value) || 0) / (max || 100)) * 100));
     const width = 60;
     return {
       canvas: [
-        { type: 'rect', x: 0, y: 1, w: width, h: 3, r: 1.5, color: C.medGrey },
+        { type: 'rect', x: 0, y: 1, w: width, h: 3.5, r: 1.75, color: '#E7E1DA' },
         {
           type: 'rect',
           x: 0,
           y: 1,
           w: (width * pct) / 100,
-          h: 3,
-          r: 1.5,
-          color: pct >= 100 ? C.crimson : C.gold
+          h: 3.5,
+          r: 1.75,
+          color: fillColor || C.gold
         }
       ],
       margin: [0, 1, 0, 1]
     };
   }
 
-  /** Talent percentages and role shares use the same bar, with different maxima. */
+  /** Talent percentages and role shares use the same bar, with different maxima and colours.
+   *  Role shares total exactly 100; talent percentages do not, so the sum tells them apart. */
   function scoresBlock(block) {
-    const isShare = (block.rows || []).every(
-      (row) => typeof row.value === 'number' && row.value <= 100
-    );
+    const rows = block.rows || [];
+    const total = rows.reduce((sum, row) => sum + (Number(row.value) || 0), 0);
+    const isShare = total === 100;
+    const maxRow = isShare
+      ? (block.rows || []).reduce((best, row) => (Number(row.value) > Number(best.value) ? row : best), (block.rows || [])[0] || {})
+      : null;
+    const barColor = (row) =>
+      isShare ? (row === maxRow ? C.burgundy : C.gold) : C.burgundy;
+    const isPct = isShare || rows.every((row) => Number(row.value) >= 0 && Number(row.value) <= 100);
     const body = (block.rows || []).map((row) => [
-      { text: String(row.name), fontSize: 9, bold: true, color: C.textDark, margin: [0, 3, 8, 3] },
+      { text: String(row.name), fontSize: 8.8, color: C.textDark, margin: [0, 3, 8, 3] },
       {
-        text: isShare ? String(row.value) + '%' : String(row.value),
-        fontSize: 9,
+        text: isPct ? String(row.value) + '%' : String(row.value),
+        fontSize: 8.8,
         bold: true,
         alignment: 'right',
         color: C.textDark,
         width: 34,
         margin: [0, 3, 0, 3]
       },
-      { stack: [scoreBar(row.value, isShare ? 100 : 15)], width: 60, margin: [6, 0, 0, 0] }
+      { stack: [scoreBar(row.value, 100, barColor(row))], width: 60, margin: [6, 0, 0, 0] }
     ]);
 
     return panel(
@@ -288,6 +296,7 @@
           }
           heroContent.push({
             text: String(block.intro || ''),
+            font: displaySafe(block.intro),
             fontSize: 11,
             color: C.textDark,
             alignment: 'center',
@@ -460,7 +469,7 @@
         // v2.2 C13: when a booking URL is configured, the QR sits beside the text link.
         /** @type {Array<any>} */
         const stack = [
-          { text: String(block.headline || ''), fontSize: 13, bold: true, color: C.crimson, alignment: 'center', margin: [0, 1, 0, 3] },
+          { text: String(block.headline || ''), font: displaySafe(block.headline), fontSize: 13.5, color: C.burgundy, alignment: 'center', margin: [0, 1, 0, 3] },
           { text: String(block.text || ''), fontSize: 9.5, color: C.textMed, alignment: 'center', margin: [0, 0, 0, 4] }
         ];
         if (block.qr && block.qr.dataUrl) {
@@ -503,7 +512,22 @@
           });
         }
         stack.push({ text: '', margin: [0, 0, 0, 1] });
-        return { stack };
+        // The reference's .cta: a gold-bordered panel, not bare centred text.
+        return {
+          table: { widths: ['*'], body: [[{ stack, margin: [6, 4, 6, 4] }]] },
+          layout: {
+            hLineWidth: () => 1,
+            vLineWidth: () => 1,
+            hLineColor: () => C.gold,
+            vLineColor: () => C.gold,
+            fillColor: () => C.panel,
+            paddingTop: () => 0,
+            paddingBottom: () => 0,
+            paddingLeft: () => 0,
+            paddingRight: () => 0
+          },
+          margin: [0, 2, 0, 0]
+        };
       }
 
       default:
@@ -639,12 +663,12 @@
     };
   }
 
-  /** The insight box: burgundy left border, heading, body (the reference's .insight). */
+  /** The insight box: burgundy left border, serif heading, body (the reference's .insight). */
   function insightBlock(block) {
     return {
       table: { widths: ['*'], body: [[{ stack: [
-        { text: String(block.title || ''), fontSize: 12.5, bold: true, color: C.burgundy, margin: [0, 0, 0, 2] },
-        { text: String(block.body || ''), fontSize: 8.8, color: C.textDark, lineHeight: 1.35 }
+        { text: String(block.title || ''), font: displaySafe(block.title), fontSize: 13, color: C.burgundy, margin: [0, 0, 0, 2] },
+        { text: String(block.body || ''), fontSize: 8.8, color: C.textDark, lineHeight: 1.42 }
       ] }]] },
       layout: {
         hLineWidth: () => 0,
@@ -661,12 +685,15 @@
     };
   }
 
-  /** A sentence card: labelled sentences separated by hairlines (the reference's .sentence-block). */
+  /** A sentence card: labelled sentences separated by hairlines (the reference's .sentence-block).
+   *  Labels follow the reference wording; the first sentence prints bold, as in the reference. */
   function sentenceCard(sentences) {
+    const REFERENCE_LABELS = ['Energises', 'Good at', 'Work you could be paid for', 'Impact'];
     const stack = [];
     sentences.forEach((entry, index) => {
-      stack.push({ text: String(entry.label || '').toUpperCase(), fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.8, margin: [0, index === 0 ? 0 : 5, 0, 1] });
-      stack.push({ text: String(entry.text || ''), fontSize: 9.5, color: C.textDark, lineHeight: 1.4, margin: [0, 0, 0, index === sentences.length - 1 ? 0 : 2] });
+      const labelText = REFERENCE_LABELS[index] || String(entry.label || '');
+      stack.push({ text: labelText.toUpperCase(), fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.8, margin: [0, index === 0 ? 0 : 5, 0, 1] });
+      stack.push({ text: String(entry.text || ''), bold: index === 0, fontSize: 9.5, color: C.textDark, lineHeight: 1.48, margin: [0, 0, 0, index === sentences.length - 1 ? 0 : 2] });
       if (index < sentences.length - 1) {
         stack.push({
           canvas: [{ type: 'line', x1: 0, y1: 0, x2: 500, y2: 0, lineWidth: 0.6, lineColor: '#E1DBD4' }],
@@ -690,9 +717,9 @@
     const chipLayout = {
       hLineWidth: () => 0.75,
       vLineWidth: () => 0.75,
-      hLineColor: () => '#D9CEC2',
-      vLineColor: () => '#D9CEC2',
-      fillColor: () => C.panel,
+      hLineColor: () => '#CFC7BE',
+      vLineColor: () => '#CFC7BE',
+      fillColor: () => '#FFFFFF',
       paddingTop: () => 3,
       paddingBottom: () => 3,
       paddingLeft: () => 6,
@@ -727,7 +754,6 @@
     if (heroBlock) content.push(renderBlock(heroBlock, ctx));
 
     content.push(sectionTitle(sections.talent || { kicker: 'Talent Tree 才', title: 'How you naturally think' }));
-    content.push(goldRule());
 
     const tree = byKind(page1, 'talent-tree')[0];
     if (tree) {
@@ -739,9 +765,9 @@
     const p1Scores = byKind(page1, 'scores')[0];
     const p1Pair = byKind(page1, 'pair')[0];
     if (p1Scores && p1Pair) {
-      const pairInner = label(p1Pair.label).concat([
-        { text: String(p1Pair.archetypeHeading || ''), fontSize: 12, bold: true, color: C.textDark, margin: [0, 0, 0, 2] },
-        { text: String(p1Pair.leadLine || ''), fontSize: 8.9, color: C.textDark, lineHeight: 1.35 }
+      // The reference styles the pattern name as a card label (small, burgundy, uppercase).
+      const pairInner = label(p1Pair.archetypeHeading || p1Pair.label).concat([
+        { text: String(p1Pair.leadLine || ''), fontSize: 8.9, color: C.textDark, lineHeight: 1.42 }
       ]);
       if (p1Pair.strengthsSentence) {
         pairInner.push({ text: String(p1Pair.strengthsSentence), fontSize: 8.9, color: C.textDark, lineHeight: 1.35, margin: [0, 3, 0, 0] });
