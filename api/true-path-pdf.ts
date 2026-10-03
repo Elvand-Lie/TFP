@@ -103,13 +103,16 @@ export default async function handler(req: any, res: any) {
     // Primary: the reference HTML printed by headless Chromium — the PDF is the HTML.
     // Fallback: the pdfmake renderer, should the browser be unavailable in the runtime.
     let pdf: Buffer;
+    let renderer = 'html';
     try {
       pdf = await renderTruePathHtmlPdf(model);
     } catch (browserError: any) {
       console.error('[true-path] html pdf render failure, falling back to pdfmake:', browserError);
+      renderer = 'pdfmake-fallback';
       pdf = await renderTruePathPdf(model);
     }
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('X-Report-Renderer', renderer);
     res.setHeader('Content-Disposition', 'attachment; filename="' + pdfFileName(model) + '"');
     res.setHeader('Cache-Control', 'private, max-age=0, no-store');
     return res.status(200).send(pdf);

@@ -8,7 +8,7 @@
   ],
   "functions": {
     "api/**/*.ts": {
-      "includeFiles": "fonts/**"
+      "includeFiles": "fonts/**;node_modules/@sparticuz/chromium/bin/**"
     }
   }
 }
