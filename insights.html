@@ -1180,42 +1180,36 @@
       }
     };
 
-    var modal = document.getElementById('insightModal');
+    // The modal markup sits later in the document than this script, so look it up lazily and
+    // bind one delegated listener instead of per-card handlers.
+    function modalEl() { return document.getElementById('insightModal'); }
     function openInsight(id) {
       var a = ARTICLES[id];
       if (!a) return;
+      var m = modalEl();
       document.getElementById('imKicker').textContent = a.kicker;
       document.getElementById('imTitle').textContent = a.title;
       document.getElementById('imMeta').textContent = a.date + ' · ' + a.read;
       document.getElementById('imContent').innerHTML = a.html;
-      modal.classList.add('open');
+      m.classList.add('open');
       document.body.style.overflow = 'hidden';
-      var closeBtn = modal.querySelector('.insight-modal-close');
+      var closeBtn = m.querySelector('.insight-modal-close');
       if (closeBtn) closeBtn.focus();
     }
     function closeInsight() {
-      modal.classList.remove('open');
+      modalEl().classList.remove('open');
       document.body.style.overflow = '';
     }
-    modal.addEventListener('click', function (e) {
-      if (e.target.hasAttribute('data-im-close')) closeInsight();
+    document.addEventListener('click', function (e) {
+      var card = e.target.closest ? e.target.closest('[data-article]') : null;
+      if (card) { e.preventDefault(); openInsight(card.getAttribute('data-article')); return; }
+      if (e.target.hasAttribute && e.target.hasAttribute('data-im-close')) closeInsight();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modal.classList.contains('open')) closeInsight();
+      if (e.key === 'Escape' && modalEl().classList.contains('open')) closeInsight();
     });
-
-    function attachInsightCards(root) {
-      (root || document).querySelectorAll('[data-article]').forEach(function (card) {
-        card.addEventListener('click', function (e) {
-          e.preventDefault();
-          openInsight(card.getAttribute('data-article'));
-        });
-      });
-    }
-    attachInsightCards();
-
-    // expose for the reveal observer in case cards re-render
-    window.attachInsightCards = attachInsightCards;
+    window.ARTICLES = ARTICLES;
+    window.attachInsightCards = function(){};
   </script>
 
   <script>
