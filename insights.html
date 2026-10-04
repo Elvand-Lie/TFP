@@ -534,27 +534,29 @@
       font-size: 1.05rem; font-weight: 400; color: rgba(245,245,242,0.8);
       line-height: 1.85; margin-top: 24px;
     }
-    .subscribe-form { display: flex; gap: 0; }
+    .subscribe-form { display: flex; gap: 0; align-items: stretch; }
     .subscribe-input {
       font-family: var(--font-sans); font-size: 0.95rem; font-weight: 400;
       color: var(--ivory); background: rgba(245,245,242,0.04);
-      border: 2px solid rgba(216,207,196,0.3); border-right: none;
-      padding: 16px 24px; flex: 1; outline: none;
+      border: 1px solid rgba(216,207,196,0.3); border-right: none;
+      height: 56px; box-sizing: border-box;
+      padding: 0 24px; flex: 1; outline: none;
       transition: border-color var(--transition-interactive), background var(--transition-interactive);
     }
     .subscribe-input::placeholder { color: rgba(245,245,242,0.5); }
     .subscribe-input:focus { border-color: var(--gold); background: rgba(216,207,196,0.08); }
-    
+
     .subscribe-submit {
       font-family: var(--font-sans); font-size: 0.85rem;
       letter-spacing: 0.18em; text-transform: uppercase;
       background: var(--crimson); color: var(--ivory);
-      border: none; padding: 16px 32px; cursor: pointer; font-weight: 600;
+      border: 1px solid var(--crimson); height: 56px; box-sizing: border-box;
+      padding: 0 32px; cursor: pointer; font-weight: 600;
       white-space: nowrap;
       display: flex; align-items: center; gap: 8px;
       position: relative; overflow: hidden;
       transition: color 0.35s;
-      z-index: 1; 
+      z-index: 1;
     }
     .subscribe-submit::before {
       content: ''; position: absolute; inset: 0; background: var(--deep-red);
@@ -640,8 +642,8 @@
       .subscribe-inner { padding: 72px 24px; }
       /* Subscribe form: stack with spacing */
       .subscribe-form { flex-direction: column; gap:12px; }
-      .subscribe-input { border:2px solid rgba(216,207,196,0.3); width:100%; box-sizing:border-box; }
-      .subscribe-submit { width:100%; justify-content:center; }
+      .subscribe-input { border:1px solid rgba(216,207,196,0.3); width:100%; box-sizing:border-box; height:56px; }
+      .subscribe-submit { width:100%; justify-content:center; height:56px; }
       
       /* Shared Elements specific */
       .footer-inner{padding:0 24px;}
