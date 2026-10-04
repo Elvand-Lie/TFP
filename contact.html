@@ -512,6 +512,22 @@
       color: rgba(245, 245, 242, 0.8);
     }
 
+    /* Free-tool links */
+    .tool-links { display: flex; flex-direction: column; gap: 10px; }
+    .tool-link {
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 12px 16px;
+      background: rgba(245, 245, 242, 0.03);
+      border: 1px solid rgba(113, 1, 1, 0.25);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .tool-link:hover { border-color: rgba(198, 169, 107, 0.55); background: rgba(245, 245, 242, 0.05); }
+    .tool-link-name { font-family: var(--font-sans); font-size: 0.92rem; font-weight: 500; color: var(--ivory); }
+    .tool-link:hover .tool-link-name { color: var(--gold); }
+    .tool-link-desc { font-family: var(--font-sans); font-size: 0.78rem; color: rgba(245, 245, 242, 0.55); }
+
     /* Confidentiality note */
     .confidential-note {
       display: flex;
@@ -618,6 +634,12 @@
     textarea:focus {
       border-color: var(--crimson);
       background: rgba(113, 1, 1, 0.05);
+    }
+
+    input:hover:not(:focus),
+    select:hover:not(:focus),
+    textarea:hover:not(:focus) {
+      border-color: rgba(198, 169, 107, 0.45);
     }
 
     input:focus+.input-line,
@@ -1398,6 +1420,14 @@
           </div>
           <div class="service-badge">
             <div class="service-badge-dot"></div>
+            <span class="service-badge-name">True Path 轨道 &mdash; Direction Report</span>
+          </div>
+          <div class="service-badge">
+            <div class="service-badge-dot"></div>
+            <span class="service-badge-name">Lucky Today 运 &mdash; Daily Readings</span>
+          </div>
+          <div class="service-badge">
+            <div class="service-badge-dot"></div>
             <span class="service-badge-name">Courses &amp; Masterclasses</span>
           </div>
           <div class="service-badge">
@@ -1426,6 +1456,26 @@
             <p class="whatsapp-sub">Message us directly</p>
           </div>
         </a>
+      </div>
+
+      <div class="contact-info-block reveal reveal-delay-2">
+        <p class="info-label">Not Ready to Enquire?</p>
+        <h2 class="info-title">Start With a Free Reading</h2>
+        <p class="info-text" style="margin-bottom: 20px;">Explore our self-guided tools first. They take a few minutes, cost nothing, and give you something concrete to bring into a conversation.</p>
+        <div class="tool-links">
+          <a href="/true-path" class="tool-link">
+            <span class="tool-link-name">True Path 轨道</span>
+            <span class="tool-link-desc">Direction report in ~4 minutes</span>
+          </a>
+          <a href="/lucky" class="tool-link">
+            <span class="tool-link-name">Lucky Today 运</span>
+            <span class="tool-link-desc">Your daily luck score and windows</span>
+          </a>
+          <a href="/bazi" class="tool-link">
+            <span class="tool-link-name">BaZi Calculator</span>
+            <span class="tool-link-desc">Your four-pillar chart, instantly</span>
+          </a>
+        </div>
       </div>
 
       <div class="contact-info-block reveal reveal-delay-2">
@@ -1505,6 +1555,14 @@
               <label class="checkbox-item">
                 <input type="checkbox" name="interest" value="fengshui" />
                 <span class="checkbox-label">Feng Shui &amp; Space Advisory (Home or Office Audit)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="truepath" />
+                <span class="checkbox-label">True Path 轨道 (Discover Your Direction, Report &amp; Consultation)</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="interest" value="lucky" />
+                <span class="checkbox-label">Lucky Today 运 (Daily Luck &amp; Almanac Readings)</span>
               </label>
               <label class="checkbox-item">
                 <input type="checkbox" name="interest" value="courses" />
