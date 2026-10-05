@@ -1267,7 +1267,7 @@
     if (!root.TruePathReport || !root.TruePathResolve || !S.tal || !S.res) return null;
     try {
       var talent = { raw: S.tal.raw, pct: S.tal.pct, dominant: S.tal.dominant, secondary: S.tal.secondary, coDominant: S.tal.coDominant, balancedProfile: S.tal.balancedProfile };
-      var triangle = { share: S.res.share, points: S.res.points, ikigaiHits: S.res.ikigaiHits, primary: S.res.primary, supporting: S.res.supporting, gap: S.res.gap, pattern: S.res.pattern };
+      var triangle = { share: S.res.share, points: S.res.points, ikigaiHits: S.res.ikigaiHits, ikigai: { hits: S.res.ikigaiHits || {} }, primary: S.res.primary, supporting: S.res.supporting, gap: S.res.gap, pattern: S.res.pattern };
       var taq = {}, saq = {};
       S.ta.forEach(function (v, i) { taq['Q' + (i + 1)] = v; });
       S.sc.forEach(function (v, i) { saq['S' + (i + 1)] = v; });
@@ -1285,7 +1285,7 @@
         meta: { resultId: S.id, createdAt: new Date().toISOString(), profile: { firstName: S.name || null } }
       });
       return root.TruePathReport.buildReportModel(record, CFG);
-    } catch (error) { root.__sharedModelError = error && error.message; return null; }
+    } catch (error) { return null; }
   }
 
   function pillRow(row, withLabel) {
