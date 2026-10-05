@@ -2,7 +2,27 @@
 
 All notable changes to The Full Picture site. Dates are 2026.
 
-## 2026-10-04 — True Path v2.2 final audit sign-off
+## 2026-10-05 — True Path v2.3 (Watch-outs & Growth)
+
+### Added
+- **Page 4 — Watch-outs & Growth 留意** (D10): every report now ends with a coaching-tone page: 2-3 numbered watch-out cards (strength overused, least natural talent, Triangle Gap), an Under Pressure line, a One Quick Win This Week panel, and a What a Questionnaire Can't Show teaser leading into the consultation. The website result page carries the matching Watch-outs section before the consultation button.
+- **Strength labels** (D2): talent branches show Very strong / Strong / Moderate / Developing / Emerging instead of bare percentages (bands in config; 0-19 bars keep a visible 8% sliver). Iron Triangle keeps its %.
+- **Talent Tree tooltips** (D1): the scores-don't-total-100 explanation moved to an ⓘ tooltip beside the heading.
+- **Shared report copy** (D6): the website result page now renders from the same content model as the PDF, so both match word for word.
+- **Analytics**: tp_watchouts_view (a2Shown, gapRole, pattern) and tp_advisory_click (titleKey, primaryRole).
+
+### Changed
+- **Report is 4 pages** (was 3): Talent → Direction → Role & True Path → Watch-outs & Growth. All visitor-facing 3-page wording updated.
+- **Lowest-branch observation rewritten** (D3): labels not percentages, energy lines below 40, ties name both branches, no more 'a reading, not a flaw'.
+- **Talent Pattern block** (D4): YOUR TALENT PATTERN label, full-sentence essence ('As a X, you ...'), co-dominant line exactly once, strengths sentence on the website too.
+- **Name field** (D7): clearer label/helper; the name is used exactly as typed — no capitalising or splitting.
+- **Tree labels** (D5): fixed seats with a ≥24px gap at every viewport; two-line name + strength label.
+- **CTA casing and bullets** (D9): Title Case buttons, bullets aligned to the text column, ⓘ icon inline.
+
+### Removed
+- **The report QR code** (v2.2 C13 cancelled): no generation, markup or reserved space remains. BOOKING_URL stays in config for the consultation link.
+
+## 2026-10-04 — True Path v2.2 final audit sign-off — True Path v2.2 final audit sign-off
 
 ### Fixed
 - **PDF download filename with CJK names** (C14): `Content-Disposition` crashed on non-ASCII names (e.g. 陈伟). Now uses RFC 5987 encoding (`filename*=UTF-8''…`) with an ASCII fallback, so every name downloads cleanly.

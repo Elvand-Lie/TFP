@@ -51,7 +51,7 @@
     // Label seats, in fixed branch order (organiser, analyst, communicator, creative).
     // v2.3 D5: Analyst top-left, Communicator top-right, Organiser left, Creative right —
     // at least 24px between any pair, so labels can never merge.
-    labelX: [52, 88, 172, 208],
+    labelX: [44, 74, 186, 216],
     labelY: [120, 26, 26, 120],
     // Fan angles in degrees, measured from straight up.
     angles: [-62, -24, 24, 62],
