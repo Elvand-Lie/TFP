@@ -1285,7 +1285,7 @@
         meta: { resultId: S.id, createdAt: new Date().toISOString(), profile: { firstName: S.name || null } }
       });
       return root.TruePathReport.buildReportModel(record, CFG);
-    } catch (error) { return null; }
+    } catch (error) { root.__sharedModelError = error && error.message; return null; }
   }
 
   function pillRow(row, withLabel) {
