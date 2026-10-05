@@ -54,7 +54,18 @@
       result:{...view.cta.result,consultHref:c.integration.consultUrl,products:c.integration.products},
       report:{...view.cta.report,privacyHref:c.integration.privacyUrl},
       bookingUrl:c.integration.bookingUrl||''};
-    return {talent,ikigai,ironTriangle,scoring,truthPath,trupath:truthPath,cta,canonical:c};
+    // v2.3: shared display bands and page-4 copy, kept in config so no renderer duplicates them.
+    const strengthBands = c.STRENGTH_BANDS || [];
+    const strengthLabel = function (pct) {
+      const v = Math.max(0, Math.min(100, Number(pct) || 0));
+      const band = strengthBands.find(function (b) { return v >= b.min; });
+      return band ? band.label : 'Emerging';
+    };
+    return {talent,ikigai,ironTriangle,scoring,truthPath,trupath:truthPath,cta,canonical:c,
+      strengthBands, strengthLabel,
+      energyLines:c.ENERGY_LINES||{}, essenceSentences:c.ESSENCE_SENTENCES||{},
+      watchouts:c.WATCHOUTS||null,
+      advisoryUrl:(c.integration&&c.integration.advisoryUrl)||''};
   }
   return Object.freeze({build});
 });

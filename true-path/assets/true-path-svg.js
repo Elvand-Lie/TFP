@@ -49,8 +49,10 @@
     trunk: 'M121 242C125 215 127 185 126 150L134 150C133 185 135 215 139 242Z',
     trunkFill: '#5a4636',
     // Label seats, in fixed branch order (organiser, analyst, communicator, creative).
-    labelX: [34, 94, 166, 226],
-    labelY: [58, 11, 11, 58],
+    // v2.3 D5: Analyst top-left, Communicator top-right, Organiser left, Creative right —
+    // at least 24px between any pair, so labels can never merge.
+    labelX: [52, 88, 172, 208],
+    labelY: [120, 26, 26, 120],
     // Fan angles in degrees, measured from straight up.
     angles: [-62, -24, 24, 62],
     crownX: 130,
@@ -167,19 +169,29 @@
       // Explicit font-size/fill as well as the class: the on-screen page styles these through CSS,
       // while the PDF renderer has no CSS and would otherwise print them at the wrong size.
       // `opts.print` swaps to dark paper inks: the light beige labels are correct on the dark
-      // screen but all but invisible once printed, and percentages have to read at a glance.
+      // screen but all but invisible once printed.
+      // v2.3 D2/D5: two-line labels — branch name over its strength label; percentages are no
+      // longer shown to visitors anywhere on the tree.
       const print = !!(opts && opts.print);
       const ink = print ? (lit ? '#7A1F2B' : '#1F1F1F') : lit ? TREE.labelInkLit : TREE.labelInk;
+      const strengthLabel =
+        (opts && opts.strengthLabels && opts.strengthLabels[category.key]) || '';
+      const nameSize = print ? 12.5 : 10.5;
+      const subSize = print ? 11 : 9.5;
       parts.push(
-        `<text class="tp-svg__branch" x="${TREE.labelX[index]}" y="${TREE.labelY[index]}" fill="${ink}" font-size="${print ? 13 : 10.5}" font-weight="${print ? 700 : 400}" text-anchor="middle">${escapeXml(
+        `<text class="tp-svg__branch" x="${TREE.labelX[index]}" y="${TREE.labelY[index]}" fill="${ink}" font-size="${nameSize}" font-weight="${print ? 700 : 400}" text-anchor="middle">${escapeXml(
           category.name
         )}</text>`
       );
-      parts.push(
-        `<text class="tp-svg__score" x="${TREE.labelX[index]}" y="${
-          TREE.labelY[index] + (print ? 17.5 : 16.5)
-        }" fill="${ink}" font-size="${print ? 14.5 : 13}" font-weight="700" text-anchor="middle">${value}%</text>`
-      );
+      if (strengthLabel) {
+        parts.push(
+          `<text class="tp-svg__score" x="${TREE.labelX[index]}" y="${
+            TREE.labelY[index] + (print ? 15 : 13)
+          }" fill="${ink}" font-size="${subSize}" font-weight="${print ? 700 : 600}" text-anchor="middle">${escapeXml(
+            strengthLabel
+          )}</text>`
+        );
+      }
     });
 
     parts.push('</svg>');

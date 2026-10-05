@@ -129,6 +129,7 @@
           dominant: tree.dominant,
           balancedProfile: tree.balancedProfile,
           print: true,
+          strengthLabels: tree.strengthLabels || {},
           ariaLabel: 'Talent Tree'
         });
       } catch (error) { /* fall through to the fallback */
@@ -175,6 +176,8 @@
     const p1 = model.pages[0];
     const p2 = model.pages[1];
     const p3 = model.pages[2];
+    const page4 = model.pages[3] || null;
+    const invite4 = page4 ? page4.blocks.find((b) => b.kind === 'invite') : null;
 
     const hero = first(p1, 'hero');
     const tree = first(p1, 'talent-tree');
@@ -205,9 +208,11 @@
     const reportDate = meta.reportDate || '';
 
     const scorePills = (rows) => (rows || []).map((row) => {
-      const w = Math.max(0, Math.min(100, Number(row.value) || 0));
+      const v = Math.max(0, Math.min(100, Number(row.value) || 0));
+      // v2.3 D2: labels instead of bare percentages; a 0-19 band keeps a visible 8% sliver.
+      const w = v < 8 ? 8 : v;
       return `<div class="score-pill"><div class="score-name">${esc(row.name)}</div>` +
-        `<div class="score-val">${esc(row.value)}%</div>` +
+        `<div class="score-val">${esc(row.label || '')}</div>` +
         `<div class="bar"><span style="width:${w}%"></span></div></div>`;
     }).join('');
 
@@ -233,7 +238,7 @@
       `<p${i ? ' style="margin-top:2mm"' : ''}>${esc(line).replace(/^([A-Za-z ]+):/, '<b>$1:</b>')}</p>`
     ).join('');
 
-    const pageFooter = (n) => `<div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia${n === 3 ? ' · Result ID kept for support' : ''}</span><span>${n} / 3</span></div>`;
+    const pageFooter = (n) => `<div class="footer"><span>The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia${n === 4 ? ' · Result ID kept for support' : ''}</span><span>${n} / 4</span></div>`;
 
     return `<!doctype html>
 <html lang="en">
@@ -388,7 +393,7 @@
 <body>
 
 <section class="page">
-  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 1 of 3</span></div>
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 1 of 4</span></div>
   <div class="hero">
     <div class="prepared">Prepared for ${esc(firstName)}${reportDate ? ' · ' + esc(reportDate) : ''}</div>
     <div class="lead serif">${esc(hero && hero.intro)}</div>
@@ -399,8 +404,9 @@
 
   <div class="section-title">
     <div class="n">Talent Tree 才</div>
-    <h2 class="serif">How you naturally think</h2>
+    <h2 class="serif">How you naturally think <span style="font-size:11pt; color:#A8823F; cursor:help;" title="Each branch is scored on its own, so the four don't need to add up to 100%.">&#9432;</span></h2>
   </div>
+  <p style="margin:-2mm 0 2mm; font-size:8pt; color:#6c6c6c;"><span style="color:#A8823F;">&#9432;</span> Each branch is scored on its own, so the four don't need to add up to 100%.</p>
 
   <div class="tree-wrap">${renderTree(tree)}</div>
 
@@ -410,8 +416,10 @@
       ${scorePills((p1Scores && p1Scores.rows) || [])}
     </div>
     <div class="card">
-      <div class="label">${esc(pair && pair.archetypeHeading)}</div>
+      <div class="label">Your Talent Pattern</div>
+      <p style="font-family:'Noto Serif CJK SC',Georgia,serif; font-size:12pt; color:#7A1F2B; margin-bottom:2mm;">${esc(pair && pair.archetypeHeading)}.</p>
       <p>${esc(pair && pair.leadLine)}</p>
+      <p style="margin-top:2mm">${esc(pair && pair.essenceSentence)}</p>
       <p style="margin-top:2mm"><b>${esc(pair && pair.strengthsSentence)}</b></p>
     </div>
   </div>
@@ -425,7 +433,7 @@
 </section>
 
 <section class="page">
-  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 2 of 3</span></div>
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 2 of 4</span></div>
   <div class="section-title">
     <div class="n">Direction 道</div>
     <h2 class="serif">Where your strengths could matter</h2>
@@ -469,7 +477,7 @@
 </section>
 
 <section class="page">
-  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 3 of 3</span></div>
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 3 of 4</span></div>
   <div class="section-title">
     <div class="n">Role 位</div>
     <h2 class="serif">Your Iron Triangle and True Path</h2>
@@ -505,13 +513,11 @@
 
   <div class="grid2">
     <div class="card">
-      <div class="label">${esc(gap && gap.label)}</div>
-      <p>${esc(gap && gap.text)}</p>
-    </div>
-    <div class="card">
       <div class="label">${esc(thrive && thrive.label)}</div>
       <p>${esc(thrive && thrive.text)}</p>
-      <div class="label" style="margin-top:3mm">${esc(growth && growth.label)}</div>
+    </div>
+    <div class="card">
+      <div class="label">${esc(growth && growth.label)}</div>
       <p>${esc(growth && growth.text)}</p>
     </div>
   </div>
@@ -530,19 +536,61 @@
     </ul>
   </div>
 
-  <div class="cta">
-    <div class="title serif">${esc(invite && invite.headline)}</div>
-    <p>${esc(invite && invite.text)}</p>
-    ${opts.qrDataUrl
-      ? `<div style="display:flex;align-items:center;justify-content:center;gap:5mm;margin-top:2mm">
-           <img src="${opts.qrDataUrl}" alt="Booking QR" style="width:25mm;height:25mm"/>
-           <div style="text-align:left"><div class="link" style="margin-top:0"><a href="${esc(invite && invite.ctaHref)}" style="color:#7A1F2B">${esc(invite && invite.ctaLabel)}</a></div>
-           <p style="margin-top:1.5mm;color:#4A4A4A">Scan the code or tap the link to book.</p></div>
-         </div>`
-      : `<div class="link"><a href="${esc(invite && invite.ctaHref)}" style="color:#7A1F2B">${esc(invite && invite.ctaLabel)}</a></div>`}
+  ${pageFooter(3)}
+</section>
+
+<section class="page">
+  <div class="topline"><span class="eyebrow">TRUE PATH · 轨道</span><span>Page 4 of 4</span></div>
+  <div class="section-title">
+    <div class="n">留意</div>
+    <h2 class="serif">Watch-outs &amp; Growth</h2>
+  </div>
+  <div class="rule"></div>
+  <p style="margin:0 0 4mm; font-size:9pt; color:#4A4A4A;">${esc(page4 && page4.intro)}</p>
+
+  <div style="display:flex; flex-direction:column; gap:3mm;">
+    ${(page4 ? page4.blocks.filter(b => b.kind === 'watch-card') : []).map((card) => `
+    <div style="background:#FAF7F2; border-left:2px solid #C6A96B; padding:3mm 4mm;">
+      <p style="font-weight:700; color:#7A1F2B; font-size:9.5pt; margin-bottom:1.5mm;">${card.number} · ${esc(card.title)}${card.talent ? ' (' + esc(card.talent) + ')' : ''}</p>
+      <p style="font-size:9pt; line-height:1.45; margin-bottom:1mm;">${esc(card.watchOut)}</p>
+      ${card.ally ? `<p style="font-size:9pt; line-height:1.45;">${esc(card.ally)}</p>` : ''}
+      <p style="font-size:8.8pt; line-height:1.45; color:#4A4A4A;"><em>${esc(card.signal)}</em></p>
+    </div>`).join('\n    ')}
   </div>
 
-  ${pageFooter(3)}
+  ${(page4 ? page4.blocks.filter(b => b.kind === 'text' && /pressure/i.test(b.label || '')) : []).map((b) => `
+  <div class="card" style="margin-top:4mm;">
+    <div class="label">${esc(b.label)}</div>
+    <p>${esc(b.text)}</p>
+  </div>`).join('')}
+
+  ${(page4 ? page4.blocks.filter(b => b.kind === 'quick-win') : []).map((b) => `
+  <div style="margin-top:4mm; background:#FAF7F2; border:1px solid #A8823F; padding:3mm 4mm; display:flex; align-items:center; gap:4mm;">
+    <span style="color:#7A1F2B; font-weight:700; font-size:12pt;">✓</span>
+    <div>
+      <div class="label" style="margin-bottom:1mm;">One Quick Win This Week</div>
+      <p style="font-size:9.5pt;">${esc(b.text)}</p>
+    </div>
+  </div>`).join('')}
+
+  ${(page4 ? page4.blocks.filter(b => b.kind === 'teaser') : []).map((t) => `
+  <div style="margin-top:4mm; background:#EFE9E1; padding:4mm 5mm;">
+    <div class="title serif" style="font-size:13pt; color:#7A1F2B; margin-bottom:1mm;">${esc(t.heading)}</div>
+    <p style="font-size:9pt; margin-bottom:2mm;">${esc(t.intro)}</p>
+    <ul style="margin:1mm 0 2mm 4.5mm; padding:0;">
+      ${(t.bullets || []).map((item) => `<li style="font-size:9pt; line-height:1.5;">${esc(item)}</li>`).join('\n      ')}
+    </ul>
+    <div class="link"><a href="${esc(invite && invite.ctaHref)}" style="color:#7A1F2B">${esc(invite && invite.ctaLabel)}</a></div>
+    ${t.advisoryLine ? `<p style="margin-top:2mm; font-size:8.2pt; color:#4A4A4A;"><em>${esc(t.advisoryLine)}</em>${t.advisoryHref ? ` — <a href="${esc(t.advisoryHref)}" style="color:#7A1F2B">contact us</a>` : ''}</p>` : ''}
+  </div>`).join('')}
+
+  <div class="card cta" style="margin-top:4mm; background:#FAF7F2; border:1px solid #A8823F; text-align:center; padding:4mm;">
+    <div class="title serif">${esc(invite4 && invite4.headline)}</div>
+    <p>${esc(invite4 && invite4.text)}</p>
+    <div class="link"><a href="${esc(invite4 && invite4.ctaHref)}" style="color:#7A1F2B">${esc(invite4 && invite4.ctaLabel)}</a></div>
+  </div>
+
+  ${pageFooter(4)}
 </section>
 
 </body>

@@ -171,3 +171,28 @@
   #true-path-app .btn { font-size: 17px; padding: 15px 26px; }
   #true-path-app .opt { font-size: 16.5px; }
 }
+
+/* ─── v2.3: report result page (shared-content renderer) ─── */
+#true-path-app .tp-label { color: var(--gold); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+#true-path-app .tp-info { color: var(--gold); cursor: help; font-size: .8em; }
+#true-path-app ul { padding-left: 1.35em; }
+#true-path-app .score-pill { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+#true-path-app .score-name { flex: 0 0 40%; }
+#true-path-app .score-val { flex: 0 0 auto; font-weight: 600; }
+#true-path-app .score-bar { flex: 1; height: 6px; background: rgba(245,245,242,.12); border-radius: 4px; overflow: hidden; }
+#true-path-app .score-bar span { display: block; height: 100%; background: var(--gold); border-radius: 4px; }
+#true-path-app .watch-card { border-left: 3px solid var(--gold); }
+#true-path-app .quick-win { border-left: 3px solid var(--gold); background: rgba(198,169,107,.08); }
+#true-path-app .teaser { background: rgba(0,0,0,.25); }
+
+/* v2.3 D8: browser print of the result page — hide chrome, keep the report. */
+@media print {
+  nav, .mobile-nav, footer, .nop, #tp-pdf-note { display: none !important; }
+  #true-path-app { padding-top: 0 !important; background: #fff !important; color: #111 !important; }
+  #true-path-app:before, #true-path-app .pulse { display: none !important; }
+  #true-path-app .pg, #true-path-app .box, #true-path-app .watch-card, #true-path-app .quick-win,
+  #true-path-app .teaser { break-inside: avoid; page-break-inside: avoid; }
+  #true-path-app svg, #true-path-app svg * { opacity: 1 !important; transform: none !important; animation: none !important; }
+  #true-path-app .grow, #true-path-app .br { animation: none !important; opacity: 1 !important; transform: none !important; }
+  #true-path-app .btn { display: none !important; }
+}

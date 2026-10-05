@@ -50,11 +50,7 @@ export function buildReportDocumentHtml(model: any): string {
     reportDate: reportDate(model.createdAt),
     resultId: model.resultId || ''
   };
-  const invite = model.pages
-    .flatMap((page: any) => page.blocks)
-    .find((block: any) => block && block.kind === 'invite');
-  const qrDataUrl = invite && invite.qr && invite.qr.dataUrl ? invite.qr.dataUrl : undefined;
-  return ReportHtml.buildReportHtml(model, meta, { qrDataUrl });
+  return ReportHtml.buildReportHtml(model, meta, {});
 }
 
 /**
@@ -119,7 +115,7 @@ export async function renderTruePathHtmlPdf(model: any, deps?: { executablePath?
     doc.setTitle('True Path Report' + (firstName ? ' — ' + firstName : ''));
     doc.setAuthor('The Full Picture');
     doc.setCreator('The Full Picture');
-    doc.setSubject('True Path 轨道 — 3-page report');
+    doc.setSubject('True Path 轨道 — 4-page report');
     if (model.createdAt) {
       const created = new Date(String(model.createdAt));
       if (!isNaN(created.getTime())) {

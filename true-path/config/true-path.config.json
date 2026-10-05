@@ -601,7 +601,8 @@
   "organiser": "planning, structure, systems, execution, resource allocation",
   "analyst": "data, logic, research, pattern recognition, strategy",
   "communicator": "speaking, teaching, persuasion, relationships, influence",
-  "creative": "imagination, innovation, ideation, design, visual thinking"
+  "creative": "imagination, innovation, ideation, design, visual thinking",
+  "talentTreeNote": "Each branch is scored on its own, so the four don’t need to add up to 100%."
  },
  "AMSG": {
   "talent_capability_aligned": "Aligned: how you see yourself matches your natural talent pattern.",
@@ -762,7 +763,7 @@
      }
     ],
     "labels": {
-     "talentPattern": "Talent Pattern 才",
+     "talentPattern": "Your Talent Pattern",
      "purpose": "Purpose · Direction 道",
      "capability": "Capability",
      "economicDirection": "Economic Direction",
@@ -816,6 +817,10 @@
      "role": {
       "kicker": "Role 位",
       "title": "Your Iron Triangle and True Path"
+     },
+     "watchouts": {
+      "kicker": "Watch-outs & Growth 留意",
+      "title": "What to Watch For"
      }
     },
     "talentInsight": {
@@ -824,8 +829,7 @@
     "directionInsight": {
      "title": "Direction is a field to explore, not a prediction",
      "body": "These are environments and forms of work that may fit the combination of your selected interests, Talent pattern and primary role. Use them as prompts for experimentation rather than fixed career prescriptions."
-    },
-    "qrCaption": "Scan to book your consultation"
+    }
    }
   },
   "cta": {
@@ -877,7 +881,7 @@
       "line": "Imagination, innovation, design, visual thinking"
      }
     ],
-    "ctaLabel": "Begin — 12 statements",
+    "ctaLabel": "Begin: 12 Statements",
     "ctaHref": "/true-path/talent/q"
    },
    "progress": {
@@ -903,8 +907,9 @@
     "ancientWisdomBridge": "Your Talent Tree shows how you think. Your Ikigai shows where it matters. Your Iron Triangle shows the role you'll play to get there.\n\nAncient Wisdom adds the one layer no questionnaire can: timing. It looks at when to lead, when to build and when to consolidate, based on your personal patterns.",
     "productsLabel": "Products",
     "productsHref": "/services",
-    "restartLabel": "Start again",
-    "restartHref": "/true-path"
+    "restartLabel": "Start Again",
+    "restartHref": "/true-path",
+    "downloadLabel": "Download PDF"
    },
    "report": {
     "headline": "Your 3-Page True Path Report",
@@ -920,10 +925,14 @@
      {
       "n": 3,
       "title": "Your Role & True Path 位 轨道"
+     },
+     {
+      "n": 4,
+      "title": "Watch-outs & Growth 留意"
      }
     ],
     "downloadLabel": "Download PDF",
-    "emailHeadline": "Would you like us to send your 3-page True Path report?",
+    "emailHeadline": "Would you like us to send your 4-page True Path report?",
     "emailFieldName": "First name",
     "emailFieldEmail": "Email",
     "emailSendLabel": "Send My Report",
@@ -938,9 +947,9 @@
    },
    "start": {
     "headline": "Before we begin, what should we call you?",
-    "fieldLabel": "First name",
+    "fieldLabel": "First name (or the name you like to be called)",
     "placeholder": "e.g. Jose",
-    "helper": "Your name appears on your personal True Path report.",
+    "helper": "This is how we'll address you in your report.",
     "ctaLabel": "Begin My True Path",
     "errorEmpty": "Please enter your first name to personalise your report.",
     "errorInvalid": "Please use letters only (up to 30 characters)."
@@ -975,6 +984,133 @@
     "url": ""
    }
   ],
-  "bookingUrl": ""
+  "bookingUrl": "",
+  "advisoryUrl": "/contact?interest=advisory"
+ },
+ "STRENGTH_BANDS": [
+  {
+   "min": 85,
+   "label": "Very strong"
+  },
+  {
+   "min": 65,
+   "label": "Strong"
+  },
+  {
+   "min": 40,
+   "label": "Moderate"
+  },
+  {
+   "min": 20,
+   "label": "Developing"
+  },
+  {
+   "min": 0,
+   "label": "Emerging"
+  }
+ ],
+ "ENERGY_LINES": {
+  "organiser": "Planning and admin may not be where you get your energy",
+  "analyst": "Detailed analysis may not be where you get your energy",
+  "communicator": "Presenting and persuading may not be where you get your energy",
+  "creative": "Generating new ideas may not be where you get your energy"
+ },
+ "WATCHOUTS": {
+  "heading": "Watch-outs & Growth 留意",
+  "intro": "Nobody is only one kind of strong. These are the patterns to watch for, not verdicts.",
+  "a1": {
+   "organiser": {
+    "title": "Strength overused",
+    "watchOut": "You may hold plans too tightly, or end up coordinating everyone’s work.",
+    "signal": "You may notice this when everyone depends on you, and you’re exhausted."
+   },
+   "analyst": {
+    "title": "Strength overused",
+    "watchOut": "You may over-research and wait for certainty before deciding.",
+    "signal": "You may notice this when good opportunities pass while you’re still checking."
+   },
+   "communicator": {
+    "title": "Strength overused",
+    "watchOut": "You may say yes too easily, or lean on persuasion where preparation is needed.",
+    "signal": "You may notice this when your calendar is full of people, and your own priorities wait."
+   },
+   "creative": {
+    "title": "Strength overused",
+    "watchOut": "You may start more ideas than you finish.",
+    "signal": "You may notice this when you have many exciting beginnings and few completed projects."
+   }
+  },
+  "a2": {
+   "organiser": {
+    "title": "Least natural talent",
+    "watchOut": "Details, deadlines and admin may slip.",
+    "signal": "You may notice this when small tasks pile up and surprise you.",
+    "quickWin": "Keep one 15-minute weekly planning ritual."
+   },
+   "analyst": {
+    "title": "Least natural talent",
+    "watchOut": "You may decide on instinct or relationships, which is risky for pricing, money and contracts.",
+    "signal": "You may notice this when a decision felt right but the numbers didn’t work.",
+    "quickWin": "Check one key number before every big decision."
+   },
+   "communicator": {
+    "title": "Least natural talent",
+    "watchOut": "Good work may go unnoticed if you don’t share it.",
+    "signal": "You may notice this when others get credit for results you helped create.",
+    "quickWin": "Share one result with your boss or clients each week."
+   },
+   "creative": {
+    "title": "Least natural talent",
+    "watchOut": "You may stick to the familiar way when a new one would work better.",
+    "signal": "You may notice this when the same approach keeps giving the same results.",
+    "quickWin": "Ask “what’s another way?” once on every project."
+   }
+  },
+  "a3": {
+   "commander": {
+    "watchOut": "You may work hard on things that aren’t clearly moving you forward.",
+    "signal": "You may notice this when you’re busy every day but unsure what you’re building towards.",
+    "quickWin": "Write down your one main goal for the next 12 months."
+   },
+   "general": {
+    "watchOut": "Your ideas and systems may be ahead of your results.",
+    "signal": "You may notice this when plans keep improving, but launches keep slipping.",
+    "quickWin": "Set one deadline this week and tell someone about it."
+   },
+   "chancellor": {
+    "watchOut": "You may create momentum faster than structure.",
+    "signal": "You may notice this when growth brings more chaos instead of more freedom.",
+    "quickWin": "Turn one task you repeat every week into a simple checklist."
+   }
+  },
+  "a3Balanced": {
+   "watchOut": "You may be pulled in every direction. Choose a primary lane for this season.",
+   "signal": "You may notice this when you say yes to every kind of role."
+  },
+  "underPressure": {
+   "commander": "Under pressure, you may become impatient, change direction too quickly, or carry decisions alone.",
+   "general": "Under pressure, you may push harder, work longer and skip rest, until you burn out.",
+   "chancellor": "Under pressure, you may tighten control, slow decisions down and resist change."
+  },
+  "teaser": {
+   "heading": "What a questionnaire can’t show",
+   "intro": "Your report shows what to watch for. It can’t show:",
+   "bullets": [
+    "When these patterns are strongest for you: the years to push forward, and the years to consolidate",
+    "Why they keep repeating, which is rooted in your personal blueprint",
+    "Your 90-day True Path plan, with someone to keep you accountable"
+   ],
+   "button": "Book a 1-Hour Metaphysics Strategic Consultation →",
+   "advisory": "For leaders who want ongoing guidance, ask about True Path Advisory."
+  }
+ },
+ "truthPathNote": "",
+ "ESSENCE_SENTENCES": {
+  "organiser_analyst": "turn complexity into clear structure",
+  "analyst_communicator": "make insight persuasive",
+  "communicator_creative": "inspire people with new possibilities",
+  "analyst_creative": "invent smart solutions to hard problems",
+  "organiser_communicator": "mobilise people around a plan",
+  "organiser_creative": "bring imaginative ideas to life"
  }
 }

@@ -81,6 +81,7 @@
   var mail = 0;
   var synTimer = null;
   var bound = 0;
+  var watchoutsTracked = false;
 
   // If a visitor manages to click a journey control before bind() ran (or if boot never
   // completes), say so on the page instead of letting the click vanish without a trace.
@@ -207,9 +208,10 @@
   var NAME_PATTERN = /^[\p{L}\p{M}][\p{L}\p{M} '.’-]{0,29}$/u;
 
   function cleanName(value) {
+    // v2.3 D7: use exactly what the visitor types — trim/collapse surrounding whitespace only.
+    // No case changes, no splitting; validation (letters, length) still applies.
     var raw = String(value === undefined || value === null ? '' : value).trim().replace(/\s+/g, ' ');
     if (!raw || raw.length > 30 || !NAME_PATTERN.test(raw)) return '';
-    if (raw === raw.toLowerCase()) raw = raw.charAt(0).toUpperCase() + raw.slice(1);
     return raw;
   }
 
@@ -539,13 +541,17 @@
   function tree(t) {
     // `raw`/`dominant` are required for the canonical tie-aware highlight, and `balancedProfile`
     // suppresses it entirely (a balanced profile shows no glowing branch).
+    // v2.3 D2: two-line labels carry the shared strength labels, never bare percentages.
+    var strengthLabels = {};
+    T.forEach(function (k) { strengthLabels[k] = CFG.strengthLabel(t.pct[k]); });
     return root.TruePathSvg.talentTreeSvg(t.pct, CATEGORIES, {
       raw: t.raw,
       dominant: t.dominant,
       secondary: t.secondary,
       coDominant: t.coDominant,
       balancedProfile: t.balancedProfile,
-      info: 'Talent Tree scores are independent strengths: you can be strong on every branch, so they do not total 100%.'
+      strengthLabels: strengthLabels,
+      info: 'Each branch is scored on its own, so the four don’t need to add up to 100%.'
     });
   }
   function tri(share) {
@@ -593,29 +599,30 @@
   }
 
   function obs(t) {
-    // v2.2 C11: the lowest-branch line depends on the score itself.
+    // v2.3 D1/D2/D3: shared wording with the model — strength labels, energy lines, no bare %,
+    // no 'scores are independent' line (it moved to the Talent Tree tooltip).
     var lowest = T.reduce(function (lo, k) { return t.pct[k] < t.pct[lo] ? k : lo; }, T[0]);
     var lp = t.pct[lowest];
+    var label = CFG.strengthLabel(lp);
+    var tied = T.filter(function (k) { return t.pct[k] === lp; });
+    var lowestNames = tied.map(function (k) { return TN[k]; }).join(' and ');
+    var isPlural = tied.length > 1;
     var lowestLine;
     if (t.balancedProfile) {
       lowestLine = 'No branch is notably quieter than the rest, which gives you range.';
-    } else if (lp >= 70) {
-      lowestLine = 'Even your least dominant branch, ' + TN[lowest] + ', is a genuine strength at ' + lp + '%.';
+    } else if (lp >= 65) {
+      lowestLine = 'Even your least dominant branch, ' + lowestNames + ', is a genuine strength (' + label + ').';
     } else if (lp >= 40) {
-      lowestLine = TN[lowest] + ' is your least dominant branch at ' + lp +
-        '%. This may be an area where you lean on others.';
+      lowestLine = lowestNames + (isPlural ? ' are' : ' is') + ' your least dominant branch (' + label + '). This may be an area where you lean on others.';
     } else {
-      lowestLine = TN[lowest] + ' is your quietest branch (' + lp +
-        '%). That is a reading, not a flaw. It often shows where a partner can complement you.';
+      var energy = (CFG.energyLines && CFG.energyLines[lowest]) || '';
+      lowestLine = lowestNames + (isPlural ? ' are your least natural branches' : ' is your least natural branch') + ' for now. ' + energy + ', so a partner who is strong here can complement you.';
     }
-    var lines = [
-      t.balancedProfile
-        ? 'Your four branches are within a point of each other, so no single style dominates yet.'
-        : t.coDominant ? leadLine(t)
-          : 'Your strongest branch is ' + TN[t.dominant] + ' (' + t.pct[t.dominant] + '%).',
-      lowestLine,
-      'Scores are independent: you can be strong on every branch.'
-    ];
+    var lines = [];
+    if (!t.balancedProfile && !t.coDominant) {
+      lines.push('Your strongest branch is ' + TN[t.dominant] + ' (' + CFG.strengthLabel(t.pct[t.dominant]) + ').');
+    }
+    lines.push(lowestLine);
     if (T.every(function (k) { return t.pct[k] >= 75; })) {
       lines.push('You show strong scores across all four branches, which suggests a versatile profile.');
     }
@@ -1253,69 +1260,148 @@
     }
   };
 
-  VW.report = function () {
-    var t = S.tal, r = S.res, p = r.primary, g = r.gap, a = arch(t), ti = titleOf();
-    var c = C.RC[p], n = RN[p], k = function (i) { return S.ik[i] || []; };
-    var al = align(t, r, S.ik), url = cUrl(ti[0], p, a[0]);
-    var PF = 'The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia';
-    var heroIntro = S.name ? esc(S.name) + ', your True Path is' : 'Your True Path is';
-    var dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    var roleWords = String(C.RV[p]).toLowerCase().split(/[^a-z]+/).filter(function (w) { return w.length > 2; });
-    var clashes = function (key) {
-      var phrase = OPT[key] ? OPT[key][2] : '';
-      return String(phrase).toLowerCase().split(/[^a-z]+/).some(function (w) {
-        return w.length > 2 && roleWords.indexOf(w) !== -1;
-      });
-    };
-    var impactPick = k(3).filter(function (key) { return !clashes(key); })[0] || k(3)[0] || null;
-    var ecoLine = al.indexOf('economic_role_aligned') !== -1
-      ? esc(C.AMSG.economic_role_aligned)
-      : al.indexOf('economic_role_explore') !== -1 ? esc(C.AMSG.economic_role_explore) : '';
+  // ─── v2.3 D6: the report renders from the ONE shared content model ─────────
+  // The same buildReportModel output drives the PDF, so website and PDF match word for word.
 
-    return '<div class="nop" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center"><button class="ghost" style="margin:0" data-act="report-back">← Back to result</button> ' +
-      '<button class="btn" style="margin:0" data-act="pdf">Save as PDF</button>' +
+  function sharedReportModel() {
+    if (!root.TruePathReportModel || !root.TruePathTrupath || !S.tal || !S.res) return null;
+    try {
+      var talent = { raw: S.tal.raw, pct: S.tal.pct, dominant: S.tal.dominant, secondary: S.tal.secondary, coDominant: S.tal.coDominant, balancedProfile: S.tal.balancedProfile };
+      var triangle = { share: S.res.share, points: S.res.points, ikigaiHits: S.res.ikigaiHits, primary: S.res.primary, supporting: S.res.supporting, gap: S.res.gap, pattern: S.res.pattern };
+      var taq = {}, saq = {};
+      S.ta.forEach(function (v, i) { taq['Q' + (i + 1)] = v; });
+      S.sc.forEach(function (v, i) { saq['S' + (i + 1)] = v; });
+      var picks = [];
+      [0, 1, 2, 3].forEach(function (i) {
+        (S.ik[i] || []).forEach(function (key) {
+          picks.push({ screenId: 'I-' + (i + 1), key: key, fromSuggestion: !!((S.fs || {})[key]) });
+        });
+      });
+      var resolved = root.TruePathTrupath.buildTruePathResult({ talent: talent, triangle: triangle, picks: picks, configs: CFG });
+      var record = root.TruePathReportModel.buildResultRecord({
+        talent: talent, triangle: triangle, resolved: resolved, picks: picks, suggestedKeys: [],
+        talentAnswers: taq, scenarios: CFG.ironTriangle.scenarios, scenarioAnswers: saq,
+        configs: { ikigai: CFG.ikigai, scoring: CFG.scoring, truthPath: CFG.truthPath },
+        meta: { resultId: S.id, createdAt: new Date().toISOString(), profile: { firstName: S.name || null } }
+      });
+      return root.TruePathReportModel.buildReportModel(record, CFG);
+    } catch (error) { return null; }
+  }
+
+  function pillRow(row, withLabel) {
+    var v = Number(row.value) || 0;
+    var w = withLabel && v < 8 ? 8 : v;
+    var shown = withLabel ? (row.label || '') : v + '%';
+    return '<div class="score-pill"><span class="score-name">' + esc(row.name) + '</span>' +
+      '<span class="score-val">' + esc(shown) + '</span>' +
+      '<span class="score-bar"><span style="width:' + w + '%"></span></span></div>';
+  }
+
+  function blockHtml(b) {
+    switch (b.kind) {
+      case 'hero':
+        return '<div class="box" style="text-align:center">' +
+          (b.preparedFor ? '<p class="mut">' + esc(b.preparedFor) + '</p>' : '') +
+          '<p>' + esc(b.intro) + '</p><h1 style="font-size:1.9rem">' + esc(b.title) + '</h1>' +
+          '<p>' + esc(b.tagline) + '</p><p class="mut">' + esc(b.subtitle) + '</p></div>';
+      case 'talent-tree':
+        return tree(S.tal);
+      case 'scores': {
+        var withLabel = (b.rows || []).every(function (row) { return row.label; });
+        return '<div class="box"><b>' + esc(b.label) + '</b><br>' +
+          (b.rows || []).map(function (row) { return pillRow(row, withLabel); }).join('') + '</div>';
+      }
+      case 'pair':
+        return '<h3><span class="tp-label">' + esc(b.label || '') + '</span> ' + esc(b.archetypeHeading) + '</h3>' +
+          '<p>' + esc(b.leadLine) + '</p>' +
+          (b.essenceSentence ? '<p>' + esc(b.essenceSentence) + '</p>' : '') +
+          '<p>' + esc(b.strengthsSentence) + '</p>';
+      case 'list-block':
+        return '<p><b>' + esc(b.label) + ':</b></p><ul>' +
+          (b.items || []).map(function (item) { return '<li>' + esc(item) + '</li>'; }).join('') + '</ul>';
+      case 'insight':
+        return '<div class="box"><b>' + esc(b.title) + '</b><p>' + esc(b.body) + '</p></div>';
+      case 'text':
+        return '<p><b>' + esc(b.label) + ':</b> ' + esc(b.text) + '</p>';
+      case 'iron-triangle':
+        return tri(b.shares);
+      case 'role-card':
+        return '<h3>' + esc(b.name) + ' ' + esc(b.chinese) + '</h3><p>' + esc(b.oneLine) + '</p>' +
+          '<p class="mut">' + esc(b.contribution) +
+          (b.allies ? '<br>Natural allies: ' + esc(b.allies) : '') + '</p>';
+      case 'title':
+        return '<div class="box"><b>' + esc(b.label) + '</b><p>' + esc(b.title) + ' — ' + esc(b.essence) + '</p>' +
+          '<p class="mut">' + esc(b.subtitle) + '</p></div>';
+      case 'watch-card':
+        return '<div class="box watch-card"><b>' + b.number + ' · ' + esc(b.title) +
+          (b.talent ? ' (' + esc(b.talent) + ')' : '') + '</b>' +
+          '<p>' + esc(b.watchOut) + '</p>' +
+          (b.ally ? '<p>' + esc(b.ally) + '</p>' : '') +
+          '<p class="mut"><em>' + esc(b.signal) + '</em></p></div>';
+      case 'quick-win':
+        return '<div class="box quick-win">✓ <b>One Quick Win This Week:</b> ' + esc(b.text) + '</div>';
+      case 'teaser':
+        return '<div class="box teaser"><b>' + esc(b.heading) + '</b><p>' + esc(b.intro) + '</p><ul>' +
+          (b.bullets || []).map(function (item) { return '<li>' + esc(item) + '</li>'; }).join('') + '</ul>' +
+          (b.advisoryLine ? '<p class="mut"><em>' + esc(b.advisoryLine) + '</em> ' +
+            (b.advisoryHref ? '<a href="' + esc(b.advisoryHref) + '" data-advisory="1">Contact us</a>' : '') + '</p>' : '') +
+          '</div>';
+      case 'invite':
+        return '<div class="box"><b>' + esc(b.headline) + '</b><p>' + esc(b.text) + '</p>' +
+          '<a class="btn" href="' + esc(b.ctaHref) + '" rel="noopener" data-consult="1">' + esc(b.ctaLabel) + '</a></div>';
+      default:
+        return '';
+    }
+  }
+
+  VW.report = function () {
+    var model = sharedReportModel();
+    var PF = 'The Full Picture · Ancient Wisdom. Modern Strategy. · thefullpicture.asia';
+    var toolbar = '<div class="nop" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">' +
+      '<button class="ghost" style="margin:0" data-act="report-back">← Back to result</button>' +
+      '<button class="btn" style="margin:0" data-act="pdf">Download My PDF Report</button>' +
       '<span id="tp-pdf-note" class="mut" style="margin:0"></span></div>' +
-      '<p class="mut">' + (S.saved && S.id ? 'Report ' : 'Local preview (not saved) · ') +
-      (S.saved && S.id ? '· The Full Picture' : 'The Full Picture') + '</p>' +
-      '<div class="pg"><div class="box" style="text-align:center">' +
-      (S.name ? '<p class="mut">Prepared for ' + esc(S.name) + ' · ' + esc(dateStr) + '</p>' : '') +
-      '<p>' + heroIntro + '</p><h1 style="font-size:1.9rem">' + esc(ti[0]) + '</h1>' +
-      '<p>' + esc(ti[1]) + '</p>' +
-      '<p class="mut">' + esc(a[0]) + ' · ' + esc(n[0]) + ' ' + esc(n[1]) + '</p></div>' +
-      '<h2>Your Talent Tree 才</h2>' + tree(t) +
-      chips(T.map(function (x) { return TN[x] + ' ' + t.pct[x] + '%'; })) +
-      '<h3>' + esc(t.balancedProfile ? 'Balanced / Emerging Tree' : a[0]) + '</h3>' +
-      '<p>' + leadLine(t) + '</p>' +
-      '<p>' + strengthsSentence(t) + '</p>' +
-      '<ul>' + obs(t).map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' +
-      '<p class="mut pf">' + esc(PF) + '</p></div>' +
-      '<div class="pg"><h2>Your Direction 道</h2>' +
-      '<p>' + (S.name ? esc(S.name) + ', y' : 'Y') + 'ou come alive when you are ' + list(k(0)) + '.</p>' +
-      '<p>You see your strengths in ' + list(k(1)) + '.</p>' +
-      '<p>You could earn a living through ' + list(k(2)) + '.</p>' +
-      '<p>The difference you want to make: ' + imp(k(3)) + '.</p>' +
-      '<p><b>Possible areas to explore:</b> ' + list(k(2)) + '.</p>' +
-      '<p>You may create value most naturally by ' + esc(C.TV[t.dominant]) + ', ' + esc(C.RV[p]) +
-      (impactPick ? ', and ' + esc(OPT[impactPick][2]) : '') + '.</p>' +
-      '<div class="box"><b>Alignment Check</b><br>' +
-      esc(C.AMSG[al[0]] || '') + (ecoLine ? '<br>' + ecoLine : '') + '</div>' +
-      '<p class="mut pf">' + esc(PF) + '</p></div>' +
-      '<div class="pg"><h2>Your Role & True Path 位 轨道</h2>' + tri(r.share) +
-      chips(R.map(function (x) { return RN[x][0] + ' ' + r.share[x] + '%'; })) +
-      '<h3>' + esc(n[0]) + ' ' + esc(n[1]) + '</h3><p>' + esc(c.core) + '</p>' +
-      '<p class="mut">' + esc(c.contrib) + '<br>Natural strengths: ' + esc(c.str) +
-      '<br>Watch-out: ' + esc(c.watch) + '</p>' +
-      '<p><b>Your gap ally (' + esc(RN[g][0]) + ' ' + esc(RN[g][1]) + '):</b> ' + esc(C.GAP[g]) +
-      (r.pattern === 'balanced' ? ' Your roles are closely balanced, so treat this as a light lean.' : '') +
-      '</p><p><b>Where you may thrive:</b> ' + esc(c.thrive) + '</p>' +
-      '<p><b>Growth edge:</b> ' + esc(c.edge) + '</p>' +
-      '<div class="box"><b>Your True Path</b><p>' + heroIntro + ' <b>' + esc(ti[0]) + '</b> — ' +
-      esc(ti[1]) + '</p><p class="mut">' + esc(a[0]) + ' · ' + esc(n[0]) + ' ' + esc(n[1]) + '</p></div>' +
-      (url ? '<p><a class="btn" href="' + esc(url) + '" rel="noopener" data-consult="1">' +
-        esc(CFG.cta.result.consultCtaLabel) + '</a></p>' : '') +
-      '<p class="mut pf">' + esc(PF) + '</p></div>' +
-      '<div class="nop"><button class="ghost" data-act="restart">' +
+      '<p class="mut nop">' + (S.saved && S.id ? 'Report ' : 'Local preview (not saved) · ') +
+      '· The Full Picture</p>';
+
+    var head = '<div class="nop"><button class="ghost" data-act="restart">' +
       esc(CFG.cta.result.restartLabel) + '</button></div>';
+
+    // Fallback: if the shared model cannot be built, keep a minimal readable report.
+    if (!model) {
+      var t = S.tal, r = S.res, a = arch(t), ti = titleOf();
+      return toolbar + '<div class="pg"><div class="box" style="text-align:center"><p>' +
+        (S.name ? esc(S.name) + ', your True Path is' : 'Your True Path is') + '</p>' +
+        '<h1 style="font-size:1.9rem">' + esc(ti[0]) + '</h1><p>' + esc(ti[1]) + '</p></div>' +
+        '<h2>Your Talent Tree 才 <span class="tp-info" title="Each branch is scored on its own, so the four don’t need to add up to 100%.">ⓘ</span></h2>' + tree(t) +
+        '</div>' + head;
+    }
+
+    // v2.3 D10 analytics: the watch-outs section is part of the report view.
+    if (!watchoutsTracked) {
+      watchoutsTracked = true;
+      var page4 = model.pages[3] || {};
+      track('tp_watchouts_view', {
+        a2Shown: !!page4.a2Shown,
+        gapRole: page4.gapRole || '',
+        pattern: page4.pattern || ''
+      });
+    }
+
+    var body = model.pages.map(function (page) {
+      var inner = page.blocks.map(function (b) {
+        if (b.kind === 'hero' && b.preparedFor) {
+          return '<div class="box" style="text-align:center"><p class="mut">' + esc(b.preparedFor) + '</p>' +
+            '<p>' + esc(b.intro) + '</p><h1 style="font-size:1.9rem">' + esc(b.title) + '</h1>' +
+            '<p>' + esc(b.tagline) + '</p><p class="mut">' + esc(b.subtitle) + '</p></div>';
+        }
+        return blockHtml(b);
+      }).join('');
+      return '<div class="pg"><h2>' + esc(page.heading) + '</h2>' + inner +
+        '<p class="mut pf">' + esc(PF) + '</p></div>';
+    }).join('');
+
+    return toolbar + body + head;
   };
 
   // ─── render (guards mirror the approved reference) ────────────────────────
@@ -1526,6 +1612,12 @@
       track('tp_consult_click', {
         titleKey: tkey(), source: S.step === 'report' ? 'report' : 'result'
       });
+      return; // a real link: let the browser follow it
+    }
+
+    // v2.3 D10: advisory link click (page 4 teaser).
+    if (button.getAttribute('data-advisory')) {
+      track('tp_advisory_click', { titleKey: tkey(), primaryRole: S.res ? S.res.primary : '' });
       return; // a real link: let the browser follow it
     }
 

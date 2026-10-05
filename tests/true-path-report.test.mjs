@@ -43,7 +43,12 @@ const modelConfigs = {
   ironTriangle: ironJson,
   truthPath: truthPathJson,
   scoring: scoringJson,
-  cta: ctaJson
+  cta: ctaJson,
+  // v2.3 D10: page-4 copy lives in config like every other string.
+  watchouts: readJson('true-path/config/true-path.config.json').WATCHOUTS,
+  energyLines: readJson('true-path/config/true-path.config.json').ENERGY_LINES,
+  essenceSentences: readJson('true-path/config/true-path.config.json').ESSENCE_SENTENCES,
+  advisoryUrl: readJson('true-path/config/true-path.config.json').integration.advisoryUrl
 };
 
 const ROLE_KEYS = ['commander', 'general', 'chancellor'];
@@ -153,24 +158,33 @@ test('report: the all-100 tie puts Commander first and the shares total exactly 
   assert.equal(record.ironTriangle.pattern, 'single');
 });
 
-test('report: the model resolves to three pages, in journey order, with config headings', () => {
+test('report: the model resolves to four pages, in journey order, with config headings (v2.3)', () => {
   const record = buildRecord(caseFInput());
   const model = ReportModel.buildReportModel(record, modelConfigs);
 
-  assert.equal(model.pages.length, 3);
+  assert.equal(model.pages.length, 4);
   assert.deepEqual(
     model.pages.map((page) => page.n),
-    [1, 2, 3]
+    [1, 2, 3, 4]
   );
   model.pages.forEach((page, index) => {
     assert.equal(page.heading, ctaJson.report.pages[index].title);
   });
 
-  // Page 3 must keep the Iron Triangle reveal, the role card and the True Path title.
+  // Page 3 keeps the Iron Triangle reveal, the role card and the True Path title — and, per
+  // v2.3 D10, loses the Triangle Gap copy and the consultation invite (both move to page 4).
   const kinds = model.pages[2].blocks.map((block) => block.kind);
   assert.ok(kinds.includes('iron-triangle'));
   assert.ok(kinds.includes('role-card'));
   assert.ok(kinds.includes('title'));
+  assert.ok(!kinds.includes('invite'), 'the consultation invite moved to page 4');
+  assert.ok(!model.pages[2].blocks.some((b) => /gap/i.test(String(b.label || ''))), 'the gap copy moved to page 4');
+
+  const watchouts = model.pages[3];
+  assert.equal(watchouts.heading, ctaJson.report.pages[3].title);
+  assert.ok(watchouts.blocks.some((b) => b.kind === 'watch-card'), 'page 4 carries the watch-out cards');
+  assert.ok(watchouts.blocks.some((b) => b.kind === 'quick-win'), 'page 4 carries the quick win');
+  assert.ok(watchouts.blocks.some((b) => b.kind === 'invite'), 'page 4 closes with the consultation invite');
 });
 
 test('report: every model block resolves its keys to real copy', () => {
@@ -178,7 +192,7 @@ test('report: every model block resolves its keys to real copy', () => {
   const model = ReportModel.buildReportModel(record, modelConfigs);
 
   // Blocks that are pure visuals or self-labelling by design, not missing a label.
-  const selfLabelled = ['invite', 'title', 'pair', 'talent-tree', 'iron-triangle', 'hero', 'insight'];
+  const selfLabelled = ['invite', 'title', 'pair', 'talent-tree', 'iron-triangle', 'hero', 'insight', 'watch-card', 'quick-win', 'teaser'];
 
   model.pages.forEach((page) => {
     assert.ok(page.blocks.length > 0, 'page ' + page.n + ' has no blocks');
@@ -252,7 +266,7 @@ test('report: the model exposes the email and consultation copy from config (Bri
   assert.equal(model.email.marketingLabel, ctaJson.report.marketingConsentLabel);
   assert.equal(model.email.privacyHref, ctaJson.report.privacyHref);
 
-  const invite = model.pages[2].blocks.find((block) => block.kind === 'invite');
+  const invite = model.pages[3].blocks.find((block) => block.kind === 'invite');
   assert.ok(invite.ctaHref, 'the consultation invite lost its destination');
 });
 

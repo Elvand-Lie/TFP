@@ -213,8 +213,8 @@
     // v2.2 C10: one strengths sentence replaces the raw lists.
     const strengthsSentence = naturalStrengthsSentence(truthPath, record, archetype);
 
-    // v2.2 C11: the lowest-branch observation now depends on the score itself.
-    const observations = observationalLines(record.talent, talentConfig).map((text, index) => ({
+    // v2.3 D3: the lowest-branch observation uses the shared strength labels and energy lines.
+    const observations = observationalLines(record.talent, talentConfig, configs).map((text, index) => ({
       key: 'observation-' + (index + 1),
       text
     }));
@@ -265,7 +265,14 @@
           // at 100 and cannot tell a tie from a lone leader.
           raw: record.talent.raw,
           dominant: record.talent.dominant,
-          balancedProfile: Boolean(record.talent.balancedProfile)
+          balancedProfile: Boolean(record.talent.balancedProfile),
+          // v2.3 D2: two-line tree labels use the shared strength bands, not percentages.
+          strengthLabels: Object.fromEntries(
+            talentConfig.categories.map((category) => [
+              category.key,
+              strengthLabelFn(configs)(record.talent.pct[category.key])
+            ])
+          )
         },
         {
           kind: 'scores',
@@ -273,7 +280,9 @@
           rows: talentConfig.categories.map((category) => ({
             key: category.key,
             name: category.name,
-            value: record.talent.pct[category.key]
+            value: record.talent.pct[category.key],
+            // v2.3 D2: visitor-facing label; `value` stays internal for the bar fill.
+            label: strengthLabelFn(configs)(record.talent.pct[category.key])
           }))
         },
         {
@@ -291,6 +300,11 @@
               : '',
           leadLine: leadLine(record.talent, talentConfig),
           strengthsSentence,
+          // v2.3 D4: the archetype essence as a complete sentence.
+          essenceSentence: (function () {
+            const essence = (configs.essenceSentences || {})[record.talent.archetypeKey];
+            return archetype && essence ? 'As a ' + archetype.name + ', you ' + essence + '.' : '';
+          })(),
           archetype: archetype ? { name: archetype.name, essence: archetype.essence } : null
         },
         {
@@ -304,7 +318,7 @@
           kind: 'insight',
           title: (truthPath.pdf && truthPath.pdf.talentInsight && truthPath.pdf.talentInsight.title) || 'What this suggests',
           body: observations
-            .filter((entry) => /least dominant|quietest|versatile profile|range/.test(entry.text))
+            .filter((entry) => /least dominant|least natural|versatile profile|range/.test(entry.text))
             .map((entry) => entry.text)
             .join(' ')
         }
@@ -380,21 +394,6 @@
               allies: primaryRole.allies
             }
           : null,
-        gapRole
-          ? {
-              kind: 'text',
-              label: iron.reveal.gapHeadline,
-              text:
-                gapRole.name +
-                ' ' +
-                gapRole.chinese +
-                ' — ' +
-                iron.reveal.gapFraming +
-                '. ' +
-                gapInsightText(gapInsight) +
-                gapLeanNote(record, iron)
-            }
-          : null,
         primaryRole
           ? { kind: 'text', label: iron.reveal.thriveHeadline, text: asText(primaryRole.thrive) }
           : null,
@@ -416,16 +415,111 @@
           items: (truthPath.reflectionPrompts || []).map((prompt) =>
             typeof prompt === 'string' ? prompt : prompt.text
           )
-        },
+        }
+      ].filter(Boolean)
+    };
+
+    // ─── v2.3 D10: page 4 — Watch-outs & Growth 留意 ───
+    const watch = configs.watchouts || {};
+    const low = lowestTalentInfo(record.talent, talentConfig);
+    const balancedTriangle = record.ironTriangle.pattern === 'balanced';
+    const a2Eligible =
+      !record.talent.balancedProfile && low.lowestPct <= 64 && low.lowestKey !== record.talent.dominant;
+
+    const watchCards = [];
+    if (watch.a1 && watch.a1[record.talent.dominant]) {
+      const a1 = watch.a1[record.talent.dominant];
+      watchCards.push({
+        kind: 'watch-card',
+        title: 'Strength overused',
+        talent: categoryName(talentConfig, record.talent.dominant),
+        watchOut: a1.watchOut,
+        signal: a1.signal
+      });
+    }
+    if (watch.a2 && a2Eligible && watch.a2[low.lowestKey]) {
+      const a2 = watch.a2[low.lowestKey];
+      watchCards.push({
+        kind: 'watch-card',
+        title: 'Least natural talent',
+        talent: categoryName(talentConfig, low.lowestKey),
+        watchOut: a2.watchOut,
+        signal: a2.signal
+      });
+    }
+    let a3Card = null;
+    if (balancedTriangle) {
+      a3Card = {
+        kind: 'watch-card',
+        title: 'Your Triangle Gap',
+        talent: '',
+        watchOut: (watch.a3Balanced && watch.a3Balanced.watchOut) || '',
+        signal: (watch.a3Balanced && watch.a3Balanced.signal) || ''
+      };
+      watchCards.push(a3Card);
+    } else if (gapRole && watch.a3 && watch.a3[gapRole.key]) {
+      const a3 = watch.a3[gapRole.key];
+      a3Card = {
+        kind: 'watch-card',
+        title: 'Your Triangle Gap: ' + gapRole.name + ' ' + gapRole.chinese,
+        talent: '',
+        watchOut: a3.watchOut,
+        signal: a3.signal,
+        ally: 'A ' + gapRole.name + '-type partner can secure the gains.'
+      };
+      watchCards.push(a3Card);
+    }
+    // Number the cards 1..N in render order.
+    watchCards.forEach((card, index) => { card.number = index + 1; });
+
+    // Block C: A2's talent quick win when A2 shows; otherwise the gap role's. The balanced
+    // triangle has no gap quick win, so it falls back to a lane-choosing action.
+    let quickWin = '';
+    if (a2Eligible && watch.a2 && watch.a2[low.lowestKey]) {
+      quickWin = watch.a2[low.lowestKey].quickWin;
+    } else if (!balancedTriangle && gapRole && watch.a3 && watch.a3[gapRole.key]) {
+      quickWin = watch.a3[gapRole.key].quickWin;
+    } else if (balancedTriangle) {
+      quickWin = 'Choose one primary lane to focus on this week.';
+    }
+
+    const teaser = watch.teaser || {};
+    const page4 = {
+      n: 4,
+      key: 'watchouts',
+      heading: (cta.report.pages[3] && cta.report.pages[3].title) || 'Watch-outs & Growth 留意',
+      intro: watch.intro || '',
+      // Analytics inputs (tp_watchouts_view) — no personal data.
+      a2Shown: Boolean(a2Eligible),
+      gapRole: record.ironTriangle.gap,
+      pattern: record.ironTriangle.pattern,
+      quickWin,
+      blocks: [
+        ...watchCards.map((card) => ({ kind: 'watch-card', ...card })),
+        primaryRole && watch.underPressure && watch.underPressure[record.ironTriangle.primary]
+          ? {
+              kind: 'text',
+              label: 'Under Pressure',
+              text: watch.underPressure[record.ironTriangle.primary]
+            }
+          : null,
+        quickWin ? { kind: 'quick-win', text: quickWin } : null,
+        teaser.heading || teaser.bullets
+          ? {
+              kind: 'teaser',
+              heading: teaser.heading || '',
+              intro: teaser.intro || '',
+              bullets: teaser.bullets || [],
+              advisoryLine: teaser.advisory || '',
+              advisoryHref: configs.advisoryUrl || ''
+            }
+          : null,
         {
           kind: 'invite',
           headline: cta.result.consultHeadline,
           text: cta.result.consultSubcopy,
-          ctaLabel: cta.result.consultCtaLabel,
-          ctaHref: cta.result.consultHref,
-          // v2.2 C13: booking QR machinery. The QR is only emitted when a booking URL is
-          // configured; the destination is an open product decision, so none is invented here.
-          qr: bookingQr(configs, record)
+          ctaLabel: (teaser.button || cta.result.consultCtaLabel),
+          ctaHref: cta.result.consultHref
         }
       ].filter(Boolean)
     };
@@ -436,7 +530,7 @@
       createdAt: record.createdAt,
       profile: record.profile || { firstName: null },
       headline: cta.report.headline,
-      pages: [page1, page2, page3],
+      pages: [page1, page2, page3, page4],
       disclaimer: truthPath.disclaimer,
       brand: cta.footer.brand,
       downloadLabel: cta.report.downloadLabel,
@@ -463,12 +557,11 @@
    * names before this, so this is the last line of defence for stored values).
    */
   function asName(value) {
+    // v2.3 D7: use exactly what the visitor types. Only trim/collapse surrounding whitespace;
+    // no case changes, no splitting.
     const raw = String(value === undefined || value === null ? '' : value).trim().replace(/\s+/g, ' ');
     if (!raw || raw.length > 30) return '';
     if (!/^[\p{L}\p{M}][\p{L}\p{M} '.’-]{0,29}$/u.test(raw)) return '';
-    // "jose" -> "Jose"; "Mei ling" keeps its typed form apart from the first letter rule, which
-    // only fires when the WHOLE name is lowercase.
-    if (raw === raw.toLowerCase()) return raw.charAt(0).toUpperCase() + raw.slice(1);
     return raw;
   }
 
@@ -532,26 +625,9 @@
   }
 
   /**
-   * C13: booking QR payload. Built only when a booking URL is configured AND the record carries
-   * its title and role, so no destination is ever invented. The UTM parameters are fixed by the
-   * brief; `tp` and `role` carry the result.
+   * C13: booking QR payload. REMOVED in v2.3 — the QR code is cancelled (Change Brief v2.3).
+   * BOOKING_URL stays in config for the normal consultation link system.
    */
-  function bookingQr(configs, record) {
-    const url = configs.cta && configs.cta.bookingUrl;
-    if (!url) return null;
-    const titleKey = record.truePath && record.truePath.titleKey;
-    const role = record.ironTriangle && record.ironTriangle.primary;
-    if (!titleKey || !role) return null;
-    const join = url.indexOf('?') === -1 ? '?' : '&';
-    return {
-      url:
-        url + join +
-        'utm_source=truepath&utm_medium=pdf&utm_campaign=report' +
-        '&tp=' + encodeURIComponent(titleKey) +
-        '&role=' + encodeURIComponent(role),
-      caption: 'Scan to book your consultation'
-    };
-  }
 
   function categoryName(talentConfig, key) {
     const category = talentConfig.categories.find((entry) => entry.key === key);
@@ -662,46 +738,75 @@
    * The third line is fixed by definition (the four branches are independent, so they never total
    * 100%).
    */
-  function observationalLines(talent, talentConfig) {
-    const name = (key) => categoryName(talentConfig, key);
+  /**
+   * v2.3 D2/D3: the lowest-branch observation. Labels come from the shared strength bands; the
+   * below-40 tier names the energy line from config. Ties name both branches and use the first
+   * branch in tie order for the energy sentence.
+   */
+  /** v2.3 D2: the shared band labels; callers that hand-assemble configs get the same defaults. */
+  function strengthLabelFn(configs) {
+    if (configs && typeof configs.strengthLabel === 'function') return configs.strengthLabel;
+    var FALLBACK_BANDS = [
+      { min: 85, label: 'Very strong' }, { min: 65, label: 'Strong' }, { min: 40, label: 'Moderate' },
+      { min: 20, label: 'Developing' }, { min: 0, label: 'Emerging' }
+    ];
+    return function (pct) {
+      var v = Math.max(0, Math.min(100, Number(pct) || 0));
+      var band = FALLBACK_BANDS.find(function (b) { return v >= b.min; });
+      return band ? band.label : 'Emerging';
+    };
+  }
+
+  function lowestTalentInfo(talent, talentConfig) {
     const keys = talentConfig.categories.map((category) => category.key);
-    const lowestPct = Math.min.apply(
-      null,
-      keys.map((key) => talent.pct[key])
-    );
-    const lowestKey = keys.reduce((low, key) => (talent.pct[key] < talent.pct[low] ? key : low), keys[0]);
+    const lowestPct = Math.min.apply(null, keys.map((key) => talent.pct[key]));
+    const tiedKeys = keys.filter((key) => talent.pct[key] === lowestPct);
+    return { lowestPct, lowestKey: tiedKeys[0], tiedKeys };
+  }
+
+  function observationalLines(talent, talentConfig, configs) {
+    const name = (key) => categoryName(talentConfig, key);
+    // v2.3 D2: the shared bands live in config; a caller that assembles configs by hand falls
+    // back to the same defaults, so labels never silently disappear.
+    const FALLBACK_BANDS = [
+      { min: 85, label: 'Very strong' }, { min: 65, label: 'Strong' }, { min: 40, label: 'Moderate' },
+      { min: 20, label: 'Developing' }, { min: 0, label: 'Emerging' }
+    ];
+    const strengthLabel = configs.strengthLabel || function (pct) {
+      const v = Math.max(0, Math.min(100, Number(pct) || 0));
+      const band = FALLBACK_BANDS.find((b) => v >= b.min);
+      return band ? band.label : 'Emerging';
+    };
+    const keys = talentConfig.categories.map((category) => category.key);
+    const { lowestPct, lowestKey, tiedKeys } = lowestTalentInfo(talent, talentConfig);
+    const lowestNames = tiedKeys.map(name);
+    const isPlural = tiedKeys.length > 1;
 
     let lowestLine;
-    if (lowestPct >= 70) {
-      lowestLine =
-        'Even your least dominant branch, ' + name(lowestKey) + ', is a genuine strength at ' +
-        talent.pct[lowestKey] + '%.';
-    } else if (lowestPct >= 40) {
-      lowestLine =
-        name(lowestKey) + ' is your least dominant branch at ' + talent.pct[lowestKey] +
-        '%. This may be an area where you lean on others.';
-    } else {
-      lowestLine =
-        name(lowestKey) + ' is your quietest branch (' + talent.pct[lowestKey] +
-        '%). That is a reading, not a flaw. It often shows where a partner can complement you.';
-    }
     if (talent.balancedProfile) {
       lowestLine = 'No branch is notably quieter than the rest, which gives you range.';
+    } else if (lowestPct >= 65) {
+      lowestLine =
+        'Even your least dominant branch, ' + lowestNames.join(' and ') + ', is a genuine strength (' +
+        strengthLabel(lowestPct) + ').';
+    } else if (lowestPct >= 40) {
+      lowestLine =
+        lowestNames.join(' and ') + (isPlural ? ' are' : ' is') + ' your least dominant branch (' +
+        strengthLabel(lowestPct) + '). This may be an area where you lean on others.';
+    } else {
+      const energyLine = (configs.energyLines && configs.energyLines[lowestKey]) || '';
+      lowestLine =
+        lowestNames.join(' and ') +
+        (isPlural ? ' are your least natural branches' : ' is your least natural branch') +
+        ' for now. ' + energyLine + ', so a partner who is strong here can complement you.';
     }
 
-    const lines = [
-      talent.balancedProfile
-        ? 'Your four branches are within a point of each other, so no single style dominates yet.'
-        : talent.coDominant
-          ? leadLine(talent, talentConfig)
-          : 'Your strongest branch is ' +
-            name(talent.dominant) +
-            ' (' +
-            talent.pct[talent.dominant] +
-            '%).',
-      lowestLine,
-      'Scores are independent: you can be strong on every branch.'
-    ];
+    // v2.3 D4: the co-dominant line lives only in the Talent Pattern paragraph, not here.
+    const lines = [];
+    if (!talent.balancedProfile && !talent.coDominant) {
+      lines.push('Your strongest branch is ' + name(talent.dominant) + ' (' + strengthLabel(talent.pct[talent.dominant]) + ').');
+    }
+    lines.push(lowestLine);
     if (keys.every((key) => talent.pct[key] >= 75)) {
       lines.push('You show strong scores across all four branches, which suggests a versatile profile.');
     }

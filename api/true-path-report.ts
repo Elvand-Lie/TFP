@@ -5,7 +5,7 @@
  * the same resultId (Brief 12 / 13):
  *
  *   POST { record, idempotencyKey }   → validate + recompute, persist, return { stored, resultId, record, reportUrl }
- *   POST { resultId, email, ... }     → capture the lead, email the 3-page PDF, notify the team
+ *   POST { resultId, email, ... }     → capture the lead, email the 4-page PDF, notify the team
  *   GET  ?id=<resultId>               → load a persisted record, returns { record } with lead redacted
  *
  * The report itself never depends on this route: the page renders from sessionStorage or from a
@@ -143,7 +143,7 @@ function buildEmailHtml(params: {
       </div>
 
       <p>${greeting}</p>
-      <p>Thank you for completing the True Path analysis. <strong>Your 3-page report is attached as a PDF.</strong></p>
+      <p>Thank you for completing the True Path analysis. <strong>Your 4-page report is attached as a PDF.</strong></p>
 
       ${
         hasSummary

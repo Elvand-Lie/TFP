@@ -151,7 +151,7 @@ test('pdf: the CJK font needed for correct Chinese rendering is bundled', () => 
   assert.ok(readFileSync(font).length > 1000, 'fonts/NotoSansSC.ttf looks empty');
 });
 
-test('pdf: rendering produces a real, complete three-page PDF', async () => {
+test('pdf: rendering produces a real, complete four-page PDF (v2.3)', async () => {
   const buffer = await render(modelFor(sampleRecord()));
   assert.equal(buffer.slice(0, 5).toString('latin1'), '%PDF-');
   assert.ok(Buffer.isBuffer(buffer), 'the renderer must return a Buffer');
@@ -165,11 +165,11 @@ test('pdf: rendering produces a real, complete three-page PDF', async () => {
   assert.match(raw, /Subtype \/Type0/, 'the CJK font was not embedded as a composite font');
   assert.match(raw, /Identity-H/, 'the CJK font is not using a CID encoding');
   assert.match(raw, /\/ToUnicode/, 'the CJK text would not be extractable or searchable');
-  // Three pages, one per journey stage.
-  assert.match(raw, /\/Count 3/, 'the PDF does not have the expected three pages');
+  // Four pages: Talent, Direction, Role & True Path, Watch-outs & Growth (v2.3).
+  assert.match(raw, /\/Count 4/, 'the PDF does not have the expected four pages');
 });
 
-test('pdf: a full-length journey still renders three pages, not four', async () => {
+test('pdf: a full-length journey renders exactly four pages, never five (v2.3)', async () => {
   // Page 3's copy grows with the number of Ikigai picks, so a realistic journey is the shape that
   // reaches the overflow: the fixture above picks 1 per screen and never spills, which is exactly
   // why the defect shipped. Each shape below was verified to render 4 pages before the fix (one
@@ -184,11 +184,11 @@ test('pdf: a full-length journey still renders three pages, not four', async () 
     const buffer = await render(modelFor(recordFor(shape)));
     const raw = buffer.toString('latin1');
     const count = Number((raw.match(/\/Count\s+(\d+)/) || [])[1]);
-    // cta.json promises a "3-Page True Path Report" in two places, so this is a product contract.
+    // v2.3: the product contract is exactly four pages — page 4 must never spill to a fifth.
     assert.equal(
       count,
-      3,
-      'journey ' + JSON.stringify(shape) + ' rendered ' + count + ' pages, not 3'
+      4,
+      'journey ' + JSON.stringify(shape) + ' rendered ' + count + ' pages, not 4'
     );
   }
 });

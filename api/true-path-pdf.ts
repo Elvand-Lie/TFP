@@ -10,12 +10,9 @@
  */
 
 import { loadResult, isStoreConfigured, isValidResultId } from '../true-path/lib/server/store';
-import { buildModel, decodePayload, reportConfigs } from '../true-path/lib/server/model';
+import { buildModel, decodePayload } from '../true-path/lib/server/model';
 import { renderTruePathPdf } from '../true-path/lib/server/pdf-generator';
 import { renderTruePathHtmlPdf } from '../true-path/lib/server/html-pdf';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const QRCode = require('qrcode');
 
 function firstValue(value: unknown): string | null {
   if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : null;
@@ -36,26 +33,9 @@ function pdfFileName(model: any): string {
 }
 
 /**
- * v2.2 C13: generate the booking QR as a data URL when a booking URL is configured and the
- * invite block carries its target. Without a configured URL nothing is invented — the machinery
- * simply stays dormant until Jose confirms the destination.
+ * v2.3: the booking QR code (v2.2 C13) is cancelled. BOOKING_URL remains in config for the
+ * normal consultation link system; no QR generation, markup or reserved space remains.
  */
-async function attachBookingQr(model: any): Promise<void> {
-  const invite = model.pages
-    .flatMap((page: any) => page.blocks)
-    .find((block: any) => block && block.kind === 'invite');
-  const target = invite && invite.qr && invite.qr.url;
-  if (!target) return;
-  try {
-    invite.qr.dataUrl = await QRCode.toDataURL(target, {
-      margin: 1,
-      width: 240,
-      color: { dark: '#1F1F1F', light: '#FFFFFF' }
-    });
-  } catch (error) {
-    console.error('[true-path] qr generation failure:', error);
-  }
-}
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'GET') {
@@ -92,11 +72,6 @@ export default async function handler(req: any, res: any) {
   const model = buildModel(record);
   if (!model) {
     return res.status(422).json({ error: 'That report could not be rendered' });
-  }
-
-  // The configs also gate the QR: a configured booking URL is required before one is generated.
-  if (reportConfigs().cta && reportConfigs().cta.bookingUrl) {
-    await attachBookingQr(model);
   }
 
   try {

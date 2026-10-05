@@ -23,6 +23,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import fs from 'node:fs';
 import { readTruePathConfig, readCanonicalConfig } from './helpers/true-path-config.mjs';
 
 const require = createRequire(import.meta.url);
@@ -119,13 +120,19 @@ function recordFor(options) {
 }
 
 function modelFor(record, overrides) {
+  const canonicalRaw = JSON.parse(fs.readFileSync(path.join(repoRoot, 'true-path/config/true-path.config.json'), 'utf8'));
   return ReportModel.buildReportModel(record, {
     talent: talentConfig,
     ikigai: (overrides && overrides.ikigai) || ikigaiJson,
     ironTriangle: (overrides && overrides.ironTriangle) || ironJson,
     truthPath: truthPathJson,
     scoring: scoringJson,
-    cta: ctaJson
+    cta: ctaJson,
+    // v2.3 D10: page-4 copy comes from config like every other string.
+    watchouts: canonicalRaw.WATCHOUTS,
+    energyLines: canonicalRaw.ENERGY_LINES,
+    essenceSentences: canonicalRaw.ESSENCE_SENTENCES,
+    advisoryUrl: canonicalRaw.integration.advisoryUrl
   });
 }
 
@@ -148,7 +155,7 @@ function blockByLabel(model, pageIndex, label) {
   return page.blocks.find((block) => block && block.label === label);
 }
 
-test('canonical: the gap block shows the approved GAP copy and never the retired classic line', () => {
+test('canonical: the gap watch-out (v2.3 page 4) shows the brief copy and never the retired classic line', () => {
   // The adapter keeps `classicImbalance` for legacy records and the reveal contract still asserts it
   // exists, but the approved report prints GAP[role] alone. Prefixing the classic framing put
   // removed copy back in front of visitors.
@@ -159,40 +166,48 @@ test('canonical: the gap block shows the approved GAP copy and never the retired
     const record = recordFor({ talentValue: 5, role });
     const gapKey = record.ironTriangle.gap;
     const canonicalGap = canonical.GAP[gapKey];
-    const block = blockByLabel(modelFor(record), 2, ironJson.reveal.gapHeadline);
+    const model = modelFor(record);
+    const page3Texts = model.pages[2].blocks
+      .filter((b) => b.kind === 'text')
+      .map((b) => b.text || '')
+      .join(' ');
+    const card = model.pages[3].blocks.find((b) => b.kind === 'watch-card' && /Triangle Gap/.test(b.title || ''));
 
     assert.ok(canonicalGap, `role ${role}: no canonical GAP copy for gap role ${gapKey}`);
-    assert.ok(block, `role ${role}: page 3 lost its ${ironJson.reveal.gapHeadline} block`);
+    // v2.3 D10: the gap lives on page 4 only, as the shortened A3 watch-out.
+    assert.ok(!page3Texts.includes(ironJson.reveal.gapHeadline), `role ${role}: the gap block must not appear on page 3`);
+    assert.ok(card, `role ${role}: page 4 lost its Triangle Gap watch-out`);
     assert.ok(
-      block.text.includes(canonicalGap),
-      `role ${role}: the approved GAP sentence for the gap role ${gapKey} is missing from the gap block`
+      card.watchOut.includes(canonicalGap.split('.')[0]),
+      `role ${role}: the approved GAP sentence for the gap role ${gapKey} is missing from the watch-out`
     );
 
     const classic = ironJson.gapInsights[gapKey].classicImbalance;
     if (classic) {
       assert.ok(
-        !block.text.includes(classic),
+        !(card.watchOut + ' ' + (card.signal || '')).includes(classic),
         `role ${role}: the retired classic imbalance copy ("${classic}") must not reach the page`
       );
     }
   }
 });
 
-test('canonical: the gap block also names the ally role and the approved framing', () => {
+test('canonical: the gap watch-out also names the ally role and the role character (v2.3 page 4)', () => {
   const record = recordFor({ talentValue: 5, role: 'chancellor' });
   const model = modelFor(record);
-  const block = blockByLabel(model, 2, ironJson.reveal.gapHeadline);
+  const card = model.pages[3].blocks.find((b) => b.kind === 'watch-card' && /Triangle Gap/.test(b.title || ''));
   const gapRole = ironJson.roles.find((entry) => entry.key === record.ironTriangle.gap);
 
   assert.ok(gapRole, 'the record must carry a gap role');
-  assert.ok(block.text.includes(gapRole.name), 'the gap block must name the ally role');
-  assert.ok(block.text.includes(gapRole.chinese), 'the gap block must carry the role character');
+  assert.ok(card, 'page 4 must carry the Triangle Gap watch-out');
+  assert.ok(card.title.includes(gapRole.name), 'the gap card must name the ally role');
+  assert.ok(card.title.includes(gapRole.chinese), 'the gap card must carry the role character');
   assert.ok(
-    block.text.includes(ironJson.reveal.gapFraming),
-    'the gap block must use the approved "The ally you most need" framing'
+    (card.ally || '').includes('A ' + gapRole.name + '-type partner can secure the gains.'),
+    'the gap card must carry the approved ally line'
   );
   // One sentence, not two run together: no doubled full stop and no stranded separator.
-  assert.ok(!/\.\s*\./.test(block.text), 'the gap sentence has a stranded or doubled full stop');
+  assert.ok(!/\.\s*\./.test(card.watchOut), 'the gap sentence has a stranded or doubled full stop');
 });
 
 test('canonical: a legacy archetype key still resolves to the canonical archetype', () => {
@@ -237,7 +252,7 @@ test('canonical: no raw snake_case key is ever printed on any page', () => {
   );
 });
 
-test('canonical: every talent level and role renders exactly three pages', async () => {
+test('canonical: every talent level and role renders exactly four pages (v2.3)', async () => {
   // cta.report promises a "3-Page True Path Report" in two places, so the page count is a product
   // contract. The overflow is page-3 copy-depth dependent, so every level x role is exercised — and
   // every TALENT SHAPE, not just a uniform answer: a uniform answer can only ever produce a balanced
@@ -254,14 +269,14 @@ test('canonical: every talent level and role renders exactly three pages', async
         const { count } = await renderPages(
           recordFor({ role, talentValue, answersByCategory: scaled })
         );
-        if (count !== 3) offenders.push(`${shape.name} @${talentValue} / ${role} -> ${count}`);
+        if (count !== 4) offenders.push(`${shape.name} @${talentValue} / ${role} -> ${count}`);
       }
     }
   }
-  assert.deepEqual(offenders, [], 'these journeys did not render three pages: ' + offenders.join(', '));
+  assert.deepEqual(offenders, [], 'these journeys did not render four pages: ' + offenders.join(', '));
 });
 
-test('canonical: the widest possible page 3 still renders three pages', async () => {
+test('canonical: the widest possible page 3 still renders four pages total (v2.3)', async () => {
   // Three picks on each of the four screens is the deepest page 3 the UI allows — and the deepest
   // alignment/observation copy, so every talent shape is exercised against it.
   for (const shape of PROFILE_SHAPES) {
@@ -276,14 +291,14 @@ test('canonical: the widest possible page 3 still renders three pages', async ()
       );
       assert.equal(
         count,
-        3,
-        `a max-length ${shape.name} ${role} journey rendered ${count} pages, not 3`
+        4,
+        `a max-length ${shape.name} ${role} journey rendered ${count} pages, not 4`
       );
     }
   }
 });
 
-test('canonical: the page 3 that previously spilled keeps its closing copy on page 3', async () => {
+test('canonical: the page 3 that previously spilled keeps its copy, with the invite on page 4 (v2.3)', async () => {
   // Regression guard for the exact shape that shipped a fourth page: one pick on I-1/I-2/I-4 and two
   // on I-3, which makes the two alignment lines long enough that the trailing disclaimer margin
   // pushed the footer onto a page of its own. Pure spacing had to give way; no copy may be dropped,
@@ -295,14 +310,15 @@ test('canonical: the page 3 that previously spilled keeps its closing copy on pa
   });
   const { count } = await renderPages(record);
 
-  assert.equal(count, 3, 'the previously spilling journey rendered ' + count + ' pages');
+  assert.equal(count, 4, 'the previously spilling journey rendered ' + count + ' pages');
 
   const model = modelFor(record);
   const page3 = model.pages[2];
   const kinds = page3.blocks.map((block) => block.kind);
 
   assert.ok(kinds.includes('list-block'), 'page 3 lost its reflection/alignment lists');
-  assert.ok(kinds.includes('invite'), 'page 3 lost the closing invite');
+  assert.ok(!kinds.includes('invite'), 'v2.3 moves the closing invite to page 4');
+  assert.ok(model.pages[3].blocks.some((b) => b.kind === 'invite'), 'page 4 lost the closing invite');
   // The reflection prompts and the invite copy are the LAST content before the disclaimer, so they
   // are what a spilled page would have taken with it.
   const reflection = page3.blocks.filter((block) => block.kind === 'list-block');
@@ -551,11 +567,11 @@ test('canonical: the pinned PDF date comes from createdAt, not the wallclock', (
   assert.equal(first.getTime(), second.getTime());
 });
 
-test('canonical: the PDF carries the three-page CJK report it promises', async () => {
+test('canonical: the PDF carries the four-page CJK report it promises (v2.3)', async () => {
   const { buffer, count } = await renderPages(recordFor({ talentValue: 5, role: 'chancellor' }));
   const raw = buffer.toString('latin1');
 
-  assert.equal(count, 3, 'the report must be three pages');
+  assert.equal(count, 4, 'the report must be four pages (v2.3: 3 + Watch-outs & Growth)');
   assert.equal(buffer.slice(0, 5).toString('latin1'), '%PDF-');
   assert.match(raw, /\/FontFile2/, 'the CJK font file was not embedded');
   assert.match(raw, /Subtype \/Type0/, 'the CJK font was not embedded as a composite font');

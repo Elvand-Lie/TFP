@@ -147,31 +147,42 @@
     const rows = block.rows || [];
     const total = rows.reduce((sum, row) => sum + (Number(row.value) || 0), 0);
     const isShare = total === 100;
+    // v2.3 D2: Talent rows carry visitor-facing labels instead of bare percentages. Iron
+    // Triangle rows are shares of a whole and keep their %.
+    const hasLabels = rows.every((row) => row.label);
     const maxRow = isShare
-      ? (block.rows || []).reduce((best, row) => (Number(row.value) > Number(best.value) ? row : best), (block.rows || [])[0] || {})
+      ? rows.reduce((best, row) => (Number(row.value) > Number(best.value) ? row : best), rows[0] || {})
       : null;
     const barColor = (row) =>
       isShare ? (row === maxRow ? C.burgundy : C.gold) : C.burgundy;
-    const isPct = isShare || rows.every((row) => Number(row.value) >= 0 && Number(row.value) <= 100);
-    const body = (block.rows || []).map((row) => [
+    // v2.3 D2: a 0–19 band shows a minimum visible 8% sliver so the bar is never empty.
+    const barFill = (row) => {
+      const v = Number(row.value) || 0;
+      return hasLabels && v < 8 ? 8 : v;
+    };
+    const body = rows.map((row) => [
       { text: String(row.name), fontSize: 8.8, color: C.textDark, margin: [0, 3, 8, 3] },
       {
-        text: isPct ? String(row.value) + '%' : String(row.value),
+        text: hasLabels ? String(row.label) : isPct(isShare, rows) ? String(row.value) + '%' : String(row.value),
         fontSize: 8.8,
         bold: true,
         alignment: 'right',
         color: C.textDark,
-        width: 34,
+        width: 58,
         margin: [0, 3, 0, 3]
       },
-      { stack: [scoreBar(row.value, 100, barColor(row))], width: 60, margin: [6, 0, 0, 0] }
+      { stack: [scoreBar(barFill(row), 100, barColor(row))], width: 60, margin: [6, 0, 0, 0] }
     ]);
 
     return panel(
       label(block.label).concat([
-        { table: { widths: ['*', 34, 66], body }, layout: 'noBorders', margin: [0, 0, 0, 0] }
+        { table: { widths: ['*', 58, 66], body }, layout: 'noBorders', margin: [0, 0, 0, 0] }
       ])
     );
+  }
+
+  function isPct(isShare, rows) {
+    return isShare || rows.every((row) => Number(row.value) >= 0 && Number(row.value) <= 100);
   }
 
   /**
@@ -250,6 +261,7 @@
       case 'talent-tree':
         // The canonical highlight rule (and the balanced-profile "no glow" case) is decided from the
         // raw scores, so they travel with the block; a balanced profile renders with no highlight.
+        // v2.3 D2: the strengthLabels map feeds the two-line tree labels (no bare percentages).
         return {
           svg: stripSvgDisclosures(
             ctx.Svg.talentTreeSvg(block.pct, block.categories, {
@@ -257,6 +269,7 @@
               dominant: block.dominant,
               balancedProfile: block.balancedProfile,
               print: true,
+              strengthLabels: block.strengthLabels || {},
               ariaLabel: block.ariaLabel || block.label || 'Talent Tree'
             })
           ),
@@ -465,43 +478,13 @@
         return titleBlock(block);
 
       case 'invite': {
-        // Brief 8/11: the soft consultation invite closes page 3. The PDF keeps it as a link.
-        // v2.2 C13: when a booking URL is configured, the QR sits beside the text link.
+        // The soft consultation invite closes page 4. v2.3: the QR code is cancelled — the
+        // button/link system carries the destination, with no QR markup anywhere.
         /** @type {Array<any>} */
         const stack = [
           { text: String(block.headline || ''), font: displaySafe(block.headline), fontSize: 13.5, color: C.burgundy, alignment: 'center', margin: [0, 1, 0, 3] },
-          { text: String(block.text || ''), fontSize: 9.5, color: C.textMed, alignment: 'center', margin: [0, 0, 0, 4] }
-        ];
-        if (block.qr && block.qr.dataUrl) {
-          stack.push({
-            columns: [
-              {
-                width: '*',
-                stack: [
-                  {
-                    text: String(block.ctaLabel || ''),
-                    fontSize: 10,
-                    bold: true,
-                    color: C.crimson,
-                    alignment: 'center',
-                    link: block.ctaHref || '/contact',
-                    decoration: 'underline',
-                    margin: [0, 14, 0, 0]
-                  }
-                ]
-              },
-              {
-                width: 96,
-                stack: [
-                  { image: String(block.qr.dataUrl), width: 71, alignment: 'center' },
-                  { text: String(block.qr.caption || ''), fontSize: 7.5, color: C.textMed, alignment: 'center', margin: [0, 2, 0, 0] }
-                ]
-              }
-            ],
-            margin: [0, 0, 0, 1]
-          });
-        } else {
-          stack.push({
+          { text: String(block.text || ''), fontSize: 9.5, color: C.textMed, alignment: 'center', margin: [0, 0, 0, 4] },
+          {
             text: String(block.ctaLabel || ''),
             fontSize: 10,
             bold: true,
@@ -509,8 +492,8 @@
             alignment: 'center',
             link: block.ctaHref || '/contact',
             decoration: 'underline'
-          });
-        }
+          }
+        ];
         stack.push({ text: '', margin: [0, 0, 0, 1] });
         // The reference's .cta: a gold-bordered panel, not bare centred text.
         return {
@@ -616,7 +599,7 @@
           characterSpacing: 1.2
         },
         {
-          text: 'Page ' + pageIndex + ' of 3',
+          text: 'Page ' + pageIndex + ' of 4',
           fontSize: 7.8,
           color: C.textMed,
           alignment: 'right'
@@ -739,6 +722,7 @@
   }
 
   function buildReportPdfDefinition(model, ctx, configs) {
+    configs = configs || {};
     /** @type {Array<any>} */
     const content = [];
     const pdfCfg = (configs && configs.truthPath && configs.truthPath.pdf) || {};
@@ -754,6 +738,18 @@
     if (heroBlock) content.push(renderBlock(heroBlock, ctx));
 
     content.push(sectionTitle(sections.talent || { kicker: 'Talent Tree 才', title: 'How you naturally think' }));
+    // v2.3 D1: the "scores are independent" explanation lives beside the heading, not as an
+    // observation bullet.
+    const treeNote = (configs.talent && configs.talent.snapshot && configs.talent.snapshot.talentTreeNote) ||
+      'Each branch is scored on its own, so the four don’t need to add up to 100%.';
+    if (treeNote) {
+      content.push({
+        text: [{ text: 'ⓘ ', color: C.gold, bold: true }, { text: treeNote }],
+        fontSize: 8,
+        color: C.textMed,
+        margin: [0, 0, 0, 2]
+      });
+    }
 
     const tree = byKind(page1, 'talent-tree')[0];
     if (tree) {
@@ -811,12 +807,10 @@
     const p3Role = byKind(page3, 'role-card')[0];
     const p3Scores = byKind(page3, 'scores')[0];
     const p3Texts = byKind(page3, 'text');
-    const gap = p3Texts.find((block) => /gap/i.test(String(block.label || '')));
     const thrive = p3Texts.find((block) => /thrive/i.test(String(block.label || '')));
     const growth = p3Texts.find((block) => /growth/i.test(String(block.label || '')));
     const p3Title = byKind(page3, 'title')[0];
     const p3Reflection = byKind(page3, 'list-block').find((block) => /reflection/i.test(String(block.label || '')));
-    const invite = byKind(page3, 'invite')[0];
 
     if (p3Triangle && p3Role) {
       const triangleRendered = renderBlock(p3Triangle, ctx);
@@ -860,26 +854,139 @@
       ));
     }
 
-    if (gap || thrive || growth) {
-      const left = gap ? [renderBlock(gap, ctx)] : [{ text: '' }];
+    if (thrive || growth) {
       const right = [];
       if (thrive) right.push(renderBlock(thrive, ctx));
       if (growth) right.push(renderBlock(growth, ctx));
-      content.push(cardRow(left, right, ['*', '*']));
+      content.push(cardRow([{ text: '' }], right, ['*', '*']));
     }
 
     if (p3Title) content.push(renderBlock(p3Title, ctx));
     if (p3Reflection) content.push(renderBlock(p3Reflection, ctx));
-    if (invite) content.push(renderBlock(invite, ctx));
 
-    content.push({
-      text: String(model.disclaimer || ''),
-      fontSize: 8,
-      italics: true,
-      color: C.textMed,
-      alignment: 'center',
-      margin: [0, 4, 0, 0]
-    });
+    // ─── v2.3 D10: Page 4 — Watch-outs & Growth 留意 ───
+    const page4 = model.pages[3];
+    if (page4) {
+      content.push(Object.assign({}, topline(4), { pageBreak: 'before' }));
+      content.push(sectionTitle(sections.watchouts || { kicker: '留意', title: 'Watch-outs & Growth' }));
+      content.push(goldRule());
+      if (page4.intro) {
+        content.push({ text: String(page4.intro), fontSize: 9, color: C.textMed, margin: [0, 0, 0, 6] });
+      }
+
+      const watchCards = byKind(page4, 'watch-card');
+      watchCards.forEach((card) => {
+        const cardStack = [
+          {
+            text: (card.number ? card.number + ' · ' : '') + String(card.title || '') +
+              (card.talent ? ' (' + card.talent + ')' : ''),
+            fontSize: 9.5, bold: true, color: C.burgundy, margin: [0, 0, 2, 2]
+          },
+          { text: String(card.watchOut || ''), fontSize: 9, color: C.textDark, lineHeight: 1.35, margin: [0, 0, 2, 0] }
+        ];
+        if (card.ally) {
+          cardStack.push({ text: String(card.ally), fontSize: 9, color: C.textDark, lineHeight: 1.35, margin: [0, 0, 2, 0] });
+        }
+        if (card.signal) {
+          cardStack.push({ text: String(card.signal), italics: true, fontSize: 8.8, color: C.textMed, lineHeight: 1.35 });
+        }
+        content.push({
+          // Ivory panel with a thin gold left border — guidance, not a warning.
+          table: { widths: ['*'], body: [[{ stack: cardStack, margin: [8, 3, 8, 3] }]] },
+          layout: {
+            hLineWidth: () => 0,
+            vLineWidth: (i) => (i === 0 ? 2 : 0),
+            hLineColor: () => 'transparent',
+            vLineColor: () => C.gold,
+            fillColor: () => C.ivory,
+            paddingTop: () => 4,
+            paddingBottom: () => 4,
+            paddingLeft: () => 8,
+            paddingRight: () => 6
+          },
+          margin: [0, 0, 0, 5]
+        });
+      });
+
+      const underPressure = byKind(page4, 'text').find((b) => /pressure/i.test(String(b.label || '')));
+      if (underPressure) {
+        content.push(renderBlock(underPressure, ctx));
+      }
+
+      const quickWin = byKind(page4, 'quick-win')[0];
+      if (quickWin) {
+        content.push({
+          table: { widths: ['auto', '*'], body: [[
+            { text: '✓', fontSize: 12, bold: true, color: C.burgundy, alignment: 'center', margin: [0, 0, 6, 0] },
+            { stack: [
+              { text: 'One Quick Win This Week', fontSize: 7.5, bold: true, color: C.burgundy, characterSpacing: 0.8, margin: [0, 0, 0, 2] },
+              { text: String(quickWin.text || ''), fontSize: 9.5, color: C.textDark }
+            ] }
+          ]] },
+          layout: {
+            hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0.8 : 0),
+            vLineWidth: () => 0.8,
+            hLineColor: () => C.gold,
+            vLineColor: () => C.gold,
+            fillColor: () => C.ivory,
+            paddingTop: () => 4,
+            paddingBottom: () => 4,
+            paddingLeft: () => 8,
+            paddingRight: () => 8
+          },
+          margin: [0, 2, 0, 6]
+        });
+      }
+
+      const teaser = byKind(page4, 'teaser')[0];
+      if (teaser) {
+        const teaserStack = [
+          { text: String(teaser.heading || ''), font: displaySafe(teaser.heading), fontSize: 13, color: C.burgundy, margin: [0, 0, 3, 0] },
+          { text: String(teaser.intro || ''), fontSize: 9, color: C.textDark, margin: [0, 0, 4, 0] }
+        ];
+        (teaser.bullets || []).forEach((bullet) => {
+          teaserStack.push({ text: [{ text: '•  ', color: C.gold }, { text: String(bullet) }], fontSize: 9, color: C.textDark, lineHeight: 1.35, margin: [0, 0, 0, 2] });
+        });
+        content.push({
+          // Slightly darker panel so it reads as the natural next step.
+          table: { widths: ['*'], body: [[{ stack: teaserStack, margin: [8, 4, 8, 4] }]] },
+          layout: {
+            hLineWidth: () => 0,
+            vLineWidth: () => 0,
+            fillColor: () => '#EFE9E1',
+            paddingTop: () => 4,
+            paddingBottom: () => 4,
+            paddingLeft: () => 6,
+            paddingRight: () => 6
+          },
+          margin: [0, 4, 0, 2]
+        });
+      }
+
+      const invite4 = byKind(page4, 'invite')[0];
+      if (invite4) content.push(renderBlock(invite4, ctx));
+
+      if (teaser && teaser.advisoryLine) {
+        content.push({
+          text: String(teaser.advisoryLine),
+          italics: true,
+          fontSize: 8.5,
+          color: C.textMed,
+          alignment: 'center',
+          link: teaser.advisoryHref || undefined,
+          margin: [0, 2, 0, 0]
+        });
+      }
+
+      content.push({
+        text: String(model.disclaimer || ''),
+        fontSize: 8,
+        italics: true,
+        color: C.textMed,
+        alignment: 'center',
+        margin: [0, 4, 0, 0]
+      });
+    }
 
     return {
       pageSize: 'A4',
@@ -888,14 +995,14 @@
       // of Ikigai picks, and at 1.14 it spills past the page bottom for a large share of valid
       // journeys, so the document rendered 4 pages while declaring 3 (and cta.json promises
       // "3-Page"). 1.05 keeps every valid journey — 1..3 picks on each of the 4 screens, all 5
-      // talent levels and all 3 roles, 1215 shapes — at exactly 3 pages without trimming copy.
+      // talent levels and all 3 roles, 1215 shapes — at exactly 3 content pages without trimming copy (v2.3 adds page 4).
       defaultStyle: { font: FONT, fontSize: 9, color: C.textDark, lineHeight: 1.05 },
       info: {
         title: asPdfName(model)
           ? 'True Path Report — ' + asPdfName(model)
           : String(model.headline || 'True Path Report'),
         author: 'The Full Picture',
-        subject: 'True Path \u8f68\u9053 \u2014 3-page report',
+        subject: 'True Path \u8f68\u9053 \u2014 4-page report',
         creator: 'The Full Picture',
         // Deterministic metadata: pdfkit defaults CreationDate to `new Date()` and derives the PDF
         // file ID from it, so an unpinned document differs on every render. Both dates are pinned
