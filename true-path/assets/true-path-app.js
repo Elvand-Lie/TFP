@@ -1264,7 +1264,7 @@
   // The same buildReportModel output drives the PDF, so website and PDF match word for word.
 
   function sharedReportModel() {
-    if (!root.TruePathReportModel || !root.TruePathTrupath || !S.tal || !S.res) return null;
+    if (!root.TruePathReport || !root.TruePathResolve || !S.tal || !S.res) return null;
     try {
       var talent = { raw: S.tal.raw, pct: S.tal.pct, dominant: S.tal.dominant, secondary: S.tal.secondary, coDominant: S.tal.coDominant, balancedProfile: S.tal.balancedProfile };
       var triangle = { share: S.res.share, points: S.res.points, ikigaiHits: S.res.ikigaiHits, primary: S.res.primary, supporting: S.res.supporting, gap: S.res.gap, pattern: S.res.pattern };
@@ -1277,14 +1277,14 @@
           picks.push({ screenId: 'I-' + (i + 1), key: key, fromSuggestion: !!((S.fs || {})[key]) });
         });
       });
-      var resolved = root.TruePathTrupath.buildTruePathResult({ talent: talent, triangle: triangle, picks: picks, configs: CFG });
-      var record = root.TruePathReportModel.buildResultRecord({
+      var resolved = root.TruePathResolve.buildTruePathResult({ talent: talent, triangle: triangle, picks: picks, configs: CFG });
+      var record = root.TruePathReport.buildResultRecord({
         talent: talent, triangle: triangle, resolved: resolved, picks: picks, suggestedKeys: [],
         talentAnswers: taq, scenarios: CFG.ironTriangle.scenarios, scenarioAnswers: saq,
         configs: { ikigai: CFG.ikigai, scoring: CFG.scoring, truthPath: CFG.truthPath },
         meta: { resultId: S.id, createdAt: new Date().toISOString(), profile: { firstName: S.name || null } }
       });
-      return root.TruePathReportModel.buildReportModel(record, CFG);
+      return root.TruePathReport.buildReportModel(record, CFG);
     } catch (error) { return null; }
   }
 
